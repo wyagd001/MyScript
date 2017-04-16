@@ -1,0 +1,15 @@
+;#IfWinActive,ahk_class RegEdit_RegEdit
+;!x::
+×¢²á±í¸´ÖÆÂ·¾¶:
+ControlGet, hwnd, hwnd, , SysTreeView321,×¢²á±í±à¼­Æ÷
+ret:=TVPath_Get(hwnd, outPath)
+if( ret = "")
+{
+StringGetPos,hpos,outPath,HKEY
+StringTrimLeft, OutputVar, outPath, hpos
+clipboard := OutputVar
+TrayTip, ¼ôÌù°å,"%OutputVar%"ÒÑ¾­¸´ÖÆµ½¼ôÌù°å¡£
+SetTimer, RemoveTrayTip, 2500
+}
+Return
+;#IfWinActive
