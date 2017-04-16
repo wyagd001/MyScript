@@ -307,7 +307,7 @@ Gui,Add,Text,x26 y60,作者：桂林小廖
 Gui,Add,Text,x26 y80,主页：
 Gui,Font,CBlue
 ;Gui,Font,CBlue Underline
-Gui,Add,Text,x+ gg vURL,http://code.google.com/p/ahk-run/
+Gui,Add,Text,x+ gg vURL,https://github.com/wyagd001/MyScript
 Gui,Font
 Gui,Add,Text,x26 y100,版本：1.0.0(2010.05.01)
 Gui,Add,Text,x26 y120,Autohotkey版本：1.1.24.00
