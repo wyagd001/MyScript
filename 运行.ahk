@@ -407,15 +407,15 @@ If(更新=1){
 URL := "http://www.baidu.com"
 If InternetCheckConnection(URL)
 {
-UrlDownloadToFile, http://www.autohotkey.net/~wygd/CurrentVer.txt, %update_txtFile%
+UrlDownloadToFile, http://wyagd001.github.io/version.txt, %update_txtFile%
 IfNotExist,%update_txtFile%
 {
-msgbox, ,升级通知,无法获取更新文件，请检查您的网络连接。
+msgbox, ,升级通知,无法下载更新文件，请检查您的网络连接。
 Return
 }
 If(sizeq>20)
 {
-msgbox, ,升级通知,无法获取更新文件，请检查您的网络连接。
+msgbox, ,升级通知,下载的更新文件大小不符，请检查您的网络连接。
 FileDelete, %update_txtFile%
 Return
 }
@@ -427,7 +427,7 @@ If(CurVer!=AppVersion)
 msgbox,4,升级通知,当前版本为:%AppVersion%`n最新版本为:%CurVer%`n是否前往主页下载?
      IfMsgBox Yes
      {
-     Run,http://code.google.com/p/ahk-run/
+     Run,https://github.com/wyagd001/MyScript
 	 FileDelete, %update_txtFile%
      }
      IfMsgBox No

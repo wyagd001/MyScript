@@ -64,7 +64,7 @@ http://www.hieddy.com/
 http://jslover.secsrv.net/AutoHotkey/Scripts/Rename-Manager.ahk  
 
 20.F1键修改文件属性扩展名和文件时间----------dule2859  
-http://ahk.5d6d.com/thread-979-1-2.html  
+http://ahk8.com/thread-881.html
 
 21.WinExplorer auto-search---------------Buddy  
 http://www.autohotkey.com/forum/topic41463.html  
@@ -76,30 +76,30 @@ http://svn.motlin.com/dev/ahk/NiftyWindows.ahk
 http://www.autohotkey.com/forum/topic32876.html  
 
 24.把你的程序钉在桌面上 - Pin2Desk-------------------------------BLooM2  
-http://ahk.5d6d.com/thread-1621-1-1.html  
+http://ahk8.com/thread-1456.html
 
 25.一键打开当前激活窗口的所在目录-------------------星雨朝霞  
-http://ahk.5d6d.com/thread-1921-1-1.html  
+http://ahk8.com/thread-1709.html
 
 26.GetModuleFileNameEx--------shimanov  
 http://www.autohotkey.com/forum/topic4182-15.html  
 http://www.autohotkey.com/forum/topic9000.html  
 
 27.截图脚本-------------  
-http://www.autohotkey.com/forum/topic18146.html
+http://www.autohotkey.com/forum/topic18146.html  
 http://ahk.5d6d.com/thread-2220-1-2.html  
 
 28.Auto-raise and Other Stuff on Mouse Hover -----------------Lexikos  
 http://www.autohotkey.com/forum/topic22763.html  
 
 29.模仿 QT TabBar 的重命名循环变换选择功能-------------------Jameson  
-http://ahk.5d6d.com/viewthread.php?tid=703  
+http://ahk8.com/thread-623.html
 
 30.7plus--------------------fragman  
 http://code.google.com/p/7plus/  
 
 31.JowAlert.ahk---------------wz520  
-http://ahk.5d6d.com/viewthread.php?tid=830  
+http://ahk8.com/thread-802.html
 
 32.Run Dynamic Script... Through a Pipe!----------------Lexikos  
 http://www.autohotkey.com/forum/topic25867.html  
@@ -111,12 +111,19 @@ https://github.com/aamii/Candy
 http://ahk8.com/thread-6003.html  
 
 35.LV_ColorInitiate  
+https://autohotkey.com/board/topic/8463-listview-colors-for-individual-lines-eg-highlighting/  
 
 36.OnMessageEx  
+https://sites.google.com/site/ahkref/custom-functions/onmessageex  
+https://autohotkey.com/board/topic/73303-onmessageex/  
 
 37.FlashTrayIcon  
+https://autohotkey.com/boards/viewtopic.php?t=4425  
 
 38.JEE_NotepadGetPath--------------jeeswg  
 https://autohotkey.com/boards/viewtopic.php?f=6&t=30050  
 
-34.COM.ahk,VA.ahk,Gdip.ahk  and more  
+39.VDLink | Win7 目录联接工具
+http://www.cnblogs.com/easysky/p/4931042.html
+
+40.COM.ahk,VA.ahk,Gdip.ahk  and more  
