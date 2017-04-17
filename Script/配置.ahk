@@ -309,7 +309,7 @@ Gui,Font,CBlue
 ;Gui,Font,CBlue Underline
 Gui,Add,Text,x+ gg vURL,https://github.com/wyagd001/MyScript
 Gui,Font
-Gui,Add,Text,x26 y100,版本：1.0.0(2010.05.01)
+Gui,Add,Text,x26 y100,% "版本："AppVersion "(2017.04.01)"
 Gui,Add,Text,x26 y120,Autohotkey版本：1.1.24.00
 Gui,Add,Text,x26 y140,系统：Win7 SP1 32bit 推荐管理员权限运行
 Gui,Add,Button,x26 y160 gUpdate,检查更新
@@ -486,7 +486,7 @@ run,%A_AhkPath% "%A_ScriptDir%\Plugins\自定义运行命令.ahk"
 Return
 
 g:
-Run,http://code.google.com/p/ahk-run/
+Run,https://github.com/wyagd001/MyScript
 Gui,Destroy
 Return
 

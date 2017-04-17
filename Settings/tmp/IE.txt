@@ -2,33 +2,4 @@ G:\Users\lyh\Favorites\Links
 G:\Users\lyh\Favorites\Links for 中国
 G:\Users\lyh\Favorites\Microsoft 网站
 G:\Users\lyh\Favorites\MSN 网站
-G:\Users\lyh\Favorites\Windows Live
-G:\Users\lyh\Favorites\爱淘宝.url
-G:\Users\lyh\Favorites\天猫商城.url
-G:\Users\lyh\Favorites\百度一下.url
-G:\Users\lyh\Favorites\淘宝特卖.url
-G:\Users\lyh\Favorites\电脑查吧--网站导航.lnk
-G:\Users\lyh\Favorites\desktop.ini
-G:\Users\lyh\Favorites\保存到麦库.url
-G:\Users\lyh\Favorites\Links\desktop.ini
-G:\Users\lyh\Favorites\Links\建议网站.url
-G:\Users\lyh\Favorites\Links\百度一下，你就知道.lnk
-G:\Users\lyh\Favorites\Links for 中国\Internet Explorer (中国).url
-G:\Users\lyh\Favorites\Links for 中国\MSN 中国.url
-G:\Users\lyh\Favorites\Links for 中国\Windows 主页(中国).url
-G:\Users\lyh\Favorites\Links for 中国\desktop.ini
-G:\Users\lyh\Favorites\Microsoft 网站\Marketplace.url
-G:\Users\lyh\Favorites\Microsoft 网站\Microsoft 工作.url
-G:\Users\lyh\Favorites\Microsoft 网站\Microsoft 家庭安全.url
-G:\Users\lyh\Favorites\Microsoft 网站\Internet Explorer 8：主页.url
-G:\Users\lyh\Favorites\Microsoft 网站\Microsoft 商店.url
-G:\Users\lyh\Favorites\MSN 网站\MSN 体育.url
-G:\Users\lyh\Favorites\MSN 网站\MSN 娱乐.url
-G:\Users\lyh\Favorites\MSN 网站\MSN 新闻.url
-G:\Users\lyh\Favorites\MSN 网站\MSN 汽车频道.url
-G:\Users\lyh\Favorites\MSN 网站\MSN 理财.url
-G:\Users\lyh\Favorites\MSN 网站\MSN 中国.url
-G:\Users\lyh\Favorites\Windows Live\Windows Live 共享空间.url
-G:\Users\lyh\Favorites\Windows Live\Windows Live 百宝箱.url
-G:\Users\lyh\Favorites\Windows Live\下载 Windows Live 软件.url
-G:\Users\lyh\Favorites\Windows Live\Windows Live Hotmail.url
+

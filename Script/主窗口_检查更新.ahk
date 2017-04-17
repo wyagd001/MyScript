@@ -14,16 +14,16 @@ URL := "http://www.baidu.com"
 If InternetCheckConnection(URL)
 ;if connected=1
 {
-UrlDownloadToFile, http://www.autohotkey.net/~wygd/CurrentVer.txt, %update_txtFile%
+UrlDownloadToFile, https://raw.githubusercontent.com/wyagd001/MyScript/master/version.txt, %update_txtFile%
 IfNotExist,%update_txtFile%
 {
-msgbox,,升级通知,无法获取更新文件，请检查您的网络连接。
+msgbox,,升级通知,无法下载更新文件，请检查您的网络连接。
 return
 }
 FileGetSize, sizeq,%update_txtFile%
 if(sizeq>20)
 {
-msgbox,,升级通知,无法获取更新文件，请检查您的网络连接。
+msgbox,,升级通知,下载的更新文件大小不符，请检查您的网络连接。
 FileDelete, %update_txtFile%
 return
 }
@@ -36,16 +36,15 @@ FileDelete, %update_txtFile%
 else{
 msgbox,262148,升级通知,当前版本为:%AppVersion%`n最新版本为:%CurVer%`n是否前往主页下载？
      IfMsgBox Yes
-     Run,http://code.google.com/p/ahk-run/
+     Run,https://github.com/wyagd001/MyScript
 FileDelete, %update_txtFile%
 return
 }
 }
 else
-msgbox,,升级通知,无法获取更新文件，请检查您的网络连接。
+msgbox,,升级通知,无法连接网络，请检查您的网络连接。
 return
 
 InternetCheckConnection(Url="",FIFC=1) {
 Return DllCall("Wininet.dll\InternetCheckConnectionA", Str,Url, Int,FIFC, Int,0)
 }
-

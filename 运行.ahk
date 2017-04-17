@@ -22,7 +22,6 @@ If(!A_IsAdmin)
 			MsgBox, 没有启用管理员权限
 	}
 
-
 ; 使“脚本管理器”文件夹中的脚本的工作目录为%A_ScriptDir%\脚本管理器，
 ; 而不是主脚本所在的目录(如果脚本管理器中没有设置WorkingDir，默认的工作目录会变为主脚本所在的目录)
 ; SetWorkingDir %A_ScriptDir%\脚本管理器
@@ -45,7 +44,7 @@ OnExit, ExitSub
 CoordMode, Mouse, Screen
 
 ;========变量设置开始========
-AppVersion = 1.0.0
+FileRead, AppVersion, %A_ScriptDir%\version.txt
 AppTitle = 拖拽移动文件到目标文件夹(自动重命名)
 ArrCount = 0    ; 快捷键初始话变量
 SetWinDelay, 0
@@ -407,15 +406,15 @@ If(更新=1){
 URL := "http://www.baidu.com"
 If InternetCheckConnection(URL)
 {
-UrlDownloadToFile, http://www.autohotkey.net/~wygd/CurrentVer.txt, %update_txtFile%
+UrlDownloadToFile, https://raw.githubusercontent.com/wyagd001/MyScript/master/version.txt, %update_txtFile%
 IfNotExist,%update_txtFile%
 {
-msgbox, ,升级通知,无法获取更新文件，请检查您的网络连接。
+msgbox, ,升级通知,无法下载更新文件，请检查您的网络连接。
 Return
 }
 If(sizeq>20)
 {
-msgbox, ,升级通知,无法获取更新文件，请检查您的网络连接。
+msgbox, ,升级通知,下载的更新文件大小不符，请检查您的网络连接。
 FileDelete, %update_txtFile%
 Return
 }
@@ -427,7 +426,7 @@ If(CurVer!=AppVersion)
 msgbox,4,升级通知,当前版本为:%AppVersion%`n最新版本为:%CurVer%`n是否前往主页下载?
      IfMsgBox Yes
      {
-     Run,http://code.google.com/p/ahk-run/
+     Run,https://github.com/wyagd001/MyScript
 	 FileDelete, %update_txtFile%
      }
      IfMsgBox No
