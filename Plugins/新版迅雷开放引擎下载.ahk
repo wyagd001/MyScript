@@ -43,8 +43,8 @@ GuiControl,disable,speedlimit
 GuiControl,disable,pause
 GuiControl,disable,Continue
 GuiControl,disable,esc
-;GuiControl,disable,run
-;GuiControl,disable,view
+GuiControl,disable,run
+GuiControl,disable,view
 Gui, Add, Button, x390 y120 w60 h25 gExitsub, 退出
 
 Gui, Add, Text, x12 y150 w80 h25 , 下载进度:
@@ -245,8 +245,6 @@ if(finish=0)
 
 Return
 
-
-
 ;monitorurl:
 sUrl2sFlie:
 GuiControlGet,surl,,sUrl
@@ -326,18 +324,24 @@ DllCall("xldl\XL_DeleteTask","int",TaskID)
 Return
 
 run:
+msgbox % FileFullPath
 run %Filefullpath%
 Return
 
 ;根目录在 C:\\ 的情况
 view:
-IfInString, Filefullpath, \\
+If(Filefullpath="")
 {
-StringReplace, vFile, Filefullpath,\\,\,All
-run % "explorer.exe /select," vFile
-Return
-	}
-run % "explorer.exe /select," FileFullPath
+Gui, Submit, NoHide
+Filefullpath := sFolder . "\" . sFile
+}
+oFilefullpath := Filefullpath
+IfInString, oFilefullpath, \\
+	StringReplace, oFilefullpath, oFilefullpath,\\,\,All
+If Fileexist(oFileFullPath)
+	run % "explorer.exe /select," oFileFullPath
+else
+	msgbox % oFileFullPath
 Return
 
 ; SetTaskbarProgress  -  Windows 7+

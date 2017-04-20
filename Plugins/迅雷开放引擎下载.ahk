@@ -293,15 +293,13 @@ run %sFile%
 Return
 
 view:
-IfInString, sFile, \\
-{
-StringReplace, vFile, sFile,\\,\,All
-ES := "explorer /select, "vFile
-run %ES%
-Return
-	}
-ES := "explorer /select, "sFile
-run %ES%
+oFile := sFile
+IfInString, oFile, \\
+	StringReplace, oFile, oFile,\\,\,All
+If Fileexist(oFile)
+	run % "explorer.exe /select," oFile
+else
+	msgbox % oFile
 Return
 
 ; SetTaskbarProgress  -  Windows 7+
