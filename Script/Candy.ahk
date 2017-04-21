@@ -43,7 +43,7 @@ SkSub_Clear_CandyVar()
         If InStr(FileExist(CandySel), "D")  ;区分是否文件夹,Attrib= D ,则是文件夹
         {
             CandySel_FileNameNoExt:=CandySel_FileNameWithExt
-            CandySel_Ext:=RegExMatch(CandySel,"^.:\\$") ? "Drive":"Folder"            ;细分：盘符或者文件夹
+            CandySel_Ext:=RegExMatch(CandySel,"^.:\\$") ? "Driver":"Folder"            ;细分：盘符或者文件夹
         }
         Else  If (CandySel_Ext="")       ;若不是文件夹，且无后缀，则定义为NoExt
         {

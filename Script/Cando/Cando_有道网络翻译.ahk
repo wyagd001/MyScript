@@ -7,7 +7,7 @@ Cando_有道网络翻译:
 	Youdao_网络释义:= json(Youdao_译文, "web.value")
 	If Youdao_基本释义<>
 	{
-		Gui,add,Edit,x10 y10 w260 h80,%Youdao_keyword%
+		Gui,add,Edit,x10 y10 w260 h80 readonly,%Youdao_keyword%
 		Gui,add,button,x270 y10 w40 h80 gsoundpaly,播放
 		Gui,add,Edit,x10 y100 w300 h80,%Youdao_基本释义%
 		Gui,add,Edit,x10 y190 w300 h80,%Youdao_网络释义%
