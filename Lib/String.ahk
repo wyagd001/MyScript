@@ -1,3 +1,4 @@
+; Unicode2Ansi pString ¡ú sString
 Ansi4Unicode(pString, nSize = "")
 {
 	If (nSize = "")
@@ -7,6 +8,7 @@ Ansi4Unicode(pString, nSize = "")
 	Return	sString
 }
 
+; Ansi2Unicode  sString ¡ú wString
 Unicode4Ansi(ByRef wString, sString, nSize = "")
 {
 	If (nSize = "")

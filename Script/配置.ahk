@@ -310,7 +310,7 @@ Gui,Font,CBlue
 Gui,Add,Text,x+ gg vURL,https://github.com/wyagd001/MyScript
 Gui,Font
 Gui,Add,Text,x26 y100,% "版本："AppVersion "(2017.04.01)"
-Gui,Add,Text,x26 y120,Autohotkey版本：1.1.24.00
+Gui,Add,Text,x26 y120,Autohotkey版本：1.1.24.00(ansi)
 Gui,Add,Text,x26 y140,系统：Win7 SP1 32bit 推荐管理员权限运行
 Gui,Add,Button,x26 y160 gUpdate,检查更新
 

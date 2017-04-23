@@ -1,9 +1,11 @@
 ; 在一个脚本已经运行时,如果再次打开它，将跳过对话框，并自动地运行（替换原来打开的脚本）。
 ;
 #SingleInstance force
-;测试启动时间
-;StartTime := A_TickCount
-Menu, Tray, Icon,%A_ScriptDir%\pic\run.ico
+;开机时启动脚本，等待时间设置长些，使托盘图标可以显示出来
+StartTime := A_TickCount
+if(StartTime<120000)
+sleep,40000
+
 ; 在脚本最开头，利用Reload变通实现批量#Include
 ; 自动生成AutoIncludeAll.ahk   第一次运行设置AutoInclude=1
 AutoInclude=1
@@ -23,7 +25,8 @@ If(!A_IsAdmin)
 	}
 
 ; 使“脚本管理器”文件夹中的脚本的工作目录为%A_ScriptDir%\脚本管理器，
-; 而不是主脚本所在的目录(如果脚本管理器中没有设置WorkingDir，默认的工作目录会变为主脚本所在的目录)
+; 而不是主脚本所在的目录(如果脚本管理器中没有设置WorkingDir，
+; 默认的工作目录会变为主脚本所在的目录)
 ; SetWorkingDir %A_ScriptDir%\脚本管理器
 
 ; 探测“隐藏"的窗口
@@ -285,7 +288,7 @@ GoSub tsk_openAll
 ;----------托盘菜单----------
 ; 菜单出错不提示，影响脚本中所有菜单，例如candy提取不到图标不会报错
 Menu, Tray, UseErrorLevel
-;Menu, Tray, Icon,shell32.dll,25
+Menu, Tray, Icon,%A_ScriptDir%\pic\run.ico
 Menu, Tray, add, 打开(&O), Open1
 Menu, Tray, add, 帮助(&H), Help
 Menu, Tray, add, &Windows Spy, Spy
@@ -756,6 +759,33 @@ If (EasyKey) {
 */
 ;----------Winpad----------
 ;=========热键设置=========
+
+;----------不显示托盘图标则重启脚本----------
+Script_pid:=DllCall("GetCurrentProcessId")
+Tray_Icons := {}
+Tray_Icons := TrayIcon_GetInfo("autohotkey_La.exe")
+if Tray_Icons.Length() = 0
+Tray_Icons := TrayIcon_GetInfo("autohotkey_Lu.exe")
+if Tray_Icons.Length() = 0
+Tray_Icons := TrayIcon_GetInfo("autohotkey.exe")
+
+for index, Icon in Tray_Icons {
+trayicons_pid .= Icon.Pid ","
+}
+If trayicons_pid not contains %Script_pid%
+{
+msgbox,4,错误,未检测到脚本的托盘图标，点"是"10秒后重启脚本，点"否"继续运行脚本,10
+IfMsgBox No
+    return
+IfMsgBox Timeout
+  return
+IfMsgBox Yes
+{
+sleep,2000
+Reload
+}
+}
+;----------不显示托盘图标则重启脚本----------
 
 ;----------WinMouse----------
 SetFormat, FLOAT, 0.0	;Round all floating operations
@@ -1472,9 +1502,9 @@ if RegExReplace(fs,"\s+") != RegExReplace(s,"\s+")
 {
   FileDelete, %f%
   FileAppend, %s%, %f%
-  sleep,2000
-  Reload
-  Return
+  msgbox,,错误,AutoInclude文件发生了变化，点"确定"后重启脚本
+IfMsgBox OK
+Reload
 }
 fs:=s:=AutoInclude_Path:=f:=""
 ;---------------------------------

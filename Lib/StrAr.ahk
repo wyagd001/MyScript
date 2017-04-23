@@ -1,5 +1,3 @@
-
-
 StrAr_Add(Str,It) ;Ìí¼ÓÔªËØ
 {
 	ReturnVal=%Str%|%It%
