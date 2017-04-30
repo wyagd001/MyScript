@@ -15,9 +15,7 @@ Cando_颜色查看:
 	}
 	else
 	{
-		Color_Hex := CandySel
-		StringReplace, Color_Hex, Color_Hex, #, ,ALL
-		StringReplace, Color_Hex, Color_Hex, 0x, ,ALL
+		RegExMatch(CandySel, "([a-fA-F\d]){6}",Color_Hex)
 		Color_RGB := Hex2RGB(Color_Hex)
 		Color_RGB := "RGB(" Color_RGB ")"
 	}
@@ -32,13 +30,13 @@ Cando_颜色查看:
 Return
 
 Cando_ColorPicker:
- if RegExMatch(CandySel, "(0x|#){1}([a-f\d]){6}",mCol){ 
-            Run,% A_ScriptDir "\Bin\ColorPicker.exe " . SubStr(mCol, 3) . "ff"
-}
-else if RegExMatch(CandySel, "\((?P<col1>25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)\,(?P<col2>25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)\,(?P<col3>25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)\)",mCol){
-            mCol :=A_ScriptDir "\Bin\ColorPicker.exe " . (dec2hex(mColcol1)dec2hex(mColcol2)dec2hex(mColcol3)) . "ff"
-Run, % mCol
-}
+	if RegExMatch(CandySel, "([a-fA-F\d]){6}",mCol)
+		Run,% A_ScriptDir "\Bin\ColorPicker.exe " . mCol . "ff"
+
+	else if RegExMatch(CandySel, "\((?P<col1>25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)\,(?P<col2>25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)\,(?P<col3>25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)\)",mCol){
+		mCol :=A_ScriptDir "\Bin\ColorPicker.exe " . (dec2hex(mColcol1)dec2hex(mColcol2)dec2hex(mColcol3)) . "ff"
+		Run, % mCol
+	}
 Return
 
 Hex2RGB(_hexRGB, _delimiter="")

@@ -2,8 +2,7 @@
 ;
 #SingleInstance force
 ;开机时启动脚本，等待时间设置长些，使托盘图标可以显示出来
-StartTime := A_TickCount
-if(StartTime<120000)
+if(A_TickCount<120000)
 sleep,40000
 
 ; 在脚本最开头，利用Reload变通实现批量#Include
@@ -763,27 +762,28 @@ If (EasyKey) {
 ;----------不显示托盘图标则重启脚本----------
 Script_pid:=DllCall("GetCurrentProcessId")
 Tray_Icons := {}
+Tray_Icons := TrayIcon_GetInfo("autohotkey.exe")
+if Tray_Icons.Length() = 0
 Tray_Icons := TrayIcon_GetInfo("autohotkey_La.exe")
 if Tray_Icons.Length() = 0
 Tray_Icons := TrayIcon_GetInfo("autohotkey_Lu.exe")
-if Tray_Icons.Length() = 0
-Tray_Icons := TrayIcon_GetInfo("autohotkey.exe")
 
 for index, Icon in Tray_Icons {
 trayicons_pid .= Icon.Pid ","
 }
 If trayicons_pid not contains %Script_pid%
 {
-msgbox,4,错误,未检测到脚本的托盘图标，点"是"10秒后重启脚本，点"否"继续运行脚本,10
-IfMsgBox No
-    return
-IfMsgBox Timeout
-  return
-IfMsgBox Yes
-{
-sleep,2000
+While (120000 - A_TickCount) > 0
+	sleep,100
+
+msgbox,4,错误,未检测到脚本的托盘图标，点"是"重启脚本，点"否"继续运行脚本,6
+IfMsgBox Yes    
+	autoreload=1
+else IfMsgBox timeout
+	autoreload=1
+
+if(autoreload=1)
 Reload
-}
 }
 ;----------不显示托盘图标则重启脚本----------
 
