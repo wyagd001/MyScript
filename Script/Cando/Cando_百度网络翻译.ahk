@@ -55,10 +55,23 @@ Return
 
 soundpaly2:
 	Gui, Submit, NoHide
-if(Baidu_keyword=CandySel)
+	if(Baidu_keyword=CandySel)
+	{
+	; 本地语音引擎
+	; spovice:=ComObjCreate("sapi.spvoice")
+	; spovice.Speak(Baidu_keyword)
+	
+	IfExist,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3
+		FileDelete,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3
+	speechurl=http://fanyi.baidu.com/gettts?lan=uk&text=%Baidu_keyword%&spd=3&source=web
+
+	if RegExMatch(Baidu_keyword,"[a-zA-Z0-9\.\?\-\!\s]")
 {
-	spovice:=ComObjCreate("sapi.spvoice")
-	spovice.Speak(Baidu_keyword)
+		URLDownloadToFile,%speechurl%,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3
+sleep,2000
+SoundPlay,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3,wait
+FileDelete,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3
+}
 }
 else
 {
@@ -108,8 +121,19 @@ if IsObject(obj.dict_result.cizu)
 {
 GuiControl, , Baidu_基本释义, % Baidu_基本释义
 GuiControl, , Baidu_网络释义, % Baidu_网络释义
-	spovice:=ComObjCreate("sapi.spvoice")
-	spovice.Speak(Baidu_keyword)
+	;spovice:=ComObjCreate("sapi.spvoice")
+	;spovice.Speak(Baidu_keyword)
+	IfExist,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3
+		FileDelete,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3
+	speechurl=http://fanyi.baidu.com/gettts?lan=uk&text=%Baidu_keyword%&spd=3&source=web
+
+	if RegExMatch(Baidu_keyword,"[a-zA-Z0-9\.\?\-\!\s]")
+{
+		URLDownloadToFile,%speechurl%,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3
+sleep,2000
+SoundPlay,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3,wait
+FileDelete,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3
+}
 }
 GuiControl, Enable, transandplay
 }

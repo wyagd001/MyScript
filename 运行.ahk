@@ -1571,5 +1571,6 @@ Return
 #include %A_ScriptDir%\Lib\Menu.ahk
 #include %A_ScriptDir%\Lib\Array.ahk
 #include %A_ScriptDir%\Lib\Window.ahk
+#include %A_ScriptDir%\Lib\ActiveScript.ahk
 #include %A_ScriptDir%\Lib\_GuiDropFiles.ahk
 #include *i %A_ScriptDir%\Script\AutoInclude.ahk
