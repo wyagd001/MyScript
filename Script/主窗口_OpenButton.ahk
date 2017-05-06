@@ -4,7 +4,7 @@ openbutton:
    if (Substr(dir,1,5) ="@Cmd@")
    {
     dir:=SubStr(dir,6)
-    run, %comspec% /k %dir%
+    run, %comspec% /k "%dir%"
    Return
    }
    if (Substr(dir,1,7) ="@Proxy@")

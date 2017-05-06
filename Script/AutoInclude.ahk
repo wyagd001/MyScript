@@ -16,6 +16,7 @@
 #Include *i %A_ScriptDir%\Script\Cando\Cando_文件夹图标设置.ahk
 #Include *i %A_ScriptDir%\Script\Cando\Cando_百度网络翻译.ahk
 #Include *i %A_ScriptDir%\Script\Cando\Cando_Google网络翻译.ahk
+#Include *i %A_ScriptDir%\Script\Cando\Cando_字符编码查看.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_文件属性.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_复制路径.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_定位文件.ahk

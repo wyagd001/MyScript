@@ -33,8 +33,8 @@ Return
 #ifwinactive, ahk_Group AppMainWindow
 ~Enter::
 ~Numpadenter::
-    sleep 2000
 WinActivate,%apptitle%
+sleep 1000
 GuiControlGet, focused_control, focusV
 ifEqual, focused_control, Dir
 {
