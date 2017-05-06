@@ -1,3 +1,34 @@
+Ansi2Unicode(ByRef wString,ByRef sString,  CP = 0)      ;cp=65001 UTF-8   cp=0 default to ANSI code page
+{
+;该函数映射一个字符串MultiByteStr到一个宽字符（unicode）的字符串WideCharStr。由该函数映射的字符串没必要是多字节字符组。
+     nSize := DllCall("MultiByteToWideChar"
+      , "Uint", CP
+      , "Uint", 0
+      , "Uint", &sString
+      , "int",  -1
+      , "Uint", 0
+      , "int",  0)
+
+   VarSetCapacity(wString, nSize * 2,0)
+
+   DllCall("MultiByteToWideChar"
+      , "Uint", CP
+      , "Uint", 0
+      , "Uint", &sString
+      , "int",  -1
+      , "Uint", &wString
+      , "int",  nSize)
+}
+
+Unicode2Ansi(ByRef wString,ByRef sString,  CP = 0)
+{
+	    nSize:=DllCall("WideCharToMultiByte", "Uint", CP, "Uint", 0, "Uint", &wString, "int", -1, "Uint", 0, "int",  0, "Uint", 0, "Uint", 0)
+
+	VarSetCapacity(sString, nSize)
+	DllCall("WideCharToMultiByte", "Uint", CP, "Uint", 0, "Uint", &wString, "int", -1, "str", sString, "int", nSize, "Uint", 0, "Uint", 0)
+	Return	sString
+}
+
 ; Unicode2Ansi pString → sString
 Ansi4Unicode(pString, nSize = "")
 {
