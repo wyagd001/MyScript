@@ -51,7 +51,13 @@ TrayIcon_GetInfo(sExeName := "")
 		pRB   := DllCall("VirtualAllocEx", Ptr, hProc, Ptr, 0, UPtr, 20, UInt, 0x1000, UInt, 0x4)
 
 		if (SubStr(A_OSVersion,1,2)=10)
-			SendMessage, 0x418, 0, 0, ToolbarWindow32%key%, ahk_class %sTray%   ; TB_BUTTONCOUNT
+{
+			if ("Shell_TrayWnd" == sTray) {
+    SendMessage, 0x418, 0, 0, ToolbarWindow32%idxTB%, ahk_class %sTray%   ; TB_BUTTONCOUNT
+} else if ("NotifyIconOverflowWindow" == sTray) {
+    SendMessage, 0x418, 0, 0, ToolbarWindow32%key%, ahk_class %sTray%   ; TB_BUTTONCOUNT
+}
+}
 		else	
 			SendMessage, 0x418, 0, 0, ToolbarWindow32%idxTB%, ahk_class %sTray%   ; TB_BUTTONCOUNT
 		
@@ -62,7 +68,13 @@ TrayIcon_GetInfo(sExeName := "")
 		Loop, %ErrorLevel%
 		{
 			if (SubStr(A_OSVersion,1,2)=10)
-				SendMessage, 0x417, A_Index - 1, pRB, ToolbarWindow32%key%, ahk_class %sTray%   ; TB_GETBUTTON
+{
+if ("Shell_TrayWnd" == sTray) {
+    SendMessage, 0x417, A_Index - 1, pRB, ToolbarWindow32%idxTB%, ahk_class %sTray%   ; TB_GETBUTTON
+} else if ("NotifyIconOverflowWindow" == sTray) {
+    SendMessage, 0x417, A_Index - 1, pRB, ToolbarWindow32%key%, ahk_class %sTray%   ; TB_GETBUTTON
+}
+}
 			else
 				SendMessage, 0x417, A_Index - 1, pRB, ToolbarWindow32%idxTB%, ahk_class %sTray%   ; TB_GETBUTTON
 			DllCall("ReadProcessMemory", Ptr, hProc, Ptr, pRB, Ptr, &btn, UPtr, szBtn, UPtr, 0)

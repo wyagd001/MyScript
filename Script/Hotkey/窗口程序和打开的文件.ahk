@@ -205,6 +205,7 @@ WMI_Query(pid)
    Return   sResult
 }
 
+;;JEE_NotepadGetFilename
 JEE_NotepadGetPath(hWnd)
 {
 	WinGetClass, vWinClass, % "ahk_id " hWnd
@@ -215,14 +216,27 @@ JEE_NotepadGetPath(hWnd)
 	FileGetVersion, vPVersion, % vPPath
 
 	MAX_PATH := 260
-	if (vPVersion = "5.1.2600.5512") ;Notepad (Windows XP version)
+	;PROCESS_QUERY_INFORMATION := 0x400 ;PROCESS_VM_READ := 0x10
+	if !hProc := DllCall("kernel32\OpenProcess", UInt,0x410, Int,0, UInt,vPID, Ptr)
+		return
+	if !vAddress && A_Is64bitOS
+	{
+		DllCall("kernel32\IsWow64Process", Ptr,hProc, IntP,vIsWow64Process)
+		vPIs64 := !vIsWow64Process
+	}
+	if (vPVersion = "5.1.2600.5512") && !vPIs64 ;Notepad (Windows XP version)
 		vAddress := 0x100A900
+	if (vPVersion = "10.0.14393.0") ;Notepad (Windows 10 version)
+	{
+		if vPIs64
+			vAddress := 0x7FF770C545C0
+		else
+			vAddress := 0x9cb30 ;(0xFBE000 also appears to work)
+;地址需要修改否则不能正确获取到路径
+	}
+
 	if !vAddress
 	{
-		hProc := DllCall("kernel32\OpenProcess", UInt,0x410, Int,0, UInt,vPID, Ptr)
-		if !hProc
-			return
-
 		VarSetCapacity(MEMORY_BASIC_INFORMATION, A_PtrSize=8?48:28, 0)
 		vAddress := 0
 		Loop
@@ -235,41 +249,48 @@ JEE_NotepadGetPath(hWnd)
 			vMbiState := NumGet(MEMORY_BASIC_INFORMATION, A_PtrSize=8?32:16, "UInt")
 			vMbiType := NumGet(MEMORY_BASIC_INFORMATION, A_PtrSize=8?40:24, "UInt")
 
-			vPath := ""
-			VarSetCapacity(vPath, MAX_PATH*2)
-			DllCall("psapi\GetMappedFileName", Ptr,hProc, Ptr,vMbiBaseAddress, Str,vPath, UInt,MAX_PATH*2, UInt)
-			if !(vPath = "")
-				SplitPath, vPath, vPath ;path to name
-
+			vName := ""
 			if (vMbiState & 0x1000) ;MEM_COMMIT := 0x1000
 			&& (vMbiType & 0x1000000) ;MEM_IMAGE := 0x1000000
-			&& InStr(vPath, "notepad")
 			{
-				vAddress := vMbiBaseAddress + 0xCAE0 ;address where path starts
-				;vAddress := vMbiBaseAddress + 0xD378 ;address where path starts (alternative that also appears to work)
+				vPath := ""
+				VarSetCapacity(vPath, MAX_PATH*2)
+				DllCall("psapi\GetMappedFileName", Ptr,hProc, Ptr,vMbiBaseAddress, Str,vPath, UInt,MAX_PATH*2, UInt)
+				if !(vPath = "")
+					SplitPath, vPath, vName
+			}
+			if InStr(vName, "notepad")
+			{
+				;MsgBox, % Format("0x{:X}", vMbiBaseAddress)
+				;get address where path starts
+				if vPIs64
+					vAddress := vMbiBaseAddress + 0x10B40
+				else
+					vAddress := vMbiBaseAddress + 0xCAE0 ;(vMbiBaseAddress + 0xD378 also appears to work)
 				break
 			}
-
 			vAddress += vMbiRegionSize
 			if (vAddress > 2**32-1) ;4 gigabytes
+			{
+				DllCall("kernel32\CloseHandle", Ptr,hProc)
 				return
+			}
 		}
-		DllCall("kernel32\CloseHandle", Ptr,hProc)
 	}
 
-	if A_Is64bitOS
+	VarSetCapacity(MEMORY_BASIC_INFORMATION, A_PtrSize=8?48:28, 0)
+	if DllCall("kernel32\VirtualQueryEx", Ptr,hProc, Ptr,vAddress, Ptr,&MEMORY_BASIC_INFORMATION, UPtr,A_PtrSize=8?48:28, UPtr)
 	{
-		hProc := DllCall("kernel32\OpenProcess", UInt,0x410, Int,0, UInt,vPID, Ptr)
-		DllCall("kernel32\IsWow64Process", Ptr,hProc, IntP,vIsWow64Process)
-		DllCall("kernel32\CloseHandle", Ptr,hProc)
-		if !vIsWow64Process ;if process is not 32-bit (i.e. if process is 64-bit)
-			vAddress := vMbiBaseAddress + 0x10B40
+		vMbiBaseAddress := NumGet(MEMORY_BASIC_INFORMATION, 0, "Ptr")
+		vPath := ""
+		VarSetCapacity(vPath, MAX_PATH*2)
+		DllCall("psapi\GetMappedFileName", Ptr,hProc, Ptr,vMbiBaseAddress, Str,vPath, UInt,MAX_PATH*2, UInt)
+		if InStr(vPath, "notepad")
+		{
+			VarSetCapacity(vPath, MAX_PATH*2, 0)
+			DllCall("kernel32\ReadProcessMemory", Ptr,hProc, Ptr,vAddress, Str,vPath, UPtr,MAX_PATH*2, UPtr,0)
+		}
 	}
-
-	hProc := DllCall("kernel32\OpenProcess", UInt,0x10, Int,0, UInt,vPID, Ptr)
-	VarSetCapacity(vPath, MAX_PATH*2, 0)
-
-	DllCall("kernel32\ReadProcessMemory", Ptr,hProc, Ptr,vAddress, Str,vPath, UPtr,MAX_PATH*2, UPtr,0)
 
 if !A_IsUnicode
 {
@@ -285,3 +306,5 @@ else
 	return vPath
 }
 }
+
+;==================================================

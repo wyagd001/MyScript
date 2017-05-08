@@ -1,10 +1,15 @@
-Ansi2Unicode(ByRef wString,ByRef sString,  CP = 0)      ;cp=65001 UTF-8   cp=0 default to ANSI code page
+; wString	转换后得到的unicode字串
+; sString		待转换字串
+; CP					待转换字串sString的代码页
+; 返回值		转换后得到的unicode字串的地址
+Ansi2Unicode(ByRef wString,ByRef sString,  CP = 0)
+;cp=65001 UTF-8   cp=0 default to ANSI code page
 {
 ;该函数映射一个字符串MultiByteStr到一个宽字符（unicode）的字符串WideCharStr。由该函数映射的字符串没必要是多字节字符组。
      nSize := DllCall("MultiByteToWideChar"
       , "Uint", CP
       , "Uint", 0
-      , "Uint", &sString
+      , "Uint", &sString   ;地址
       , "int",  -1
       , "Uint", 0
       , "int",  0)
@@ -18,10 +23,22 @@ Ansi2Unicode(ByRef wString,ByRef sString,  CP = 0)      ;cp=65001 UTF-8   cp=0 d
       , "int",  -1
       , "Uint", &wString
       , "int",  nSize)
+Return	&wString
 }
 
+; wString	待转换的unicode字串  
+; sString		转换后得到的字串
+; CP					转换后得到的字串sString的代码页
+; 返回值		转换后得到的字串 
 Unicode2Ansi(ByRef wString,ByRef sString,  CP = 0)
 {
+; &wString 传入的是地址，所以wString变量不能直接传入地址
+/* 
+; U版运行例子
+pp=中文
+Unicode2Ansi(qq,pp,936) ;正确
+Unicode2Ansi(qq,&pp,936) ;错误
+*/
 	    nSize:=DllCall("WideCharToMultiByte", "Uint", CP, "Uint", 0, "Uint", &wString, "int", -1, "Uint", 0, "int",  0, "Uint", 0, "Uint", 0)
 
 	VarSetCapacity(sString, nSize)
@@ -32,6 +49,12 @@ Unicode2Ansi(ByRef wString,ByRef sString,  CP = 0)
 ; Unicode2Ansi pString → sString
 Ansi4Unicode(pString, nSize = "")
 {
+; pString 是地址变量，需直接传入地址
+/* 
+; 例
+pp=中文
+Ansi4Unicode(&pp)
+*/
 	If (nSize = "")
 	    nSize:=DllCall("kernel32\WideCharToMultiByte", "Uint", 0, "Uint", 0, "Uint", pString, "int", -1, "Uint", 0, "int",  0, "Uint", 0, "Uint", 0)
 	VarSetCapacity(sString, nSize)
