@@ -122,20 +122,80 @@ VarSetCapacity(Var, Len, 0)
 Return, StrPut(Str, &Var, Enc),VarSetCapacity(var,-1)
 }
 
-/*
-;2016/11/13  移除该函数
-;运行.ahk  引用    水平垂直最大化 功能使用
- DecodeInteger( p_type, p_address, p_offset, p_hex=true )
- {
-    old_FormatInteger := A_FormatInteger
-    ifEqual, p_hex, 1, SetFormat, Integer, hex
-    else, SetFormat, Integer, dec
-    StringRight, size, p_type, 1
-    loop, %size%
-        value += *( ( p_address+p_offset )+( A_Index-1 ) ) << ( 8*( A_Index-1 ) )
-    if ( size <= 4 and InStr( p_type, "u" ) != 1 and *( p_address+p_offset+( size-1 ) ) & 0x80 )
-        value := -( ( ~value+1 ) & ( ( 2**( 8*size ) )-1 ) )
-    SetFormat, Integer, %old_FormatInteger%
-    return, value
-  }
-*/
+; ; 发送中文，避免输入法影响
+_SendRaw(Keys)
+{
+Len := StrLen(Keys) ; 得到字符串的长度，注意一个中文字符的长度是2
+KeysInUnicode := "" ; 将要发送的字符序列
+Char1 := "" ; 暂存字符1
+Code1 := 0 ; 字符1的ASCII码，值介于 0x0-0xFF (即1~255)
+Char2 := "" ; 暂存字符2
+Index := 1 ; 用于循环
+Loop
+{
+Code2 := 0 ; 字符2的ASCII码
+Char1 := SubStr(Keys, Index, 1) ; 第一个字符
+Code1 := Asc(Char1) ; 得到其ASCII值
+if(Code1 >= 129 And Code1 <= 254 And Index < Len) ; 判断是否中文字符的第一个字符
+{
+Char2 := SubStr(Keys, Index+1, 1) ; 第二个字符
+Code2 := Asc(Char2) ; 得到其ASCII值
+if(Code2 >= 64 And Code2 <= 254) ; 若条件成立则说明是中文字符
+{
+Code1 <<= 8 ; 第一个字符应放到高8位上
+Code1 += Code2 ; 第二个字符放在低8位上
+}
+Index++
+}
+if(Code1 <= 255) ; 如果此值仍<=255则说明是非中文字符，否则经过上面的处理必然大于255
+Code1 := "0" . Code1
+KeysInUnicode .= "{ASC " . Code1 . "}"
+if(Code2 > 0 And Code2 < 64)
+{
+Code2 := "0" . Code2
+KeysInUnicode .= "{ASC " . Code2 . "}"
+}
+Index++
+if(Index > Len)
+Break
+}
+Send % KeysInUnicode
+}
+
+; http://ahk8.com/thread-5385.html
+; 发送中文，避免输入法影响
+SendStr(String)
+{
+    if(A_IsUnicode)
+    {
+        Loop, Parse, String
+            ascString .= (Asc(A_loopfield)>127 )? A_LoopField : "{ASC 0" . Asc(A_loopfield) . "}"
+    }
+    else     ;如果非Unicode
+    {
+        z:=0
+        Loop,parse,String
+        {
+            if RegExMatch(A_LoopField, "[^x00-xff]")
+            {
+                if (z=1)
+                {
+                    x<<= 8
+                    x+=Asc(A_loopfield)
+                    z:=0
+                    ascString .="{ASC 0" . x . "}"
+                }
+                else
+                {
+                    x:=asc(A_loopfield)
+                    z:=1
+                }
+            }
+            else
+            {
+                ascString .="{ASC 0" . Asc(A_loopfield) . "}"
+            }
+        }
+    }
+    SendInput %ascString%
+}

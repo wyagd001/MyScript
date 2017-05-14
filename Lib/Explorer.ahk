@@ -223,11 +223,9 @@ SelectFiles(Select,Clear=1,Deselect=0,MakeVisible=1,focus=1, hWnd=0)
 	}
 	Else If(hWnd:=WinActive("ahk_group DesktopGroup") && A_PtrSize = 4)
 	{
-		SplitPath, Select, Select
-		If A_IsUnicode   ;Unicode 版直接发送中文
-			Send,% Select
-		Else
-			_SendRaw(Select)    ;ansi 版转码后发送
+		SplitPath, Select,,,, Select
+		SendStr(Select)  ;A版，U版兼容
+		; _SendRaw(Select)  ; A版
 	}
 }
 

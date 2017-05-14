@@ -73,8 +73,8 @@ CopyFilenames()
 CopyPath:
 GuiControlGet,whichbutton, Focus
 GuiControlGet,copypath,,%whichbutton%
-StringLeft,copypath2,copypath,9
-StringTrimLeft, copypath, copypath, 9
+StringLeft, copypath2, copypath, A_IsUnicode?5:9
+StringTrimLeft, copypath, copypath, A_IsUnicode?5:9
 Clipboard = %copypath%
 TrayTip, 剪贴板,%copypath2%" %copypath% "已经复制到剪贴板。
 Gui,3:Destroy
