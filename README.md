@@ -124,7 +124,7 @@ https://autohotkey.com/boards/viewtopic.php?t=4425
 38.JEE_NotepadGetPath--------------jeeswg  
 https://autohotkey.com/boards/viewtopic.php?f=6&t=30050  
 
-39.VDLink | Win7 目录联接工具
-http://www.cnblogs.com/easysky/p/4931042.html
+39.VDLink | Win7 目录联接工具  
+http://www.cnblogs.com/easysky/p/4931042.html  
 
 40.COM.ahk,VA.ahk,Gdip.ahk  and more  

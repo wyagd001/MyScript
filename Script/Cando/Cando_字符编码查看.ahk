@@ -48,10 +48,18 @@ Tochinese:
 	GuiControl, , %WButton%, % %WButton%
 	If(WButton = "trc")
 	{
-		Ansi2Unicode(tmp1, trc, 936)
+		If !A_IsUnicode
+			Ansi2Unicode(tmp1, trc, 936)
+		Else
+			tmp1:=trc
+
 		VarSetCapacity(tmp2, 2*cch:=VarSetCapacity(tmp1)//2), LCMAP_SIMPLIFIED_CHINESE:=0x02000000 
 		DllCall( "LCMapStringW", UInt,0x400, UInt,LCMAP_SIMPLIFIED_CHINESE, Str,tmp1, UInt,cch, Str,tmp2, UInt,cch )
-		Unicode2Ansi(tmp2, spc, 936)
+
+		If !A_IsUnicode
+			Unicode2Ansi(tmp2, spc, 936)
+		Else
+			spc := tmp2
 		GuiControl, , Ccharacter, % spc
 	}
 	Else
@@ -64,7 +72,10 @@ Tochinese:
 			cch:=DllCall( "LCMapStringW", UInt,0, UInt,LCMAP_BYTEREV, Str,varchinese, UInt,-1, Str,0, UInt,0)
 			VarSetCapacity(LE, cch * 2)
 			DllCall( "LCMapStringW", UInt,0, UInt,LCMAP_BYTEREV, Str,varchinese, UInt,cch, Str,LE, UInt,cch)
-			Unicode2Ansi(LE, spc, 936)
+			If !A_IsUnicode
+				Unicode2Ansi(LE, spc, 936)
+			Else
+				spc:=LE
 			GuiControl, , Ccharacter, % spc
 		}
 		Else
