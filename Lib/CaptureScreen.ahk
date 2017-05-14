@@ -152,13 +152,13 @@ Convert(sFileFr = "", sFileTo = "", nQuality = "")
 	}
 	Else If	sFileFr Is Integer
 		DllCall("gdiplus\GdipCreateBitmapFromHBITMAP", "Uint", sFileFr, "Uint", 0, "UintP", pImage)
-	Else	DllCall("gdiplus\GdipLoadImageFromFile", "Uint", Unicode4Ansi(wFileFr,sFileFr), "UintP", pImage)
+	Else	DllCall("gdiplus\GdipLoadImageFromFile", "Uint", A_IsUnicode?&sFileFr:Unicode4Ansi(wFileFr,sFileFr), "UintP", pImage)
 
 	DllCall("gdiplus\GdipGetImageEncodersSize", "UintP", nCount, "UintP", nSize)
 	VarSetCapacity(ci,nSize,0)
 	DllCall("gdiplus\GdipGetImageEncoders", "Uint", nCount, "Uint", nSize, "Uint", &ci)
 	Loop, %	nCount
-		If	InStr(Ansi4Unicode(NumGet(ci,76*(A_Index-1)+44)), "." . sExtTo)
+		If	InStr(A_IsUnicode?StrGet(NumGet(ci,76*(A_Index-1)+44), "UTF-16"):Ansi4Unicode(NumGet(ci,76*(A_Index-1)+44)), "." . sExtTo)
 		{
 			pCodec := &ci+76*(A_Index-1)
 			Break
@@ -178,7 +178,9 @@ Convert(sFileFr = "", sFileTo = "", nQuality = "")
 	}
 
 	If	pImage
-		pCodec	? DllCall("gdiplus\GdipSaveImageToFile", "Uint", pImage, "Uint", Unicode4Ansi(wFileTo,sFileTo), "Uint", pCodec, "Uint", pParam) : DllCall("gdiplus\GdipCreateHBITMAPFromBitmap", "Uint", pImage, "UintP", hBitmap, "Uint", 0) . SetClipboardData(hBitmap), DllCall("gdiplus\GdipDisposeImage", "Uint", pImage)
+{
+		pCodec	? DllCall("gdiplus\GdipSaveImageToFile", "Uint", pImage, "Uint", A_IsUnicode?&sFileTo:Unicode4Ansi(wFileTo,sFileTo), "Uint", pCodec, "Uint", pParam) : DllCall("gdiplus\GdipCreateHBITMAPFromBitmap", "Uint", pImage, "UintP", hBitmap, "Uint", 0) . SetClipboardData(hBitmap), DllCall("gdiplus\GdipDisposeImage", "Uint", pImage)
+}
 
 	DllCall("gdiplus\GdiplusShutdown" , "Uint", pToken)
 	DllCall("FreeLibrary", "Uint", hGdiPlus)
@@ -222,23 +224,3 @@ SetClipboardData(hBitmap)
 	DllCall("SetClipboardData", "Uint", 8, "Uint", hDIB)
 	DllCall("CloseClipboard")
 }
-
-/*
-;与Lib\String.ahk文件中的函数重复注释掉
-Unicode4Ansi(ByRef wString, sString)
-{
-	nSize := DllCall("MultiByteToWideChar", "Uint", 0, "Uint", 0, "Uint", &sString, "int", -1, "Uint", 0, "int", 0)
-	VarSetCapacity(wString, nSize * 2)
-	DllCall("MultiByteToWideChar", "Uint", 0, "Uint", 0, "Uint", &sString, "int", -1, "Uint", &wString, "int", nSize)
-	Return	&wString
-}
-
-
-Ansi4Unicode(pString)
-{
-	nSize := DllCall("WideCharToMultiByte", "Uint", 0, "Uint", 0, "Uint", pString, "int", -1, "Uint", 0, "int",  0, "Uint", 0, "Uint", 0)
-	VarSetCapacity(sString, nSize)
-	DllCall("WideCharToMultiByte", "Uint", 0, "Uint", 0, "Uint", pString, "int", -1, "str", sString, "int", nSize, "Uint", 0, "Uint", 0)
-	Return	sString
-}
-*/
