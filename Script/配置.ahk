@@ -53,7 +53,7 @@ Gui,Add,Button,x450 y325 w70 h30 g99GuiClose Default,取消
 Gui,Add,Tab,x-4 y1 w640 h320 ,快捷键|Plugins|常规|自动激活|7Plus菜单|整点报时|播放器|运行|关于
 
 Gui,Tab,快捷键
-Gui,Add,text,x10 y30 w500,注意:#表示Win,!表示Alt,+表示Shift,^表示Ctrl,Space表示空格键,Up表示向上箭头,~表示按键原功能不会被屏蔽，*表示有其它键同时按下时快捷键仍然生效
+Gui,Add,text,x10 y30 w550,注意:#表示Win,!表示Alt,+表示Shift,^表示Ctrl,Space表示空格键,Up表示向上箭头,~表示按键原功能不会被屏蔽，*表示有其它键同时按下时快捷键仍然生效
 
 Gui,Add,ListView,x6 y60 w550 h245 vhotkeysListview ghotkeysListview Grid -Multi +NoSortHdr -LV0x10 +LV0x4000 +AltSubmit,快捷键标签|快捷键|适用窗口|序号
 Gui,listview,hotkeysListview 
@@ -76,7 +76,7 @@ LV_Modify(1,"Vis")
 LV_ColorInitiate(99)
 sleep,500
 Gui,Tab,Plugins
-Gui,Add,ListView,x6 y30 w520 h245 vPluginsListview ghotkeysListview Grid -Multi -LV0x10 +LV0x4000 +AltSubmit,名称|快捷键|其他调用方法|序号
+Gui,Add,ListView,x6 y30 w550 h245 vPluginsListview ghotkeysListview Grid -Multi -LV0x10 +LV0x4000 +AltSubmit,名称|快捷键|其他调用方法|序号
 Gosub, Load_PluginsList
 Gui,Add,Button,x10 y280 w80 h30 gEdit_PluginsHotkey,编辑菜单(&E)
 Gui,Add,Button,x90 y280 w80 h30 gLoad_PluginsList,刷新菜单(&R)
@@ -200,7 +200,7 @@ If(openauto=1){
 }
 
 Gui,Tab,7Plus菜单
-Gui,Add,ListView,r12 w520 h245 v7pluslistview Grid -Multi +NoSortHdr Checked AltSubmit -LV0x10 g7plusListView,激活|ID  |菜单名称
+Gui,Add,ListView,r12 w550 h245 v7pluslistview Grid -Multi +NoSortHdr Checked AltSubmit -LV0x10 g7plusListView,激活|ID  |菜单名称
 ;如果窗口含有多个 ListView 控件,默认情况下函数操作于最近添加的那个. 要改变这种情况,请指定 Gui,ListView,ListViewName
 Gosub, Load_List
 Gui,Add,Button,x10 y280 w80 h30 gButtun_Edit,编辑菜单(&E)
@@ -295,11 +295,11 @@ Else If(DefaultPlayer="AhkPlayer"){
 
 Gui,Tab,运行
 Gui,Add,Text,x26 y41,运行输入框下拉列表中固定的项目(各项目间用“|”分开):
-Gui,Add,Edit,x26 y61 w400 r4 vsp,%stableProgram%
+Gui,Add,Edit,x26 y61 w530 r4 vsp,%stableProgram%
 Gui,Add,Text,x26 y135,运行输入框中自定义短语(一行一个,例如“c = c:\”，只对本程序有效):
-Gui,Add,Edit,x26 y155 w400 r8 vop,%otherProgram%
+Gui,Add,Edit,x26 y155 w530 r8 vop,%otherProgram%
 Gui,Add,Text,x26 y290,系统注册表中已注册的命令对本程序同样有效
-Gui,Add,Button,x290 y285 g自定义运行命令_click,查看修改
+Gui,Add,Button,x390 y285 g自定义运行命令_click,查看修改
 
 Gui,Tab,关于
 Gui,Add,Text,x26 y40,名称：运行 - Ahk
