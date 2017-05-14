@@ -46,5 +46,5 @@ msgbox,,升级通知,无法连接网络，请检查您的网络连接。
 return
 
 InternetCheckConnection(Url="",FIFC=1) {
-Return DllCall("Wininet.dll\InternetCheckConnectionA", Str,Url, Int,FIFC, Int,0)
+Return DllCall("Wininet.dll\InternetCheckConnection", Str,Url, Int,FIFC, Int,0)
 }
