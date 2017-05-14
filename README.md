@@ -97,6 +97,7 @@ http://ahk8.com/thread-623.html
 
 30.7plus--------------------fragman  
 http://code.google.com/p/7plus/  
+https://github.com/7plus/7plus  
 
 31.JowAlert.ahk---------------wz520  
 http://ahk8.com/thread-802.html

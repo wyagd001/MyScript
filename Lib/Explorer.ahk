@@ -1,18 +1,18 @@
-;#include COM.ahk
-;Explorer Windows Manipulations - Sean
-;http://www.autohotkey.com/forum/topic20701.html
-;7plus - fragman
-;http://code.google.com/p/7plus/
+; Explorer Windows Manipulations - Sean
+; http://www.autohotkey.com/forum/topic20701.html
+; 7plus - fragman
+; http://code.google.com/p/7plus/
+; https://github.com/7plus/7plus
 
 ;测试快捷键
 #F1::
-	If(WinActive("ahk_group ccc"))
-	{
-			hWnd:=WinExist("A")
-		  qqq:= ShellFolder(hwnd,3,0)
-        MsgBox %qqq%
-	}
-return
+If(WinActive("ahk_group ccc"))
+{
+	hWnd:=WinExist("A")
+	qqq:= ShellFolder(hwnd,3,0)
+	MsgBox %qqq%
+}
+Return
 ;测试快捷键
 
 GetCurrentFolder()
@@ -22,120 +22,120 @@ GetCurrentFolder()
 	If (WinActive("ahk_group ExplorerGroup"))
 	{
 		hWnd:=WinExist("A")
-		return ShellFolder(hWnd,1)
+		Return ShellFolder(hWnd,1)
 	}
 	If (WinActive("ahk_group DesktopGroup"))
-		return %A_Desktop%
+		Return %A_Desktop%
 	isdg := IsDialog()
 	If (isdg=1) ;No Support for old dialogs for now
 	{
-	ControlGetText, text , ToolBarWindow322, A
-	dgpath:=SubStr(text,InStr(text," "))
-	dgpath = %dgpath%
-	return dgpath
-    }
-	else if (isdg=2)
-	{
-	newfolder=types2
-	return 0
+		ControlGetText, text , ToolBarWindow322, A
+		dgpath:=SubStr(text,InStr(text," "))
+		dgpath = %dgpath%
+		Return dgpath
 	}
-	return 0
+	Else If (isdg=2)
+	{
+		newfolder=types2
+		Return 0
+	}
+Return 0
 }
 
 ShellNavigate(sPath, bExplore=False, hWnd=0)
 {
 	SetTitleMatchMode, RegEx
-	If	hWnd || (hWnd :=	WinExist("ahk_class (?:Cabinet|Explore)WClass"))
+	If hWnd || (hWnd :=	WinExist("ahk_class (?:Cabinet|Explore)WClass"))
 	{
 		For window in ComObjCreate("Shell.Application").Windows
 			If	(window.hWnd = hWnd)
 				window.Navigate2[sPath]
-		Until	(window.hWnd = hWnd)
+		Until (window.hWnd = hWnd)
 	}
-	Else if	bExplore
+	Else If bExplore
 		ComObjCreate("Shell.Application").Explore[sPath]
-	Else	ComObjCreate("Shell.Application").Open[sPath]
+	Else ComObjCreate("Shell.Application").Open[sPath]
 }
 
 /*
-returntype=1 当前文件夹
-returntype=2 具有焦点的选中项
-returntype=3 是所有选中项
-returntype=4 当前文件夹下所有项目
+Returntype=1 当前文件夹
+Returntype=2 具有焦点的选中项
+Returntype=3 所有选中项
+Returntype=4 当前文件夹下所有项目
 */
 ShellFolder(hWnd=0,returntype=0,onlyname=0)
 {
-   if !(window := Explorer_GetWindow(hwnd))
-      return ErrorLevel := "ERROR"
-if (window="desktop")
-{
-  if (returntype=3)
-       selection=1
-    if (returntype=4)
-       selection=0
- ;桌面文件夹区别对待
-      ControlGet, hwWindow, HWND,, SysListView321, ahk_class Progman
-      if !hwWindow ; #D mode
-         ControlGet, hwWindow, HWND,, SysListView321, A
-      ControlGet, files, List, % ( selection ? "Selected":"") "Col1",,ahk_id %hwWindow%
-      base := SubStr(A_Desktop,0,1)=="" ? SubStr(A_Desktop,1,-1) : A_Desktop
-      Loop, Parse, files, `n, `r
-      {
-         hpath := base "\" A_LoopField
-         IfExist %hpath% ; ignore special icons like Computer (at least for now)
-            ret .= hpath "`n"
-      }
-    return Trim(ret,"`n")
-   }
-   else
-  {
-  		;Find hwnd window
-      doc:=window.Document
-       if (returntype=1)
-         {
-				sFolder   := doc.Folder.Self.path
-        if onlyname
+	If !(window := Explorer_GetWindow(hwnd))
+		Return ErrorLevel := "ERROR"
+	If (window="desktop")
+	{
+		If (returntype=3)
+			selection=1
+		If (returntype=4)
+			selection=0
+
+		ControlGet, hwWindow, HWND,, SysListView321, ahk_class Progman  ; 桌面文件夹区别对待
+		If !hwWindow ; #D mode
+			ControlGet, hwWindow, HWND,, SysListView321, A
+		ControlGet, files, List, % ( selection ? "Selected":"") "Col1",,ahk_id %hwWindow%
+		base := SubStr(A_Desktop,0,1)=="" ? SubStr(A_Desktop,1,-1) : A_Desktop
+		Loop, Parse, files, `n, `r
+		{
+			hpath := base "\" A_LoopField
+			IfExist %hpath% ; ignore special icons like Computer (at least for now)
+				ret .= hpath "`n"
+		}
+	Return Trim(ret,"`n")
+	}
+	Else
+	{
+		; Find hwnd window
+		doc:=window.Document
+		If (returntype=1)
+		{
+			sFolder   := doc.Folder.Self.path
+			If onlyname
 				sFolder := doc.Folder.Self.name
-        }
-				if (returntype=2)
-				{
-					sFocus :=doc.FocusedItem.Path
-          if onlyname
-					SplitPath, sFocus , sFocus
-				}
-				if(returntype=3)
-				{
-         collection := doc.SelectedItems
-         for item in collection
-            {
-              hpath :=  item.path
-							if onlyname
-								SplitPath, hpath , hpath
-							sSelect .=hpath "`n"
-						}
-           StringReplace, sSelect, sSelect, \\ , \, 1
-          }
-        if(returntype=4)
-         {
-          collection := doc.Folder.Items
-          for item in collection
-           {
-             hpath :=  item.path
-							if onlyname
-								SplitPath, hpath , hpath
-              sSelect .= hpath "`n"
-         }
-         }
-        sSelect:=Trim(sSelect,"`n")
-				if (returntype=1)
-					Return   sFolder
-				else if (returntype=2)
-					Return   sFocus
-				else if (returntype=3)
-					Return   sSelect
-				else if (returntype=4)
-					Return sSelect
-}
+		}
+		If (returntype=2)
+		{
+			sFocus :=doc.FocusedItem.Path
+			If onlyname
+				SplitPath, sFocus , sFocus
+		}
+		If(returntype=3)
+		{
+			collection := doc.SelectedItems
+			for item in collection
+			{
+				hpath :=  item.path
+				If onlyname
+					SplitPath, hpath , hpath
+				sSelect .=hpath "`n"
+			}
+			StringReplace, sSelect, sSelect, \\ , \, 1
+		}
+		If(returntype=4)
+		{
+			collection := doc.Folder.Items
+			for item in collection
+			{
+				hpath :=  item.path
+				If onlyname
+					SplitPath, hpath , hpath
+				sSelect .= hpath "`n"
+			}
+		}
+		sSelect:=Trim(sSelect,"`n")
+		If (returntype=1)
+			Return   sFolder
+		Else If (returntype=2)
+			Return   sFocus
+		Else If (returntype=3)
+			Return   sSelect
+		Else If (returntype=4)
+			Return sSelect
+	}
 }
 
 SelectFiles(Select,Clear=1,Deselect=0,MakeVisible=1,focus=1, hWnd=0)
@@ -145,22 +145,22 @@ SelectFiles(Select,Clear=1,Deselect=0,MakeVisible=1,focus=1, hWnd=0)
 		SplitPath, Select, Select ;Make sure only names are used
 		for Item in ComObjCreate("Shell.Application").Windows
 		{
-			if (Item.hwnd = hWnd)
+			If (Item.hwnd = hWnd)
 			{
 				doc:=Item.Document
 				value:=!(Deselect = 1)
 				value1:=!(Deselect = 1)+(focus = 1)*16+(MakeVisible = 1)*8
 				count := doc.Folder.Items.Count
-				if(Clear = 1)
+				If(Clear = 1)
 				{
-					if(count > 0)
+					If(count > 0)
 					{
 						item := doc.Folder.Items.Item(0)
 						doc.SelectItem(item,4)
 						doc.SelectItem(item,0)
 					}
 				}
-				if(!IsObject(Select))
+				If(!IsObject(Select))
 					Select := ToArray(Select)
 				items := Array()
 				itemnames := Array()
@@ -171,7 +171,7 @@ SelectFiles(Select,Clear=1,Deselect=0,MakeVisible=1,focus=1, hWnd=0)
 					{
 						item := doc.Folder.Items.Item(index - 1)
 						itemname := item.Name
-						if(itemname != "")
+						If(itemname != "")
 						{
 							; outputdebug itemname %itemname%
 							break
@@ -196,18 +196,18 @@ SelectFiles(Select,Clear=1,Deselect=0,MakeVisible=1,focus=1, hWnd=0)
 							Loop % items.len()
 							{
                 
-								if(RegexMatch(itemnames[A_Index],"i)" filter))
+								If(RegexMatch(itemnames[A_Index],"i)" filter))
 								{
 									doc.SelectItem(items[A_Index], index=1 ? value1 : value)
 									index++
 								}
 							}
 						}
-						else
+						Else
 						{
 							Loop % items.len()
 							{
-								if(itemnames[A_Index]=filter)
+								If(itemnames[A_Index]=filter)
 								{
 									doc.SelectItem(items[A_Index], index=1 ? value1 : value)
 									index++
@@ -217,93 +217,38 @@ SelectFiles(Select,Clear=1,Deselect=0,MakeVisible=1,focus=1, hWnd=0)
 						}
 					}
 				}
-				return
+				Return
 			}
 		}
 	}
-	else if(hWnd:=WinActive("ahk_group DesktopGroup") && A_PtrSize = 4)
+	Else If(hWnd:=WinActive("ahk_group DesktopGroup") && A_PtrSize = 4)
 	{
-   SplitPath, Select, Select
-   _SendRaw(Select)    ;ansi版直接发送中文
-	}
-}
-
-/*
-GetSelectedFiles(FullName=1)
-{
-	Critical
-	global MuteClipboardSurveillance, MuteClipboardList,Vista7
-	If (WinActive("ahk_group ExplorerGroup"))
-	{
-		RegRead,hidefileext,HKCU,Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced,HideFileExt
-		if(hidefileext=1)
-        {
-		ControlGetFocus, focussed ,A
-		MuteClipboardList := true
-		clipboardbackup := clipboardall
-		clipboard := ""
-		ClipWait, 0.5, 1
-		MuteClipboardList := true
-		Send ^c
-		ClipWait, 0.5, 1
-		result := clipboard
-		MuteClipboardList := true
-		clipboard := clipboardbackup
-		ControlFocus %focussed%, A
-		return result
-		}
+		SplitPath, Select, Select
+		If A_IsUnicode   ;Unicode 版直接发送中文
+			Send,% Select
 		Else
-		{
-		hWnd:=WinExist("A")
-		if(FullName)
-			return ShellFolder(hwnd,3)   ;选择文件(夹)的路径
-		else
-			return ShellFolder(hwnd,4)  ;选择文件(夹)的文件名
-		}
+			_SendRaw(Select)    ;ansi 版转码后发送
 	}
-
-	if((Vista7 && x:=IsDialog())||WinActive("ahk_group DesktopGroup"))
-	{
-		ControlGetFocus, focussed ,A
-		if(x=1)
-			ControlFocus DirectUIHWND2, A
-		if(WinActive("ahk_group DesktopGroup"))
-			ControlFocus SysListView321, A
-		MuteClipboardList := true
-		clipboardbackup := clipboardall
-		clipboard := ""
-		ClipWait, 0.05, 1
-		MuteClipboardList := true
-		Send ^c
-		ClipWait, 1.5, 1
-		result := clipboard
-		TrayTip %result%
-		MuteClipboardList := true
-		clipboard := clipboardbackup
-		ControlFocus %focussed%, A
-		return result
-	}
-
 }
-*/
+
 ;Returns selected files separated by `n
 GetSelectedFiles(FullName=1, hwnd=0)
 {
 	global MuteClipboardList,Vista7
 	If(WinActive("ahk_group ExplorerGroup"))
 	{
-		if(!hwnd)
+		If(!hwnd)
 			hWnd:=WinExist("A")
-		if FullName
+		If FullName
 		{
-			return ShellFolder(hwnd,3)
+			Return ShellFolder(hwnd,3)
 			}
-		else
-			return ShellFolder(hwnd,3,1)
+		Else
+			Return ShellFolder(hwnd,3,1)
 	}
-	else if(Vista7 && x:=IsDialog())
+	Else If(Vista7 && x:=IsDialog())
 	{
-		if(x=1)
+		If(x=1)
 		{
 			ControlGetFocus, focussed ,A
 			ControlFocus DirectUIHWND2, A
@@ -318,15 +263,15 @@ GetSelectedFiles(FullName=1, hwnd=0)
 		ClipWait, 0.05, 1
 		result := clipboard
 		clipboard := clipboardbackup
-		if(x=1)
+		If(x=1)
 			ControlFocus %focussed%, A
 		OutputDebug, Selected Files: %result%
 		MuteClipboardList:=false
-		return result
+		Return result
 	}
-	else if(WinActive("ahk_group DesktopGroup"))
+	Else If(WinActive("ahk_group DesktopGroup"))
 	{
-		; if(A_PtrSize = 8) ;64bit doesn't support listview method below yet
+		; If(A_PtrSize = 8) ;64bit doesn't support listview method below yet
 		; {
 			; MuteClipboardList := true
 			; clipboardbackup := clipboardall
@@ -340,12 +285,12 @@ GetSelectedFiles(FullName=1, hwnd=0)
 			; clipboard := clipboardbackup
 			; OutputDebug, Selected Files: %result%
 			; MuteClipboardList:=false
-			; return result
+			; Return result
 		; }
-		; else
+		; Else
 		; {
 			ControlGet, result, List, Selected Col1, SysListView321, A ;This line causes explorer to crash on 64 bit systems when used in a 32 bit AHK build
-			if(result)
+			If(result)
 			{
 				Loop, Parse, result, `n ; Rows are delimited by linefeeds (`n).
 				{
@@ -355,10 +300,10 @@ GetSelectedFiles(FullName=1, hwnd=0)
 					IfExist  %hpath%.lnk
 					   result2 .= "`n" A_Desktop "\" A_LoopField ".lnk"
 					}
-				return SubStr(result2,2)
+				Return SubStr(result2,2)
 			}
-			else
-				return ""
+			Else
+				Return ""
 	}
 	; }
 }
@@ -367,31 +312,31 @@ GetSelectedFiles(FullName=1, hwnd=0)
 IsDialog(window=0)
 {
 	result:=0
-	if(window)
+	If(window)
 		window:="ahk_id " window
-	else
+	Else
 		window:="A"
 	WinGetClass,wc,%window%
-	if(wc="#32770")
+	If(wc="#32770")
 	{
 		;Check for new FileOpen dialog
 		ControlGet, hwnd, Hwnd , , DirectUIHWND3, %window%
-		if(hwnd)
+		If(hwnd)
 		{
 			ControlGet, hwnd, Hwnd , , SysTreeView321, %window%
-			if(hwnd)
+			If(hwnd)
 			{
 				ControlGet, hwnd, Hwnd , , Edit1, %window%
-				if(hwnd)
+				If(hwnd)
 				{
 					ControlGet, hwnd, Hwnd , , Button2, %window%
-					if(hwnd)
+					If(hwnd)
 					{
 						ControlGet, hwnd, Hwnd , , ComboBox2, %window%
-						if(hwnd)
+						If(hwnd)
 						{
 						ControlGet, hwnd, Hwnd , , ToolBarWindow323, %window%
-						if(hwnd)
+						If(hwnd)
 							result:=1
 						}
 					}
@@ -399,23 +344,23 @@ IsDialog(window=0)
 			}
 		}
 		;Check for old FileOpen dialog
-		if(!result)
+		If(!result)
 		{
 			ControlGet, hwnd, Hwnd , , ToolbarWindow321, %window%          ;工具栏
-			if(hwnd)
+			If(hwnd)
 			{
 				ControlGet, hwnd, Hwnd , , SysListView321, %window%        ;文件列表
-				if(hwnd)
+				If(hwnd)
 				{
 					ControlGet, hwnd, Hwnd , , ComboBox3, %window%         ;文件类型下拉选择框
-					if(hwnd)
+					If(hwnd)
 					{
 						ControlGet, hwnd, Hwnd , , Button3, %window%       ;取消按钮
-						if(hwnd)
+						If(hwnd)
 						{
 							;ControlGet, hwnd, Hwnd , , SysHeader321 , %window%    ;详细视图的列标题
 							ControlGet, hwnd, Hwnd , , ToolBarWindow322,%window%  ;左侧导航栏
-							if(hwnd)
+							If(hwnd)
 								result:=2
 						}
 					}
@@ -423,30 +368,30 @@ IsDialog(window=0)
 			}
 		}
 	}
-	return result
+	Return result
 }
 
 SetFocusToFileView()
 {
-	if (WinActive,ahk_group ExplorerGroup)
+	If (WinActive,ahk_group ExplorerGroup)
 	{
-		if(A_OSVersion="WIN_7")
+		If(A_OSVersion="WIN_7")
 			ControlFocus DirectUIHWND3, A
-		else ;XP, Vista
+		Else ;XP, Vista
 		 	ControlFocus SysListView321, A
 	}
-	else if((x:=IsDialog())=1) ;New Dialogs
+	Else If((x:=IsDialog())=1) ;New Dialogs
 	{
-		if(A_OSVersion="WIN_7")
+		If(A_OSVersion="WIN_7")
 			ControlFocus DirectUIHWND2, A
-		else
+		Else
 			ControlFocus SysListView321, A
 	}
-    else if(x=2) ;Old Dialogs
+    Else If(x=2) ;Old Dialogs
 	{
 		ControlFocus SysListView321, A
 	}
-	return
+	Return
 }
 
 TranslateMUI(resDll, resID)
@@ -454,49 +399,49 @@ TranslateMUI(resDll, resID)
 VarSetCapacity(buf, 256)
 hDll := DllCall("LoadLibrary", "str", resDll)
 Result := DllCall("LoadString", "uint", hDll, "uint", resID, "str", buf, "int", 128)
-return buf
+Return buf
 }
 
 IsRenaming()
 {
 	;;; 声明全局变量，否则N_OSVersion在第二次判断时值为空
-	if(A_OSVersion="WIN_7")
+	If(A_OSVersion="WIN_7")
 	 ControlGetFocus focussed, A
-  else
+  Else
     focussed:=XPGetFocussed()
-	if(WinActive("ahk_group ExplorerGroup")) ;Explorer
+	If(WinActive("ahk_group ExplorerGroup")) ;Explorer
 	{
-		if(strStartsWith(focussed,"Edit"))
+		If(strStartsWith(focussed,"Edit"))
 		{
-			if(A_OSVersion="WIN_7")
+			If(A_OSVersion="WIN_7")
 				ControlGetPos , X, Y, Width, Height, DirectUIHWND3, A
-			else
+			Else
 				ControlGetPos , X, Y, Width, Height, SysListView321, A
 			ControlGetPos , X1, Y1, Width1, Height1, %focussed%, A
-			if(IsInArea(X1,Y1, X, Y, Width, Height) && IsInArea(X1+Width1,Y1, X, Y, Width, Height) && IsInArea(X1,Y1+Height1, X, Y, Width, Height) && IsInArea(X1+Width1,Y1+Height1, X, Y, Width, Height))
-				return true
+			If(IsInArea(X1,Y1, X, Y, Width, Height) && IsInArea(X1+Width1,Y1, X, Y, Width, Height) && IsInArea(X1,Y1+Height1, X, Y, Width, Height) && IsInArea(X1+Width1,Y1+Height1, X, Y, Width, Height))
+				Return true
 		}
 	}
-	else if (WinActive("ahk_group DesktopGroup")) ;Desktop
+	Else If (WinActive("ahk_group DesktopGroup")) ;Desktop
 	{
-		if(focussed="Edit1")
-			return true
+		If(focussed="Edit1")
+			Return true
 	}
-	else if((x:=IsDialog())) ;FileDialogs
+	Else If((x:=IsDialog())) ;FileDialogs
 	{
-		if(strStartsWith(focussed,"Edit1"))
+		If(strStartsWith(focussed,"Edit1"))
 		{
-			;figure out if the the edit control is inside the DirectUIHWND2 or SysListView321
-			if(x=1 && A_OSVersion="WIN_7") ;New Dialogs
+			;figure out If the the edit control is inside the DirectUIHWND2 or SysListView321
+			If(x=1 && A_OSVersion="WIN_7") ;New Dialogs
 				ControlGetPos , X, Y, Width, Height, DirectUIHWND2, A
-			else ;Old Dialogs
+			Else ;Old Dialogs
 				ControlGetPos , X, Y, Width, Height, SysListView321, A
 			ControlGetPos , X1, Y1, Width1, Height1, %focussed%, A
-			if(IsInArea(X1,Y1, X, Y, Width, Height)&&IsInArea(X1+Width1,Y1, X, Y, Width, Height)&&IsInArea(X1,Y1+Height1, X, Y, Width, Height)&&IsInArea(X1+Width1,Y1+Height1, X, Y, Width, Height))
-				return true
+			If(IsInArea(X1,Y1, X, Y, Width, Height)&&IsInArea(X1+Width1,Y1, X, Y, Width, Height)&&IsInArea(X1,Y1+Height1, X, Y, Width, Height)&&IsInArea(X1+Width1,Y1+Height1, X, Y, Width, Height))
+				Return true
 		}
 	}
-	return false
+	Return false
 }
 
 XPGetFocussed()
@@ -508,9 +453,9 @@ XPGetFocussed()
   {
     ControlGet hwnd, Hwnd, , %A_LoopField%, A
     hwnd += 0   ; Convert from hexa to decimal
-    if(hwnd=ctrlHwnd)
+    If(hwnd=ctrlHwnd)
     {
-      return A_LoopField
+      Return A_LoopField
     }
   }
 }
@@ -518,12 +463,12 @@ XPGetFocussed()
 strStartsWith(string,start)
 {
 	x:=(strlen(start)<=strlen(string)&&Substr(string,1,strlen(start))=start)
-	return x
+	Return x
 }
 
 IsInArea(px,py,x,y,w,h)
 {
-	return (px>x&&py>y&&px<x+w&&py<y+h)
+	Return (px>x&&py>y&&px<x+w&&py<y+h)
 }
 
 GetFocusedControl()
@@ -549,7 +494,7 @@ GetFocusedControl()
 WinGetClass(window=0)
 {
 WinGetClass, class, window
-return class
+Return class
 }
 
 RefreshExplorer()
@@ -559,15 +504,17 @@ RefreshExplorer()
 	{
 		for Item in ComObjCreate("Shell.Application").Windows
 		{
-			if (Item.hwnd = hWnd)
+			If (Item.hwnd = hWnd)
 			{
 				Item.Refresh()
 				Send {F5}
-				return
+				Return
 			}
 		}
 	}
-	else if(IsDialog())
+	Else If(IsDialog())
+		Send {F5}
+	Else
 		Send {F5}
 }
 
@@ -577,9 +524,9 @@ CreateNewFolder()
 global shell32muipath
   ;This is done manually, by creating a text file with the translated name, which is then focussed
 	SetFocusToFileView()
-if(A_OSversion = "WIN_XP")
+If(A_OSversion = "WIN_XP")
     TextTranslated:=TranslateMUI("shell32.dll",30320) ;"New Folder"
-else
+Else
    TextTranslated:=TranslateMUI("shell32.dll",16888) ;"New Folder"
 	CurrentFolder:=GetCurrentFolder()
 	If newfolder=types2
@@ -597,14 +544,14 @@ else
 		Testpath:=CurrentFolder "\" TextTranslated " (" i ")"
 	}
 	FileCreateDir, %TestPath%	;Create file and then select it and rename it
-    if ErrorLevel
+    If ErrorLevel
 	TrayTip,错误,新建文件夹出错！,3
 	RefreshExplorer()
   sleep,1000
 		SelectFiles(Testpath)
 Sleep 50
 	Send {F2}
-	return
+	Return
 }
 
 CreateNewTextFile()
@@ -612,15 +559,15 @@ CreateNewTextFile()
   global Vista7,txt
 	;This is done manually, by creating a text file with the translated name, which is then focussed
 	SetFocusToFileView()
-	if(Vista7)
+	If(Vista7)
     TextTranslated:=TranslateMUI("G:\Windows\notepad.exe",470) ;"New Textfile"
-  else
+  Else
   {
     newstring:=TranslateMUI("shell32.dll",8587) ;"New"
     TextTranslated:=newstring  " " TranslateMUI("notepad.exe",469) ;"Textfile"
   }
 	CurrentFolder :=GetCurrentFolder()
-	if CurrentFolder=0
+	If CurrentFolder=0
 	Return
 	Testpath := CurrentFolder "\" TextTranslated "." txt
 	i:=1 ;Find free filename
@@ -630,7 +577,7 @@ CreateNewTextFile()
 		Testpath:=CurrentFolder "\" TextTranslated " (" i ")." txt
 	}
 	FileAppend , , %TestPath%	;Create file and then select it and rename it
-	if ErrorLevel
+	If ErrorLevel
 	{
     TrayTip,错误,新建文本文档出错,3
 	Return
@@ -640,7 +587,7 @@ CreateNewTextFile()
 		SelectFiles(TestPath)
 	Sleep 50
     Send     {F2}
-	return
+	Return
 }
 
 
@@ -649,30 +596,30 @@ IsMouseOverFileList()
 	CoordMode,Mouse,Relative
 	MouseGetPos, MouseX, MouseY,Window , UnderMouse
 	WinGetClass, winclass , ahk_id %Window%
-	if(A_OSVersion="WIN_7" && (winclass="CabinetWClass" || winclass="ExploreWClass")) ;Win7 Explorer
+	If(A_OSVersion="WIN_7" && (winclass="CabinetWClass" || winclass="ExploreWClass")) ;Win7 Explorer
 	{
 		ControlGetPos , cX, cY, Width, Height, DirectUIHWND3, A
-		if(IsInArea(MouseX,MouseY,cX,cY,Width,Height))
-			return true
+		If(IsInArea(MouseX,MouseY,cX,cY,Width,Height))
+			Return true
 	}
-	else if((z:=IsDialog(window))=1) ;New dialogs
+	Else If((z:=IsDialog(window))=1) ;New dialogs
 	{
 		outputdebug new dialog
 		ControlGetPos , cX, cY, Width, Height, DirectUIHWND2, A
 		outputdebug x %MouseX% y %mousey% x%cx% y%cy% w%width% h%height%
-		if(IsInArea(MouseX,MouseY,cX,cY,Width,Height)) ;Checking for area because rename might be in process and mouse might be over edit control
+		If(IsInArea(MouseX,MouseY,cX,cY,Width,Height)) ;Checking for area because rename might be in process and mouse might be over edit control
 		{
 			outputdebug over filelist
-			return true
+			Return true
 		}
 	}
-	else if(winclass="CabinetWClass" || winclass="ExploreWClass" || z=2) ;Old dialogs or Vista/XP
+	Else If(winclass="CabinetWClass" || winclass="ExploreWClass" || z=2) ;Old dialogs or Vista/XP
 	{
 		ControlGetPos , cX, cY, Width, Height, SysListView321, A
-		if(IsInArea(MouseX,MouseY,cX,cY,Width,Height) && UnderMouse = "SysListView321") ;Additional check needed for XP because of header
-			return true
+		If(IsInArea(MouseX,MouseY,cX,cY,Width,Height) && UnderMouse = "SysListView321") ;Additional check needed for XP because of header
+			Return true
 	}
-	return false
+	Return false
 }
 
 ToArray(SourceFiles, ByRef Separator = "`n", ByRef wasQuoted = 0)
@@ -682,44 +629,44 @@ ToArray(SourceFiles, ByRef Separator = "`n", ByRef wasQuoted = 0)
 	wasQuoted := 0
 	Loop
 	{
-		if(pos > strlen(SourceFiles))
+		If(pos > strlen(SourceFiles))
 			break
 			
 		char := SubStr(SourceFiles, pos, 1)
-		if(char = """" || wasQuoted) ;Quoted paths
+		If(char = """" || wasQuoted) ;Quoted paths
 		{
 			file := SubStr(SourceFiles, InStr(SourceFiles, """", 0, pos) + 1, InStr(SourceFiles, """", 0, pos + 1) - pos - 1)
-			if(!wasQuoted)
+			If(!wasQuoted)
 			{
 				wasQuoted := 1
 				Separator := SubStr(SourceFiles, InStr(SourceFiles, """", 0, pos + 1) + 1, InStr(SourceFiles, """", 0, InStr(SourceFiles, """", 0, pos + 1) + 1) - InStr(SourceFiles, """", 0, pos + 1) - 1)
 			}
-			if(file)
+			If(file)
 			{
 				files.append(file)
 				pos += strlen(file) + 3
 				continue
 			}
-			else
+			Else
 				Msgbox Invalid source format %SourceFiles%
 		}
-		else
+		Else
 		{
 			file := SubStr(SourceFiles, pos, max(InStr(SourceFiles, Separator, 0, pos + 1) - pos, 0)) ; separator
-			if(!file)
+			If(!file)
 				file := SubStr(SourceFiles, pos) ;no quotes or separators, single file
-			if(file)
+			If(file)
 			{
 				files.append(file)
 				pos += strlen(file) + strlen(Separator)
 				continue
 			}
-			else
+			Else
 				Msgbox Invalid source format
 		}
 		pos++ ;Shouldn't happen
 	}
-	return files
+	Return files
 }
 
 StringReplace(InputVar, SearchText, ReplaceText = "", All = "") {
@@ -731,17 +678,17 @@ ExpandEnvVars(ppath)
 {
 	VarSetCapacity(dest, 2000)
 	DllCall("ExpandEnvironmentStrings", "str", ppath, "str", dest, int, 1999, "Cdecl int")
-	return dest
+	Return dest
 }
 
 strEndsWith(string,end)
 {
-	return strlen(end)<=strlen(string) && Substr(string,-strlen(end)+1)=end
+	Return strlen(end)<=strlen(string) && Substr(string,-strlen(end)+1)=end
 }
 
 strTrim(string, trim)
 {
-	return strTrimLeft(strTrimRight(string,trim),trim)
+	Return strTrimLeft(strTrimRight(string,trim),trim)
 }
 
 strTrimLeft(string,trim)
@@ -751,7 +698,7 @@ strTrimLeft(string,trim)
 	{
 		StringTrimLeft, string, string, %len%
 	}
-	return string
+	Return string
 }
 
 strTrimRight(string,trim)
@@ -761,7 +708,7 @@ strTrimRight(string,trim)
 	{
 		StringTrimRight, string, string, %len%
 	}
-	return string
+	Return string
 }
 
 
@@ -772,15 +719,15 @@ richObject(){
                              , "deepCopy", "objDeepCopy", "equal", "objEqual"
              , "flatten", "objFlatten"  ))
 
-   return  Object("base", richObject)
+   Return  Object("base", richObject)
 }
 
 Explorer_GetPath(hwnd="")
 {
-   if !(window := Explorer_GetWindow(hwnd))
-      return, ErrorLevel := "ERROR"
-   if (window="desktop")
-      return, A_Desktop
+   If !(window := Explorer_GetWindow(hwnd))
+      Return, ErrorLevel := "ERROR"
+   If (window="desktop")
+      Return, A_Desktop
    hpath := window.LocationURL
     hpath := RegExReplace(hpath, "ftp://.*@","ftp://")
     StringReplace, hpath, hpath, file:///
@@ -791,7 +738,7 @@ Explorer_GetPath(hwnd="")
       If RegExMatch(hpath, "i)(?<=%)[\da-f]{1,2}", hex)
          StringReplace, hpath, hpath, `%%hex%, % Chr("0x" . hex), All
       Else Break
-   return hpath
+   Return hpath
 }
 
 Explorer_GetWindow(hwnd="")
@@ -800,31 +747,31 @@ Explorer_GetWindow(hwnd="")
     WinGet, process, processName, % "ahk_id" hwnd := hwnd? hwnd:WinExist("A")
     WinGetClass class, ahk_id %hwnd%
 
-    if (process!="explorer.exe")
-        return
-    if (class ~= "(Cabinet|Explore)WClass")
+    If (process!="explorer.exe")
+        Return
+    If (class ~= "(Cabinet|Explore)WClass")
     {
         for window in ComObjCreate("Shell.Application").Windows
-           if (window.hwnd==hwnd)
-               return window
+           If (window.hwnd==hwnd)
+               Return window
      }
-    else if (class ~= "Progman|WorkerW")
-        return "desktop" ; desktop found
+    Else If (class ~= "Progman|WorkerW")
+        Return "desktop" ; desktop found
 } 
 
 InFileList()
 {
-	if(A_OSVersion="WIN_7")
+	If(A_OSVersion="WIN_7")
 		ControlGetFocus focussed, A
-	else
+	Else
 	  focussed:=XPGetFocussed()
 
-	if(WinActive("ahk_group ExplorerGroup"))
+	If(WinActive("ahk_group ExplorerGroup"))
 	{
-		if((A_OSVersion="WIN_7" && focussed="DirectUIHWND3") || (A_OSVersion ="XP" && focussed="SysListView321"))
-			return true
+		If((A_OSVersion="WIN_7" && focussed="DirectUIHWND3") || (A_OSVersion ="XP" && focussed="SysListView321"))
+			Return true
 	}
-	return false
+	Return false
 }
 
 
@@ -882,9 +829,9 @@ typedef enum  {
 */
 ShellContextMenu( sPath, win_hwnd = 0 )
 {
-   if ( !sPath  )
-      return
-   if !win_hwnd
+   If ( !sPath  )
+      Return
+   If !win_hwnd
    {
       Gui,SHELL_CONTEXT:New, +hwndwin_hwnd
       Gui,Show
@@ -893,7 +840,7 @@ ShellContextMenu( sPath, win_hwnd = 0 )
    If sPath Is Not Integer
       DllCall("shell32\SHParseDisplayName", "Wstr", sPath, "Ptr", 0, "Ptr*", pidl, "Uint", 0, "Uint*", 0)
       ;This function is the preferred method to convert a string to a pointer to an item identifier list (PIDL).
-   else
+   Else
       DllCall("shell32\SHGetFolderLocation", "Ptr", 0, "int", sPath, "Ptr", 0, "Uint", 0, "Ptr*", pidl)
    DllCall("shell32\SHBindToParent", "Ptr", pidl, "Ptr", GUID4String(IID_IShellFolder,"{000214E6-0000-0000-C000-000000000046}"), "Ptr*", pIShellFolder, "Ptr*", pidlChild)
    ;IShellFolder->GetUIObjectOf
@@ -910,7 +857,7 @@ ShellContextMenu( sPath, win_hwnd = 0 )
       global pIContextMenu3 := ComObjQuery(pIContextMenu, IID_IContextMenu3:="{BCFCE0A0-EC17-11D0-8D10-00A0C90F2719}")
    e := A_LastError ;GetLastError()
    ComObjError(1)
-   if (e != 0)
+   If (e != 0)
       goTo, StopContextMenu
    Global   WPOld:= DllCall("SetWindowLongPtr", "Ptr", win_hwnd, "int",-4, "Ptr",RegisterCallback("WindowProc"),"UPtr")
    DllCall("GetCursorPos", "int64*", pt)
@@ -959,7 +906,7 @@ StopContextMenu:
    ObjRelease(pIContextMenu)
    pIContextMenu2:=pIContextMenu3:=WPOld:=0
    Gui,SHELL_CONTEXT:Destroy
-   return idn
+   Return idn
 }
 
 WindowProc(hWnd, nMsg, wParam, lParam)
@@ -986,7 +933,7 @@ VTable(ppv, idx)
 GUID4String(ByRef CLSID, String)
 {
    VarSetCapacity(CLSID, 16,0)
-   return DllCall("ole32\CLSIDFromString", "wstr", String, "Ptr", &CLSID) >= 0 ? &CLSID : ""
+   Return DllCall("ole32\CLSIDFromString", "wstr", String, "Ptr", &CLSID) >= 0 ? &CLSID : ""
 }
 
 CoTaskMemFree(pv)
@@ -1043,19 +990,19 @@ ShellFileOperation( fileO=0x0, fSource="", fTarget="", flags=0x0, ghwnd=0x0 )
 SetDirectory(sPath)
 {
 	sPath:=ExpandEnvVars(sPath)
-	if(strEndsWith(sPath,":"))
+	If(strEndsWith(sPath,":"))
 		sPath .="\"s
 	If (WinActive("ahk_class CabinetWClass"))
 	{
-		if (InStr(FileExist(sPath), "D") || SubStr(sPath,1,3)="::{" || SubStr(sPath,1,6)="ftp://" || strEndsWith(sPath,".search-ms"))
+		If (InStr(FileExist(sPath), "D") || SubStr(sPath,1,3)="::{" || SubStr(sPath,1,6)="ftp://" || strEndsWith(sPath,".search-ms"))
 		{
 			hWnd:=WinExist("A")
 			ShellNavigate(sPath,0,hwnd)
 		}
     }
-	else if (IsDialog())
+	Else If (IsDialog())
 		SetDialogDirectory(sPath)
-	else
+	Else
 		MsgBox Can't navigate: Wrong window
 }
 
