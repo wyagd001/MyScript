@@ -231,11 +231,11 @@ JEE_NotepadGetPath(hWnd)
 		if vPIs64
 			vAddress := 0x7FF770C545C0
 		else
-			vAddress := 0x9cb30 ;(0xFBE000 also appears to work)
+			vAddress := 0xFBE000 ;(0xFBE000 also appears to work)
 ;地址需要修改否则不能正确获取到路径
 	}
 
-	if !vAddress
+	if !vAddress or (vPVersion = "10.0.14393.0")
 	{
 		VarSetCapacity(MEMORY_BASIC_INFORMATION, A_PtrSize=8?48:28, 0)
 		vAddress := 0
@@ -259,8 +259,19 @@ JEE_NotepadGetPath(hWnd)
 				if !(vPath = "")
 					SplitPath, vPath, vName
 			}
-			if InStr(vName, "notepad")
+			if InStr(vName, "notepad") && (vPVersion = "10.0.14393.0")
 			{
+				;get address where path starts
+				if vPIs64
+					;vAddress := vMbiBaseAddress + 0x25C0
+					vAddress := vMbiBaseAddress + 0x245C0
+				else
+					vAddress := vMbiBaseAddress + 0x1CB30 ;(0x1E000 also appears to work)
+				;MsgBox, % Format("0x{:X}", vMbiBaseAddress) "`r`n" Format("0x{:X}", vAddress)
+				break
+			}
+			if InStr(vName, "notepad") && !(vPVersion = "10.0.14393.0")
+					{
 				;MsgBox, % Format("0x{:X}", vMbiBaseAddress)
 				;get address where path starts
 				if vPIs64
@@ -285,6 +296,9 @@ JEE_NotepadGetPath(hWnd)
 		vPath := ""
 		VarSetCapacity(vPath, MAX_PATH*2)
 		DllCall("psapi\GetMappedFileName", Ptr,hProc, Ptr,vMbiBaseAddress, Str,vPath, UInt,MAX_PATH*2, UInt)
+; \Device\HarddiskVolume6\WINDOWS\notepad.exe XP C盘
+; \Device\HarddiskVolume10\Windows\notepad.exe  win7 G盘
+;msgbox %vPath%
 		if InStr(vPath, "notepad")
 		{
 			VarSetCapacity(vPath, MAX_PATH*2, 0)
