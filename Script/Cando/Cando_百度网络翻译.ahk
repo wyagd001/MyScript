@@ -292,10 +292,12 @@ Jxon_Load(ByRef src, args*)
 }
  
 decodeu(ustr){
-ustr := StrReplace(ustr,    "[", "")
-ustr := StrReplace(ustr,    "]", "")
-ustr := StrReplace(ustr,    "<", "")
-ustr := StrReplace(ustr,    ">", "")
+If A_IsUnicode
+return ustr
+ustr := StrReplace(ustr, "[", "")
+ustr := StrReplace(ustr, "]", "")
+ustr := StrReplace(ustr, "<", "")
+ustr := StrReplace(ustr, ">", "")
    Loop
     {
         if !ustr

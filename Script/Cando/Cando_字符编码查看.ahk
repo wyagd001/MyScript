@@ -6,7 +6,7 @@ Cando_字符编码查看:
 	Gosub,Encode
 	Gui, add, text,x5 y5,简体汉字:
 	Gui,add,Edit,x120 y5 w300 h20 vCcharacter,%CandySel%
-	Gui,add,button,x420 y5 w50 h20 gviewcode,查看
+	Gui,add,button,x420 y5 w50 h20 default gviewcode,查看
 
 	Gui, add, text,x5 y35 ,系统默认编码(CP0):
 	Gui,add,Edit,x120  y35 w300 h20 vcp0,% Trim(cp0)

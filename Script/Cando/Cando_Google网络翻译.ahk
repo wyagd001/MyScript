@@ -53,9 +53,14 @@ IE := ComObjCreate("InternetExplorer.Application")
 ; [HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\{0002DF01-0000-0000-C000-000000000046}]
 ; [HKEY_CLASSES_ROOT\CLSID\{0002DF01-0000-0000-C000-000000000046}]
 IE.Navigate(path)
+StartTime := A_TickCount
 While IE.readyState!=4 || IE.document.readyState!="complete" || IE.busy
+{
         Sleep 50
-
+ElapsedTime := A_TickCount - StartTime
+if ElapsedTime > 10000
+break
+}
  RegExMatch(IE.Document.body.innerHTML,"TKK.*?\)\;" , tkkkk)
 
 Result := IE.document.all.result_box.innertext
