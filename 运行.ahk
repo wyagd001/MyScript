@@ -16,12 +16,12 @@ If(!A_IsAdmin)
 	{
 		Loop %0%
 			params .= " " (InStr(%A_Index%, " ") ? """" %A_Index% """" : %A_Index%)
-		uacrep := DllCall("shell32\ShellExecuteA", uint, 0, str, "RunAs", str, A_AhkPath, str, """" A_ScriptFullPath """" params, str, A_WorkingDir, int, 1)
+		uacrep := DllCall("shell32\ShellExecute", uint, 0, str, "RunAs", str, A_AhkPath, str, """" A_ScriptFullPath """" params, str, A_WorkingDir, int, 1)
 		If(uacrep = 42) ;UAC Prompt confirmed, application may Run as admin
 			MsgBox, 成功启用管理员权限
 		Else
 			MsgBox, 没有启用管理员权限
-	}
+}
 
 ; 使“脚本管理器”文件夹中的脚本的工作目录为%A_ScriptDir%\脚本管理器，
 ; 而不是主脚本所在的目录(如果脚本管理器中没有设置WorkingDir，

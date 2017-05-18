@@ -125,10 +125,12 @@ StringReplace, RDRV, RDRV, B
    DriveGet, Size, Capacity, %A_LoopField%:
    Capacity := DriveSpace( A_LoopField,1 )
    VarSetCapacity( DiskFreeSz,16,0 )
-   DllCall( "shlwapi.dll\StrFormatByteSize64A", Int64,Capacity, Str,DiskFreeSz, UInt,16 )
+   DllCall( "shlwapi.dll\" (A_IsUnicode?"StrFormatByteSizeW":"StrFormatByteSize64A"), Int64,Capacity, Str,DiskFreeSz, UInt,16 )
+
    Capacity2 := DriveSpace( A_LoopField,2 )
    VarSetCapacity( DiskSz,16,0 )
-   DllCall( "shlwapi.dll\StrFormatByteSize64A", Int64,Capacity2, Str,DiskSz, UInt,16 )
+   DllCall( "shlwapi.dll\" (A_IsUnicode?"StrFormatByteSizeW":"StrFormatByteSize64A"), Int64,Capacity2, Str,DiskSz, UInt,16 )
+
    If (size != "")
    Menu, USB, Add, &%A_LoopField%: %Label%`t%DiskFreeSz% - %DiskSz%,opRem
   }
@@ -145,7 +147,7 @@ DeviceList:
    DriveGet, Label, Label, %A_LoopField%:
    DriveGet, Size, Capacity, %A_LoopField%:
    Capacity := DriveSpace( A_LoopField,2 ), VarSetCapacity( DiskSz,16,0 )
-   DllCall( "shlwapi.dll\StrFormatByteSize64A", Int64,Capacity, Str,DiskSz, UInt,16 )
+   DllCall( "shlwapi.dll\" (A_IsUnicode?"StrFormatByteSizeW":"StrFormatByteSize64A"), Int64,Capacity, Str,DiskSz, UInt,16 )
    If (Label = "") {
    Label = NO LABEL
    }
@@ -160,7 +162,8 @@ DriveSpace(Drv="", Free=1)
  VarSetCapacity(BPS, 30, 0)   ; Bytes Per Sector
  VarSetCapacity(FC , 30, 0)   ; Free Clusters
  VarSetCapacity(TC , 30, 0)   ; Total Clusters
- DllCall( "GetDiskFreeSpaceA", Str,Drv, UIntP,SPC, UIntP,BPS, UIntP,FC, UIntP,TC )
+ DllCall( "GetDiskFreeSpace", Str,Drv, UIntP,SPC, UIntP,BPS, UIntP,FC, UIntP,TC )
+;msgbox % SPC "*" BPS "*" FC "*" SPC*BPS*FC
 Return Free=1 ? (SPC*BPS*FC) : (SPC*BPS*TC) ; Ternary Operator requires 1.0.46+
 }
 
