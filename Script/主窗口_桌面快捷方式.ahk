@@ -12,16 +12,20 @@ Loop, %A_WorkingDir%\*.%kShortcutExt%,,   ; for each shortcut in the directory, 
 
 Menu,mymenu, add
 
+If Fileexist("Òþ²Ø")
+{
 Loop, %A_desktop%\Òþ²Ø\*.lnk
    {
         SplitPath, A_LoopFileName, , , , menuName,      ; remove extension
         Menu, Òþ²Ø, add, %menuName%, RunThisMenuItem2  ; ´´½¨×Ó²Ëµ¥Ïî¡£
     }
 Menu,mymenu, add, Òþ²Ø, :Òþ²Ø  ; ´´½¨¸¸²Ëµ¥Ïî¡£
+}
 
 Menu,mymenu,show
 Menu,mymenu,deleteall
-Menu, Òþ²Ø,deleteall
+If Fileexist("Òþ²Ø")
+	Menu, Òþ²Ø,deleteall
    SetWorkingDir,%tempworkdir%
    ;tooltip, % A_WorkingDir
 return
