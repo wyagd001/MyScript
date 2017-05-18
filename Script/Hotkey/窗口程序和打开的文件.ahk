@@ -226,16 +226,8 @@ JEE_NotepadGetPath(hWnd)
 	}
 	if (vPVersion = "5.1.2600.5512") && !vPIs64 ;Notepad (Windows XP version)
 		vAddress := 0x100A900
-	if (vPVersion = "10.0.14393.0") ;Notepad (Windows 10 version)
-	{
-		if vPIs64
-			vAddress := 0x7FF770C545C0
-		else
-			vAddress := 0xFBE000 ;(0xFBE000 also appears to work)
-;地址需要修改否则不能正确获取到路径
-	}
 
-	if !vAddress or (vPVersion = "10.0.14393.0")
+	if !vAddress
 	{
 		VarSetCapacity(MEMORY_BASIC_INFORMATION, A_PtrSize=8?48:28, 0)
 		vAddress := 0
@@ -259,18 +251,18 @@ JEE_NotepadGetPath(hWnd)
 				if !(vPath = "")
 					SplitPath, vPath, vName
 			}
-			if InStr(vName, "notepad") && (vPVersion = "10.0.14393.0")
+			if InStr(vName, "notepad") && (vPVersion = "10.0.14393.0")  ; win10
 			{
 				;get address where path starts
 				if vPIs64
 					;vAddress := vMbiBaseAddress + 0x25C0
 					vAddress := vMbiBaseAddress + 0x245C0
 				else
-					vAddress := vMbiBaseAddress + 0x1CB30 ;(0x1E000 also appears to work)
+					vAddress := vMbiBaseAddress + 0x1E000 ;(0x1CB30 文件菜单打开时有效 拖拽无效  0x1E000 拖拽文件打开和文件菜单打开都有效)
 				;MsgBox, % Format("0x{:X}", vMbiBaseAddress) "`r`n" Format("0x{:X}", vAddress)
 				break
 			}
-			if InStr(vName, "notepad") && !(vPVersion = "10.0.14393.0")
+			if InStr(vName, "notepad") && !(vPVersion = "10.0.14393.0") ;Win7
 					{
 				;MsgBox, % Format("0x{:X}", vMbiBaseAddress)
 				;get address where path starts
