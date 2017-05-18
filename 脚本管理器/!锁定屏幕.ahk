@@ -42,7 +42,7 @@ start:
 	blockinput, MouseMove
 	Gui, +AlwaysOnTop +Disabled -SysMenu +Owner -Caption +ToolWindow
         gui, font, s28
-	gui, add, text,x%fx% y%fy% cred s28, 你已经锁定了键盘与鼠标`n请输入正确的密码以解锁
+	gui, add, text,x%fx% y%fy% cred , 你已经锁定了键盘与鼠标`n请输入正确的密码以解锁
 	CustomColor = 000000
 	Gui, Color, %CustomColor%
 	gui, show,X0 Y0 W%A_ScreenWidth% H%A_ScreenHeight%,锁定屏幕
