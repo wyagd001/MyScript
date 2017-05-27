@@ -1,7 +1,7 @@
 ;#IfWinActive ahk_group ExplorerGroup
 ;+c::
 return
-文件追加到剪贴板复制:
+文件追加到剪贴板之复制:
 if (InFileList() && !IsRenaming())
 {
 files := GetSelectedFiles()
@@ -13,7 +13,7 @@ else
 return
 
 ;+X::
-文件追加到剪贴板剪切:
+文件追加到剪贴板之剪切:
 if (InFileList() && !IsRenaming())
 {
 files := GetSelectedFiles()

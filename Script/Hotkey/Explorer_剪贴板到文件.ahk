@@ -1,7 +1,15 @@
 ¼ôÌù°åµ½ÎÄ¼ş:
+ If (InFileList() && !IsRenaming())
+{
 CurrentFolder:=GetCurrentFolder()
+if CurrentFolder
 PasteToPath(CurrentFolder)
- return
+else
+send % trim(A_ThisHotkey,"$")
+}
+else
+send % trim(A_ThisHotkey,"$")
+return
 
 PasteToPath(path)
 {
