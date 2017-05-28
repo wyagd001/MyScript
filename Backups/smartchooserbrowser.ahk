@@ -58,9 +58,9 @@ ExitApp
 
 GetModuleFileNameEx( p_pid )
 {
-   if A_OSVersion in WIN_95,WIN_98,WIN_ME
+   if A_OSVersion in WIN_95,WIN_98,WIN_ME,WIN_XP
    {
-      MsgBox, This Windows version (%A_OSVersion%) is not supported.
+      MsgBox, Windows 版本 (%A_OSVersion%) 不支持。Win 7 及以上系统才能正常使用。
       return
    }
 

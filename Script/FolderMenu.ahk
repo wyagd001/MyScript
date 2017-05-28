@@ -419,7 +419,7 @@ if w_Class not in %f_SupportApps%
 if w_Class = CabinetWClass
 {
 	ControlGetPos, w_Edit1Pos,,,, Edit1, ahk_id %w_WinID%
-	if A_OSVersion = WIN_7	; For new addresbar in Vista or 7
+	if Vista7	; For new addresbar in Vista or 7
 	{
 		if w_Edit1Pos =
 		{
@@ -566,7 +566,7 @@ if SubStr(f_OpenFavPath, 1, 1) = "*" ; file filter
 		Send, {Enter}exit{Enter}
 	}
 	; Vista Explorer (thanks to Mr. Milk)
-	else if A_OSVersion = WIN_7
+	else if Vista7
 	{
 		if f_OpenFavPath != *.*
 		{
@@ -889,7 +889,7 @@ f_GetPath(WindowID, Class)
 	Global s_Apps_OthersList
 	if Class in #32770
 	{
-		if A_OSVersion = WIN_7
+		if Vista7
 		{
 			ControlGetPos, ToolbarPos,,,, ToolbarWindow322, ahk_id %WindowID%
 			if ToolbarPos !=
@@ -923,7 +923,7 @@ f_GetPath(WindowID, Class)
 	}
 	else if Class in CabinetWClass,ExploreWClass
 	{
-		if A_OSVersion = WIN_7
+		if Vista7
 		{
 			ControlGetPos, ToolbarPos,,,, ToolbarWindow322, ahk_id %WindowID%
 			if ToolbarPos !=
@@ -1279,7 +1279,7 @@ f_GetIcon(ThisPath)
 			IniRead, f_Icons_Recent, %FloderMenu_iniFile%, Icons, Recent, %A_Space%
 			if f_Icons_Recent =
 			{
-				if A_OSVersion = WIN_7
+				if Vista7
 					f_Icons_Recent := "imageres.dll,-117"
 				else
 					f_Icons_Recent := "shell32.dll,-21"
@@ -1938,7 +1938,7 @@ f_CreateSystemRecentMenu()
 	Menu, SystemRecentMenu, Add
 	Menu, SystemRecentMenu, Delete	; delete old menu
 
-	if A_OSVersion = WIN_7
+	if Vista7
 		RecentPath = %AppData%\Microsoft\Windows\Recent ; For Vista / 7
 	else
 		RecentPath = %UserProfile%\Recent ; For XP
@@ -2177,7 +2177,7 @@ f_GetExplorerList() ; Thanks to F1reW1re
 		WinGetClass, ThisClass, ahk_id %ThisID%
 		if ThisClass in ExploreWClass,CabinetWClass
 		{
-			if A_OSVersion = WIN_7
+			if Vista7
 				ControlGetText, ThisPath, ToolbarWindow322, ahk_id %ThisID%
 			else
 				ControlGetText, ThisPath, ComboBoxEx321, ahk_id %ThisID%
@@ -2224,7 +2224,7 @@ f_ToggleHidden() ; thanks to Mr. Milk
 f_RefreshExplorer()
 {
 	WinGet, w_WinID, ID, ahk_class Progman
-	if A_OSVersion = WIN_7
+	if Vista7
 		SendMessage, 0x111, 0x1A220,,, ahk_id %w_WinID%
 	else
 		SendMessage, 0x111, 0x7103,,, ahk_id %w_WinID%
@@ -2232,7 +2232,7 @@ f_RefreshExplorer()
 	Loop, %w_WinIDs%
 	{
 		w_WinID := w_WinIDs%A_Index%
-		if A_OSVersion = WIN_7
+		if Vista7
 			SendMessage, 0x111, 0x1A220,,, ahk_id %w_WinID%
 		else
 			SendMessage, 0x111, 0x7103,,, ahk_id %w_WinID%
@@ -2241,7 +2241,7 @@ f_RefreshExplorer()
 	Loop, %w_WinIDs%
 	{
 		w_WinID := w_WinIDs%A_Index%
-		if A_OSVersion = WIN_7
+		if Vista7
 			SendMessage, 0x111, 0x1A220,,, ahk_id %w_WinID%
 		else
 			SendMessage, 0x111, 0x7103,,, ahk_id %w_WinID%

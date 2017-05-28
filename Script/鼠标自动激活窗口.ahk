@@ -106,7 +106,7 @@ MouseGetPos, lastx, lasty
         MouseGetPos,,, win, ctl
         WinGetTitle, ti, ahk_id %win%
         WinGetClass, cl, ahk_id %win%
-        if (A_OSVersion = "WIN_7" && (cl = "Button" && ti = "开始"))
+        if (Vista7 && (cl = "Button" && ti = "开始"))
             or (cl = "Shell_TrayWnd" && ctl = "Button1")
         {
             Click
