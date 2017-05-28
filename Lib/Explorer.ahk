@@ -373,14 +373,14 @@ SetFocusToFileView()
 {
 	If (WinActive,ahk_group ExplorerGroup)
 	{
-		If(A_OSVersion="WIN_7")
+		If(Vista7)
 			ControlFocus DirectUIHWND3, A
 		Else ;XP, Vista
 		 	ControlFocus SysListView321, A
 	}
 	Else If((x:=IsDialog())=1) ;New Dialogs
 	{
-		If(A_OSVersion="WIN_7")
+		If(Vista7)
 			ControlFocus DirectUIHWND2, A
 		Else
 			ControlFocus SysListView321, A
@@ -402,8 +402,7 @@ Return buf
 
 IsRenaming()
 {
-	;;; 声明全局变量，否则N_OSVersion在第二次判断时值为空
-	If(A_OSVersion="WIN_7")
+	If(Vista7)
 	 ControlGetFocus focussed, A
   Else
     focussed:=XPGetFocussed()
@@ -411,7 +410,7 @@ IsRenaming()
 	{
 		If(strStartsWith(focussed,"Edit"))
 		{
-			If(A_OSVersion="WIN_7")
+			If(Vista7)
 				ControlGetPos , X, Y, Width, Height, DirectUIHWND3, A
 			Else
 				ControlGetPos , X, Y, Width, Height, SysListView321, A
@@ -430,7 +429,7 @@ IsRenaming()
 		If(strStartsWith(focussed,"Edit1"))
 		{
 			;figure out If the the edit control is inside the DirectUIHWND2 or SysListView321
-			If(x=1 && A_OSVersion="WIN_7") ;New Dialogs
+			If(x=1 && Vista7) ;New Dialogs
 				ControlGetPos , X, Y, Width, Height, DirectUIHWND2, A
 			Else ;Old Dialogs
 				ControlGetPos , X, Y, Width, Height, SysListView321, A
@@ -594,7 +593,7 @@ IsMouseOverFileList()
 	CoordMode,Mouse,Relative
 	MouseGetPos, MouseX, MouseY,Window , UnderMouse
 	WinGetClass, winclass , ahk_id %Window%
-	If(A_OSVersion="WIN_7" && (winclass="CabinetWClass" || winclass="ExploreWClass")) ;Win7 Explorer
+	If(Vista7 && (winclass="CabinetWClass" || winclass="ExploreWClass")) ;Win7 Explorer
 	{
 		ControlGetPos , cX, cY, Width, Height, DirectUIHWND3, A
 		If(IsInArea(MouseX,MouseY,cX,cY,Width,Height))
@@ -759,14 +758,14 @@ Explorer_GetWindow(hwnd="")
 
 InFileList()
 {
-	If(A_OSVersion="WIN_7")
+	If(Vista7)
 		ControlGetFocus focussed, A
 	Else
 	  focussed:=XPGetFocussed()
 
 	If(WinActive("ahk_group ExplorerGroup"))
 	{
-		If((A_OSVersion="WIN_7" && focussed="DirectUIHWND3") || (A_OSVersion ="XP" && focussed="SysListView321"))
+		If((Vista7 && focussed="DirectUIHWND3") || (A_OSVersion ="XP" && focussed="SysListView321"))
 			Return true
 	}
 	Return false

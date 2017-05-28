@@ -108,9 +108,9 @@ vol_BarOptionsMaster = 1:B1 ZH%vol_Thick% ZX8 ZY4 W%vol_Width% X%vol_PosX% Y%vol
 Splitpath,A_AhkPath,,pathd
 
 ; 检测系统版本
-; 版本号>6  vista7为真(1)
-RegRead,vista7, HKLM, SOFTWARE\Microsoft\Windows NT\CurrentVersion, CurrentVersion
-vista7 := vista7 >= 6
+; 版本号>6  Vista7为真(1)
+RegRead,Vista7, HKLM, SOFTWARE\Microsoft\Windows NT\CurrentVersion, CurrentVersion
+global Vista7 := Vista7 >= 6.0.7
 
 ;---------水平垂直最大化---------
 VarSetCapacity( work_area, 16 )
@@ -776,7 +776,7 @@ If trayicons_pid not contains %Script_pid%
 While (120000 - A_TickCount) > 0
 	sleep,100
 
-msgbox,4,错误,未检测到脚本的托盘图标，点"是"重启脚本，点"否"继续运行脚本,6
+msgbox,4,错误,未检测到脚本的托盘图标，点"是"重启脚本，点"否"继续运行脚本。`n默认(超时)自动重启脚本。,6
 IfMsgBox Yes    
 	autoreload=1
 else IfMsgBox timeout

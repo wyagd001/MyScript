@@ -5,10 +5,10 @@ CurrentFolder:=GetCurrentFolder()
 if CurrentFolder
 PasteToPath(CurrentFolder)
 else
-send % trim(A_ThisHotkey,"$")
+Send % trim(A_ThisHotkey,"$")
 }
 else
-send % trim(A_ThisHotkey,"$")
+Send % trim(A_ThisHotkey,"$")
 return
 
 PasteToPath(path)

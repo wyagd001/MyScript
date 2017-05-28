@@ -214,7 +214,8 @@ JEE_NotepadGetPath(hWnd)
 	WinGet, vPID, PID, % "ahk_id " hWnd
 	WinGet, vPPath, ProcessPath, % "ahk_id " hWnd
 	FileGetVersion, vPVersion, % vPPath
-
+	StringLeft, vPVersionnum, vPVersion, 2
+	vPVersionnum+=0.1
 	MAX_PATH := 260
 	;PROCESS_QUERY_INFORMATION := 0x400 ;PROCESS_VM_READ := 0x10
 	if !hProc := DllCall("kernel32\OpenProcess", UInt,0x410, Int,0, UInt,vPID, Ptr)
@@ -251,19 +252,24 @@ JEE_NotepadGetPath(hWnd)
 				if !(vPath = "")
 					SplitPath, vPath, vName
 			}
-			if InStr(vName, "notepad") && (vPVersion = "10.0.14393.0")  ; win10
+			if InStr(vName, "notepad") && (vPVersionnum > 10)    ; win10
 			{
 				;get address where path starts
 				if vPIs64
 					;vAddress := vMbiBaseAddress + 0x25C0
 					vAddress := vMbiBaseAddress + 0x245C0
 				else
-					vAddress := vMbiBaseAddress + 0x1E000 ;(0x1CB30 文件菜单打开时有效 拖拽无效  0x1E000 拖拽文件打开和文件菜单打开都有效)
+				{
+					If (vPVersion = "10.0.15063.0")
+						vAddress := vMbiBaseAddress + 0x1F000 ; (0x1CB30 文件菜单打开时有效 拖拽无效  0x1E000 拖拽文件打开和文件菜单打开都有效)
+					If (vPVersion = "10.0.14393.0")
+						vAddress := vMbiBaseAddress + 0x1E000
 				;MsgBox, % Format("0x{:X}", vMbiBaseAddress) "`r`n" Format("0x{:X}", vAddress)
+				}
 				break
 			}
-			if InStr(vName, "notepad") && !(vPVersion = "10.0.14393.0") ;Win7
-					{
+			if InStr(vName, "notepad") && (vPVersionnum < 10) ; Win7
+			{
 				;MsgBox, % Format("0x{:X}", vMbiBaseAddress)
 				;get address where path starts
 				if vPIs64
