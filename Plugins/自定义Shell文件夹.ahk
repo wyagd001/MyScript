@@ -3,7 +3,7 @@ Gui, Add, Button, x+15 gEditVar, 编辑该值(&E)
 Gui, Add, Button, x+15 gopenfolder, 跳转到目录(&E)
 Gui, Add, Button, x+15 gRegedit, 跳转到注册表(&O)
 Gui, Add, Button, x+20 gAbout, 关于(&A)
-Gui, Add, ListView, xm w600 h400 gListView vEV,Shell文件夹|目录路径
+Gui, Add, ListView, xm Grid w600 h400 gListView vEV,Shell文件夹|目录路径
 Gui,Show,,自定义User Shell Folders
 Gui +resize
 
@@ -125,10 +125,12 @@ Return
 
 ListView:
 if (A_GuiEvent = "DoubleClick")
+{
 LV_GetText(varname, A_EventInfo, 1)
 LV_GetText(varvalue, A_EventInfo, 2)
 gui 2:show,,编辑该值
 GuiControl,2:,varname,% varname
 GuiControl,2:,varvalue,% varvalue
 GuiControl,2:disable,Varname
+}
 return

@@ -1004,19 +1004,19 @@ Return
 
 About:
 Gui,3:Default
-Gui,Add,Text,x y,名称：AhkPlayer`n作者：桂林小廖
-Gui,Add,Text,x y+10,主页：
-Gui,Add,Text,x y+10  cBlue gLink_1,http://code.google.com/p/ahk-run/
-Gui,Add,Text,x y+10,致谢：
-Gui,Add,Text,x y+10  cBlue gLink_2,Sound.ahk - fincs
-Gui,Add,Text,x y+10  cBlue gLink_3,MCI Library - jballi
-Gui,Add,Text,x y+10  cBlue gLink_4,QuickSound - Stefan V
-Gui,Add,Text,x y+10  cBlue gLink_5,NighPlayer - NiGH(dracula004)
+Gui,Add,Text, ,名称：AhkPlayer`n作者：桂林小廖
+Gui,Add,Text,y+10,主页：
+Gui,Add,Text,y+10  cBlue gLink_1,https://github.com/wyagd001/MyScript
+Gui,Add,Text,y+10,致谢：
+Gui,Add,Text,y+10  cBlue gLink_2,Sound.ahk - fincs
+Gui,Add,Text,y+10  cBlue gLink_3,MCI Library - jballi
+Gui,Add,Text,y+10  cBlue gLink_4,QuickSound - Stefan V
+Gui,Add,Text,y+10  cBlue gLink_5,NighPlayer - NiGH(dracula004)
 Gui,show,,关于
 Return
 
 Link_1:
-Run,http://code.google.com/p/ahk-run/
+Run,https://github.com/wyagd001/MyScript
 Return
 
 Link_2:
@@ -1032,7 +1032,7 @@ Run,http://www.autohotkey.com/forum/topic53076.html
 Return
 
 Link_5:
-Run,http://ahk.5d6d.com/thread-2883-1-1.html
+Run,http://ahk8.com/thread-2570.html
 Return
 
 ;查找歌曲

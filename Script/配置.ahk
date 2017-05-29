@@ -299,7 +299,7 @@ Gui,Add,Edit,x26 y61 w530 r4 vsp,%stableProgram%
 Gui,Add,Text,x26 y135,运行输入框中自定义短语(一行一个,例如“c = c:\”，只对本程序有效):
 Gui,Add,Edit,x26 y155 w530 r8 vop,%otherProgram%
 Gui,Add,Text,x26 y290,系统注册表中已注册的命令对本程序同样有效
-Gui,Add,Button,x390 y285 g自定义运行命令_click,查看修改
+Gui,Add,Button,x490 y285 g自定义运行命令_click,查看修改
 
 Gui,Tab,关于
 Gui,Add,Text,x26 y40,名称：运行 - Ahk
@@ -311,7 +311,7 @@ Gui,Add,Text,x+ gg vURL,https://github.com/wyagd001/MyScript
 Gui,Font
 Gui,Add,Text,x26 y100,% "版本："AppVersion
 Gui,Add,Text,x26 y120,Autohotkey版本：1.1.24.00(ansi)
-Gui,Add,Text,x26 y140,系统：Win7 SP1 32bit 推荐管理员权限运行
+Gui,Add,Text,x26 y140,系统：Win7 SP1 32bit (主使用环境)
 Gui,Add,Button,x26 y160 gUpdate,检查更新
 
 ;Gui & Hyperlink - AGermanUser

@@ -4,7 +4,7 @@ ListLines Off
 Sys=HKLM
 sys1=HKEY_LOCAL_MACHINE
 
-Menu, Context, Add, 浏览文件位置, PlayLV2
+Menu, Context, Add, 浏览文件位置, PlayLV
 
 Gui, Add, Button,gLoadw,刷新列表(&R)
 Gui, Add, Button, x+15 gEditVar, 编辑/创建项目(&C)
@@ -77,7 +77,6 @@ Loop,%Sys%,SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths,0,1
 }
 return
 
-
 Varsave:
 Gui 2:Submit
 RegWrite,REG_SZ,%Sys%,SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\%varname%,,%varvalue%
@@ -96,7 +95,7 @@ varvalue=
 else{
 LV_GetText(varname, FocusedRowNumber, 1)
 LV_GetText(varvalue, FocusedRowNumber, 2)
-gui 2:show,,创建新的项目
+gui 2:show,,编辑运行命令
 }
 GuiControl,2:,varname,% varname
 GuiControl,2:,varvalue,% varvalue
@@ -163,23 +162,16 @@ Return
 
 ListView:
 if (A_GuiEvent = "RightClick")
-    {
-    rrownum:=A_EventInfo
+{
+	rrownum:=A_EventInfo
 	Menu, Context, Show
-    }
+}
 else if (A_GuiEvent = "DoubleClick")
-gosub,PlayLV
-return
-
-PlayLV2:
-LV_GetText(Mdir, rrownum, 2)
-abcd=explorer.exe /select, "%Mdir%"
-Transform,abcd,Deref,%abcd%
-Run,%abcd%
+	gosub,EditVar
 return
 
 PlayLV:
-LV_GetText(Mdir, A_EventInfo, 2)
+LV_GetText(Mdir, rrownum, 2)
 abcd=explorer.exe /select, "%Mdir%"
 Transform,abcd,Deref,%abcd%
 Run,%abcd%
