@@ -1,4 +1,7 @@
 ; https://github.com/7plus/7plus/blob/master/Clipboard.ahk
+; 快捷键定义在 ahk_group ExplorerGroup 资源管理器中有效，桌面无效，
+; 按下快捷键后可能要"刷新",刷新使“粘贴”菜单生效
+; 有时会失败，失败后复制任意文字后重试
 ;#IfWinActive ahk_group ExplorerGroup
 ;+c::
 文件追加到剪贴板之复制:
@@ -6,8 +9,12 @@
 	{
 		files := GetSelectedFiles()
 		If(files)
+		{
 			AppendToClipboard(files)
-	}
+			TrayTip, 剪贴板,%files%已经复制到剪贴板(追加)。
+			SetTimer, RemoveTrayTip, 2500
+		}
+}
 	Else
 		Send % A_ThisHotkey
 Return
@@ -18,7 +25,11 @@ Return
 	{
 		files := GetSelectedFiles()
 		If(files)
+		{
 			AppendToClipboard(files,1)
+			TrayTip, 剪贴板,%files%已经剪切到剪贴板(追加)。
+			SetTimer, RemoveTrayTip, 2500
+		}
 	}
 	Else
 		Send % A_ThisHotkey
@@ -27,13 +38,12 @@ Return
 
 ;Appends files to CF_HDROP structure in clipboard
 AppendToClipboard( files, cut=0) {
-	DllCall("OpenClipboard", "Uint", 0)
+	DllCall("OpenClipboard", "Ptr", 0)
 	If(DllCall("IsClipboardFormatAvailable", "Uint", 1))
 		DllCall("EmptyClipboard")
 	DllCall("CloseClipboard")
-	txt:=clipboard (clipboard = "" ? "" : "`r`n") files
+	txt:=clipboard (clipboard = "" ? "" : "`n") files
 	Sort, txt , U
-	DllCall("OpenClipboard", "Uint", 0)
 	CopyToClipboard(txt, true, cut)
 	DllCall("CloseClipboard")
 	Return
@@ -82,7 +92,7 @@ CopyToClipboard(files, clear, cut=0){
   Loop, Parse, files, `n,`r  ; Rows are delimited by linefeeds (`r`n).
 		offset += StrPut(A_LoopField, pPath+offset,StrLen(A_LoopField)+1,"UTF-16") * 2
   DllCall("GlobalUnlock", "Ptr", hPath)
-	;hPath must not be freed! ->http://msdn.microsoft.com/en-us/library/ms649051(VS.85).aspx
+	; hPath must not be freed! ->http://msdn.microsoft.com/en-us/library/ms649051(VS.85).aspx
 	If clear
 	{
   	DllCall("EmptyClipboard")                                                              ; Empty the clipboard, otherwise SetClipboardData may fail.
@@ -102,5 +112,6 @@ CopyToClipboard(files, clear, cut=0){
 	result:=DllCall("SetClipboardData","UInt",cfFormat,"Ptr",mem)
 	Clipwait, 1, 1
 	DllCall("CloseClipboard")
+	; mem must not be freed! ->http://msdn.microsoft.com/en-us/library/ms649051(VS.85).aspx
 	Return
 }

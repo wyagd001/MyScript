@@ -112,7 +112,9 @@ MCode(ByRef code, hex)
 		NumPut("0x" . SubStr(hex,2*A_Index-1,2), code, A_Index-1, "Char")
 }
 
-ExtractData2(pointer)  ; 老版本autohotkey使用的"StrGet"  留做备份
+; 老版autohotkey使用的 "StrGet" 留做备份
+; get data starting from pointer up to 0 char
+ExtractData(pointer)
 {
 	Loop
 	{ 

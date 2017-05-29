@@ -768,6 +768,11 @@ InFileList()
 		If((Vista7 && focussed="DirectUIHWND3") || (A_OSVersion ="XP" && focussed="SysListView321"))
 			Return true
 	}
+		If(WinActive("ahk_group DesktopGroup"))
+	{
+		If((Vista7 && focussed="SysListView321") || (A_OSVersion ="XP" && focussed="SysListView321"))
+			Return true
+	}
 	Return false
 }
 
