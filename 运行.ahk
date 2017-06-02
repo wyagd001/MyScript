@@ -3,7 +3,7 @@
 #SingleInstance force
 ;开机时启动脚本，等待时间设置长些，使托盘图标可以显示出来
 if(A_TickCount<120000)
-sleep,40000
+sleep,20000
 
 ; 在脚本最开头，利用Reload变通实现批量#Include
 ; 自动生成AutoIncludeAll.ahk   第一次运行设置AutoInclude=1
