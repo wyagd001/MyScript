@@ -132,7 +132,7 @@ VarSetCapacity(Var, Len, 0)
 Return, StrPut(Str, &Var, Enc),VarSetCapacity(var,-1)
 }
 
-; ; 发送中文，避免输入法影响
+; 发送中文，避免输入法影响  备份，已用 SendStr 代替
 _SendRaw(Keys)
 {
 Len := StrLen(Keys) ; 得到字符串的长度，注意一个中文字符的长度是2

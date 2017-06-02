@@ -26,7 +26,7 @@ IfExist,%A_SCRIPTDIR%\Settings\tmp\google_tts.mp3
 sleep,1000
 textlen:=StrLen(Google_keyword)
 
-SpeechUrl = https://translate.google.com.hk/translate_tts?ie=UTF-8&q=%Google_keyword%&sl=zh-CN&tl=en&total=1&idx=0&textlen=%textlen%&tk=%tk%&client=t&prev=input&ttsspeed=0.5
+SpeechUrl = https://translate.google.cn/translate_tts?ie=UTF-8&q=%Google_keyword%&sl=zh-CN&tl=en&total=1&idx=0&textlen=%textlen%&tk=%tk%&client=t&prev=input&ttsspeed=0.5
 
 $CMD = "%A_SCRIPTDIR%\Bin\wget.exe"  -U "Lynx 1.2.3.4" -O "%A_SCRIPTDIR%\Settings\tmp\google_tts.mp3" --no-check-certificate  "%SpeechUrl%"
 Run, %comspec% /c "%$CMD%"  , , Hide
@@ -44,7 +44,7 @@ GoogleApi(KeyWord)
 		LangOut := "en",LangIn := "zh-CN"
 	else
 		LangOut := "zh-CN",LangIn := "en"
-base := "https://translate.google.com.hk/?hl=zh-CN&tab=wT#"
+base := "https://translate.google.cn/?hl=zh-CN&tab=wT#"
 path := base . LangIn . "/" . LangOut . "/" . UrlEncode(KeyWord,"UTF-8")
 
 IE := ComObjCreate("InternetExplorer.Application")
@@ -58,7 +58,7 @@ While IE.readyState!=4 || IE.document.readyState!="complete" || IE.busy
 {
         Sleep 50
 ElapsedTime := A_TickCount - StartTime
-if ElapsedTime > 10000
+if ElapsedTime > 25000
 break
 }
  RegExMatch(IE.Document.body.innerHTML,"TKK.*?\)\;" , tkkkk)
