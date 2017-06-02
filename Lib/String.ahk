@@ -1,15 +1,23 @@
 ; wString	转换后得到的unicode字串
 ; sString		待转换字串
 ; CP					待转换字串sString的代码页
-; 返回值		转换后得到的unicode字串的地址
+; 返回值		转换后得到的unicode字串,wString的地址
 Ansi2Unicode(ByRef wString,ByRef sString,  CP = 0)
 ;cp=65001 UTF-8   cp=0 default to ANSI code page
 {
-;该函数映射一个字符串MultiByteStr到一个宽字符（unicode）的字符串WideCharStr。由该函数映射的字符串没必要是多字节字符组。
+; 该函数映射一个字符串 (MultiByteStr) 到一个宽字符 (unicode UTF-16) 的字符串 (WideCharStr)。
+; 由该函数映射的字符串没必要是多字节字符组。
+; &sString 传入的是地址，所以 sString 变量不能直接传入地址
+/* 
+; A版运行例子
+pp=中文
+Ansi2Unicode(qq,pp,936) ; 正确
+Ansi2Unicode(qq,&pp,936) ; 错误
+*/
      nSize := DllCall("MultiByteToWideChar"
       , "Uint", CP
       , "Uint", 0
-      , "Uint", &sString   ;地址
+      , "Uint", &sString   ; 传入的是字串的地址
       , "int",  -1
       , "Uint", 0
       , "int",  0)
@@ -28,18 +36,20 @@ Return	&wString
 
 ; wString	待转换的unicode字串  
 ; sString		转换后得到的字串
-; CP					转换后得到的字串sString的代码页
-; 返回值		转换后得到的字串 
+; CP					转换后得到的字串sString的代码页，例如 CP=65001，转换得到的字串就是UTF8的字符串
+; 返回值		转换后得到的字串sString
 Unicode2Ansi(ByRef wString,ByRef sString,  CP = 0)
 {
+; 该函数映射一个宽字符串 (unicode UTF-16) 到一个新的字符串
+; 把宽字符串 (unicode UTF-16) 转换成指定代码页的新字符串
 ; &wString 传入的是地址，所以wString变量不能直接传入地址
 /* 
 ; U版运行例子
-pp=中文
-Unicode2Ansi(qq,pp,936) ;正确
-Unicode2Ansi(qq,&pp,936) ;错误
+qq=中文
+Unicode2Ansi(qq,pp,936) ; 正确
+Unicode2Ansi(&qq,pp,936) ; 错误
 */
-	    nSize:=DllCall("WideCharToMultiByte", "Uint", CP, "Uint", 0, "Uint", &wString, "int", -1, "Uint", 0, "int",  0, "Uint", 0, "Uint", 0)
+	nSize:=DllCall("WideCharToMultiByte", "Uint", CP, "Uint", 0, "Uint", &wString, "int", -1, "Uint", 0, "int",  0, "Uint", 0, "Uint", 0)
 
 	VarSetCapacity(sString, nSize)
 	DllCall("WideCharToMultiByte", "Uint", CP, "Uint", 0, "Uint", &wString, "int", -1, "str", sString, "int", nSize, "Uint", 0, "Uint", 0)
@@ -56,7 +66,7 @@ pp=中文
 Ansi4Unicode(&pp)
 */
 	If (nSize = "")
-	    nSize:=DllCall("kernel32\WideCharToMultiByte", "Uint", 0, "Uint", 0, "Uint", pString, "int", -1, "Uint", 0, "int",  0, "Uint", 0, "Uint", 0)
+		nSize:=DllCall("kernel32\WideCharToMultiByte", "Uint", 0, "Uint", 0, "Uint", pString, "int", -1, "Uint", 0, "int",  0, "Uint", 0, "Uint", 0)
 	VarSetCapacity(sString, nSize)
 	DllCall("kernel32\WideCharToMultiByte", "Uint", 0, "Uint", 0, "Uint", pString, "int", -1, "str", sString, "int", nSize + 1, "Uint", 0, "Uint", 0)
 	Return	sString
