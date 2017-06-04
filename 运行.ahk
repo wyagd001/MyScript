@@ -1442,22 +1442,22 @@ Return
 cSigleMenu:
 Menu,AllWinMenu,Add,
 
-Menu,SigleMenu,Add,桌面 1,ActDesk
-Menu,SigleMenu,Add,桌面 2,ActDesk
-Menu,SigleMenu,Add,桌面 3,ActDesk
-Menu,SigleMenu,Add,桌面 4,ActDesk
+Menu,SigleMenu,Add,虚拟桌面 1,ActDesk
+Menu,SigleMenu,Add,虚拟桌面 2,ActDesk
+Menu,SigleMenu,Add,虚拟桌面 3,ActDesk
+Menu,SigleMenu,Add,虚拟桌面 4,ActDesk
 ;----------------------------------------------------------------------------
 Menu,SigleMenu,Add,
 
-Menu,DeskAdd,Add,桌面 [1],DeskAdd
-Menu,DeskAdd,Add,桌面 [2],DeskAdd
-Menu,DeskAdd,Add,桌面 [3],DeskAdd
-Menu,DeskAdd,Add,桌面 [4],DeskAdd
+Menu,DeskAdd,Add,虚拟桌面 [1],DeskAdd
+Menu,DeskAdd,Add,虚拟桌面 [2],DeskAdd
+Menu,DeskAdd,Add,虚拟桌面 [3],DeskAdd
+Menu,DeskAdd,Add,虚拟桌面 [4],DeskAdd
 ;----------------------------------------------------------------------------
 Menu,SigleMenu,Add,加入到,:DeskAdd
 Menu,SigleMenu,Add,所有窗口,:AllWinMenu
 Menu,SigleMenu,Add,还原本窗口,Disa
-Menu,SigleMenu,Check,桌面 1
+Menu,SigleMenu,Check,虚拟桌面 1
 
 #initial:
 ActDeskNum:=1

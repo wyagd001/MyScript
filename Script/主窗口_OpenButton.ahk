@@ -116,6 +116,9 @@ openbutton:
 
 	If (Substr(dir,1,8) ="@ExeAhk@")
 	{
+		; https://autohotkey.com/board/topic/23575-how-to-run-dynamic-script-through-a-pipe/
+		ptr := A_PtrSize ? "Ptr" : "UInt"
+		char_size := A_IsUnicode ? 2 : 1
 		dir:=SubStr(dir,9)
 		pipe_name := "‘À––Ahk√¸¡Ó"
 ; Before reading the file, AutoHotkey calls GetFileAttributes(). This causes
@@ -127,27 +130,27 @@ openbutton:
 		pipe := CreateNamedPipe(pipe_name, 2)
 		If (pipe=-1 or pipe_ga=-1) {
 			MsgBox CreateNamedPipe failed.
-			ExitApp
+			Return
 		}
 
 		Run, %A_AhkPath% "\\.\pipe\%pipe_name%"
 
 ; Wait for AutoHotkey to connect to pipe_ga via GetFileAttributes().
-		DllCall("ConnectNamedPipe","uint",pipe_ga,"uint",0)
+		DllCall("ConnectNamedPipe",ptr,pipe_ga,ptr,0)
 ; This pipe is not needed, so close it now. (The pipe instance will not be fully
 ; destroyed until AutoHotkey also closes its handle.)
-		DllCall("CloseHandle","uint",pipe_ga)
+		DllCall("CloseHandle",ptr,pipe_ga)
 ; Wait for AutoHotkey to connect to open the "file".
-		DllCall("ConnectNamedPipe","uint",pipe,"uint",0)
+		DllCall("ConnectNamedPipe",ptr,pipe,ptr,0)
 
 ; AutoHotkey reads the first 3 bytes to check for the UTF-8 BOM "???". If it is
 ; NOT present, AutoHotkey then attempts to "rewind", thus breaking the pipe.
-		dir := chr(239) chr(187) chr(191) dir
+		dir := (A_IsUnicode ? chr(0xfeff) : chr(239) chr(187) chr(191)) dir
 
-		If !DllCall("WriteFile","uint",pipe,"str",dir,"uint",StrLen(dir)+1,"uint*",0,"uint",0)
+		If !DllCall("WriteFile",ptr,pipe,"str",dir,"uint",(StrLen(dir)+1)*char_size,"uint*",0,ptr,0)
 			MsgBox WriteFile failed: %ErrorLevel%/%A_LastError%
 
-		DllCall("CloseHandle","uint",pipe)
+		DllCall("CloseHandle",ptr,pipe)
 	Return
 	}
 
@@ -195,9 +198,11 @@ openbutton:
 	}
 Return
 
-CreateNamedPipe(Name, OpenMode=3, PipeMode=0, MaxInstances=255) {
+CreateNamedPipe(Name, OpenMode=3, PipeMode=0, MaxInstances=255)
+{
+	global ptr
 Return DllCall("CreateNamedPipe","str","\\.\pipe\" Name,"uint",OpenMode
-        ,"uint",PipeMode,"uint",MaxInstances,"uint",0,"uint",0,"uint",0,"uint",0)
+        ,"uint",PipeMode,"uint",MaxInstances,"uint",0,"uint",0,ptr,0,ptr,0)
 }
 
 RegRead(RootKey, SubKey, ValueName = "") {

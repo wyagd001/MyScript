@@ -142,11 +142,11 @@ Loop, parse,DeskGroup,`|
 
 Loop 4
 {
-	MenuName=桌面 %A_Index%
+	MenuName=虚拟桌面 %A_Index%
 	Menu,SigleMenu,Uncheck,%MenuName%
 }
 
-MenuName=桌面 %ActDeskNum%
+MenuName=虚拟桌面 %ActDeskNum%
 Menu,SigleMenu,Check,%MenuName%
 ; ToolTip % DeskGroup_%ActDeskNum%
 
@@ -282,12 +282,13 @@ Return
 
 
 ; ***** 虚拟桌面函数 functions *****
+; https://autohotkey.com/board/topic/5793-multiple-virtual-desktops/page-1
 
 ; switch to the desktop with the given index number
 SwitchToDesktop(newDesktop)
 {
    global
-
+WinClose, ahk_class SysShadow
    if (curDesktop <> newDesktop)
    {
       GetCurrentWindows(curDesktop)
@@ -298,6 +299,7 @@ SwitchToDesktop(newDesktop)
       TrayTip, DesktopSwitch, Switching to desktop %newDesktop%
       curDesktop := newDesktop
    }
+	WinClose, ahk_class SysShadow
    return
 }
 
