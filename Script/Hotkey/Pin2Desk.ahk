@@ -278,9 +278,6 @@ If StrAr_Find(ToggleList,WinID)
 else send #{Right}
 Return
 
-
-
-
 ; ***** ÐéÄâ×ÀÃæº¯Êý functions *****
 ; https://autohotkey.com/board/topic/5793-multiple-virtual-desktops/page-1
 
@@ -288,7 +285,7 @@ Return
 SwitchToDesktop(newDesktop)
 {
    global
-WinClose, ahk_class SysShadow
+	WinClose, ahk_class SysShadow
    if (curDesktop <> newDesktop)
    {
       GetCurrentWindows(curDesktop)

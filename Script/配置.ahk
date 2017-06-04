@@ -623,7 +623,8 @@ for k,v in hotkeys
 }
 If eqaulhotkey>=2
 {
-	LV_ColorChange(FocusedRowNumber,"0x0000FF","0xFFFFFF") 
+	; RGB系颜色
+	LV_ColorChange(FocusedRowNumber,"0xFF0000","0xFFFFFF") 
 	LV_Modify(FocusedRowNumber,"-Select")
 	LV_Modify(FocusedRowNumber+1,"Select")
 	traytip,错误,相同快捷键已经存在,5
@@ -946,49 +947,37 @@ LV_ColorChange(Index="",TextColor="",BackColor="") ; change specific line's colo
 	} 
 }
 
-;禁止调整列表中列的宽度，行文字变色
+; 禁止调整列表中列的宽度，行文字变色
 WM_NOTIFY( p_w,p_l,p_m )
 { 
 	local draw_stage,Current_Line,Index
 	Critical
+
 	Static HDN_BEGINTRACKA = -306,HDN_BEGINTRACKW = -326,HDN_DIVIDERDBLCLICK = -320
 	;Code := -(~NumGet(p_l+0,8))-1
 	Code :=NumGet(p_l + 8,0,"Int")
 	If (Code = HDN_BEGINTRACKA) || (Code = HDN_BEGINTRACKW)|| (Code = HDN_BEGINTRACKW)
 		Return True
-	If ( DecodeInteger( "uint4",p_l,0 ) = hw_LV_ColorChange ){ 
-		If ( DecodeInteger( "int4",p_l,8 ) = -12 ) {                            ; NM_CUSTOMDRAW 
-			draw_stage := DecodeInteger( "uint4",p_l,12 ) 
+	If ( NumGet( p_l+0,0,"Uint") = hw_LV_ColorChange ){ 
+		If ( NumGet(p_l+0,8,"int" ) = -12 ) {                            ; NM_CUSTOMDRAW 
+			draw_stage := NumGet(p_l+0,12,"Uint") 
 			If ( draw_stage = 1 )                                                 ; CDDS_PREPAINT 
 				Return,0x20                                                      ; CDRF_NOTIFYITEMDRAW 
 			Else If ( draw_stage = 0x10000|1 ){                                   ; CDDS_ITEM 
-				Current_Line := DecodeInteger( "uint4",p_l,36 )+1 
+				Current_Line := NumGet( p_l+0,36,"Uint")+1 
 				LV_GetText(Index,Current_Line,4) 
 				If (Line_Color_%Index%_Text != ""){
-					EncodeInteger( Line_Color_%Index%_Text,4,p_l,48 )   ; foreground 
-					EncodeInteger( Line_Color_%Index%_Back,4,p_l,52 )   ; background 
+					NumPut( BGR(Line_Color_%Index%_Text),p_l+0,48,"Uint")   ; foreground 
+					NumPut( BGR(Line_Color_%Index%_Back),p_l+0,52,"Uint")   ; background 
+
+					;debug:=Line_Color_%Index%_Text "-" Line_Color_%Index%_Back "-" NumGet( p_l+0,0,"Uint") "-" NumGet(p_l+0,8,"int" ) "-" NumGet(p_l+0,12,"Uint") "-" NumGet( p_l+0,36,"Uint") "-" NumGet( p_l+0,48,"Uint") "-" NumGet( p_l+0,52,"Uint")
+					;fileappend,% debug "`n`n",%A_desktop%\debug.txt
 				}
 			}
 		}
 	}
 }
 
-DecodeInteger( p_type,p_address,p_offset,p_hex=true )
-{ 
-	old_FormatInteger := A_FormatInteger 
-	ifEqual,p_hex,1,SetFormat,Integer,hex 
-	Else,SetFormat,Integer,dec 
-	StringRight,size,p_type,1 
-	loop,%size% 
-		value += *( ( p_address+p_offset )+( A_Index-1 ) ) << ( 8*( A_Index-1 ) ) 
-	If ( size <= 4 and InStr( p_type,"u" ) != 1 and *( p_address+p_offset+( size-1 ) ) & 0x80 ) 
-		value := -( ( ~value+1 ) & ( ( 2**( 8*size ) )-1 ) ) 
-	SetFormat,Integer,%old_FormatInteger% 
-	Return,value 
-} 
-
-EncodeInteger( p_value,p_size,p_address,p_offset )
-{ 
-	loop,%p_size% 
-	DllCall( "RtlFillMemory","uint",p_address+p_offset+A_Index-1,"uint",1,"uchar",p_value >> ( 8*( A_Index-1 ) ) ) 
+BGR(i) {
+   Return, (i & 0xff) << 16 | (i & 0xffff) >> 8 << 8 | i >> 16
 }
