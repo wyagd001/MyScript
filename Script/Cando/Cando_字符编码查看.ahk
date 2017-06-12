@@ -1,11 +1,8 @@
 Cando_字符编码查看:
 	Gui,66:Default
 	Gui,Destroy
-	;CandySel:="开一二不"  ; 后、沈 里 杰 等汉字繁简转换不会成功 後、瀋、裏、傑
-; http://bbs.csdn.net/topics/80273594
-; http://www.csframework.com/archive/2/arc-2-20110816-1794.htm
-; http://xpcpy.blog.51cto.com/679285/528914
-; http://www.greenhua.com/soft/14445.html
+	;CandySel:="开一二不"  
+	; 后、沈、里、 杰 等汉字简繁转换不会成功 後、瀋、裏、傑
 
 	Gosub,Encode
 	Gui, add, text,x5 y5,简体汉字:
@@ -311,19 +308,19 @@ toHex( ByRef V, ByRef H, dataSz:=0 )
 
 hex2dec(h)
 {
-oldfrmt := A_FormatInteger
-SetFormat, integer, dec
-d :=h+0
+	oldfrmt := A_FormatInteger
+	SetFormat, integer, dec
+	d :=h+0
+	SetFormat, IntegerFast, %oldfrmt% 
 return d
-SetFormat, IntegerFast, %oldfrmt% 
 } 
 
 dec2hex(d)
 {
-oldfrmt := A_FormatInteger
-SetFormat, integer, H
-h :=d+0
-SetFormat, IntegerFast, %oldfrmt%
+	oldfrmt := A_FormatInteger
+	SetFormat, integer, H
+	h :=d+0
+	SetFormat, IntegerFast, %oldfrmt%
 return h
 }
 
