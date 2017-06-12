@@ -412,7 +412,7 @@ FileReadLine, Mp3, %AhkMediaLibFile%, %PlayIndex%
 	MCI_ToHHMMSS2(len, hh, lm, ls)
 Return 
 
-ListReadWrite: ;() {
+ListReadWrite:
 
 	IniRead, Count, %run_iniFile%, AhkPlayer, Count
 	IniRead, PlayIndex, %run_iniFile%, AhkPlayer, PlayIndex
@@ -428,10 +428,7 @@ if (PlayIndex > Count)
 	PlayIndex = 1
 
 	IniWrite, %PlayIndex%, %run_iniFile%, AhkPlayer, PlayIndex
-
-Return ;}
-
-
+Return
 
 sNameTrim:
 StringLen, sLength, mp3
@@ -516,37 +513,41 @@ Return
 ^+P::
 MyPause:
 	Status := MCI_Status(hSound)
-	If(Status = "stopped" OR Status = "Paused"){
+
+	If(Status = "stopped" OR Status = "Paused")
+	{
 		If Status = stopped
-		       {
-				MCI_Play(hSound)
-				Menu, PlayBack, UnCheck,停止(&S)
-				Menu, PlayBack, UnCheck,暂停/播放(&P)
-        if(hidelrc=0)
+		{
+			MCI_Play(hSound)
+			Menu, PlayBack, UnCheck,停止(&S)
+			Menu, PlayBack, UnCheck,暂停/播放(&P)
+			if(hidelrc=0)
 				Gosub, Lrc
-				SetTimer,CheckStatus,100
-				}
-			Else{
-				MCI_Resume(hSound)
-        if(hidelrc=0)
-         {
+			SetTimer,CheckStatus,100
+		}
+		Else
+		{
+			MCI_Resume(hSound)
+			if(hidelrc=0)
+			{
 				lrcPause(0)
-        Gui,2:show 
-         }
-				Menu, PlayBack, ToggleCheck,暂停/播放(&P)
+				Gui,2:show 
 			}
+			Menu, PlayBack, ToggleCheck,暂停/播放(&P)
+		}
 		GuiControl,,pausepic,	%A_ScriptDir%\pic\AhkPlayer\play.bmp
 		playing = 1
-    }
-    Else{
+	}
+	Else
+	{
 		Pausetime:=A_TickCount
 		MCI_Pause(hSound)
 		if(hidelrc=0)
-    {
-     lrcPause(1)
-     hidelrc=2
-		 gosub lrcshow
-    }
+		{
+			lrcPause(1)
+			hidelrc=2
+			gosub lrcshow
+		}
 		Menu, PlayBack, ToggleCheck,暂停/播放(&P)
 		playing = 0
 		GuiControl,,pausepic,%A_ScriptDir%\pic\AhkPlayer\pause.bmp
@@ -614,7 +615,6 @@ PlayMusic:
 	MCI_ToHHMMSS2(len, hh, lm, ls)
 Return
 
-
 !F3::
 Jump:
 	InputBox, Seek,跳转,输入要跳转到的时间，歌词不支持跳转`n例子：要跳转到2:20输入220
@@ -646,7 +646,6 @@ Jump:
    }
 
 Return
-
 
 !F5::
 IfExist,%LrcPath%\%name%.lrc

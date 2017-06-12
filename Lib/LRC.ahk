@@ -2,15 +2,15 @@ lrcPause(x){
 	global
 	Stime:=starttime
 	If x=0
-	SetTimer, lrcpause, Off
+		SetTimer, lrcpause, Off
 	Else
-	SetTimer, lrcpause, 100
-	Return
+		SetTimer, lrcpause, 100
+Return
 
-	lrcpause:
-	passedtime:=A_TickCount-Pausetime
-	starttime:=Stime+passedtime
-	Return
+lrcpause:
+		passedtime:=A_TickCount-Pausetime
+		starttime:=Stime+passedtime
+Return
 }
 
 lrcECHO(lrcfile,GuiTitle){
@@ -21,7 +21,13 @@ lrcECHO(lrcfile,GuiTitle){
 	if hidelrc=0
 		Gui, 2:Show, NoActivate, %GuiTitle% - AhkPlayer  ; 不激活窗体避免改变当前激活的窗口
 
-;读取lrc文件的内容
+	OlderFileEncoding:=A_FileEncoding
+	file :=FileOpen(lrcfile,"r")
+	encoding := file.encoding
+	if(encoding="UTF-8")
+		FileEncoding, UTF-8
+
+	; 读取lrc文件的内容
 	n:=1
 	temp:=1
 	Loop, read, %lrcfile%
@@ -65,7 +71,7 @@ lrcECHO(lrcfile,GuiTitle){
 		}
 	}
 
-;对时间戳进行排序
+; 对时间戳进行排序
 	Loop
 	{
 		n:=1
@@ -97,9 +103,11 @@ lrcECHO(lrcfile,GuiTitle){
 
 	t:=1
 	GuiControl, 2:, lrc, % lrc%t%
+	lrcpos := lrcpos?lrcpos:0
 	starttime := A_TickCount - lrcpos
 	lrcpos = 0
 	maxsec:=n-1
+	FileEncoding,% OlderFileEncoding
 	SetTimer, clock, 50
 	Return
 

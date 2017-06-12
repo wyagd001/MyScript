@@ -34,7 +34,7 @@ Cando_ColorPicker:
 		Run,% A_ScriptDir "\Bin\ColorPicker.exe " . mCol . "ff"
 
 	else if RegExMatch(CandySel, "\((?P<col1>25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)\,(?P<col2>25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)\,(?P<col3>25[0-5]|2[0-4]\d|[0-1]\d{2}|[1-9]?\d)\)",mCol){
-		mCol :=A_ScriptDir "\Bin\ColorPicker.exe " . (dec2hex(mColcol1)dec2hex(mColcol2)dec2hex(mColcol3)) . "ff"
+		mCol :=A_ScriptDir "\Bin\ColorPicker.exe " . (color_dec2hex(mColcol1)color_dec2hex(mColcol2)color_dec2hex(mColcol3)) . "ff"
 		Run, % mCol
 	}
 Return
@@ -73,7 +73,7 @@ RGB2Hex(_decimalRGB, _delimiter="")
 }
 
 ;十进制转换为十六进制的函数，参数为10进制数整数.
-dec2hex(d)
+color_dec2hex(d)
 {
 SetFormat, integer, hex
 h :=d+0
