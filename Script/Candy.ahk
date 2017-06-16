@@ -486,7 +486,7 @@ SkSub_GetMenuItem(IniDir,IniNameNoExt,Sec,TopRootMenuName,Parent="")   ;´ÓÒ»¸öin
         }
         Else
         {
-            szMenuIdx.insert( Parent ""  Left )
+            szMenuIdx.Push( Parent ""  Left )
             szMenuContent[ TopRootMenuName "/" Parent "" Left] := Right
             szMenuWhichFile[ TopRootMenuName "/" Parent "" Left] :=IniNameNoExt
         }

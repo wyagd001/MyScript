@@ -1571,7 +1571,6 @@ Return
 #include %A_ScriptDir%\Script\地址栏粘贴并转到.ahk
 #include %A_ScriptDir%\Lib\Explorer.ahk
 #include %A_ScriptDir%\Lib\Menu.ahk
-#include %A_ScriptDir%\Lib\Array.ahk
 #include %A_ScriptDir%\Lib\Window.ahk
 #include %A_ScriptDir%\Lib\ActiveScript.ahk
 #include %A_ScriptDir%\Lib\_GuiDropFiles.ahk

@@ -178,12 +178,12 @@ SelectFiles(Select,Clear=1,Deselect=0,MakeVisible=1,focus=1, hWnd=0)
 						}
 						Sleep 10
 					}
-					items.append(item)
-					itemnames.append(itemname)
+					items.Push(item)
+					itemnames.Push(itemname)
          ;FileAppend,%itemname%`n,%A_desktop%\123.txt
 				}
-        ererer:=Select.len()
-				Loop % Select.len()
+        ererer:=Select.Length()
+				Loop % Select.Length()
 				{
 					index := A_Index
 					filter := Select[A_Index]
@@ -193,7 +193,7 @@ SelectFiles(Select,Clear=1,Deselect=0,MakeVisible=1,focus=1, hWnd=0)
 						{
 							filter := "\Q" StringReplace(filter, "*", "\E.*\Q", 1) "\E"
 							filter := strTrim(filter,"\Q\E")
-							Loop % items.len()
+							Loop % items.Length()
 							{
                 
 								If(RegexMatch(itemnames[A_Index],"i)" filter))
@@ -205,7 +205,7 @@ SelectFiles(Select,Clear=1,Deselect=0,MakeVisible=1,focus=1, hWnd=0)
 						}
 						Else
 						{
-							Loop % items.len()
+							Loop % items.Length()
 							{
 								If(itemnames[A_Index]=filter)
 								{
@@ -640,7 +640,7 @@ ToArray(SourceFiles, ByRef Separator = "`n", ByRef wasQuoted = 0)
 			}
 			If(file)
 			{
-				files.append(file)
+				files.Push(file)
 				pos += strlen(file) + 3
 				continue
 			}
@@ -654,7 +654,7 @@ ToArray(SourceFiles, ByRef Separator = "`n", ByRef wasQuoted = 0)
 				file := SubStr(SourceFiles, pos) ;no quotes or separators, single file
 			If(file)
 			{
-				files.append(file)
+				files.Push(file)
 				pos += strlen(file) + strlen(Separator)
 				continue
 			}

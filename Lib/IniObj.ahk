@@ -1,7 +1,9 @@
-;已修改
+; 已修改
 ; OrderedArray code by Lexikos
-; Modifications and additional methods by rbrtryn
 ; http://tinyurl.com/lhtvalv
+; Modifications and additional methods by rbrtryn
+; https://autohotkey.com/board/topic/94043-ordered-array/
+
 OrderedArray(prm*)
 {
     ; Define prototype object for ordered arrays:
