@@ -21,22 +21,12 @@ LButton::
 	Send {LButton Up}
 	If Closewindow && (Closewindow <> "Error")
 	{
-		If LastClosewindow
+		If(Closewindow!=LastClosewindow)
 		{
-			If(Closewindow!=LastClosewindow)
-			{
-				LastClosewindow:=Closewindow
-				IniWrite,%LastClosewindow%, %run_iniFile%,常规, LastClosewindow
-				Tooltip,该窗口已经记录(点击)。
-				Sleep,1000
-				Tooltip
-			}
-		}
-		else
-		{
+			CloseWindowList.Push(Closewindow)
 			LastClosewindow:=Closewindow
-			Tooltip,该窗口已经记录(点击)。
 			IniWrite,%LastClosewindow%, %run_iniFile%,常规, LastClosewindow
+			Tooltip,该窗口已经记录(点击)。
 			Sleep,1000
 			Tooltip
 		}

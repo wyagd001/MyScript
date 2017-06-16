@@ -162,25 +162,15 @@ MouseGetPos, lastx, lasty
 				Closewindow:=Explorer_GetPath()
 					if Closewindow && (Closewindow <> "Error")
 					{
-						if LastClosewindow
-						{
 							if(Closewindow!=LastClosewindow)
 							{
+							CloseWindowList.Push(Closewindow)
 							LastClosewindow:=Closewindow
 							IniWrite,%LastClosewindow%, %run_iniFile%,常规, LastClosewindow
 							Tooltip,该窗口已经记录(悬浮)。
 							sleep,700
 							Tooltip
 							}
-						}
-						else
-						{
-						LastClosewindow:=Closewindow
-						IniWrite,%LastClosewindow%, %run_iniFile%,常规, LastClosewindow
-						Tooltip,该窗口已经记录(悬浮)。
-						sleep,700
-						Tooltip
-						}
 					}
 				}
 			}

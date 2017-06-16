@@ -130,6 +130,8 @@ work_area_h := NumGet(work_area,12)-NumGet(work_area,4)
 
 x_x2:=work_area_w- 634
 y_y2:=work_area_h- 108
+
+CloseWindowList := []
 ;=========变量设置结束=========
 
 ;=========读取配置文件开始=========

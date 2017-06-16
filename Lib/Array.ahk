@@ -19,7 +19,7 @@ Array(p1="?", p2="?", p3="?", p4="?", p5="?", p6="?"){
 	  ArrBase.unique := "Array_Unique" 
 	  ArrBase.extend := "Array_Extend"
 	  ;ArrBase.copy := "Array_Copy"
-	  ArrBase.pop := "Array_Pop"
+	  ;ArrBase.pop := "Array_Pop"  ;与主程序中的Pop()冲突
 	  ArrBase.swap := "Array_Swap"
 	  ArrBase.move := "Array_Move"
 	}

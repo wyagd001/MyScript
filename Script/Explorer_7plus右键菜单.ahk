@@ -12,12 +12,18 @@ Return
 Return
 
 1007:
-	sleep,500
-	If Closewindow && FileExist(Closewindow)
-		run, % "explorer.exe " Closewindow
-	Else If LastClosewindow && FileExist(LastClosewindow)
-		Run, % "explorer.exe " LastClosewindow
-;msgbox % Closewindow "-" FileExist(Closewindow) "-" LastClosewindow "-" FileExist(LastClosewindow)
+	Sleep,500
+	If CloseWindowList.Length()
+	{
+		tmpCW:=CloseWindowList.Pop()
+		If tmpCW &&FileExist(tmpCW)
+			run, % "explorer.exe " tmpCW
+	}
+	Else
+	{
+		If LastClosewindow && FileExist(LastClosewindow)
+			Run, % "explorer.exe " LastClosewindow
+	}
 Return
 
 regsvr32dll:
