@@ -2,7 +2,7 @@ Cando_字符编码查看:
 	Gui,66:Default
 	Gui,Destroy
 	;CandySel:="开一二不"  
-	; 后、沈、里、 杰 等汉字简繁转换不会成功 後、瀋、裏、傑
+	; 汉字简繁转换不确保成功 例如后(後)、沈(瀋)、里(裏)、 杰(傑)、发(發、髮)等 
 
 	Gosub,Encode
 	Gui, add, text,x5 y5,简体汉字:
@@ -154,8 +154,8 @@ ToDec:
 	code := StrReplace(code, "\u", " ")
 	Loop, Parse, code, %A_Space%
 	{
-  tmphex:="0x" A_LoopField
-  c2dec .=" " hex2dec(tmphex)
+		tmphex:="0x" A_LoopField
+		c2dec .=" " hex2dec(tmphex)
 }
 GuiControl, , %WButton%, % Trim(c2dec)
 c2dec=
@@ -165,7 +165,7 @@ ToHex:
 	Gui, Submit, NoHide
 	WButton:=StrReplace(A_GuiControl , "tohex", "")
 	code:=%WButton%
- If(code="")
+	If(code="")
 		Return
 	If code contains a,b,c,d,e,f
 		Return
@@ -174,7 +174,7 @@ ToHex:
 	code := StrReplace(code, "&#", "")
 	code := StrReplace(code, ";", " ")
 	Loop, Parse, code, %A_Space%
-	c2hex .=" " dec2hex(A_LoopField)
+		c2hex .=" " dec2hex(A_LoopField)
 	c2hex:=StrReplace(c2hex, "0x", "")
 
 	GuiControl, , %WButton%, % Trim(c2hex)
