@@ -18,6 +18,7 @@
 #Include *i %A_ScriptDir%\Script\Cando\Cando_Google网络翻译.ahk
 #Include *i %A_ScriptDir%\Script\Cando\Cando_字符编码查看.ahk
 #Include *i %A_ScriptDir%\Script\Cando\Cando_Msdn搜索.ahk
+#Include *i %A_ScriptDir%\Script\Cando\Cando_十进制十六进制转换.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_文件属性.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_复制路径.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_定位文件.ahk

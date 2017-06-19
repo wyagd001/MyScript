@@ -151,7 +151,7 @@ ToDec:
 	GuiControl, , %WButton%
  If(code="")
 		Return
-code := StrReplace(code, "\u", " ")
+	code := StrReplace(code, "\u", " ")
 	Loop, Parse, code, %A_Space%
 	{
   tmphex:="0x" A_LoopField
@@ -167,18 +167,18 @@ ToHex:
 	code:=%WButton%
  If(code="")
 		Return
-If code contains a,b,c,d,e,f
-Return
+	If code contains a,b,c,d,e,f
+		Return
 	GuiControl, , %WButton%
 
-code := StrReplace(code, "&#", "")
-code := StrReplace(code, ";", " ")
+	code := StrReplace(code, "&#", "")
+	code := StrReplace(code, ";", " ")
 	Loop, Parse, code, %A_Space%
-  c2hex .=" " dec2hex(A_LoopField)
-c2hex:=StrReplace(c2hex, "0x", "")
+	c2hex .=" " dec2hex(A_LoopField)
+	c2hex:=StrReplace(c2hex, "0x", "")
 
-GuiControl, , %WButton%, % Trim(c2hex)
-c2hex=
+	GuiControl, , %WButton%, % Trim(c2hex)
+	c2hex=
 Return
 
 clearedit:
