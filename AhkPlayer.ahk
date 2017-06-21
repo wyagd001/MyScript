@@ -344,14 +344,17 @@ else
 Gui,Show,,播放媒体库 - AhkPlayer
 Return
 
+; 停止播放，返回开头
 Stop:
-SetTimer,CheckStatus,Off
-playing=0
-MCI_Stop(hSound)
-Menu, PlayBack, Check,停止(&S)
-
-SetTimer, clock,Off
-gosub,CheckStatus
+  SetTimer,CheckStatus,Off
+  playing=0
+  MCI_Stop(hSound)
+  MCI_Seek(hSound,0)
+  Menu, PlayBack, Check,停止(&S)
+  Gui,2:hide
+  lrcclear()
+  SetTimer, clock,Off
+  gosub,CheckStatus
 Return
 
 ToolTipMP3:
@@ -509,7 +512,7 @@ MCI_Seek(hSound, MCI_Length(hSound))
 }
 Return
 
-;暂停
+; 暂停
 ^+P::
 MyPause:
 	Status := MCI_Status(hSound)
@@ -554,7 +557,7 @@ MyPause:
 	}
 Return
 
-;下一首
+; 下一首
 ^+F5::
 Next:
 	MCI_Seek(hSound, MCI_Length(hSound))
@@ -562,6 +565,7 @@ if (hidelrc=0)
 Gosub, Lrc
 Return
 
+; 退出程序
 ^+E::
 Exit:
 ExitSub:
@@ -574,7 +578,7 @@ ExitSub:
 	ExitApp
 Return
 
-;播放包含关键字的歌曲
+; 播放包含关键字的歌曲
 !F9::
 PlayMusic:
 ;Exit = true
@@ -729,7 +733,7 @@ hide=1
 }
 Return
 
-;将正在播放的文件加入到播放列表
+; 将正在播放的文件加入到播放列表
 !F10::
 FileRead, NoDoubles, %AhkMediaListFile%
 IfNotInString, NoDoubles, %mp3%
@@ -759,7 +763,7 @@ VolumeC:
 VA_SetVolume(VSlider)
 Return
 
-;菜单添加文件到列表
+; 菜单添加文件到列表
 MenuFileAdd:
 Gui,Submit, NoHide
 FileSelectFile, File, M,, 添加文件, 音频文件 (*.mp3; *.wma; *.wav; *.mid;)
@@ -785,7 +789,7 @@ LV_ModifyCol()
 LV_Modify(xuhao,"+Vis")
 Return
 
-;菜单添加文件夹到列表
+; 菜单添加文件夹到列表
 MenuFolderAdd:
 Gui,Submit, NoHide
 FileSelectFolder,  Folder,,, 选择音频文件所在文件夹
@@ -807,7 +811,7 @@ LV_ModifyCol()
 LV_Modify(xuhao,"+Vis")
 return
 
-;拖拽文件到窗口
+; 拖拽文件到窗口
 GuiDropFiles:
 Gui, Submit, NoHide
 LV_Modify(0, "-Select")
@@ -827,7 +831,7 @@ Loop, Parse, A_GuiEvent, `n
 LV_Modify(xuhao,"+Vis")
 Return
 
-;菜单播放所选(单选)
+; 菜单播放所选(单选)
 MenuOpen:
 LV_GetText(Mp3, LV_GetNext(Row), 4)
 PlaylistIndex:=LV_GetNext(Row)
@@ -854,14 +858,14 @@ if FileExist(Mp3)
 	}
 Return
 
-;菜单打开所选文件位置(单选)
+; 菜单打开所选文件位置(单选)
 MenuOpenFilePath:
 LV_GetText(Mp3, LV_GetNext(Row), 4)
 If Fileexist(Mp3)
 Run,% "explorer.exe /select," Mp3
  Return
 
-;菜单删除所选(可多选)
+; 菜单删除所选(可多选)
 MenuRemove:
 Loop, % LV_GetCount()			;%
 	Row := LV_GetNext(Row), LV_Delete(Row)
@@ -891,7 +895,7 @@ MsgBox,,清空列表失败,列表已经为空或文件不可读写
 }
 Return
 
-;单曲循环
+; 单曲循环
 PSingleCycle:
 SingleCycle := !SingleCycle
 if(SingleCycle=true)
@@ -911,7 +915,7 @@ FileDelete, %SingleCycleFile%
 }
 Return
 
-;播放列表
+; 播放列表
 PTList:
 NowPlayFile = %AhkMediaListFile%
 FileGetSize, playlistfilesize, %AhkMediaListFile%
@@ -938,7 +942,7 @@ gosub,refreshList
 Gui,Show,,播放列表 - AhkPlayer
 Return
 
-;播放媒体库
+; 播放媒体库
 PTLib:
 NowPlayFile := AhkMediaLibFile
 Menu, PlayBack, Check,播放媒体库(&M)
@@ -1034,7 +1038,7 @@ Link_5:
 Run,http://ahk8.com/thread-2570.html
 Return
 
-;查找歌曲
+; 查找歌曲
 find:
 Libxuhao=0
 LV_Delete()
@@ -1057,7 +1061,7 @@ Loop, read, %AhkMediaLibFile%
 LV_ModifyCol()
 Return
 
-;刷新列表
+; 刷新列表
 refreshList:
 LV_Delete()
 xuhao = 0
@@ -1073,7 +1077,7 @@ Loop, read, %AhkMediaListFile%
 }
 Return
 
-;查找结果追加到列表
+; 查找结果追加到列表
 FindToList:
 ;Findsave:
 ;FileDelete, %AhkMediaListFile%
@@ -1094,7 +1098,7 @@ FileRead, NoDoubles, %AhkMediaListFile%
 	}
 Return
 
-;右键清空列表或从列表中删除
+; 右键清空列表或从列表中删除
 Remove:
 If (A_ThisMenuItem = "清空列表")
    {
@@ -1126,7 +1130,7 @@ gosub,refreshlist
 }
 Return
 
-;右键移除重复与无效项
+; 右键移除重复与无效项
 RemoveDuplicateInvalid:
 TF_RemoveDuplicateLines(AhkMediaListFile, "", "", 0,false)
 sleep,200
@@ -1145,7 +1149,7 @@ sleep,200
 gosub,refreshList
 Return
 
-;右键将选中行添加到播放列表
+; 右键将选中行添加到播放列表
 AddList:
 RowNumber = 0
 FileRead, NoDoubles, %AhkMediaListFile%
@@ -1173,7 +1177,7 @@ else if (A_GuiEvent = "DoubleClick")
 gosub,PlayLV
 return
 
-;右键播放所选歌曲
+; 右键播放所选歌曲
 PlayLV:
 LV_GetText(Mp3, A_EventInfo, 4)
 PlaylistIndex:= A_EventInfo
@@ -1245,26 +1249,26 @@ if hSound
 return
 
 CheckStatus:
-Status := MCI_Status(hSound)
-If Status = stopped
-    {
+  Status := MCI_Status(hSound)
+  If Status = stopped
+  {
     SB_SetText("停止播放 " SName,1)
-	SongTime = 0:0:0 / %lhh%:%lm%:%ls%
-	SB_SetText(SongTime,2)
-	SB_SetProgress(0 ,3)
-    }
-If Status = Paused
-    {
+    SongTime = 0:0:0 / %lhh%:%lm%:%ls%
+    SB_SetText(SongTime,2)
+    SB_SetProgress(0 ,3)
+  }
+  If Status = Paused
+  {
     SB_SetText("暂停 " SName,1)
-    }
-If playing = 1
-{
- SB_SetText("正在播放 " SName ,1)
- SongTime = %hh%:%mm%:%ss% / %lhh%:%lm%:%ls%
- SB_SetText(SongTime,2)
- opos := (pos/Len)*100
- SB_SetProgress(opos ,3)
- }
+  }
+  If playing = 1
+  {
+    SB_SetText("正在播放 " SName ,1)
+    SongTime = %hh%:%mm%:%ss% / %lhh%:%lm%:%ls%
+    SB_SetText(SongTime,2)
+    opos := (pos/Len)*100
+    SB_SetProgress(opos ,3)
+  }
 Return
 
 Updatevolume:
