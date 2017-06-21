@@ -474,7 +474,7 @@ Run,notepad.exe %run_iniFile%,,UseErrorLevel
 Return
 
 inieditor_click:
-Run,%A_AhkPath% "%A_ScriptDir%\Plugins\inieditor.ahk" "%run_iniFile%"
+Run,"%A_AhkPath%" "%A_ScriptDir%\Plugins\inieditor.ahk" "%run_iniFile%"
 Return
 
 ooo:
@@ -482,7 +482,7 @@ Run,%FloderMenu_iniFile%
 Return
 
 自定义运行命令_click:
-run,%A_AhkPath% "%A_ScriptDir%\Plugins\自定义运行命令.ahk"
+run,"%A_AhkPath%" "%A_ScriptDir%\Plugins\自定义运行命令.ahk"
 Return
 
 g:
@@ -745,7 +745,7 @@ If not FocusedRowNumber
 else
 {
 LV_GetText(Col1Text,FocusedRowNumber,1) 
-Run,%A_AhkPath% "%A_ScriptDir%\Plugins\%Col1Text%.ahk"
+Run,"%A_AhkPath%" "%A_ScriptDir%\Plugins\%Col1Text%.ahk"
 }
 Return
 

@@ -103,9 +103,9 @@ vol_PosY := A_ScreenHeight - vol_Thick - 72
 vol_BarOptionsMaster = 1:B1 ZH%vol_Thick% ZX8 ZY4 W%vol_Width% X%vol_PosX% Y%vol_PosY% CW%vol_CW%
 ;---------Alt+滚轮调节音量随机颜色---------
 
-; 托盘菜单中打开帮助文件和spy时需指定路径
+; 托盘菜单中打开帮助文件和spy时需指定路径，判断托盘图标指定进程名
 ; 将Autohotkey.exe的完整路径分割，贮存Autohotkey.exe所在目录的路径为"pathd"
-Splitpath,A_AhkPath,,pathd
+Splitpath,A_AhkPath,Ahk_Process,pathd
 
 ; 检测系统版本
 ; 版本号>6  Vista7为真(1)
@@ -764,11 +764,7 @@ If (EasyKey) {
 ;----------不显示托盘图标则重启脚本----------
 Script_pid:=DllCall("GetCurrentProcessId")
 Tray_Icons := {}
-Tray_Icons := TrayIcon_GetInfo("autohotkey.exe")
-if Tray_Icons.Length() = 0
-Tray_Icons := TrayIcon_GetInfo("autohotkey_La.exe")
-if Tray_Icons.Length() = 0
-Tray_Icons := TrayIcon_GetInfo("autohotkey_Lu.exe")
+Tray_Icons := TrayIcon_GetInfo(Ahk_Process)
 
 for index, Icon in Tray_Icons {
 trayicons_pid .= Icon.Pid ","
@@ -1522,7 +1518,7 @@ for k,v in Pluginshotkey
 {
 If(v=tmphotkey)
 {
-Run,%A_AhkPath% "%A_ScriptDir%\Plugins\%k%.ahk"
+Run,"%A_AhkPath%" "%A_ScriptDir%\Plugins\%k%.ahk"
 break
 }
 }

@@ -156,9 +156,9 @@ ToDec:
 	{
 		tmphex:="0x" A_LoopField
 		c2dec .=" " hex2dec(tmphex)
-}
-GuiControl, , %WButton%, % Trim(c2dec)
-c2dec=
+	}
+	GuiControl, , %WButton%, % Trim(c2dec)
+	c2dec=
 Return
 
 ToHex:

@@ -10,7 +10,7 @@ Loop, %scriptCount%
         ifinstring, thisScript, !
 	    continue
         IfWinNotExist %thisScript% - AutoHotkey    ; 没有打开
-            Run,%A_AhkPath% "%ScriptManager_Path%\%thisScript%"
+            Run,"%A_AhkPath%" "%ScriptManager_Path%\%thisScript%"
 
         scripts%A_index%1 = 1
 
@@ -31,7 +31,7 @@ Loop, %scriptCount%
     If thisScript = %A_thismenuitem%.ahk  ; match found.
     {
         IfWinNotExist %thisScript% - AutoHotkey    ; 没有打开
-            Run,%A_AhkPath% "%ScriptManager_Path%\%thisScript%"
+            Run,"%A_AhkPath%" "%ScriptManager_Path%\%thisScript%"
 
         scripts%A_index%1 := 1
 

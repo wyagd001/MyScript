@@ -133,7 +133,7 @@ openbutton:
 			Return
 		}
 
-		Run, %A_AhkPath% "\\.\pipe\%pipe_name%"
+		Run, "%A_AhkPath%" "\\.\pipe\%pipe_name%"
 
 ; Wait for AutoHotkey to connect to pipe_ga via GetFileAttributes().
 		DllCall("ConnectNamedPipe",ptr,pipe_ga,ptr,0)
