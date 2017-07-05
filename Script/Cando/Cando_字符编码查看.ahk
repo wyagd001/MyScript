@@ -41,6 +41,10 @@ Cando_字符编码查看:
 	Gui,add,Edit,x120 y215 w300 h20 vtrc,% trc
 	Gui,add,button,x420 y215 w50 h20 vtrctochinese gTochinese,转简体
 
+	Gui, add, text,x5 y+10 ,日文(CP932):
+	Gui,add,Edit,x120 y245 w300 h20 vcp932,
+	Gui,add,button,x420 y245 w50 h20 vcp932tochinese gTochinese,转日文
+
 	Gui,show,,中文字符编码查看
 	SetFormat, integer, D
 Return
@@ -53,13 +57,14 @@ viewcode:
 	{
 		CandySel:=Ccharacter
 		Gosub,Encode
-		GuiControl, , cp0, % Trim(cp0)
+	  GuiControl, , cp0, % Trim(cp0)
 		GuiControl, , cp936, % Trim(cp936)
 		GuiControl, , cp950, % Trim(cp950)
 		GuiControl, , cp65001, % Trim(cp65001)
 		GuiControl, , cp1200, % Trim(cp1200)
 		GuiControl, , cp1201, % Trim(cp1201)
 		GuiControl, , trc, % trc
+    GuiControl, , cp932,
 	}
 Return
 
@@ -269,11 +274,16 @@ Encode(Str, Encoding, Separator := " ")
 		Else
 		{
 			HH:=SubStr(h:=NumGet(ObjStr, A_Index - 1, "UChar"), 3)
-			If(h<0x7F)
+			If(h+0<0x7F)
 			{
-				ObjCodes .=Separator . HH
-				tmpswitch=1
-			}
+        if(tmpswitch=2)
+        {
+				  ObjCodes .= HH
+				  tmpswitch=1
+			  }
+        else
+          ObjCodes .= Separator . HH
+      }
 			else
 			{
 				if(tmpswitch=1) or (tmpswitch="")or (tmpswitch=0)
