@@ -1,20 +1,21 @@
-;原脚本已被修改
-;MoveInactiveWin.ahk
-;http://www.1hoursoftware.com
-;Easy Window Dragging -- KDE style (requires XP/2k/NT) -- by Jonny
-;http://www.autohotkey.com/forum/topic2062.html  和  帮助文件里的脚本实例中有收录
+; 原脚本已被修改
+; MoveInactiveWin.ahk
+; http://www.1hoursoftware.com
+; Easy Window Dragging -- KDE style (requires XP/2k/NT) -- by Jonny
+; http://www.autohotkey.com/forum/topic2062.html 和  帮助文件里的脚本实例中有收录
 
-SetWinDelay,0
-SetBatchLines,-1
-CoordMode,Mouse,Screen
+;SetWinDelay,0
+;SetBatchLines,-1
+;CoordMode,Mouse,Screen
 
-#ifWinNotActive,Warcraft III
-!LButton::
-ifWinActive,ahk_class Valve001
-{
-    Send !{LButton}
-return
-}
+;#ifWinNotActive,Warcraft III
+;!LButton::
+Alt和左键移动窗口:
+;ifWinActive,ahk_class Valve001
+;{
+;    Send !{LButton}
+;return
+;}
 MouseGetPos,oldmx,oldmy,mwin,mctrl
 WinGet, window_minmax, MinMax, ahk_id %mwin%
 ; Return if the window is maximized or minimized
@@ -40,15 +41,16 @@ Loop
   oldmy:=my
 }
 Return
-#ifWinNotActive
+;#ifWinNotActive
 
-#ifWinNotActive,Warcraft III
-!RButton::
-ifWinActive,ahk_class Valve001
-{
-    Send !{RButton}
-return
-}
+;#ifWinNotActive,Warcraft III
+;!RButton::
+Alt和右键窗口大小:
+;ifWinActive,ahk_class Valve001
+;{
+;    Send !{RButton}
+;return
+;}
 CoordMode,Mouse,Screen
 MouseGetPos,KDE_X1,KDE_Y1,KDE_id
 WinGet,KDE_Win,MinMax,ahk_id %KDE_id%
@@ -85,9 +87,10 @@ Loop
     KDE_Y1 := (KDE_Y2 + KDE_Y1)
 }
 return
-#ifWinNotActive
+;#ifWinNotActive
 
-!^LButton::
+;!^LButton::
+控件位置:
 ; Get the initial mouse position and Control id relative to the Window
 CoordMode,Mouse,Relative
 MouseGetPos,KDE_X1,KDE_Y1,KDE_id,KDE_Ctrl
@@ -107,7 +110,8 @@ Loop
 }
 return
 
-!^RButton::
+;!^RButton::
+控件大小:
 ; Get the initial mouse position and Control id relative to the Window
 CoordMode,Mouse,Relative
 MouseGetPos,KDE_X1,KDE_Y1,KDE_id,KDE_Ctrl

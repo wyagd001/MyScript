@@ -14,7 +14,7 @@ Monitormenuclick:
 	{
 		idx :=A_Index-1
 		state := MenuState(hMenu,idx)
-		if (state = 128)
+		if (state = 128)  ; ∏ﬂ¡¡≤Àµ• MFS_HILITE 0x00000080
 		{
 			;IsEnabled := GetContextMenuState(hMenu, idx)
 			idn := DllCall("GetMenuItemID", "Uint", hMenu, "int", idx)
@@ -51,7 +51,7 @@ return
 
 addmenuitem:
 	;settimer, reactivate, -300
-	clsn:=WinGetClass2(hWndnow)
+	clsn:=WinGetClass(hWndnow)
 	WinGet, active_id, ID, A
 	wingetclass, act_class,ahk_id %active_id%
 	if act_class in CabinetWClass,IEframe
@@ -110,10 +110,9 @@ HookProc(hWinEventHook2, Event, hWnd)
 		hShutdownDialog =
 }
 
-WinGetClass2( hwnd )
+WinGetClass( hwnd )
 {
 	WinGetClass, wclass, ahk_id %hwnd%
-	;tooltip % wclass
 	Return wclass
 }
 
@@ -175,7 +174,6 @@ GetContextMenuState(hMenu, Position)
 	*/
 return GetMenuItemInfoRes
 }
-
 
 _IsPressed(sHexKey)
 {

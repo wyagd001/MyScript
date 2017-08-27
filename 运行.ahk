@@ -1,17 +1,20 @@
-; 在一个脚本已经运行时,如果再次打开它，将跳过对话框，并自动地运行（替换原来打开的脚本）。
-;
+; 在一个脚本已经运行时，如果再次打开它，
+; 将跳过对话框，并自动地运行（替换原来打开的脚本）。
 #SingleInstance force
-;开机时启动脚本，等待时间设置长些，使托盘图标可以显示出来
+; 开机时启动脚本，等待时间设置长些，使托盘图标可以显示出来
 if(A_TickCount<120000)
 sleep,20000
 
-; 在脚本最开头，利用Reload变通实现批量#Include
-; 自动生成AutoIncludeAll.ahk   第一次运行设置AutoInclude=1
-AutoInclude=1
+run_iniFile = %A_ScriptDir%\settings\setting.ini
+IniRead, content, %run_iniFile%,功能开关
+Gosub, GetAllKeys
 
-If AutoInclude
+; 在脚本最开头，利用Reload变通实现批量#Include
+; 自动生成AutoIncludeAll.ahk
+If Auto_Include
 	Gosub, _AutoInclude
 
+; 管理员权限
 If(!A_IsAdmin)
 	{
 		Loop %0%
@@ -23,17 +26,13 @@ If(!A_IsAdmin)
 			MsgBox, 没有启用管理员权限
 }
 
-; 使“脚本管理器”文件夹中的脚本的工作目录为%A_ScriptDir%\脚本管理器，
-; 而不是主脚本所在的目录(如果脚本管理器中没有设置WorkingDir，
-; 默认的工作目录会变为主脚本所在的目录)
-; SetWorkingDir %A_ScriptDir%\脚本管理器
-
 ; 探测“隐藏"的窗口
 DetectHiddenWindows, On
 ; 设置脚本的执行速度
 SetBatchLines -1
 ComObjError(0)
 AutoTrim, On
+SetWinDelay, 0
 
 ; 匹配模式 窗口标题包含有指定文字时符合匹配 。
 SetTitleMatchMode 2
@@ -48,18 +47,14 @@ CoordMode, Mouse, Screen
 ;========变量设置开始========
 FileRead, AppVersion, %A_ScriptDir%\version.txt
 AppTitle = 拖拽移动文件到目标文件夹(自动重命名)
-ArrCount = 0    ; 快捷键初始话变量
-SetWinDelay, 0
-XWN_FocusFollowsMouse = 0   ; 附加功能自动激活窗口初始不激活，与自动激活冲突
-State = 0
+
+; 附加功能自动激活窗口初始不激活，与自动激活冲突
+XWN_FocusFollowsMouse = 0   
 ImageExtensions = jpg,png,bmp,gif,tga,tif,ico,jpeg
-visable = 1
 HKOpenInNewFolder = 1
-ejecttype = 0
 
 ZoomNao := .25
 
-run_iniFile = %A_ScriptDir%\settings\setting.ini
 FloderMenu_iniFile = %A_ScriptDir%\settings\FloderMenu.ini
 SaveDeskIcons_inifile = %A_ScriptDir%\settings\SaveDeskIcons.ini
 update_txtFile = %A_ScriptDir%\settings\tmp\CurrentVersion.txt
@@ -147,18 +142,13 @@ IniRead,ws_Animate, %run_iniFile%,缩为标题栏, ws_Animate
 IniRead,ws_RollUpSmoothness, %run_iniFile%,缩为标题栏, ws_RollUpSmoothness
 IniRead,Edge_Dock_Activation_Delay, %run_iniFile%,自动显示隐藏窗口, Edge_Dock_Activation_Delay
 IniRead,Edge_Dock_Border_Visible, %run_iniFile%,自动显示隐藏窗口, Edge_Dock_Border_Visible
-IniRead,更新,%run_iniFile%,常规,更新
-IniRead,run_with_sys,%run_iniFile%,常规,run_with_sys
-IniRead,mousetip,%run_iniFile%,常规,mousetip
-IniRead,x_x,%run_iniFile%,常规,x_x
-IniRead,y_y,%run_iniFile%,常规,y_y
-IniRead,txt,%run_iniFile%,常规,txt
-IniRead,TextEditor,%run_iniFile%,常规,TextEditor
-IniRead,ImageEditor,%run_iniFile%,常规,ImageEditor
-IniRead,PasteAndOpen,%run_iniFile%,常规,PasteAndOpen
-IniRead,SaveDeskIcons,%run_iniFile%,常规,SaveDeskIcons
-IniRead,smartchooserbrowser,%run_iniFile%,常规,smartchooserbrowser
-IniRead,TargetFolder,%run_iniFile%,常规,TargetFolder
+
+IniRead, content, %run_iniFile%,常规
+Gosub, GetAllKeys
+
+IniRead, content, %run_iniFile%,功能模式选择
+Gosub, GetAllKeys
+
 If TargetFolder
 {
 	IfnotExist,%TargetFolder%
@@ -176,37 +166,32 @@ If LastClosewindow
 	IniWrite,%LastClosewindow%,%run_iniFile%,常规,LastClosewindow
 	}
 }
-IniRead,openauto,%run_iniFile%,自动激活,openauto
-IniRead,hover_task_buttons,%run_iniFile%,自动激活,hover_task_buttons
-IniRead,hover_task_group,%run_iniFile%,自动激活,hover_task_group
-IniRead,hover_task_min_info,%run_iniFile%,自动激活,hover_task_min_info
-IniRead,hover_start_button,%run_iniFile%,自动激活,hover_start_button
-IniRead,hover_min_max,%run_iniFile%,自动激活,hover_min_max
-IniRead,hover_any_window,%run_iniFile%,自动激活,hover_any_window
-IniRead,scrollundermouse,%run_iniFile%,自动激活,scrollundermouse
-IniRead,hover_keep_zorder,%run_iniFile%,自动激活,hover_keep_zorder
-IniRead,hover_delay,%run_iniFile%,自动激活,hover_delay
-IniRead,hover_no_buttons,%run_iniFile%,自动激活,hover_no_buttons
-IniRead,DisHover,%run_iniFile%,自动激活,DisHover
-IniRead,ActDisHover,%run_iniFile%,自动激活,ActDisHover
 
-IniRead,baoshionoff,%run_iniFile%,时间,baoshionoff
-IniRead,baoshilx,%run_iniFile%,时间,baoshilx
-IniRead,renwu,%run_iniFile%,时间,renwu
-IniRead,rh,%run_iniFile%,时间,rh
-IniRead,rm,%run_iniFile%,时间,rm
-IniRead,renwucx,%run_iniFile%,时间,renwucx
+IniRead, content, %run_iniFile%,自动激活
+Gosub, GetAllKeys
 
-IniRead,miniMizeOn,%run_iniFile%,窗口缩略图,miniMizeOn
+IniRead, content, %run_iniFile%,时间
+Gosub, GetAllKeys
+
+;----------窗口缩略图----------
 If MiniMizeOn
 {
-IniRead,fw,%run_iniFile%,窗口缩略图,fw
-IniRead,fh,%run_iniFile%,窗口缩略图,fh
-IniRead,fi,%run_iniFile%,窗口缩略图,fi
-IniRead,shuiping,%run_iniFile%,窗口缩略图,shuiping
-IniRead,shuipingxia,%run_iniFile%,窗口缩略图,shuipingxia
-IniRead,shuzhiyou,%run_iniFile%,窗口缩略图,shuzhiyou
+IniRead, content, %run_iniFile%,窗口缩略图
+Gosub, GetAllKeys
+
+MiniMizeNum=50
+ffw:=fw-5 ;缩略图窗口里的图片宽
+fx2:=A_ScreenWidth - fw
+fy2:=A_ScreenHeight - fh - 35
+
+If shuipingxia
+fy :=fy2      ;水平排列时定义Y值
+If shuzhiyou
+fx :=fx2      ;竖直在右边排列时定义X值
+iconx:=fw - 48
+icony:=fh - 48
 }
+;----------窗口缩略图----------
 
 Loop 8
 {
@@ -235,6 +220,7 @@ IniRead otherProgram,%run_iniFile%,otherProgram
 			%MyVar_Key%=%MyVar_Val% 		; 这样的写法不会传递环境变量。EnvSet,%MyVar_Key%,"%MyVar_Val%"
 ; 另一种写法，可以传递环境变量到被他启动的应用程序
 	}
+
 	global szMenuIdx:={}      ;菜单用1
 	global szMenuContent:={}      ;菜单用2
 	global szMenuWhichFile:={}      ;菜单用3
@@ -404,7 +390,7 @@ Menu,  addf, Add, 启动时记忆桌面图标,AutoSaveDeskIcons
 Menu,  addf, Add, 记忆桌面图标, SaveDesktopIconsPositions
 Menu,  addf, Add, 恢复桌面图标, RestoreDesktopIconsPositions
 
-If(更新=1){
+If(Auto_Update=1){
 ;connected:=DllCall("Wininet.dll\InternetGetConnectedState", "Str", 0x40,"Int",0)
 ;If connected=1
 URL := "http://www.baidu.com"
@@ -437,7 +423,7 @@ msgbox,4,升级通知,当前版本为:%AppVersion%`n最新版本为:%CurVer%`n是否前往主页下载
 {
 msgbox,4,更新设置,下次启动时是否仍然检测更新。
 IfMsgBox No
-IniWrite,0,%run_iniFile%,更新设置,更新
+IniWrite,0,%run_iniFile%,功能开关,Auto_Update
 FileDelete, %update_txtFile%
 }
 }
@@ -448,7 +434,16 @@ FileDelete, %update_txtFile%
 FileDelete, %update_txtFile%
 }
 
+if Auto_DisplayWindow
+{
 Gui, Show, x%x_x% y%y_y% w624 h78, %AppTitle%
+visable = 1
+}
+else
+{
+Gui, Show, hide x%x_x% y%y_y% w624 h78, %AppTitle%
+visable= 0
+}
 ;=========图形界面的"绘制"=========
 
 ;=========图形界面的"绘制"2=========
@@ -471,7 +466,7 @@ Else
 		Menu, addf, UnCheck, 智能浏览器
 }
 
-If ( SaveDeskIcons=1)
+If ( Auto_SaveDeskIcons=1)
 	{
         Menu, addf, Check, 启动时记忆桌面图标
         SetTimer,SaveDesktopIconsPositionsdelay,40000
@@ -527,6 +522,9 @@ GroupAdd, DesktopTaskbarGroup,ahk_class WorkerW
 GroupAdd, DesktopTaskbarGroup,ahk_class Shell_TrayWnd
 GroupAdd, DesktopTaskbarGroup,ahk_class BaseBar
 GroupAdd, DesktopTaskbarGroup,ahk_class DV2ControlHost
+
+GroupAdd, GameWindows,ahk_class Warcraft III
+GroupAdd, GameWindows,ahk_class Valve001
 ;=========窗口分组=========
 
 ;=========功能加载开始=========
@@ -546,26 +544,9 @@ gui_hh = 0
 gui_ww = 0
 ;----------Folder Menu----------
 
-;----------窗口缩略图----------
-If MiniMizeOn
-{
-MiniMizeNum=50
-ffw:=fw-5 ;缩略图窗口里的图片宽
-fx2:=A_ScreenWidth - fw
-fy2:=A_ScreenHeight - fh - 35
-
-If shuipingxia
-fy :=fy2      ;水平排列时定义Y值
-If shuzhiyou
-fx :=fx2      ;竖直在右边排列时定义X值
-iconx:=fw - 48
-icony:=fh - 48
-}
-;----------窗口缩略图----------
-
 ;----------计算文件MD5模式选择----------
 If md5type=1
-hModule := DllCall("LoadLibrary", "str", "MD5Lib.dll")
+hModule_Md5 := DllCall("LoadLibrary", "str", A_ScriptDir "\MD5Lib.dll\hexMD5")
 ;----------计算文件MD5模式选择----------
 
 
@@ -628,7 +609,7 @@ SetTimer,aaa,2000
 settimer,检测,5000
 
 ;----------开启鼠标自动激活功能----------
-If(openauto=1)
+If(Auto_Raise=1)
 SetTimer, hovercheck, 100
 
 ;当某些窗口存在时，鼠标悬停功能直接返回
@@ -677,6 +658,13 @@ Hotkey, IfWinActive
 Hotkey, IfWinNotActive
 If ErrorLevel
 TrayTip, 发现错误,执行快捷键时发生错误，请检查配置快捷键相关部分, , 3
+
+If MiniMizeOn=0
+{
+Hotkey, IfWinNotActive, ahk_group DesktopTaskbarGroup
+Hotkey,% myhotkey.窗口缩略图, Off
+Hotkey, IfWinNotActive
+}
 
 IniRead,  hotkeycontent, %run_iniFile%,Plugins
 hotkeycontent:="[Plugins]" . "`n" . hotkeycontent
@@ -759,6 +747,15 @@ If (EasyKey) {
 ;移除EasyKey
 */
 ;----------Winpad----------
+
+;----------虚拟桌面----------
+Loop, 4
+{
+Hotkey, % myhotkey.前缀_数字虚拟桌面切换 Chr(A_Index+48), ToggleVirtualDesktop
+
+Hotkey, % myhotkey.前缀_功能键发送到虚拟桌面 "F" A_Index,SendActiveToDesktop
+}
+;----------虚拟桌面----------
 ;=========热键设置=========
 
 ;----------不显示托盘图标则重启脚本----------
@@ -781,7 +778,10 @@ else IfMsgBox timeout
 	autoreload=1
 
 if(autoreload=1)
+{
 Reload
+Return
+}
 }
 ;----------不显示托盘图标则重启脚本----------
 
@@ -1287,7 +1287,7 @@ IfWinNotActive,%AppTitle%
 WinActivate,%AppTitle%
 Else
 {
-    Gui,hide
+Gui,hide
 visable=0
 }
 }
@@ -1325,7 +1325,6 @@ If miniMizeOn
 	}
 }
 ;msgbox,2
-
 
 ; 还原pin2desk钉住的窗口
 If ToggleList
@@ -1372,6 +1371,10 @@ DetectHiddenWindows On
             StringRePlace menuName, thisScript, .ahk
         }
 }
+
+If md5type=1
+  DllCall("FreeLibrary", "Ptr", hModule_Md5)
+
 ;msgbox,5
 ;是否粘贴并打开和监视关机的资源
 If PasteAndOpen
@@ -1500,11 +1503,15 @@ if RegExReplace(fs,"\s+") != RegExReplace(s,"\s+")
 {
   FileDelete, %f%
   FileAppend, %s%, %f%
-  msgbox,,错误,AutoInclude文件发生了变化，点"确定"后重启脚本
+  msgbox,,脚本重启,Include 文件发生了变化，点"确定"后重启脚本，应用更新
 IfMsgBox OK
+{
+fs:=s:=AutoInclude_Path:=f:=""
 Reload
+Return
 }
 fs:=s:=AutoInclude_Path:=f:=""
+}
 ;---------------------------------
 Return
 
@@ -1523,18 +1530,6 @@ break
 }
 }
 return
-
-/*
-;测试用
-y & m::
-MsgBox,% stableProgram
-Return
-;在上面的例子中，y 变成一个前缀键；而且也导致了通过它去按 y 它自己的时候失去了它原本/天生的功能
-y::
-Send y
-Return
-;测试用
-*/
 
 #include %A_ScriptDir%\Script\脚本管理器.ahk
 #include %A_ScriptDir%\Script\配置.ahk

@@ -488,11 +488,11 @@ GetFocusedControl()
    Return focusedHwnd
 }
 
-WinGetClass(window=0)
-{
-WinGetClass, class, window
-Return class
-}
+;WinGetClass(window=0)
+;{
+;WinGetClass, class, window
+;Return class
+;}
 
 RefreshExplorer()
 {

@@ -2,17 +2,16 @@ option:
 IniRead,询问,%run_iniFile%,截图,询问
 IniRead,filetp,%run_iniFile%,截图,filetp
 
-IniRead,更新,%run_iniFile%,常规,更新
-IniRead,run_with_sys,%run_iniFile%,常规,run_with_sys
-IniRead,mousetip,%run_iniFile%,常规,mousetip
+IniRead,Auto_Update,%run_iniFile%,功能开关,Auto_Update
+IniRead,run_with_sys,%run_iniFile%,功能开关,run_with_sys
+IniRead,mousetip,%run_iniFile%,功能开关,mousetip
 IniRead,x_x,%run_iniFile%,常规,x_x
 IniRead,y_y,%run_iniFile%,常规,y_y
 IniRead,txt,%run_iniFile%,常规,txt
 IniRead,TextEditor,%run_iniFile%,常规,TextEditor
 IniRead,ImageEditor,%run_iniFile%,常规,ImageEditor
-IniRead,removebutton,%run_iniFile%,常规,removebutton
 
-IniRead,openauto,%run_iniFile%,自动激活,openauto
+IniRead,Auto_Raise,%run_iniFile%,功能开关,Auto_Raise
 IniRead,hover_task_buttons,%run_iniFile%,自动激活,hover_task_buttons
 IniRead,hover_task_group,%run_iniFile%,自动激活,hover_task_group
 IniRead,hover_task_min_info,%run_iniFile%,自动激活,hover_task_min_info
@@ -103,7 +102,7 @@ Else If(filetp="gif"){
 	GuiControl,,tp4,1
 }
 
-Gui,Add,CheckBox,Checked%更新% x26 y61 w100 h20 vupdate,启动时检测更新
+Gui,Add,CheckBox,Checked%Auto_Update% x26 y61 w100 h20 vupdate,启动时检测更新
 Gui,Font,Cred
 Gui,Add,Text,x136 y66 ,对脚本的启动速度有影响
 Gui,Font
@@ -152,19 +151,18 @@ Gui,Add,Edit,x350 y247 w150 h20 vImageEditor,%ImageEditor%
 Gui,Add,Button,x500 y247 w30 h20 gImageBrowse,...
 
 Gui,Tab,自动激活
-Gui,Add,CheckBox,x26 y41 w200 h20 vopenauto gautorise1,开启鼠标自动激活(点击)功能
+Gui,Add,CheckBox,x26 y41 w200 h20 vAuto_Raise gAutoRaise,开启鼠标自动激活(点击)功能
 Gui,Add,CheckBox,x26 y61 w500 h20 vhover_task_buttons,任务栏按钮自动点击功能（鼠标悬停在任务栏按钮上时自动点击）
 Gui,Add,CheckBox,x44 y81 w250 h20 vhover_task_group,开启任务栏分组按钮自动点击功能(未测试)
 Gui,Add,CheckBox,x44 y101 w410 h20 vhover_task_min_info,任务栏最小化窗口只显示悬浮信息（最小化的窗口不自动点击,Win7无效）
 Gui,Add,CheckBox,x26 y121 w410 h20 vhover_start_button,开始菜单自动点击功能（鼠标悬停在开始菜单位置时自动点击开始菜单）
 Gui,Add,CheckBox,x26 y141 w410 h20 vhover_min_max,标题栏按钮自动点击（鼠标悬停在最小化，最大化/还原按钮时自动点击）
 Gui,Add,Text,x26 y165 w180 h20 vtext1,鼠标悬停所在窗口时的动作：
-Gui,Add,Radio,x26 y185 w115 h20 vhover_any_window gundermouse,窗口自动激活
-Gui,Add,Radio,x150 y185 w200 h20 vscrollundermouse gundermouse,不激活窗口滚轮生效(有滚动条时)
-Gui,Add,Radio,x370 y185 w200 h20 vnoundereffect gundermouse,无动作
-Gui,Add,CheckBox,x44 y208 w200 h20 vhover_keep_zorder,激活时不更改窗口顺序(效果一般)
+Gui,Add,CheckBox,x26 y185 w115 h20 vhover_any_window gundermouse,窗口自动激活
+Gui,Add,CheckBox,x44 y205 w200 h20 vhover_keep_zorder,激活时不更改窗口顺序(效果一般)
 Gui,Add,Text,x26 y235 w150 h20 vtext,悬停延迟响应时间（毫秒）：
 Gui,Add,Edit,x170 y230 w50 h20 vhover_delay,%hover_delay%
+Gui,Add,CheckBox,x26 y255 w200 h20 vscrollundermouse gundermouse,不激活窗口滚轮生效(有滚动条时)
 
  GuiControl,,hover_task_buttons,%hover_task_buttons%
  GuiControl,,hover_task_group,%hover_task_group%
@@ -186,8 +184,8 @@ GuiControl,Disable,hover_keep_zorder
 GuiControl,Disable,text
 GuiControl,Disable,hover_delay
 
-If(openauto=1){
-	GuiControl,,openauto,1
+If(Auto_Raise=1){
+	GuiControl,,Auto_Raise,1
 	GuiControl,Enable,hover_task_buttons
 	GuiControl,Enable,hover_task_group
 	GuiControl,Enable,hover_task_min_info
@@ -335,8 +333,8 @@ OnMessageEx(0x200,"HandleMessage")
 Gui,Show,xCenter yCenter w570 h355,选项
 Return
 
-autorise1:
-If(openauto := !openauto){
+autoraise:
+If(Auto_Raise := !Auto_Raise){
 	GuiControl,Enable,hover_task_buttons
 	GuiControl,Enable,hover_task_group
 	GuiControl,Enable,hover_task_min_info
@@ -362,21 +360,18 @@ Else
 Return
 
 undermouse:
-Gui,Submit,NoHide
-If Radio=1
+;Gui,Submit,NoHide
+If (hover_any_window := !hover_any_window)
 {
-	hover_any_window=1
-	scrollundermouse=0
+GuiControlGet, hover_any_window
+if hover_any_window
+GuiControl,,scrollundermouse,0
 }
-If Radio=2
+If (scrollundermouse := !scrollundermouse)
 {
-	hover_any_window=0
-	scrollundermouse=1
-}
-If Radio=3
-{
-	hover_any_window=0
-	scrollundermouse=0
+GuiControlGet, scrollundermouse
+if scrollundermouse
+GuiControl,,hover_any_window,0
 }
 Return
 
@@ -841,13 +836,12 @@ for k,v in IniObj(hotkeycontent,OrderedArray()).Plugins
 
 IniWrite,%ask%,%run_iniFile%,截图,询问
 IniWrite,%filetp%,%run_iniFile%,截图,filetp
-IniWrite,%update%,%run_iniFile%,常规,更新
-IniWrite,%autorun%,%run_iniFile%,常规,run_with_sys
-IniWrite,%mtp%,%run_iniFile%,常规,mousetip
+IniWrite,%update%,%run_iniFile%,功能开关,Auto_Update
+IniWrite,%autorun%,%run_iniFile%,功能开关,run_with_sys
+IniWrite,%mtp%,%run_iniFile%,功能开关,mousetip
 IniWrite,%txt%,%run_iniFile%,常规,txt
 IniWrite,%TextEditor%,%run_iniFile%,常规,TextEditor
 IniWrite,%ImageEditor%,%run_iniFile%,常规,ImageEditor
-IniWrite,%removebutton%,%run_iniFile%,常规,removebutton
 
 If(autorun=1){
 	RegWrite,REG_SZ,HKEY_LOCAL_MACHINE,SOFTWARE\Microsoft\Windows\CurrentVersion\Run,Run - Ahk,%A_ScriptFullPath%
@@ -857,7 +851,7 @@ Else
 IniWrite,%x1%,%run_iniFile%,常规,x_x
 IniWrite,%y1%,%run_iniFile%,常规,y_y
 
-IniWrite,%openauto%,%run_iniFile%,自动激活,openauto
+IniWrite,%Auto_Raise%,%run_iniFile%,功能开关,Auto_Raise
 IniWrite,%hover_task_buttons%,%run_iniFile%,自动激活,hover_task_buttons
 IniWrite,%hover_task_group%,%run_iniFile%,自动激活,hover_task_group
 IniWrite,%hover_task_min_info%,%run_iniFile%,自动激活,hover_task_min_info
@@ -882,8 +876,9 @@ IniWrite,%ap4%,%run_iniFile%,AudioPlayer,TTPlayer
 IniWrite,%ap5%,%run_iniFile%,AudioPlayer,Winamp
 IniWrite,%DefaultPlayer%,%run_iniFile%,固定的程序,DefaultPlayer
 IniWrite,%sp%,%run_iniFile%,固定的程序,stableProgram
-;FileAppend,%op%,%run_iniFile%
+
 IniDelete,%run_iniFile%,otherProgram
+;FileAppend, `n`r, %run_iniFile%
 Loop,Parse,op,`n`r
 {
 	otp2:=A_LoopField

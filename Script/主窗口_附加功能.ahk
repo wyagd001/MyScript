@@ -1,7 +1,12 @@
 _TrayEvent:
-XWN_FocusFollowsMouse := !XWN_FocusFollowsMouse
-Gosub, _ApplySettings
-Gosub, _MenuUpdate
+  XWN_FocusFollowsMouse := !XWN_FocusFollowsMouse
+  If(Auto_Raise=1 && hover_any_window=1)
+    Msgbox,,提示,自动激活窗口已在选项自动激活中启用,5
+  Else
+  {
+    Gosub, _ApplySettings
+    Gosub, _MenuUpdate
+  }
 Return
 
 _MenuUpdate:
@@ -52,7 +57,7 @@ Return
 
 runwithsys:
 run_with_sys := !run_with_sys
-IniWrite,%run_with_sys%,%run_iniFile%,常规,run_with_sys
+IniWrite,%run_with_sys%,%run_iniFile%,功能开关,run_with_sys
 
 	If ( run_with_sys=1 )
 	{
@@ -67,26 +72,26 @@ IniWrite,%run_with_sys%,%run_iniFile%,常规,run_with_sys
 Return
 
 AutoSaveDeskIcons:
-SaveDeskIcons := !SaveDeskIcons
-IniWrite,%SaveDeskIcons%,%run_iniFile%,常规,SaveDeskIcons
-If  SaveDeskIcons=1
+Auto_SaveDeskIcons := !Auto_SaveDeskIcons
+IniWrite,%Auto_SaveDeskIcons%,%run_iniFile%,功能开关,Auto_SaveDeskIcons
+If  Auto_SaveDeskIcons=1
 	Menu, addf, Check, 启动时记忆桌面图标
 	Else
 	Menu, addf, UnCheck, 启动时记忆桌面图标
 Return
 
 smartchooserbrowser:
-smartchooserbrowser := !smartchooserbrowser
-IniWrite,%smartchooserbrowser%,%run_iniFile%,常规,smartchooserbrowser
-If  smartchooserbrowser=1
-{
-	Menu, addf, Check, 智能浏览器
-	writeahkurl()
+  smartchooserbrowser := !smartchooserbrowser
+  IniWrite,%smartchooserbrowser%,%run_iniFile%,功能开关,smartchooserbrowser
+  If  smartchooserbrowser=1
+  {
+	  Menu, addf, Check, 智能浏览器
+	  writeahkurl()
 	}
 	Else
 	{
-	Menu, addf, UnCheck, 智能浏览器
-	delahkurl()
+	  Menu, addf, UnCheck, 智能浏览器
+	  delahkurl()
 	}
 Return
 
@@ -110,53 +115,53 @@ IfNotInString,AhkURL,smartchooserbrowser.ahk
 }
 */
 
-appurl= "%A_ScriptDir%\Bin\smartchooserbrowser.exe" "`%1"
+  appurl= "%A_ScriptDir%\Bin\smartchooserbrowser.exe" "`%1"
 
-RegRead AhkURL, HKCR, Ahk.URL\shell\open\command
-IfNotInString,AhkURL,smartchooserbrowser.exe
-{
-	RegWrite, REG_SZ, HKCR, Ahk.URL
-	RegWrite, REG_SZ, HKCR, Ahk.URL\shell,,open
-	RegWrite, REG_SZ, HKCR, Ahk.URL\shell\open\command, ,%appurl%
-}
+  RegRead AhkURL, HKCR, Ahk.URL\shell\open\command
+  IfNotInString,AhkURL,smartchooserbrowser.exe
+  {
+	  RegWrite, REG_SZ, HKCR, Ahk.URL
+	  RegWrite, REG_SZ, HKCR, Ahk.URL\shell,,open
+	  RegWrite, REG_SZ, HKCR, Ahk.URL\shell\open\command, ,%appurl%
+  }
 
-; 检查是否存在备份，若不存在则读取系统默认（防止意外退出）
-RegRead old_FTP, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp\UserChoice, URL.LastFound
+  ; 检查是否存在备份，若不存在则读取系统默认（防止意外退出）
+  RegRead old_FTP, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp\UserChoice, URL.LastFound
 if ErrorLevel
 	RegRead old_FTP, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp\UserChoice, Progid
 
-RegRead old_HTTP, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice, URL.LastFound
+  RegRead old_HTTP, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice, URL.LastFound
 if ErrorLevel
 	RegRead old_HTTP, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice, Progid
 
-RegRead old_HTTPS, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice, URL.LastFound
+  RegRead old_HTTPS, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice, URL.LastFound
 if ErrorLevel
 	RegRead old_HTTPS, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice, Progid
 
-; 写入备份设置（防止意外退出）
-RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp\UserChoice, URL.LastFound, %old_FTP%
-RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice, URL.LastFound, %old_HTTP%
-RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice, URL.LastFound, %old_HTTPS%
+  ; 写入备份设置（防止意外退出）
+  RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp\UserChoice, URL.LastFound, %old_FTP%
+  RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice, URL.LastFound, %old_HTTP%
+  RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice, URL.LastFound, %old_HTTPS%
 
-; 设置临时键值
-RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp\UserChoice, Progid, Ahk.URL
-RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice, Progid, Ahk.URL
-RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice, Progid, Ahk.URL
+  ; 设置临时键值
+  RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp\UserChoice, Progid, Ahk.URL
+  RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice, Progid, Ahk.URL
+  RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice, Progid, Ahk.URL
 }
 
 
 delahkurl()
 {
-RegRead old_FTP, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp\UserChoice, URL.LastFound
-RegRead old_HTTP, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice, URL.LastFound
-RegRead old_HTTPS, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice, URL.LastFound
+  RegRead old_FTP, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp\UserChoice, URL.LastFound
+  RegRead old_HTTP, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice, URL.LastFound
+  RegRead old_HTTPS, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice, URL.LastFound
 
-RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp\UserChoice, Progid, %old_FTP%
-RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice, Progid, %old_HTTP%
-RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice, Progid, %old_HTTPS%
+  RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp\UserChoice, Progid, %old_FTP%
+  RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice, Progid, %old_HTTP%
+  RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice, Progid, %old_HTTPS%
 
-; 删除备份设置
-RegDelete HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp\UserChoice, URL.LastFound
-RegDelete HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice, URL.LastFound
-RegDelete HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice, URL.LastFound
+  ; 删除备份设置
+  RegDelete HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp\UserChoice, URL.LastFound
+  RegDelete HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice, URL.LastFound
+  RegDelete HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice, URL.LastFound
 }

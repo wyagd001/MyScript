@@ -1,8 +1,13 @@
-;Ctrl+Enter自动补齐网址
+; Ctrl+Enter自动补齐网址
 #IfWinActive,ahk_Group AppMainWindow
 ^Enter::
-Gui, Submit, NoHide
-if dir
-run http://www.%Dir%.com/
+  Gui, Submit, NoHide
+  if dir
+  {
+    IfNotInString, dir, www
+      run http://www.%Dir%.com/
+    Else
+      Send, {Enter}
+  }
 Return
 #IfWinActive

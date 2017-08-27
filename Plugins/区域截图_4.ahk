@@ -7,6 +7,8 @@ pToken := Gdip_Startup()
 run_iniFile = %A_ScriptDir%\..\settings\setting.ini
 IniRead,filetp, %run_iniFile%,截图, filetp
 IniRead,截图保存目录, %run_iniFile%,截图, 截图保存目录
+IfnotExist,%截图保存目录%
+  IniRead, 截图保存目录, %run_iniFile%, 路径设置, 截图保存目录
 
 SystemLanguage := SubStr(A_Language,3,2)=04?"CN":"EN"
 

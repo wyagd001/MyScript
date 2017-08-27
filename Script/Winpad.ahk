@@ -278,8 +278,8 @@ WinPreviouslyActive()
 ;
 MoveWindowToNextScreen:
     gosub WP_SetLastFoundWindowByHotkey
-    WinGet, state, MinMax
-    if state = 1
+    WinGet, MinMax_State, MinMax
+    if MinMax_State = 1
     {   ; Maximized windows don't move correctly on XP
         ; (and possibly other versions of Windows)
         WinRestore

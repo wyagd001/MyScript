@@ -6,6 +6,8 @@ IniRead,询问, %run_iniFile%,截图, 询问
 IniRead,filetp, %run_iniFile%,截图, filetp
 IniRead,热键延迟截图, %run_iniFile%,截图, 热键延迟截图
 IniRead,截图保存目录, %run_iniFile%,截图, 截图保存目录
+IfnotExist,%截图保存目录%
+  IniRead, 截图保存目录, %run_iniFile%, 路径设置, 截图保存目录
 
   TrayTip,截图进行中...,
   (

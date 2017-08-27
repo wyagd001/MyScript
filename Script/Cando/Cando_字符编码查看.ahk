@@ -274,7 +274,7 @@ Encode(Str, Encoding, Separator := " ")
 		Else
 		{
 			HH:=SubStr(h:=NumGet(ObjStr, A_Index - 1, "UChar"), 3)
-			If(h+0<0x7F)
+			If(h+0<= 0x7F)
 			{
         if(tmpswitch=2)
         {

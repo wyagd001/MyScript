@@ -1,21 +1,21 @@
-;Eject any drive  ------------ Thalon
-;http://www.autohotkey.com/forum/topic8923.html
-;Eject Removable Hardware -------------- Vspider
-;http://www.autohotkey.com/forum/topic54164.html
-;Crazy Scripting : Safely Remove USB Flash Drive ------- skan
-;http://www.autohotkey.com/forum/topic44873.html
-;2000下弹出U盘无效 XP下弹出后，盘符图标还在，托盘仍有显示
-;
+; Eject any drive  ------------ Thalon
+; http://www.autohotkey.com/forum/topic8923.html
+; Eject Removable Hardware -------------- Vspider
+; http://www.autohotkey.com/forum/topic54164.html
+; Crazy Scripting : Safely Remove USB Flash Drive ------- skan
+; http://www.autohotkey.com/forum/topic44873.html
+; 2000下弹出U盘无效 XP下弹出后，盘符图标还在，托盘仍有显示
+; https://autohotkey.com/boards/viewtopic.php?t=4491
 
 弹出U盘:
 Devs =  `r`n
 DevF = 0
 Gosub, DeviceList
 If (Devs = "`r`n") {
-Traytip, Error, No Removable Hardware Found, 10
+Traytip, 错误, 找不到可移动硬件, 10
 return
 }
-Traytip, Type the Drive Letter to Eject, %Devs%, 10
+Traytip, 输入可移动磁盘盘符用以弹出磁盘, %Devs%, 10
 SetCapsLockState, On
 Input, Driveletter, L1
 SetCapsLockState, Off
@@ -29,7 +29,7 @@ DriveGet, RDRV, List, REMOVABLE
   DevF = 1
   }
 If (DevF = 0){
-Traytip, Error, No Removable Hardware Found in the Selected Letter, 10
+Traytip, Error, 找不到所输入的盘符的可移动硬件, 10
 return
 }
 
@@ -61,7 +61,7 @@ if A_LastError = 32         ;Another application has read or write-access to the
 
    if hVolume != -1
    {
-      msgbox, 4164, Warning, Another application is reading this device.`nThrow it out anyway?
+      msgbox, 4164, 警告, 另一个应用程序正在读取此设备.`n确认继续弹出?
       IfMsgbox, No
       {
          DllCall("CloseHandle", UInt, hVolume)   ;Release handle here
@@ -71,7 +71,7 @@ if A_LastError = 32         ;Another application has read or write-access to the
 
    if A_LastError = 32      ;No read access was possible also
    {
-      msgbox, 4164, Warning!, Another application is writing to this device!`nThrow it out anyway?
+      msgbox, 4164, 警告!, 另一个应用程序正在写入此设备!`n确认继续弹出?
       IfMsgbox, No
          return
       else
@@ -101,14 +101,16 @@ if hVolume != -1      ;Drive is thrown out
       , UInt,  NULL)
 
    DllCall("CloseHandle", UInt, hVolume)
-   TrayTip, Safe To Remove Hardware, %Driveletter% %Label% can now be safely removed from the computer., 2, 1
+   TrayTip, 安全删除硬件, %Driveletter% %Label% 现在可以安全地从计算机中删除., 2, 1
 }
 }
-else
+else if ejecttype=2
 {
 Driveletter = %Driveletter%:
 USBD_SafelyRemove( Driveletter )
 }
+else
+Eject(Driveletter) 
 return
 
 ;^Q::
@@ -241,8 +243,6 @@ run,%rempath%
 Return
 
 USBD_SafelyRemove( Drv ) {
- If A_OSVersion not in  WIN_VISTA,WIN_XP,WIN_2000
-   Return
  If ! ( Serial := USBD_GetDeviceSerial( Drv ) )
    Return
  DeviceID := USBD_GetDeviceID( Serial )
@@ -287,4 +287,52 @@ DeviceEject( DeviceID ) {
  If ! DllCall( "SetupAPI\CM_Get_DevNode_Status", UIntP,STS, UIntP,PR, UInt,DI, Int,0)
  DllCall( "SetupAPI\CM_Request_Device_EjectA", UInt,DI, UIntP,VT, Str,VE, UInt,255, Int,0)
  DllCall( "FreeLibrary", UInt,hMod )
+}
+
+Eject( DRV  ) {                       ;  By SKAN,  http://goo.gl/pUUGRt,  CD:01/Sep/2014 | MD:13/Sep/2014
+Local hMod, hVol, queryEnum, VAR := "", sPHDRV := "", nDID := 0, nVT := 1, nTC := A_TickCount 
+Local IOCTL_STORAGE_GET_DEVICE_NUMBER := 0x2D1080, STORAGE_DEVICE_NUMBER,  FILE_DEVICE_DISK := 0x00000007 
+
+  DriveGet, VAR, Type, % DRV := SubStr( DRV, 1, 1 ) ":"
+  If ( VAR = "" )
+     Return  ( ErrorLevel := -1 ) + 1
+        
+  If ( VAR = "CDROM" ) {
+     Drive, Eject, %DRV%  
+     If ( nTC + 1000 > A_Tickcount ) 
+        Drive, Eject, %DRV%, 1
+     Return  ( ErrorLevel ? 0 : 1 )
+  } 
+
+; Find physical drive number from drive letter.   
+  hVol := DllCall( "CreateFile", "Str","\\.\" DRV, "Int",0, "Int",0, "Int",0, "Int",3, "Int",0, "Int",0 )
+
+  VarSetcapacity( STORAGE_DEVICE_NUMBER, 12, 0 )
+  DllCall( "DeviceIoControl", "Ptr",hVol, "UInt",IOCTL_STORAGE_GET_DEVICE_NUMBER
+         , "Int",0, "Int",0, "Ptr",&STORAGE_DEVICE_NUMBER, "Int",12, "PtrP",0, "Ptr",0 )  
+
+  DllCall( "CloseHandle", "Ptr",hVol )
+
+  If (  NumGet( STORAGE_DEVICE_NUMBER, "UInt" ) = FILE_DEVICE_DISK  ) 
+     sPHDRV := "\\\\.\\PHYSICALDRIVE" NumGet( STORAGE_DEVICE_NUMBER, 4, "UInt" )
+  
+; Find PNPDeviceID = USBSTOR for given physical drive
+  queryEnum := ComObjGet( "winmgmts:" ).ExecQuery( "Select * from Win32_DiskDrive "
+                      . "where DeviceID='" sPHDRV "' and InterfaceType='USB'" )._NewEnum()
+  If not queryEnum[ DRV ]
+     Return ( ErrorLevel := -2 ) + 2
+     
+  hMod := DllCall( "LoadLibrary", "Str","SetupAPI.dll", "UPtr" )
+  
+; Locate USBSTOR node and move up to its parent
+  DllCall( "SetupAPI\CM_Locate_DevNode", "PtrP",nDID, "Str",DRV.PNPDeviceID, "Int",0 )
+  DllCall( "SetupAPI\CM_Get_Parent", "PtrP",nDID, "UInt",nDID, "Int",0 )
+
+  VarSetCapacity( VAR, 520, 0 )
+  While % ( nDID and nVT and A_Index < 4 ) 
+    DllCall( "SetupAPI\CM_Request_Device_Eject", "UInt",nDID, "PtrP",nVT, "Str",VAR, "Int",260, "Int",0 )
+  
+  DllCall("FreeLibrary", "Ptr",hMod ),    DllCall( "SetLastError", "UInt",nVT )     
+
+Return ( nVT ? ( ErrorLevel := -3 ) + 3 : 1 )  
 }

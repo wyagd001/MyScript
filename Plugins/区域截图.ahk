@@ -14,6 +14,8 @@ IniRead,filetp, %run_iniFile%,截图, filetp
 IniRead,区域选择方式, %run_iniFile%,截图, 区域选择方式
 IniRead,热键延迟截图, %run_iniFile%,截图, 热键延迟截图
 IniRead,截图保存目录, %run_iniFile%,截图, 截图保存目录
+IfnotExist,%截图保存目录%
+  IniRead, 截图保存目录, %run_iniFile%, 路径设置, 截图保存目录
 
 if(区域选择方式=1)
 {

@@ -45,8 +45,8 @@ HashFile(filePath,hashType=2)
    f := FileOpen(filePath,"r","CP0")
    if !IsObject(f)
       return 0
-   if !hModule := DllCall( "GetModuleHandle", "str", "Advapi32.dll", "Ptr" )
-      hModule := DllCall( "LoadLibrary", "str", "Advapi32.dll", "Ptr" )
+   if !hModule_Hash := DllCall( "GetModuleHandle", "str", "Advapi32.dll", "Ptr" )
+      hModule_Hash := DllCall( "LoadLibrary", "str", "Advapi32.dll", "Ptr" )
    if !dllCall("Advapi32\CryptAcquireContextW"
             ,"Ptr*",hCryptProv
             ,"Uint",0
@@ -65,7 +65,7 @@ HashFile(filePath,hashType=2)
 
    VarSetCapacity(read_buf,BUFF_SIZE,0)
 
-    hCryptHashData := DllCall("GetProcAddress", "Ptr", hModule, "AStr", "CryptHashData", "Ptr")
+    hCryptHashData := DllCall("GetProcAddress", "Ptr", hModule_Hash, "AStr", "CryptHashData", "Ptr")
    While (cbCount := f.RawRead(read_buf, BUFF_SIZE))
    {
       if (cbCount = 0)
@@ -106,7 +106,7 @@ HashFile(filePath,hashType=2)
 
 FreeHandles:
    f.Close()
-   DllCall("FreeLibrary", "Ptr", hModule)
+   DllCall("FreeLibrary", "Ptr", hModule_Hash)
    dllCall("Advapi32\CryptDestroyHash","Ptr",hHash)
    dllCall("Advapi32\CryptReleaseContext","Ptr",hCryptProv,"UInt",0)
    return hashval

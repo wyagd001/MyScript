@@ -134,3 +134,11 @@ IniObj(d,byref n:=""){
 		return f
 	}
 }
+
+GetAllKeys:
+  Loop, Parse, content, `n
+  {
+    StringSplit, data, A_LoopField, =
+    %data1%:=data2
+  }
+return

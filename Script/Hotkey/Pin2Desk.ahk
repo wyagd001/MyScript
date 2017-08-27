@@ -1,5 +1,6 @@
 ;#include %A_ScriptDir%\Lib\StrArray.ahk
-+MButton::
+;+MButton::
+Pin2Desk:
 	WinGetClass,WinClass,A
 	If WinClass In Progman,Manager,Shell_TrayWnd,WorkerW
 	{
@@ -25,9 +26,7 @@
 	Gosub,AddWinMenu
 Return
 
-
-
-AddWinMenu: ;
+AddWinMenu:
 Menu,AllWinMenu,DeleteAll
 Loop, parse,ToggleList,`|
 {
@@ -49,8 +48,6 @@ Menu,AllWinMenu,Add
 Menu,AllWinMenu,Add,还原所有窗口,Disall
 Return
 
-
-
 DeskAdd: ;添加到桌面 n
 If (ActDeskNum=A_ThisMenuItemPos)
 {
@@ -65,9 +62,8 @@ DeskGroup_%A_ThisMenuItemPos%:=StrAr_Add(DeskGroup_%A_ThisMenuItemPos%,WinID)
 ; MsgBox % DeskGroup_%A_ThisMenuItemPos%
 Return
 
-
-
-~+RButton::
+;~+RButton::
+Pin2Desk_WinMenu:
 Gosub,AddWinMenu
 WinGet,WinID,ID,A
 If StrAr_Find(ToggleList,WinID)
@@ -221,20 +217,27 @@ WinSet, Style, -0xC00000, ahk_id %WinID%
 Return
 */
 
-!#1::
-!#2::
-!#3::
-!#4::
+;!#1::
+;!#2::
+;!#3::
+;!#4::
+ToggleVirtualDesktop:
 StringRight,ActDeskNum,A_thishotkey,1
 Gosub,HotKeyAct
 Return
 
-^!f1::SendActiveToDesktop(1)
-^!f2::SendActiveToDesktop(2)
-^!f3::SendActiveToDesktop(3)
-^!f4::SendActiveToDesktop(4)
+SendActiveToDesktop:
+StringRight,TempStr,A_thishotkey,1
+SendActiveToDesktop(TempStr)
+Return
 
-LWin & Up::
+;^!f1::SendActiveToDesktop(1)
+;^!f2::SendActiveToDesktop(2)
+;^!f3::SendActiveToDesktop(3)
+;^!f4::SendActiveToDesktop(4)
+
+;LWin & Up::
+Pin2Desk_WinMoveUp:
 WinGet,WinID,ID,A
 WinGetPos,x,y,w,h,ahk_id %WinID%
 y-=10
@@ -245,7 +248,8 @@ If StrAr_Find(ToggleList,WinID)
 else send #{Up}
 Return
 
-LWin & Down::
+;LWin & Down::
+Pin2Desk_WinMoveUpDown:
 WinGet,WinID,ID,A
 WinGetPos,x,y,w,h,ahk_id %WinID%
 y+=10
@@ -256,7 +260,8 @@ If StrAr_Find(ToggleList,WinID)
 else send #{Down}
 Return
 
-LWin & Left::
+;LWin & Left::
+Pin2Desk_WinMoveUpLeft:
 WinGet,WinID,ID,A
 WinGetPos,x,y,w,h,ahk_id %WinID%
 x-=10
@@ -267,7 +272,8 @@ If StrAr_Find(ToggleList,WinID)
 else send #{Left}
 Return
 
-LWin & Right::
+;LWin & Right::
+Pin2Desk_WinMoveUpRight:
 WinGet,WinID,ID,A
 WinGetPos,x,y,w,h,ahk_id %WinID%
 x+=10

@@ -25,6 +25,8 @@ IniRead, AhkMediaLib, %run_iniFile%, AhkPlayer, AhkMediaLib
 IniRead, AutoUpdateMediaLib, %run_iniFile%, AhkPlayer, AutoUpdateMediaLib
 IniRead, Lrcfontcolor, %run_iniFile%, AhkPlayer, Lrcfontcolor
 IniRead, LrcPath, %run_iniFile%, AhkPlayer, LrcPath
+IfnotExist,%LrcPath%
+  IniRead, LrcPath, %run_iniFile%, ¬∑æ∂…Ë÷√, LrcPath
 IniRead, followmouse, %run_iniFile%, AhkPlayer, followmouse
 IniRead, PlayListdefalut, %run_iniFile%, AhkPlayer, PlayListdefalut
 IniRead, PlayRandom, %run_iniFile%, AhkPlayer, PlayRandom
