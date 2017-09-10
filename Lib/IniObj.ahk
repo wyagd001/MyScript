@@ -132,13 +132,5 @@ IniObj(d,byref n:=""){
 						? f[n,RTrim(SubStr(i, 1, b-1))] := LTrim(SubStr(i, b+1)) : (f[n,i]:=""))
 				: ""
 		return f
-	}
 }
-
-GetAllKeys:
-  Loop, Parse, content, `n
-  {
-    StringSplit, data, A_LoopField, =
-    %data1%:=data2
-  }
-return
+}

@@ -15,13 +15,20 @@ Return
 	Sleep,500
 	If CloseWindowList.Length()
 	{
-		tmpCW:=CloseWindowList.Pop()
-		If tmpCW &&FileExist(tmpCW)
-			run, % "explorer.exe " tmpCW
+		if(GetKeyState("Shift"))
+		{
+			gosub,CloseWindowListMenuShow
+			return
+		}
+		If (tmpCW :=CloseWindowList.Pop())
+		{ 
+			if FileExist(tmpCW) or  InStr(tmpCW, "::{")
+				run, % "explorer.exe " tmpCW
+		}
 	}
 	Else
 	{
-		If LastClosewindow && FileExist(LastClosewindow)
+		If FileExist(LastClosewindow) or  InStr(LastClosewindow, "::{")
 			Run, % "explorer.exe " LastClosewindow
 	}
 Return

@@ -54,7 +54,7 @@ Gui,Add,Tab,x-4 y1 w640 h320 ,快捷键|Plugins|常规|自动激活|7Plus菜单|整点报时|播
 Gui,Tab,快捷键
 Gui,Add,text,x10 y30 w550,注意:#表示Win,!表示Alt,+表示Shift,^表示Ctrl,Space表示空格键,Up表示向上箭头,~表示按键原功能不会被屏蔽，*表示有其它键同时按下时快捷键仍然生效
 
-Gui,Add,ListView,x6 y60 w550 h245 vhotkeysListview ghotkeysListview Grid -Multi +NoSortHdr -LV0x10 +LV0x4000 +AltSubmit,快捷键标签|快捷键|适用窗口|序号
+Gui,Add,ListView,x6 y60 w550 h245 vhotkeysListview ghotkeysListview checked Grid -Multi +NoSortHdr -LV0x10 +LV0x4000 +AltSubmit,快捷键标签|快捷键|适用窗口|序号
 Gui,listview,hotkeysListview 
 LV_Delete()
 IniRead,hotkeycontent,%run_iniFile%,快捷键
@@ -62,9 +62,9 @@ hotkeycontent:="[快捷键]" . "`n" . hotkeycontent
 for k,v in IniObj(hotkeycontent,OrderedArray()).快捷键
 {
 	If k contains 特定窗口,排除窗口
-	LV_Add("",k,v,";" k,A_index)
+	LV_Add("check",k,v,";" k,A_index)
 	Else
-	LV_Add("",k,v,";",A_index)
+	LV_Add(InStr(v,"@")?"" : "check",k,v,";",A_index)
 }
 LV_ModifyCol()
 LV_ModifyCol(4,40)
@@ -572,6 +572,26 @@ If(A_GuiControl="PluginsListview")
 tmpstr=Plugins
 Gui,99:ListView,PluginsListview
 }
+If(A_GuiEvent = "I")
+{
+	If (ErrorLevel == "C")
+	{
+LV_GetText(tmphotkey,A_EventInfo,2)
+if instr(tmphotkey,"@")
+{
+StringReplace, tmphotkey, tmphotkey,@
+LV_Modify(A_EventInfo, , , tmphotkey)
+}
+	}
+	If (ErrorLevel == "c")
+	{
+LV_GetText(tmphotkey,A_EventInfo,2)
+if (!tmphotkey or InStr(tmphotkey,"ahk"))
+return
+tmphotkey:="@" tmphotkey
+LV_Modify(A_EventInfo, , , tmphotkey)
+	}
+}
 If A_GuiEvent = DoubleClick     ;Double-clicking a row opens the Edit Row dialogue window.
 	gosub,Edithotkey
 Return
@@ -616,7 +636,7 @@ for k,v in hotkeys
 	If (v=EditRowEditCol2)
 	eqaulhotkey+=1
 }
-If eqaulhotkey>=2
+If eqaulhotkey=2
 {
 	; RGB系颜色
 	LV_ColorChange(FocusedRowNumber,"0xFF0000","0xFFFFFF") 

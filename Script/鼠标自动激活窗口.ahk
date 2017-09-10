@@ -5,7 +5,6 @@
     MouseGetPos, lastx, lasty
 return
 
-
 hovercheck:
   CoordMode, Mouse, Screen
     MouseGetPos, x, y
@@ -24,7 +23,6 @@ hovercheck:
         }
     }
 return
-
 
 hovering:
     if (hover_no_buttons && (GetKeyState("LButton") or GetKeyState("RButton") or GetKeyState("Shift") or GetKeyState("CapsLock")))
@@ -153,26 +151,6 @@ MouseGetPos, lastx, lasty
 			{
 			Click
 			return
-			}
-			else if ErrorLevel in 20
-			{
-			WinGetClass, win, ahk_id %win%
-				if(win="CabinetWClass")
-				{
-				Closewindow:=Explorer_GetPath()
-					if Closewindow && (Closewindow <> "Error")
-					{
-							if(Closewindow!=LastClosewindow)
-							{
-							CloseWindowList.Push(Closewindow)
-							LastClosewindow:=Closewindow
-							IniWrite,%LastClosewindow%, %run_iniFile%,常规, LastClosewindow
-							Tooltip,该窗口已经记录(悬浮)。
-							sleep,700
-							Tooltip
-							}
-					}
-				}
 			}
 		}
 ; hover over any window to focus:

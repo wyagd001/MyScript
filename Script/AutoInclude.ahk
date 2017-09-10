@@ -21,18 +21,17 @@
 #Include *i %A_ScriptDir%\Script\Cando\Cando_十进制十六进制转换.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_文件属性.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_复制路径.ahk
-#Include *i %A_ScriptDir%\Script\Hotkey\Explorer_定位文件.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_MD5.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_FastFolder.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_AppendFiles.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_智能重命名.ahk
-#Include *i %A_ScriptDir%\Script\Hotkey\Explorer_用记事本打开.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_新建.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\截取屏幕.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\截取窗口.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\快捷键_Plugins.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\快捷键.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\窗口水平垂直最大化.ahk
+#Include *i %A_ScriptDir%\Script\Hotkey\窗口程序和打开的文件.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\窗口缩略图.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\注册表.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Window Dragging KDE style.ahk
@@ -41,7 +40,8 @@
 #Include *i %A_ScriptDir%\Script\Hotkey\Cmd.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Eval.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_剪贴板到文件.ahk
-#Include *i %A_ScriptDir%\Script\Hotkey\窗口程序和打开的文件.ahk
+#Include *i %A_ScriptDir%\Script\Hotkey\Explorer_定位文件.ahk
+#Include *i %A_ScriptDir%\Script\Hotkey\Explorer_用记事本打开.ahk
 #Include *i %A_ScriptDir%\Script\7plus右键菜单\创建目录联接.ahk
 #Include *i %A_ScriptDir%\Script\7plus右键菜单\移动文件到同名文件夹.ahk
 #Include *i %A_ScriptDir%\Script\7plus右键菜单\百度搜索文件名.ahk

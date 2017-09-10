@@ -31,7 +31,7 @@
     #NoTrayIcon 
     #SingleInstance off
     
-#Include %A_ScriptDir%\..\Lib\IniObj.ahk
+
     OnMessage(0x4E, "WM_NOTIFY")
     
     gosub MakeGui
@@ -967,3 +967,5 @@ Anchor(i, a = "", r = false) {
         , NumPut(dw, c, cb + 8, "Short"), NumPut(dh, c, cb + 10, "Short")
     Return, true
 }
+
+#Include %A_ScriptDir%\..\Lib\IniObj.ahk

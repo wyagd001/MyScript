@@ -5,7 +5,7 @@
 if(A_TickCount<120000)
 sleep,20000
 
-run_iniFile = %A_ScriptDir%\settings\setting.ini
+global run_iniFile := A_ScriptDir "\settings\setting.ini"
 IniRead, content, %run_iniFile%,功能开关
 Gosub, GetAllKeys
 
@@ -126,7 +126,8 @@ work_area_h := NumGet(work_area,12)-NumGet(work_area,4)
 x_x2:=work_area_w- 634
 y_y2:=work_area_h- 108
 
-CloseWindowList := []
+global CloseWindowList := []
+global folder := [] 
 ;=========变量设置结束=========
 
 ;=========读取配置文件开始=========
@@ -434,7 +435,7 @@ FileDelete, %update_txtFile%
 FileDelete, %update_txtFile%
 }
 
-if Auto_DisplayWindow
+if Auto_DisplayMainWindow
 {
 Gui, Show, x%x_x% y%y_y% w624 h78, %AppTitle%
 visable = 1
@@ -469,7 +470,7 @@ Else
 If ( Auto_SaveDeskIcons=1)
 	{
         Menu, addf, Check, 启动时记忆桌面图标
-        SetTimer,SaveDesktopIconsPositionsdelay,40000
+        SetTimer,SaveDesktopIconsPositionsdelay,30000
         Menu, addf, Disable,  恢复桌面图标
 	}
 Else
@@ -546,11 +547,27 @@ gui_ww = 0
 
 ;----------计算文件MD5模式选择----------
 If md5type=1
-hModule_Md5 := DllCall("LoadLibrary", "str", A_ScriptDir "\MD5Lib.dll\hexMD5")
+hModule_Md5 := DllCall("LoadLibrary", "str", A_ScriptDir "\MD5Lib.dll")
 ;----------计算文件MD5模式选择----------
 
+;----------7plus右键菜单----------
+FileCreateDir %A_Temp%\7plus
+Gui +LastFound
+hAHK := WinExist()
+FileDelete, %A_Temp%\7plus\hwnd.txt
+FileAppend, %hAHK%, %A_Temp%\7plus\hwnd.txt
+;----------7plus右键菜单----------
 
-;----------地址栏等ClassNN:edit1添加“粘贴并打开”的右键菜单----------监视关机对话框的选择----------
+;----------7plus右键菜单----------
+IniRead,CloseWindowList_showmenu,%run_iniFile%,1007,showmenu
+if CloseWindowList_showmenu
+{
+DllCall("RegisterShellHookWindow","uint",hAHK)
+OnMessage(DllCall("RegisterWindowMessageW","str","SHELLHOOK"),"ShellWM")
+}
+;----------7plus右键菜单----------
+
+;----------地址栏等ClassNN:edit1添加“粘贴并打开”的右键菜单----------
 If PasteAndOpen
 {
 hMenu:=
@@ -568,24 +585,32 @@ global HookProcAdr := RegisterCallback( "HookProcMenu", "F" )
 global hWinEventHook := SetWinEventHook( 0x4, 0x4,0, HookProcAdr, 0, 0, 0 )   ;0x4 EVENT_SYSTEM_MENUSTART
 ;fileappend ,% "HookProcAdr:" HookProcAdr . " - hWinEventHook:"  hWinEventHook "`n",%a_desktop%\debug.txt
 ;fileappend ,% "&HookProcAdr:" &HookProcAdr . " - &hWinEventHook:" &hWinEventHook "`n",%a_desktop%\debug.txt
-
-;监视关机
-;HookProcAdr2 := RegisterCallback( "HookProc", "F" )
-;hWinEventHook2 := SetWinEventHook( 0x1, 0x17,0, HookProcAdr2, 0, 0, 0 )
 }
-;----------地址栏等ClassNN:edit1添加“粘贴并打开”的右键菜单----------监视关机对话框的选择----------
+;----------地址栏等ClassNN:edit1添加“粘贴并打开”的右键菜单----------
 
-/*
+;----------监视关机对话框的选择----------
 ;拦截关机
+If ShutdownMonitor
+{
 ShutdownBlock := true
 RegWrite ,REG_SZ,HKEY_CURRENT_USER,Control Panel\Desktop,AutoEndTasks,0
 ;关机时首先响应  To make a script the last process to terminate change "0x4FF" to "0x0FF".
 ;HKEY_CURRENT_USER,Control Panel\Desktop,AutoEndTasks,0
-DllCall("kernel32.dll\SetProcessShutdownParameters", UInt, 0x4FF, UInt, 0)
 ;Vista+关机提示结束进程
-DllCall("ShutdownBlockReasonCreate","Uint",hAHK,"Str",A_ScriptFullPath " is still running")
+error_temp:=DllCall("ShutdownBlockReasonCreate","Uint",hAHK,"wStr",A_ScriptFullPath " is still running")
+if !error_temp
+msgbox "ShutdownBlockReasonCreate"
+error_temp :=DllCall("kernel32.dll\SetProcessShutdownParameters", UInt, 0x4FF, UInt, 0)
+if !error_temp
+msgbox "SetProcessShutdownParameters"
+;监视关机
+HookProcAdr2 := RegisterCallback( "HookProc", "F" )
+hWinEventHook2 := SetWinEventHook( 0x1, 0x17,0, HookProcAdr2, 0, 0, 0 )
+if !hWinEventHook2
+msgbox "SetWinEventHook"
 OnMessage(0x11, "WM_QUERYENDSESSION")
-*/
+}
+;----------监视关机对话框的选择----------
 
 ;----------整点报时功能----------
   If baoshionoff
@@ -629,14 +654,6 @@ SetTimer,FreeAppMem,300000
 ;----------Pin2Desk----------
 Gosub,cSigleMenu
 ;----------Pin2Desk----------
-
-;----------7plus右键菜单----------
-FileCreateDir %A_Temp%\7plus
-Gui +LastFound
-hAHK := WinExist()
-FileDelete, %A_Temp%\7plus\hwnd.txt
-FileAppend, %hAHK%, %A_Temp%\7plus\hwnd.txt
-;----------7plus右键菜单----------
 ;=========功能加载结束=========
 
 ;=========热键设置=========
@@ -651,7 +668,7 @@ Else IfInString,k,特定窗口
 Hotkey, IfWinActive, %v%
 Else IfInString,k,排除窗口
 Hotkey, IfWinNotActive, %v%
-Else If v
+Else If (v && !InStr(v,"@"))
  hotkey, %v%,%k% ;,UseErrorLevel
 }
 Hotkey, IfWinActive
@@ -1161,58 +1178,6 @@ Menu, Gui_Dock_Windows,deleteall
 Menu, ConfigMenu1,deleteall
 Return
 
-WM_QUERYENDSESSION(wParam, lParam)
-{
-   global ShutdownBlock
-   If not ShutdownBlock
-      Exit
-   SetTimer, ShutdownDialog, 10
-   Return false
-   /*   ;XP
-    ENDSESSION_LOGOFF = 0x80000000
-    If (lParam & ENDSESSION_LOGOFF)  ; 用户正在注销
-        EventType = 注销
-    Else  ; 系统正在关闭或重启。
-        EventType = 关机
-   Return false
-    MsgBox, 4,, 正在%EventType%，是否允许？
-    IfMsgBox Yes
-        Return true  ; 告诉操作系统允许让 关机/注销 操作继续。
-    Else
-    {
-    DllCall("ShutdownBlockReasonDestroy","Uint",hAhk)
-    Return false  ; 告诉操作系统终止 关机/注销。
-     }
-     */
-}
-
-ShutdownDialog:
-WinWait, ahk_class BlockedShutdownResolver
-If not ErrorLevel
-{
-   WinClose, ahk_class BlockedShutdownResolver
-   WinWaitClose, ahk_class BlockedShutdownResolver
-   IfNotEqual, ErrorLevel, 1, WinClose, ahk_class Progman
-   SetTimer, ShutdownDialog, off
-}
-Return
-
-#IfWinActive, 关闭 Windows ahk_class #32770
-Enter::
-Space::
-ControlGet, Choice, Choice, , ComboBox1
-ControlGetFocus, Focus
-If Choice in 注销,重新启动,关机,Install updates and shut down
-{
-   If (Focus = "ComboBox1" && A_ThisHotkey = "Enter")
-      or (Focus = "Button3")
-      ShutdownBlock := false
-}
-SendInput, % "{" . A_ThisHotkey . "}"
-Return
-#IfWinActive
-
-
 Open1:
 ListVars
 Return
@@ -1302,8 +1267,17 @@ Return
 ExitSub:
 
 FileDelete, %A_Temp%\7plus\hwnd.txt
-;DllCall("ShutdownBlockReasonDestroy", UInt, hAHK)
+
+; 释放监视关机的资源
+if ShutdownMonitor
+{
+DllCall("ShutdownBlockReasonDestroy", UInt, hAHK)
+UnhookWinEvent2()
+}
+
 ;msgbox,0
+if CloseWindowList_showmenu
+DllCall("DeregisterShellHookWindow","uint",hAHK)
 
 If !smartchooserbrowser
 delahkurl()
@@ -1376,7 +1350,7 @@ If md5type=1
   DllCall("FreeLibrary", "Ptr", hModule_Md5)
 
 ;msgbox,5
-;是否粘贴并打开和监视关机的资源
+; 释放粘贴并打开的资源
 If PasteAndOpen
 {
 WinShow,ahk_class Shell_TrayWnd
@@ -1484,6 +1458,14 @@ Ctrl_ShImgVw_:="ShImgVw:CZoomWnd1"
 Ctrl_#32770:="SysListView321"
 Return
 
+GetAllKeys:
+  Loop, Parse, content, `n
+  {
+    StringSplit, data, A_LoopField, =
+    %data1%:=data2
+  }
+return
+
 _AutoInclude:
 	f = %A_ScriptDir%\Script\AutoInclude.ahk
 	FileRead, fs, %f%
@@ -1555,11 +1537,13 @@ return
 #include %A_ScriptDir%\Script\Explorer_DeskIcons.ahk
 #include %A_ScriptDir%\Script\Explorer_7plus右键菜单.ahk
 #include %A_ScriptDir%\Script\Explorer_显示隐藏文件.ahk
+#include %A_ScriptDir%\Script\Explorer_重新打开关闭的窗口.ahk
 #include %A_ScriptDir%\Script\鼠标自动激活窗口.ahk
 #include %A_ScriptDir%\Script\整点报时.ahk
 #include %A_ScriptDir%\Script\Candy.ahk
 #include %A_ScriptDir%\Script\Dock To Edge.ahk
-#include %A_ScriptDir%\Script\地址栏粘贴并转到.ahk
+#include %A_ScriptDir%\Script\地址栏粘贴并打开.ahk
+#include %A_ScriptDir%\Script\关机对话框.ahk
 #include %A_ScriptDir%\Lib\Explorer.ahk
 #include %A_ScriptDir%\Lib\Menu.ahk
 #include %A_ScriptDir%\Lib\Window.ahk

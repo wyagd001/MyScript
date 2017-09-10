@@ -83,32 +83,7 @@ HookProcMenu( hWinEventHook, Event, hWnd, idObject, idChild, dwEventThread, dwms
 	}
 }
 
-HookProc(hWinEventHook2, Event, hWnd)
-{
-	global ShutdownBlock
-	static hShutdownDialog
-	Event += 0
-	if Event = 8 ; EVENT_SYSTEM_CAPTURESTART
-	{
-		WinGetClass, Class, ahk_id %hWnd%
-		WinGetTitle, Title, ahk_id %hWnd%
-		if (Class = "Button" and Title = "确定")
-		{
-			ControlGet, Choice, Choice, , ComboBox1, ahk_id %hShutdownDialog%
-			if Choice in 注销,重新启动,关机,Install updates and shut down
-				ShutdownBlock := false
-		}
-	}
-	else if Event = 16 ; EVENT_SYSTEM_DIALOGSTART
-	{
-		WinGetClass, Class, ahk_id %hWnd%
-		WinGetTitle, Title, ahk_id %hWnd%
-		If (Class = "#32770" and Title = "关闭 Windows")
-			hShutdownDialog := hWnd
-	}
-	else if Event = 17 ; EVENT_SYSTEM_DIALOGEND
-		hShutdownDialog =
-}
+
 
 WinGetClass( hwnd )
 {
@@ -116,30 +91,14 @@ WinGetClass( hwnd )
 	Return wclass
 }
 
-SetWinEventHook(eventMin, eventMax, hmodWinEventProc, lpfnWinEventProc, idProcess, idThread, dwFlags)
-{
-	return DllCall("SetWinEventHook"
-	, Uint,eventMin
-	, Uint,eventMax
-	, Uint,hmodWinEventProc
-	, Uint,lpfnWinEventProc
-	, Uint,idProcess
-	, Uint,idThread
-	, Uint,dwFlags)
-}
-
 UnhookWinEvent()
 {
 	Global
 	QQ:=DllCall( "UnhookWinEvent", Uint,hWinEventHook )
 	qw:=DllCall( "GlobalFree", UInt,HookProcAdr ) ; free up allocated memory for RegisterCallback
-	; tooltip % "成功为0：" qw
-	;DllCall( "UnhookWinEvent", Uint,hWinEventHook2 )
-	;DllCall( "GlobalFree", UInt,&HookProcAdr2 )  
+	; msgbox % "成功为0：" qw
 	; &HookProcAdr 引发程序异常退出  改为 HookProcAdr不知道是否有同样效用
 }
-
-
 
 /***************************************************************
 * returns the state of a menu entry

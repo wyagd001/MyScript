@@ -13,6 +13,8 @@
 	}
 Return
 
+/*
+; 下次更新删除 
 #If  IsOverCloseButton()
 LButton::
 	Closewindow:=Explorer_GetPath()
@@ -43,3 +45,4 @@ IsOverCloseButton()
 			Return (ErrorLevel == 20)
 		}
 	}
+*/
