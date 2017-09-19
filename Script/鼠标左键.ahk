@@ -12,37 +12,3 @@
 		Run taskmgr.exe
 	}
 Return
-
-/*
-; 下次更新删除 
-#If  IsOverCloseButton()
-LButton::
-	Closewindow:=Explorer_GetPath()
-	Send {LButton Down}
-	KeyWait, LButton
-	Send {LButton Up}
-	If Closewindow && (Closewindow <> "Error")
-	{
-		If(Closewindow!=LastClosewindow)
-		{
-			CloseWindowList.Push(Closewindow)
-			LastClosewindow:=Closewindow
-			IniWrite,%LastClosewindow%, %run_iniFile%,常规, LastClosewindow
-			Tooltip,该窗口已经记录(点击)。
-			Sleep,1000
-			Tooltip
-		}
-	}
-Return
-#If
-
-IsOverCloseButton()
-	{
-		IfWinActive, ahk_class CabinetWClass
-		{
-			MouseGetPos, x, y, winid
-			SendMessage, 0x84,, (x & 0xFFFF) | (y & 0xFFFF) << 16,, ahk_id %winid%
-			Return (ErrorLevel == 20)
-		}
-	}
-*/

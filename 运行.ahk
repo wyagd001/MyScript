@@ -597,7 +597,7 @@ RegWrite ,REG_SZ,HKEY_CURRENT_USER,Control Panel\Desktop,AutoEndTasks,0
 ;关机时首先响应  To make a script the last process to terminate change "0x4FF" to "0x0FF".
 ;HKEY_CURRENT_USER,Control Panel\Desktop,AutoEndTasks,0
 ;Vista+关机提示结束进程
-error_temp:=DllCall("ShutdownBlockReasonCreate","Uint",hAHK,"wStr",A_ScriptFullPath " is still running")
+error_temp:=DllCall("ShutdownBlockReasonCreate","Uint",hAHK,"Str",A_ScriptFullPath " is still running")
 if !error_temp
 msgbox "ShutdownBlockReasonCreate"
 error_temp :=DllCall("kernel32.dll\SetProcessShutdownParameters", UInt, 0x4FF, UInt, 0)
@@ -654,6 +654,11 @@ SetTimer,FreeAppMem,300000
 ;----------Pin2Desk----------
 Gosub,cSigleMenu
 ;----------Pin2Desk----------
+
+;----------农历节日----------
+if Auto_JCTF
+Gosub,JCTF
+;----------农历节日----------
 ;=========功能加载结束=========
 
 ;=========热键设置=========
@@ -1539,7 +1544,8 @@ return
 #include %A_ScriptDir%\Script\Explorer_显示隐藏文件.ahk
 #include %A_ScriptDir%\Script\Explorer_重新打开关闭的窗口.ahk
 #include %A_ScriptDir%\Script\鼠标自动激活窗口.ahk
-#include %A_ScriptDir%\Script\整点报时.ahk
+#include %A_ScriptDir%\Script\时间_报时和定时任务.ahk
+#include %A_ScriptDir%\Script\时间_判断农历节日.ahk
 #include %A_ScriptDir%\Script\Candy.ahk
 #include %A_ScriptDir%\Script\Dock To Edge.ahk
 #include %A_ScriptDir%\Script\地址栏粘贴并打开.ahk
