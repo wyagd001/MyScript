@@ -330,7 +330,7 @@ Label_Candy_RunCommand:
 <<<<终极运行>>>>                                                  ║
 ╚══════════════════════════════════════╝
 */
-        Candy_All_Cmd:="web|keys|cando|cango|run|openwith|SetClipBoard|msgbox|config|openwith|ow|rund|runp"
+        Candy_All_Cmd:="web|keys|cando|cango|run|openwith|SetClipBoard|msgbox|config|openwith|ow|rund|runp|ExeAhk"
     If Not RegExMatch(Candy_Cmd,"i)^\s*(" Candy_All_Cmd ")\s*\|")
         Candy_Cmd=OpenWith|%Candy_Cmd% ;如果没有,则人为补一个OpenWith
     Candy_Cmd:=RegExReplace(Candy_Cmd,"~\|",Chr(3))
@@ -421,6 +421,11 @@ Label_Candy_RunCommand:
             Send ^v
         }
     }
+    Else If (Candy_Cmd_Str1="ExeAhk")
+		{      
+      ;msgbox % Candy_Cmd_Str2
+			RunScript(Candy_Cmd_Str2)
+		}
     Return
 
 /*

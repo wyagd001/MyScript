@@ -1,8 +1,8 @@
 addfavorites:
+tempworkdir:=A_WorkingDir
 Loop, parse, A_GuiEvent, `n, `r
 {
    Gui, Submit, NoHide
-   tempworkdir:=A_WorkingDir
 
    w = %A_ScriptDir%\favorites
    SetWorkingDir, %w%
@@ -10,7 +10,6 @@ Loop, parse, A_GuiEvent, `n, `r
    {
    msgbox,没有选择文件或文件夹。
    SetWorkingDir,%tempworkdir%
-   ;tooltip, % A_WorkingDir
    return
    }
 
@@ -18,7 +17,6 @@ Loop, parse, A_GuiEvent, `n, `r
    InputBox,shortName,,请输入快捷方式的名称?,,,,,,,,%OutNameNoExt%
    if ErrorLevel{
    SetWorkingDir,%tempworkdir%
-   ;tooltip, % A_WorkingDir
    return
    }
    else
@@ -29,17 +27,16 @@ Loop, parse, A_GuiEvent, `n, `r
    IfMsgBox No
    {
    SetWorkingDir,%tempworkdir%
-   ;tooltip, % A_WorkingDir
    return
    }
    else{
    FileCreateShortcut,%dir%,%shortName%.lnk,%w%
+   SetWorkingDir,%tempworkdir%
    return
    }
    }
    FileCreateShortcut,%dir%,%shortName%.lnk,%w%
    SetWorkingDir,%tempworkdir%
-   ;tooltip, % A_WorkingDir
    return
 }
 return
@@ -90,7 +87,6 @@ Menu,mymenu2, add, %fname%, :%fname%  ; 创建父菜单项。
 Menu,mymenu2,show
 Menu,mymenu2,deleteall
 SetWorkingDir,%tempworkdir%
-;tooltip, % A_WorkingDir
 /*
 Loop, %w2%\*.*, 2, 0
 {

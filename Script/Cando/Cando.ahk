@@ -65,7 +65,3 @@ try {
 	thunder.CommitTasks()
 }
 Return
-
-Cando_查看Dll内函数:
-msgbox,,Dll文件内函数列表, % DllListExports(CandySel)
-return

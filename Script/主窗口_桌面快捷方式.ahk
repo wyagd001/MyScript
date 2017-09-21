@@ -26,15 +26,10 @@ Menu,mymenu,show
 Menu,mymenu,deleteall
 If Fileexist("вўВи")
 	Menu, вўВи,deleteall
-   SetWorkingDir,%tempworkdir%
-   ;tooltip, % A_WorkingDir
+SetWorkingDir,%tempworkdir%
 return
 
 RunThisMenuItem2:
 RunFileName = %A_desktop%\вўВи\%A_ThisMenuItem%.lnk
 run, %RunFileName%
 Return    ;жиди
-
-
-
-

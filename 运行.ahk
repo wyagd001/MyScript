@@ -1518,6 +1518,18 @@ break
 }
 return
 
+RunScript(script) {
+    static test_ahk := A_AhkPath,
+    shell := ComObjCreate("WScript.Shell")
+    tempworkdir:=A_WorkingDir
+    SetWorkingDir %A_ScriptDir%
+    exec := shell.Exec(test_ahk " /ErrorStdOut *")
+    exec.StdIn.WriteLine(script)
+    exec.StdIn.Close()  ; Unlike cmd.exe, AutoHotkey needs this.
+   SetWorkingDir %tempworkdir%
+    return exec.StdOut.ReadAll()
+}
+
 #include %A_ScriptDir%\Script\Ω≈±æπ‹¿Ì∆˜.ahk
 #include %A_ScriptDir%\Script\≈‰÷√.ahk
 #include %A_ScriptDir%\Script\FolderMenu.ahk
