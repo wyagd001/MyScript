@@ -1,11 +1,11 @@
 1008:
 	sPara=/SRC
-	SetTimer,创建目录联接,100
+	SetTimer,创建目录联接,-200
 Return
 
 1009:
 	sPara=/DES
-	SetTimer,创建目录联接,100
+	SetTimer,创建目录联接,-200
 Return
 
 创建目录联接:
@@ -16,11 +16,9 @@ Return
 		Files:=GetCurrentFolder()
 	If !Files
 	{
-		MsgBox,,,获取文件路径失败。,3
-		SetTimer,创建目录联接,Off
+		MsgBox,,,获取文件路径失败2。,3
 		Return
 	}
-	SetTimer,创建目录联接,Off
 	Critical,Off
 	SplitPath,Files, , , , , tempStr1
 	DriveGet, tempStr, FS, %tempStr1%

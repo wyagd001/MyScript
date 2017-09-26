@@ -1,7 +1,7 @@
 ;桌面lnk文件无效(所有lnk文件都无效)
 1003:
 	;MsgBox
-	SetTimer,移动文件到同名文件夹,200
+	SetTimer,移动文件到同名文件夹,-200
 Return
 
 ;文件移动到同名文件夹内
@@ -14,13 +14,11 @@ Critical,On
 Files := GetSelectedFiles()
 If !Files
 {
-	MsgBox,,,获取文件路径失败。,3
-	SetTimer,移动文件到同名文件夹,Off
+	MsgBox,,,获取文件路径失败4。,3
 	Return
 }
 Critical,Off
 
-SetTimer,移动文件到同名文件夹,Off
 Loop, Parse, files, `n,`r
 {
 	FileFullPath := A_LoopField

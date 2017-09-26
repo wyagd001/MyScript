@@ -1,5 +1,5 @@
 1006:
-	SetTimer,smartunrar,200
+	SetTimer,smartunrar,-200
 Return
 
 ;智能解压
@@ -13,11 +13,10 @@ Critical,On
 Files := GetSelectedFiles()
 If !Files
 {
-	MsgBox,,,获取文件路径失败。,3
-	SetTimer,smartunrar,Off
+	MsgBox,,,获取文件路径失败5。,3
 Return
 }
-SetTimer,smartunrar,off
+
 Loop Parse, Files, `n, `r ;从 Files 中逐个获取压缩包路径。换行作分隔符，忽略头尾回车。
 {
 SplitPath A_LoopField, , 包目录, , 包名 ;将压缩包路径分割为它的所在目录和不含扩展名的文件名

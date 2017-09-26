@@ -1,5 +1,5 @@
 1005:
-	SetTimer,copyfolderStructure,200
+	SetTimer,copyfolderStructure,-200
 Return
 
 ;复制文件夹结构而不复制文件夹中的文件
@@ -9,13 +9,11 @@ Critical,On
 Files := GetSelectedFiles()
 If !Files
 {
-	MsgBox,,,获取文件路径失败。,3
-	SetTimer,copyfolderStructure,Off
+	MsgBox,,,获取文件路径失败3。,3
 Return
 }
 Critical,Off
 
-SetTimer,copyfolderStructure,Off
 Files:=Files . "\"
 CopyDirStructure(Files,A_Desktop,1)
 Return

@@ -1,14 +1,16 @@
 ;#IfWinActive,拖拽移动文件到目标文件夹（自动重命名）
 ;* 任意==号时自动触发，不需要终止符触发，B0 触发不删除==
-:?*:==::
+:?B0*:==::
 ;msgbox % IME_GetSentenceMode(_mhwnd())
 If(IME_GetSentenceMode(_mhwnd())= 0)
 ;检测IME状态，中文输入时不执行任何命令，测试时，WIN7下切换搜狗/智能ABC时状态值都为0，英文键盘、QQ拼音输入法状态值为8
 {
+;tooltip,% IME_GetSentenceMode(_mhwnd())
 sleep,400
 Return
 }
-Else{
+Else
+{
 V := ClipboardAll
 Clipboard :=
 ;复制

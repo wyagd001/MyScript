@@ -1,6 +1,6 @@
 ;桌面lnk文件无效(所有lnk文件都无效)
 1004:
-	SetTimer,searchthefile,200
+	SetTimer,searchthefile,-200
 Return
 
 ;桌面lnk文件无效  Why
@@ -11,13 +11,11 @@ Critical,On
 Files := GetSelectedFiles()
 If !Files
 {
-	MsgBox,,,获取文件路径失败。,3
-	SetTimer,searchthefile,Off
+	MsgBox,,,获取文件路径失败1。,3
 Return
 }
 Critical,Off
 
-SetTimer,searchthefile,Off
 Loop, Parse, files, `n,`r
 fullpath := A_LoopField
 
