@@ -6,6 +6,9 @@ if(A_TickCount<120000)
 sleep,20000
 
 global run_iniFile := A_ScriptDir "\settings\setting.ini"
+IfNotExist, %run_iniFile%
+	FileCopy, %A_ScriptDir%\Backups\setting.ini, %run_iniFile%
+
 IniRead, content, %run_iniFile%,功能开关
 Gosub, GetAllKeys
 
@@ -60,11 +63,11 @@ SaveDeskIcons_inifile = %A_ScriptDir%\settings\SaveDeskIcons.ini
 update_txtFile = %A_ScriptDir%\settings\tmp\CurrentVersion.txt
 ScriptManager_Path=%A_ScriptDir%\脚本管理器
 
-IfNotExist, %run_iniFile%
-	FileCopy, %A_ScriptDir%\Backups\setting.ini, %run_iniFile%
-
 global Candy_ProFile_Ini := A_ScriptDir . "\settings\candy\[candy].ini"
 SplitPath,Candy_ProFile_Ini,,Candy_Profile_Dir,,Candy_ProFile_Ini_NameNoext
+
+Windy_Profile_Ini  := A_ScriptDir . "\settings\Windy\Windy.ini"
+SplitPath,Windy_Profile_Ini,,Windy_Profile_Ini_Dir,,Windy_Profile_Ini_NameNoext
 
 ;---------Alt+滚轮调节音量随机颜色---------
 Random,ColorNum,0,6
@@ -116,7 +119,6 @@ DllCall( "SystemParametersInfo"
          , "uint", &work_area    ;结构左0右8上4下12  NumGet(work_area,8)
          , "uint", 0 )
 
-
 ; 获取工作区域宽
 work_area_w := NumGet(work_area,8)-NumGet(work_area,0)
 ; 获取工作区域高,不计算任务栏高度
@@ -126,8 +128,14 @@ work_area_h := NumGet(work_area,12)-NumGet(work_area,4)
 x_x2:=work_area_w- 634
 y_y2:=work_area_h- 108
 
+; 最近关闭的资源管理器窗口
 global CloseWindowList := []
 global folder := [] 
+
+; Candy，Windy
+	global szMenuIdx:={}      ;菜单用1
+	global szMenuContent:={}      ;菜单用2
+	global szMenuWhichFile:={}      ;菜单用3
 ;=========变量设置结束=========
 
 ;=========读取配置文件开始=========
@@ -221,10 +229,6 @@ IniRead otherProgram,%run_iniFile%,otherProgram
 			%MyVar_Key%=%MyVar_Val% 		; 这样的写法不会传递环境变量。EnvSet,%MyVar_Key%,"%MyVar_Val%"
 ; 另一种写法，可以传递环境变量到被他启动的应用程序
 	}
-
-	global szMenuIdx:={}      ;菜单用1
-	global szMenuContent:={}      ;菜单用2
-	global szMenuWhichFile:={}      ;菜单用3
 ;=========读取配置文件结束=========
 
 ;=========托盘菜单绘制=========
@@ -1559,6 +1563,7 @@ RunScript(script) {
 #include %A_ScriptDir%\Script\时间_报时和定时任务.ahk
 #include %A_ScriptDir%\Script\时间_判断农历节日.ahk
 #include %A_ScriptDir%\Script\Candy.ahk
+#include %A_ScriptDir%\Script\Windy.ahk
 #include %A_ScriptDir%\Script\Dock To Edge.ahk
 #include %A_ScriptDir%\Script\地址栏粘贴并打开.ahk
 #include %A_ScriptDir%\Script\关机对话框.ahk

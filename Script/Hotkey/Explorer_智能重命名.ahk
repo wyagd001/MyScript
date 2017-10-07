@@ -20,6 +20,8 @@ F2::
     If !ErrorLevel   ; 当文件名有 "." 时才进行变换选择
     {
         MoveCount := StrLen(FileName) - DotPostion
+        if state=
+            state=2
         Goto, RenameState%State%
     }
 Return

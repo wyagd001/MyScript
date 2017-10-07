@@ -162,7 +162,7 @@ Gui,Add,CheckBox,x26 y185 w115 h20 vhover_any_window gundermouse,窗口自动激活
 Gui,Add,CheckBox,x44 y205 w200 h20 vhover_keep_zorder,激活时不更改窗口顺序(效果一般)
 Gui,Add,Text,x26 y235 w150 h20 vtext,悬停延迟响应时间（毫秒）：
 Gui,Add,Edit,x170 y230 w50 h20 vhover_delay,%hover_delay%
-Gui,Add,CheckBox,x26 y255 w200 h20 vscrollundermouse gundermouse,不激活窗口滚轮生效(有滚动条时)
+Gui,Add,CheckBox,x26 y255 w300 h20 vscrollundermouse gundermouse,在不激活窗口情况下使滚轮生效(窗口有滚动条时)
 
  GuiControl,,hover_task_buttons,%hover_task_buttons%
  GuiControl,,hover_task_group,%hover_task_group%
