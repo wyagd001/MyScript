@@ -12,7 +12,6 @@
 退出：^+E
 */
 
-
 #Persistent
 #NoTrayIcon
 #SingleInstance force
@@ -34,9 +33,8 @@ IniRead, huifushangci, %run_iniFile%, AhkPlayer, huifushangci
 
 hidelrc=0
 PlaylistIndex:=0
-AhkMediaLibFile = %A_ScriptDir%\settings\mp3s.txt
-AhkMediaListFile =  %A_ScriptDir%\settings\playlist.txt
-SingleCycleFile = %A_ScriptDir%\settings\SingleCycle.txt
+AhkMediaLibFile = %A_ScriptDir%\settings\AhkPlayer\mp3s.txt
+AhkMediaListFile =  %A_ScriptDir%\settings\AhkPlayer\playlist.txt
 If (PlayListdefalut="t")
 NowPlayFile := AhkMediaListFile
 else
@@ -168,9 +166,9 @@ UpdateMediaLib:
 			Fileappend, , %AhkMediaLibFile%
 	Loop, %AhkMediaLib%\*.*, 0,1
 		{
-			mp3 := A_loopfilename
+			mp3_loop := A_loopfilename
 
-			 Splitpath, mp3,,,Extension
+			 Splitpath, mp3_loop,,,Extension
 			 if (Extension != "mp3" && Extension != "wma")
 						 Continue
 			 			 else
@@ -208,92 +206,98 @@ mp3 := Mp3Playing
 Return
 
 StarPlay:
+	If hSound 
+	{
+		MCI_Stop(hSound)
+		MCI_Close(hSound)
+	}
+
+	if SingleCycle
+		goto SingleCycleplay
+
 	Count :=TF_CountLines(NowPlayFile)
-	If hSound {
-			MCI_Stop(hSound)
-			MCI_Close(hSound)
-	      }
-		IniRead, PlayRandom, %run_iniFile%, AhkPlayer, PlayRandom
-        IniRead, followmouse, %run_iniFile%, AhkPlayer, followmouse
-        IniRead, PlayListdefalut, %run_iniFile%, AhkPlayer, PlayListdefalut
+	IniRead, PlayRandom, %run_iniFile%, AhkPlayer, PlayRandom
+	IniRead, followmouse, %run_iniFile%, AhkPlayer, followmouse
+	IniRead, PlayListdefalut, %run_iniFile%, AhkPlayer, PlayListdefalut
 
-		if (PlayRandom = "t")
+	if (PlayRandom = "t")  ; 随机播放
 	{
-		if (PlayListdefalut="t")
- 		{
-		if (followmouse="t")
+		if (PlayListdefalut="t")  ; 播放列表
 		{
-		if (PlaylistIndex != LV_GetNext(Row))
-		{
-		PlaylistIndex:=LV_GetNext(Row)
-		LV_GetText(Mp3,PlaylistIndex,4)
-	}
-	else
-		{
-	    Random, Rand, 1, %Count%
-	    FileReadLine, Mp3, %NowPlayFile%, %Rand%
+			if (followmouse="t")   ; 跟随鼠标
+			{
+				if (PlaylistIndex != LV_GetNext(Row))
+				{
+					PlaylistIndex:=LV_GetNext(Row)
+					LV_GetText(Mp3,PlaylistIndex,4)
+				}
+			}
+			else   ; 非跟随鼠标
+			{
+				Random, Rand, 1, %Count%
+				FileReadLine, Mp3, %NowPlayFile%, %Rand%
 				LV_Modify(0,"-Select")
-		LV_Modify(Rand,"+Select +Focus +Vis")
-		PlaylistIndex:=LV_GetNext(Row)
-	    }
-	    }
-	    }
-	    else
-		{
-	    Random, Rand, 1, %Count%
-	    FileReadLine, Mp3, %NowPlayFile%, %Rand%
-	    }
-	}
-		else
-	{
-		if (PlayListdefalut="t")
- 		{
-		if (PlaylistIndex>=LV_GetCount())
-        PlaylistIndex:=0
-		if (followmouse="t")
-		{
-		if (PlaylistIndex=LV_GetNext(Row))
-        PlayListIndex++
-		Else
-		PlaylistIndex:=LV_GetNext(Row)
-	    }
-	    Else
-		PlayListIndex++
-
-		LV_GetText(Mp3,PlaylistIndex,4)
-		LV_Modify(0,"-Select")
-        LV_Modify(PlaylistIndex,"+Select +Focus +Vis")
+				LV_Modify(Rand,"+Select +Focus +Vis")
+				PlaylistIndex:=LV_GetNext(Row)
+			}
 		}
-        else
-	    {
+		else  ; 播放媒体库
+		{
+			Random, Rand, 1, %Count%
+			FileReadLine, Mp3, %NowPlayFile%, %Rand%
+			}
+	}
+	else   ; 非随机播放
+	{
+		if (PlayListdefalut="t")   ; 播放列表
+		{
+			if (PlaylistIndex>=LV_GetCount())
+				PlaylistIndex:=0
+			if (followmouse="t")
+			{
+				if (PlaylistIndex=LV_GetNext(Row))
+					PlayListIndex++
+				Else
+					PlaylistIndex:=LV_GetNext(Row)
+			}
+			Else
+				PlayListIndex++
+
+			LV_GetText(Mp3,PlaylistIndex,4)
+			LV_Modify(0,"-Select")
+			LV_Modify(PlaylistIndex,"+Select +Focus +Vis")
+		}
+		else  ; 播放媒体库
+		{
 			IniRead, PlayIndex, %run_iniFile%, AhkPlayer, PlayIndex
 			PlayIndex++
 			IniWrite, %PlayIndex%, %run_iniFile%, AhkPlayer, PlayIndex
 			;IniRead, PlayListSize, %A_ScriptDir%\tmp\setting.ini, AhkPlayer, PlayListSize
-        if (PlayIndex>Count) {
-		PlayIndex = 1
-		Iniwrite, %PlayIndex%, %run_iniFile%,AhkPlayer, PlayIndex
-	    }
-		FileReadLine, Mp3, %NowPlayFile%, %PlayIndex%
+			if (PlayIndex>Count)
+			{
+				PlayIndex = 1
+				Iniwrite, %PlayIndex%, %run_iniFile%,AhkPlayer, PlayIndex
+			}
+			FileReadLine, Mp3, %NowPlayFile%, %PlayIndex%
 		}
 	}
 
+	SingleCycleplay:
 	hSound := MCI_Open(Mp3, "myfile")
-
 	IniWrite, %mp3%, %run_iniFile%, AhkPlayer, Mp3Playing
 	lastptime = 1
-    SetTimer UpdateSlider,off
-    GUIControl,,Slider,0
-    GUIControl,Disable,Slider
+	SetTimer UpdateSlider,off
+	GUIControl,,Slider,0
+	GUIControl,Disable,Slider
 	Gosub, MyPause
 	len := MCI_Length(hSound)
 	GUIControl,Enable,Slider
-    SetTimer,UpdateSlider,100
+	SetTimer,UpdateSlider,100
 	SetTimer,CheckStatus,250
 	Gosub, ToolTipMP3
-    ;Gosub命令：程序跳转到ToolTipMP3标签，执行标签下的语句，遇到Return返回，才继续执行该行下面的语句即继续执行Gosub, StarPlay   Goto命令则不会返回
-
-	;播放下一首歌曲
+	; Gosub命令：程序跳转到ToolTipMP3标签，执行标签下的语句，遇到Return返回，
+	; 才继续执行该行下面的语句即继续执行Gosub, StarPlay   Goto命令则不会返回
+	; 播放下一首歌曲
 	Gosub, StarPlay
 Return
 
@@ -336,9 +340,9 @@ Loop, read, %AhkMediaListFile%
 	{
 	xuhao++
 	SetFormat, float ,03
-	mp3 = %A_LoopReadline%
-	SplitPath, Mp3,,,ext, name
-    LV_Add("", xuhao+0.0,name, ext,mp3)
+	mp3_loop = %A_LoopReadline%
+	SplitPath, mp3_loop,,,ext, name
+    LV_Add("", xuhao+0.0,name, ext,mp3_loop)
     LV_ModifyCol()
 }
 }
@@ -400,7 +404,6 @@ ToolTipMP3:
 }
 }
 Return
-
 
 PlayfromList: 
 FileReadLine, Mp3, %AhkMediaLibFile%, %PlayIndex%
@@ -575,8 +578,6 @@ ExitSub:
 		MCI_Stop(hSound)
 		MCI_Close(hSound)
 	}
-    If(SingleCycle=true)
-    FileDelete, %SingleCycleFile%
 	ExitApp
 Return
 
@@ -778,13 +779,13 @@ Loop, % File0-1
 	xuhao++
 	NextIndex := A_Index+1
 	w:=File%NextIndex%
-	mp3 =  %File1%\%w%
-	SplitPath, mp3,,,ext, name
+	mp3_loop =  %File1%\%w%
+	SplitPath, mp3_loop,,,ext, name
 	If ext in mp3,wma,wmv,wav,mpg,mid			;这是我目前已知的能用soundplay播放的格式
 	{
 	SetFormat, float ,03
-	LV_Add("Focus Select",xuhao+0.0,name,ext, mp3)
-	Fileappend,%mp3%`n, %AhkMediaListFile%
+	LV_Add("Focus Select",xuhao+0.0,name,ext, mp3_loop)
+	Fileappend,%mp3_loop%`n, %AhkMediaListFile%
 	}
 }
 LV_ModifyCol()
@@ -860,11 +861,12 @@ if FileExist(Mp3)
 	}
 Return
 
-; 菜单打开所选文件位置(单选)
+; 菜单/右键 打开所选文件位置(单选)
 MenuOpenFilePath:
-LV_GetText(Mp3, LV_GetNext(Row), 4)
-If Fileexist(Mp3)
-Run,% "explorer.exe /select," Mp3
+OpenfilePath:
+LV_GetText(mp3_loop, LV_GetNext(Row), 4)
+If Fileexist(mp3_loop)
+Run,% "explorer.exe /select," mp3_loop
  Return
 
 ; 菜单删除所选(可多选)
@@ -875,8 +877,8 @@ Loop, % LV_GetCount()			;%
 FileDelete, %AhkMediaListFile%
 	Loop, % LV_GetCount()
 	{
-	LV_GetText(Mp3, A_Index, 4)
-	Fileappend,%Mp3%`n, %AhkMediaListFile%
+	LV_GetText(mp3_loop, A_Index, 4)
+	Fileappend,%mp3_loop%`n, %AhkMediaListFile%
     }
 gosub,refreshList
 Return
@@ -901,20 +903,9 @@ Return
 PSingleCycle:
 SingleCycle := !SingleCycle
 if(SingleCycle=true)
-{
 Menu,PlayBack,Check,单曲循环(&D)
-OldNowPlayFile = %NowPlayFile%
-FileDelete, %SingleCycleFile%
-FileAppend,%Mp3%,%SingleCycleFile%
-NowPlayFile = %SingleCycleFile%
-}
 else
-{
 Menu,PlayBack,UnCheck,单曲循环(&D)
-NowPlayFile = %OldNowPlayFile%
-OldNowPlayFile =
-FileDelete, %SingleCycleFile%
-}
 Return
 
 ; 播放列表
@@ -931,14 +922,14 @@ Menu, PlayBack,UnCheck,播放媒体库(&M)
 Menu, PlayBack,Disable,播放列表(&L)
 Menu, PlayBack, Enable,播放媒体库(&M)
 
-IniRead, PlayListdefalut, %run_iniFile%, AhkPlayer, PlayListdefalut
-If (PlayListdefalut="t")
-{
+;IniRead, PlayListdefalut, %run_iniFile%, AhkPlayer, PlayListdefalut
+;If (PlayListdefalut="t")
+;{
 Menu,PlayBack,Enable,--跟随光标播放(&F)
 IniRead, followmouse, %run_iniFile%, AhkPlayer, followmouse
 If (followmouse="t")
 Menu,PlayBack,Check,--跟随光标播放(&F)
-}
+;}
 }
 gosub,refreshList
 Gui,Show,,播放列表 - AhkPlayer
@@ -1049,15 +1040,15 @@ Loop, read, %AhkMediaLibFile%
 		{
 			Libxuhao++
 			SetFormat, float ,04
-			mp3 = %A_LoopReadline%
+			mp3_loop = %A_LoopReadline%
 			Found = Yes
 			Loop, Parse, find, %a_Space%
-			IfNotInString, mp3, %A_LoopField%, SetEnv, Found, No
+			IfNotInString, mp3_loop, %A_LoopField%, SetEnv, Found, No
 
 			IfEqual, Found, Yes
 				{
-			    SplitPath, mp3,,,ext, name
-				LV_Add("Focus",Libxuhao+0.0, name,ext, mp3)
+			    SplitPath, mp3_loop,,,ext, name
+				LV_Add("Focus",Libxuhao+0.0, name,ext, mp3_loop)
 				}
 }
 LV_ModifyCol()
@@ -1071,10 +1062,10 @@ SetFormat,float ,3.0
 Loop, read, %AhkMediaListFile%
 	{
 	xuhao++
-	mp3 = %A_LoopReadline%
-	SplitPath, Mp3,,,ext, name
+	mp3_loop = %A_LoopReadline%
+	SplitPath, mp3_loop,,,ext, name
 	SetFormat, float ,03
-    LV_Add("",xuhao+0.0, name, ext,mp3)
+    LV_Add("",xuhao+0.0, name, ext,mp3_loop)
     LV_ModifyCol()
 }
 Return
@@ -1094,9 +1085,9 @@ FileRead, NoDoubles, %AhkMediaListFile%
 
 	Loop, % LV_GetCount()
 	{
-	LV_GetText(Mp3, A_Index, 4)
-    IfNotInString, NoDoubles, %mp3%
-	Fileappend, %mp3%`n, %AhkMediaListFile%
+	LV_GetText(mp3_loop, A_Index, 4)
+    IfNotInString, NoDoubles, %mp3_loop%
+	Fileappend, %mp3_loop%`n, %AhkMediaListFile%
 	}
 Return
 
@@ -1125,8 +1116,8 @@ else If (A_ThisMenuItem = "从列表中删除")
 	FileDelete, %AhkMediaListFile%
 	Loop, % LV_GetCount()
 	{
-	LV_GetText(Mp3, A_Index, 4)
-	Fileappend,%Mp3%`n, %AhkMediaListFile%
+	LV_GetText(mp3_loop, A_Index, 4)
+	Fileappend,%mp3_loop%`n, %AhkMediaListFile%
 	}
 gosub,refreshlist
 }
@@ -1136,7 +1127,7 @@ Return
 RemoveDuplicateInvalid:
 TF_RemoveDuplicateLines(AhkMediaListFile, "", "", 0,false)
 sleep,200
-FileMove,%A_ScriptDir%\settings\playlist_copy.txt,%AhkMediaListFile%,1
+FileMove,%A_ScriptDir%\settings\AhkPlayer\playlist_copy.txt,%AhkMediaListFile%,1
 sleep,200
 newText=
 Loop, Read,%AhkMediaListFile%
@@ -1160,11 +1151,11 @@ Loop, % LV_GetCount()
 RowNumber := LV_GetNext(RowNumber)
  if not RowNumber
  break
-LV_GetText(Mp3,RowNumber, 4)
-IfNotInString, NoDoubles, %mp3%
-	Fileappend, %mp3%`n, %AhkMediaListFile%
+LV_GetText(mp3_loop,RowNumber, 4)
+IfNotInString, NoDoubles, %mp3_loop%
+	Fileappend, %mp3_loop%`n, %AhkMediaListFile%
 else
-Repeat .= mp3 . "`n"
+Repeat .= mp3_loop . "`n"
 }
 if Repeat
 MsgBox,,添加失败, 以下文件已在列表中!`n%Repeat%
@@ -1181,8 +1172,8 @@ return
 
 ; 右键播放所选歌曲
 PlayLV:
-LV_GetText(Mp3, A_EventInfo, 4)
-PlaylistIndex:= A_EventInfo
+LV_GetText(mp3, LV_GetNext(), 4)
+PlaylistIndex:= LV_GetNext()
 If hSound {
 	MCI_Close(hSound)
 }
@@ -1199,12 +1190,6 @@ SetTimer,CheckStatus,on
 	MCI_ToHHMMSS2(pos, hh, mm, ss)
 	MCI_ToHHMMSS2(len, hh, lm, ls)
 return
-
-OpenfilePath:
-LV_GetText(Mp3,LV_GetNext(), 4)
-If Fileexist(Mp3)
-Run,% "explorer.exe /select," Mp3
- Return
 
 Slider:
 if hSound

@@ -43,8 +43,7 @@ Windy_Window_Area:="主窗体"
         }
         Else
         {
-Windy_Cmd=Error
-;Windy_Cmd:=SkSub_Ini_RegexFindValue(Windy_Profile_Ini, Windy_Window_Area , "i)(^|\|)\Q" Windy_CurWin_ProcName "\E($|\|)")
+Windy_Cmd:=SkSub_Ini_RegexFindValue(Windy_Profile_Ini, Windy_Window_Area , "i)(^|\|)\Q" Windy_CurWin_ProcName "\E($|\|)")
             If(Windy_Cmd="Error") ;如果没有定义，则看看AnyWindow的定义
             {
                 IniRead,Windy_Cmd,%Windy_Profile_Ini%,%Windy_Window_Area%,Any
@@ -115,14 +114,23 @@ Label_Windy_DrawMenu:
 
 ;================菜单处理================================
 Label_Windy_HandleMenu:
+ If GetKeyState("Ctrl")			    ;[按住Ctrl则是进入配置]
+    {
+Windy_ctrl_ini_fullpath:=Windy_Profile_Ini_Dir . "\" . Windy_Window_Area . "\" . szMenuWhichFile[ A_thisMenu "/" A_ThisMenuItem] . ".ini"
+        Windy_Ctrl_Regex:="=\s*\Q" szMenuContent[ A_thisMenu "/" A_ThisMenuItem] "\E\s*$"
+        SkSub_EditConfig(Windy_ctrl_ini_fullpath,Windy_Ctrl_Regex)
+}
+else
+{
     Windy_Cmd := szMenuContent[ A_thisMenu "/" A_ThisMenuItem]
     Goto Label_Windy_RunCommand
+}
     return
 
 Label_Copy_WinPath_Windy:
-    ;If GetKeyState("Ctrl")			    ;[按住Ctrl则是进入配置]
-    ;    Goto Label_Windy_Editconfig
-   ; Else
+    If GetKeyState("Ctrl")			    ;[按住Ctrl则是进入配置]
+       Goto Label_Windy_Editconfig
+   Else
         Clipboard:=Windy_CurWin_Fullpath
     Return
 
@@ -433,4 +441,30 @@ _DeleteSubMenus(TopRootMenuName)
 Sksub_Clear_WindyVar()
 {
 Windy_X:=Windy_Y:=Windy_CurWin_id:=Windy_CurWin_ClassNN:=Windy_CurWin_Pid:=
+}
+
+Label_Windy_Editconfig:
+        Windy_Ctrl_Regex:="i)(^\s*|\|)" Windy_CurWin_ProcName "(\||\s*)[^=]*="
+        SkSub_EditConfig(Windy_Profile_Ini,Windy_Ctrl_Regex)
+return
+
+/* 正则方式在ini文件的某个字段内查找，某Sks_Value，如果找到，则返回这个字段
+   找不到，则返回原值
+*/
+SkSub_Ini_RegexFindValue(Sks_IniFile,Sks_Section,Sks_Key)
+{
+	IniRead,Sks_All_keys,%Sks_IniFile%,%Sks_Section%               ;提取[associations]段里面所有的群组
+	Loop,Parse,Sks_All_keys,`n
+	{
+		StringSplit,line,A_LoopField,=
+		If(RegExMatch(line1, Sks_Key))
+		{
+     if line2
+			Return,%line2%
+			Break
+		}
+	}
+	Return "error"
+	/*返回原值，纯粹是为了迎合Candy、Windy的需求
+	*/
 }

@@ -55,8 +55,6 @@ GetShellFolderPath(hwnd=0)
 return explorer.exe
 }
 
-!/::   ;测试用
-tooltip % ShutdownBlock  ;测试用
 CloseWindowListMenuShow:
 menu,CloseWindowListMenu,add,最近关闭窗口列表,nul
 Menu, CloseWindowListMenu, disable, 最近关闭窗口列表

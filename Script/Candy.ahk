@@ -161,6 +161,7 @@ Label_Candy_DrawMenu:
     Menu,CandyTopLevelMenu,show
 ;     ToolTip ;若要评估出menu时间，这里需打开 ,共三处，3/3
     Return
+
 ;================菜单处理================================
 Label_Candy_HandleMenu:
     If GetKeyState("Ctrl")			    ;[按住Ctrl则是进入配置]
