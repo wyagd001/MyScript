@@ -65,3 +65,7 @@ try {
 	thunder.CommitTasks()
 }
 Return
+
+Cando_发送路径到对话框:
+ControlSetText , edit1, %CandySel%, ahk_class #32770
+return

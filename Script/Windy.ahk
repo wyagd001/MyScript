@@ -6,6 +6,8 @@ Label_Windy_Start_Inside:   ;内部调用入口，让Windy可以在“#if”模式下运行。
     WinGet,        Windy_CurWin_Pid,PID,Ahk_ID %Windy_CurWin_id%                                ;当前窗口的Pid
     WinGet,        Windy_CurWin_Fullpath,ProcessPath,Ahk_ID %Windy_CurWin_id%           ;当前窗口的进程路径
     SplitPath,     Windy_CurWin_Fullpath,,Windy_CurWin_ParentPath,,Windy_CurWin_ProcName            ;当前窗口的进程名称，不带后缀
+if (Windy_CurWin_ProcName="explorer")
+Windy_CurWin_FolderPath:=GetCurrentFolder()
     WinGetClass,  Windy_CurWin_Class, Ahk_ID %Windy_CurWin_id%                                ;当前窗口的Class
     WinGetTitle,  Windy_CurWin_Title, Ahk_ID %Windy_CurWin_id%                                  ;当前窗口的title
 
@@ -148,6 +150,7 @@ Label_Windy_RunCommand:
     Windy_Cmd:=Sksub_EnvTrans(Windy_Cmd) ;替换自变量以及系统变量,Ini里面用~%表示一个%,当然了用~~%，表示一个原义的~%
     ;当前窗口的相关信息
     StringReplace,Windy_Cmd,Windy_Cmd,{Win:class}            ,%Windy_CurWin_class%,All
+     StringReplace,Windy_Cmd,Windy_Cmd,{Win:FolderPath}            ,%Windy_CurWin_FolderPath%,All
     StringReplace,Windy_Cmd,Windy_Cmd,{Win:pid}              ,%Windy_CurWin_pids%,All
     StringReplace,Windy_Cmd,Windy_Cmd,{Win:id}                ,%Windy_CurWin_ids%,All
     StringReplace,Windy_Cmd,Windy_Cmd,{Win:title}             ,%Windy_CurWin_title%,All
@@ -231,18 +234,18 @@ Label_Windy_RunCommand:
     {
         Clipboard:=RegExReplace(Windy_Cmd,"i)^SetClipBoard\|\s?")
     }
-    ;Else If(RegExMatch(Windy_Cmd,"i)^(AlwaysOnTop\|)")) ;如果是以AlwaysOnTop|开头，则是置顶当前窗体
-    ;{
-    ;    settopmost(Windy_CurWin_id)
-    ;}
+    Else If(RegExMatch(Windy_Cmd,"i)^(AlwaysOnTop\|)")) ;如果是以AlwaysOnTop|开头，则是置顶当前窗体
+    {
+        WinSet,AlwaysOnTop,,Ahk_ID %Windy_CurWin_id%
+    }
     Else If(RegExMatch(Windy_Cmd,"i)^(bottom\|)")) ;如果是以bottom|开头，则是最底部
     {
         WinSet,Bottom,,Ahk_ID %Windy_CurWin_id%
     }
-    ;Else If(RegExMatch(Windy_Cmd,"i)^(Send\|)")) ;如果是以send|开头，则是发送字串
-    ;{
-    ;    SkSub_SendStr(Splitted_Windy_Cmd2)
-    ;}
+    Else If(RegExMatch(Windy_Cmd,"i)^(Send\|)")) ;如果是以send|开头，则是发送字串
+    {
+        SendStr(Splitted_Windy_Cmd2)
+    }
     Else If (RegExMatch(Windy_Cmd,"i)^MsgBox\|"))  ;如果是以MsgBox|开头，则是发一个提示框
     {
         Gui +LastFound +OwnDialogs +AlwaysOnTop
@@ -468,3 +471,7 @@ SkSub_Ini_RegexFindValue(Sks_IniFile,Sks_Section,Sks_Key)
 	/*返回原值，纯粹是为了迎合Candy、Windy的需求
 	*/
 }
+
+Windo_发送路径到对话框:
+ControlSetText , edit1, %Windy_CurWin_FolderPath%, ahk_class #32770
+return

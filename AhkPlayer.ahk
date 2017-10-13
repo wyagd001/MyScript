@@ -52,7 +52,7 @@ Menu, FileMenu, Add, 添加文件(&F), MenuFileAdd
 Menu, FileMenu, Add, 添加文件夹(&D), MenuFolderAdd
 Menu, FileMenu, Add, 退出(&X), Exit
 Menu, EditMenu, Add, 播放所选(单选)(&O), MenuOpen
-Menu, EditMenu, Add, 删除所选(&R), MenuRemove
+Menu, EditMenu, Add, 从列表中删除(&R), MenuRemove
 Menu, EditMenu, Add, 清空列表(&C), MenuClear
 Menu, EditMenu, Add, 打开文件位置(单选)(&C), MenuOpenFilePath
 
@@ -307,7 +307,7 @@ Gui, Menu, MyMenuBar
 Menu, Context, Add, 播放(单选), PlayLV
 Menu, Context, Add, 打开文件位置(单选), OpenfilePath
 Menu, Context, Add, 添加到列表, AddList
-Menu, Context, Add, 从列表中删除, Remove
+Menu, Context, Add, 从列表中删除(可多选), Remove
 Menu, Context, Add, 清空列表, Remove
 Menu, Context, Add, 清除列表中的重复与无效项, RemoveDuplicateInvalid
 
@@ -869,8 +869,17 @@ If Fileexist(mp3_loop)
 Run,% "explorer.exe /select," mp3_loop
  Return
 
-; 菜单删除所选(可多选)
+; 菜单从列表中删除(可多选)
 MenuRemove:
+FlieLineCount :=TF_CountLines(AhkMediaListFile)
+LVLineCount :=LV_GetCount()
+if(FlieLineCount - LVLineCount >2)
+{
+msgbox,错误！不是播放列表，当前菜单不可用。
+return
+}
+else
+{
 Loop, % LV_GetCount()			;%
 	Row := LV_GetNext(Row), LV_Delete(Row)
 
@@ -881,6 +890,7 @@ FileDelete, %AhkMediaListFile%
 	Fileappend,%mp3_loop%`n, %AhkMediaListFile%
     }
 gosub,refreshList
+}
 Return
 
 MenuClear:
@@ -1108,7 +1118,16 @@ MsgBox,,清空列表失败,列表已经为空或文件不可读写
 	Fileappend, , %AhkMediaListFile%
 	}
 }
-else If (A_ThisMenuItem = "从列表中删除")
+else If (A_ThisMenuItem = "从列表中删除(可多选)")
+{
+FlieLineCount :=TF_CountLines(AhkMediaListFile)
+LVLineCount :=LV_GetCount()
+if(FlieLineCount - LVLineCount >2)
+{
+msgbox,错误！不是播放列表，当前菜单不可用。
+return
+}
+else
 {
 	Loop, % LV_GetCount()			;%
 	Row := LV_GetNext(Row), LV_Delete(Row)
@@ -1120,6 +1139,7 @@ else If (A_ThisMenuItem = "从列表中删除")
 	Fileappend,%mp3_loop%`n, %AhkMediaListFile%
 	}
 gosub,refreshlist
+}
 }
 Return
 

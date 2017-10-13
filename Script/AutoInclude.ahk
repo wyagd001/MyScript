@@ -19,6 +19,7 @@
 #Include *i %A_ScriptDir%\Script\Cando\Cando_字符编码查看.ahk
 #Include *i %A_ScriptDir%\Script\Cando\Cando_Msdn搜索.ahk
 #Include *i %A_ScriptDir%\Script\Cando\Cando_十进制十六进制转换.ahk
+#Include *i %A_ScriptDir%\Script\Cando\Cando_文件转换编码.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_文件属性.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_复制路径.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_MD5.ahk
