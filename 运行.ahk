@@ -131,6 +131,8 @@ y_y2:=work_area_h- 108
 ; 最近关闭的资源管理器窗口
 global CloseWindowList := []
 global folder := [] 
+IniRead, CloseWindowFolders, %run_iniFile% , CloseWindowList
+CloseWindowList := StrSplit(CloseWindowFolders,"`n")
 
 ; Candy，Windy
 	global szMenuIdx:={}      ;菜单用1
@@ -560,9 +562,8 @@ Gui +LastFound
 hAHK := WinExist()
 FileDelete, %A_Temp%\7plus\hwnd.txt
 FileAppend, %hAHK%, %A_Temp%\7plus\hwnd.txt
-;----------7plus右键菜单----------
 
-;----------7plus右键菜单----------
+;----------7plus右键菜单之重新打开关闭的窗口----------
 IniRead,CloseWindowList_showmenu,%run_iniFile%,1007,showmenu
 if CloseWindowList_showmenu
 {

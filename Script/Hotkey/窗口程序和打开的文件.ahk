@@ -28,6 +28,25 @@ If FileFullPath
   goto OpenFileFullPath
 }
 
+;;;;;;;;;;;;;;提取命令行;;;;;;;;;
+;WMI_Query("\\.\root\cimv2", "Win32_Process")
+CMDLine:= WMI_Query(pid)
+
+RegExMatch(CMDLine, "i).*exe.*?\s+(.*)", ff_)   ; 正则匹配命令行参数
+;带参数的命令行不能得到路径  例如 a.exe /resart "D:\123.txt"
+;命令行参数中打开的文件有些程序带  “"”，（"打开文件路径"） 有些程序不带 “"”（打开文件路径）
+StringReplace,FileFullPath,ff_1,`",,All
+startzimu:=RegExMatch(FileFullPath, "i)^[a-z]")
+
+ if !startzimu
+{
+RegExMatch(FileFullPath, "i).*?\s+(.*)", fff_)
+FileFullPath:=fff_1
+}
+
+if FileFullPath<>
+ goto OpenFileFullPath
+
 IfInString,_Title,RealPlayer
 {
 DetectHiddenText, On
@@ -53,25 +72,6 @@ Return
 FileFullPath:=getDocumentPath(ProcessPath)  
 if FileFullPath<>
   goto OpenFileFullPath
-
-;;;;;;;;;;;;;;提取命令行;;;;;;;;;
-;WMI_Query("\\.\root\cimv2", "Win32_Process")
-CMDLine:= WMI_Query(pid)
-
-RegExMatch(CMDLine, "i).*exe.*?\s+(.*)", ff_)   ; 正则匹配命令行参数
-;带参数的命令行不能得到路径  例如 a.exe /resart "D:\123.txt"
-;命令行参数中打开的文件有些程序带  “"”，（"打开文件路径"） 有些程序不带 “"”（打开文件路径）
-StringReplace,FileFullPath,ff_1,`",,All
-startzimu:=RegExMatch(FileFullPath, "i)^[a-z]")
-
- if !startzimu
-{
-RegExMatch(FileFullPath, "i).*?\s+(.*)", fff_)
-FileFullPath:=fff_1
-}
-
-if FileFullPath<>
- gosub OpenFileFullPath
 
 ;直接打开记事本程序，然后打开文本文件，命令行没有文件路径，使用读取内存的方法得到路径
 IfInString,_Title,记事本
@@ -201,7 +201,7 @@ WMI_Query(pid)
     if queryEnum[process]
         sResult.=process.CommandLine
     else
-        MsgBox Process not found!  
+        MsgBox 指定进程没有找到!  
    Return   sResult
 }
 

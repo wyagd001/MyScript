@@ -24,6 +24,8 @@ if CloseWindowList.Length() = 9
 CloseWindowList.RemoveAt(1)
 CloseWindowList.Push(folder[lp].cmd)
 IniWrite,% folder[lp].cmd, %run_iniFile%,³£¹æ, LastClosewindow
+Array_removeDuplicates(CloseWindowList)
+Array_writeToINI(CloseWindowList,"CloseWindowList",run_iniFile)
 }
 folder.Remove(lp)
 }

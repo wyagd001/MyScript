@@ -46,7 +46,7 @@ SH_OK:
 		errFlag:=3, tempStr:="链接名称不得包含以下任意字符：\ / : * \ ? "" < > |"
 	If (errFlag=0) And (FileExist(SH_Path)="")
 		errFlag:=4, tempStr:= "链接目录不存在"
-	If (errFlag=0) And (FileExist(SHTG_Path)="") and  !InStr(FileExist("C:\My Folder"), "D")
+	If (errFlag=0) And (FileExist(SHTG_Path)="") and  !InStr(FileExist(SHTG_Path), "D")
 		errFlag:=5, tempStr:= "目标文件不存在"
 	If ((errFlag=0) And (sPara="/S")) 
 	{
