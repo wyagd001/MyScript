@@ -1,7 +1,6 @@
 f_ReadConfig()
 {
 	Global
-
 	; applications
 	IniRead, s_Apps_Explorer  , %FloderMenu_iniFile%, Applications, Explorer      , 1 ; all enabled by default
 	IniRead, s_Apps_Dialog    , %FloderMenu_iniFile%, Applications, Dialog        , 1
@@ -2436,4 +2435,4 @@ return
 #Include %A_ScriptDir%\Lib\Tooltip.ahk
 ;#Include %A_ScriptDir%\Lib\ShellContextMenu.ahk
 ;合并到Lib\Explorer.ahk中
-#Include %A_ScriptDir%\Lib\string.ahk
+;#Include %A_ScriptDir%\Lib\string.ahk

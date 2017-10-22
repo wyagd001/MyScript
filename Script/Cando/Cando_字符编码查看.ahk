@@ -215,32 +215,6 @@ MCode(ByRef code, hex)
 		NumPut("0x" . SubStr(hex,2*A_Index-1,2), code, A_Index-1, "Char")
 }
 
-; 老版autohotkey使用的 "StrGet" 留做备份
-; get data starting from pointer up to 0 char
-ExtractData(pointer)
-{
-	Loop
-	{ 
-		errorLevel := ( pointer+(A_Index-1) )
-		Asc := *( errorLevel ) 
-		IfEqual, Asc, 0, Break ; Break if NULL Character 
-		String := String . Chr(Asc)
-	} 
-Return String 
-}
-
-; Encode简化版留做备用
-; 可参考链接：https://zhuanlan.zhihu.com/p/19712731
-Encode2(Str, Encoding, Separator := " ")
-{
-	StrCap := StrPut(Str, Encoding)
-	VarSetCapacity(ObjStr, StrCap * ((encoding="utf-16"||encoding="cp1200") ? 2 : 1))
-	StrPut(Str, &ObjStr, Encoding)
-	Loop, % StrCap * ((encoding="utf-16"||encoding="cp1200") ? 2 : 1)
-		ObjCodes .= Separator . NumGet(ObjStr, A_Index - 1, "UChar")
-Return, ObjCodes
-}
-
 Encode(Str, Encoding, Separator := " ")
 {
 	If (Encoding="cp1201")
@@ -309,30 +283,6 @@ Encode(Str, Encoding, Separator := " ")
 Return, ObjCodes
 }
 
-toHex( ByRef V, ByRef H, dataSz:=0 )
-{ ; http://goo.gl/b2Az0W (by SKAN)
-	P := ( &V-1 ), VarSetCapacity( H,(dataSz*2) ), Hex := "123456789ABCDEF0"
-	Loop, % dataSz ? dataSz : VarSetCapacity( V )
-		H  .=  SubStr(Hex, (*++P >> 4), 1) . SubStr(Hex, (*P & 15), 1)
-}
-
-hex2dec(h)
-{
-	oldfrmt := A_FormatInteger
-	SetFormat, integer, dec
-	d :=h+0
-	SetFormat, IntegerFast, %oldfrmt% 
-return d
-} 
-
-dec2hex(d)
-{
-	oldfrmt := A_FormatInteger
-	SetFormat, integer, H
-	h :=d+0
-	SetFormat, IntegerFast, %oldfrmt%
-return h
-}
-
 ; 独立运行(调测时)需加上
-#Include *i %A_ScriptDir%\..\..\Lib\string.ahk
+;#Include *i %A_ScriptDir%\..\..\Lib\string.ahk
+;#Include *i %A_ScriptDir%\..\..\Lib\进制转换.ahk

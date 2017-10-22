@@ -6,55 +6,72 @@
 ;MsgBox,% Date_GetLunarDate(A_Now-1*1000000)  
 
 JCTF:
-today:=SubStr(A_Now, 1, 8)
-Lunar_Year:=Date_GetLunarDate(today,1)
-TX =
-CTFSC:=[]
-CTFArray := {"新年": "0101", "元宵节": "0115", "民歌节": "0303", "端午节": "0505", "七夕节": "0707", "中元节": "0715", "中秋节": "0815", "重阳节": "0909", "小年": "1223","第二年新年": "0101","自定义节日一": "0601", "自定义节日二": "00709", "自定义节日三": "0913"}
-for k,v in CTFArray
-{
-if(k="第二年新年")
-CTFSC[k]:=Date_GetDate(Lunar_Year+1 . v)
-else
-CTFSC[k]:=Date_GetDate(Lunar_Year . v)
-}
+	today:=SubStr(A_Now, 1, 8)
+	Lunar_Year:=Date_GetLunarDate(today,1)
+	TX =
+	CTFSC:=[]
+	IniRead, CTFData, %run_iniFile%, 农历节日
+	If(Windy_Cmd="Error")
+	{
+		CTFArray := {"新年": "0101", "元宵节": "0115", "民歌节": "0303", "端午节": "0505", "七夕节": "0707", "中元节": "0715", "中秋节": "0815", "重阳节": "0909", "小年": "1223","第二年新年": "0101"}
+		; ,"自定义节日一": "0601","自定义节日二": "0709","自定义节日三": "0827", "自定义节日四": "0924"
+	}
+	else
+	{
+		temp_array := StrSplit(Trim(CTFData), ["=", "`n"])
+		CTFArray := {}, i := 0
+		Loop % temp_array.length()/2
+		{
+			currentLoopIterationIniKeyName := temp_array[++i]
+			CTFArray[currentLoopIterationIniKeyName] := temp_array[++i]
+		}
+		temp_array :=CTFData :=""
+	}
 
-for k,v in CTFSC
-{
-Leafdays:=v
-Leafdays -=today,days
-if (Leafdays<=5 and Leafdays>=0)
-{
-settimer,MCTF,30000
-if ( Leafdays=0 )
-TX .="今天是" k " " Date_GetLunarDate(today) " `n"
-else
-{
-if(k="第二年新年")
-{
-if(Leafdays=1)
-TX .="今天是除夕`n"
-else
-TX .= "距离除夕还剩" Leafdays-1 "天`n"
-TX .= "距离新年还剩" Leafdays "天`n"
-}
-else
-TX .= "距离" k "还剩" Leafdays "天`n"
-}
-}
-if (Leafdays=6)
-settimer,MCTF,30000
-}
-if tx
-msgbox % tx
+	for k,v in CTFArray
+	{
+		if(k="第二年新年")
+			CTFSC[k]:=Date_GetDate(Lunar_Year+1 . v)
+		else
+			CTFSC[k]:=Date_GetDate(Lunar_Year . v)
+	}
+
+	for k,v in CTFSC
+	{
+		Leafdays:=v
+		Leafdays -=today,days
+		if (Leafdays<=5 and Leafdays>=0)
+		{
+			settimer,MCTF,30000
+			if ( Leafdays=0 )
+				TX .="今天是" k " " Date_GetLunarDate(today) " `n"
+			else
+			{
+				if(k="第二年新年")
+				{
+					if(Leafdays=1)
+						TX .="今天是除夕`n"
+					else
+						TX .= "距离除夕还有" Leafdays-1 "天`n"
+					TX .= "距离新年还有" Leafdays "天`n"
+				}
+				else
+					TX .= "距离" k "还有" Leafdays "天`n"
+			}
+		}
+		if (Leafdays=6)
+			settimer,MCTF,30000
+	}
+	if tx
+		msgbox % tx
 return
 
 MCTF:
-if (A_Hour=0 && A_Min=30)
-{
-gosub,JCTF
-settimer,MCTF,off
-}
+	if (A_Hour=0 && A_Min=30)
+	{
+		gosub,JCTF
+		settimer,MCTF,off
+	}
 return
 
 /*
@@ -320,66 +337,4 @@ Analyze(Data,ByRef rtn1,ByRef rtn2,ByRef rtn3,ByRef rtn4)
     rtn4:=System("0x" . newyear,"H","D")
     if strlen(rtn4)=3
         rtn4:="0" . rtn4
-}
-
-Bin(x)
-{                ;dec-bin
-	while x
-	r:=1&x r,x>>=1
-	return r
-}
-Dec(x)
-{                ;bin-dec
-	b:=StrLen(x),r:=0
-	loop,parse,x
-	r|=A_LoopField<<--b
-	return r
-}
-Dec_Hex(x)                ;dec-hex
-{
-	SetFormat, IntegerFast, hex
-	he := x
-	he += 0
-	he .= ""
-	SetFormat, IntegerFast, d
-	Return,he
-}
-Hex_Dec(x)
-{
-	SetFormat, IntegerFast, d
-	de := x
-	de := de + 0
-	Return,de
-}
-
-system(x,InPutType="D",OutPutType="H")
-{
-	if InputType=B
-	{
-		IF OutPutType=D
-		r:=Dec(x)
-		Else IF OutPutType=H
-		{
-			x:=Dec(x)
-			r:=Dec_Hex(x)
-		}
-	}
-	Else If InputType=D
-	{
-		IF OutPutType=B
-		r:=Bin(x)
-		Else If OutPutType=H
-		r:=Dec_Hex(x)
-	}
-	Else If InputType=H
-	{
-		IF OutPutType=B
-		{
-			x:=Hex_Dec(x)
-			r:=Bin(x)
-		}
-		Else If OutPutType=D
-		r:=Hex_Dec(x)
-	}
-	Return,r
 }

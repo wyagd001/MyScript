@@ -66,8 +66,8 @@ ScriptManager_Path=%A_ScriptDir%\脚本管理器
 global Candy_ProFile_Ini := A_ScriptDir . "\settings\candy\[candy].ini"
 SplitPath,Candy_ProFile_Ini,,Candy_Profile_Dir,,Candy_ProFile_Ini_NameNoext
 
-Windy_Profile_Ini  := A_ScriptDir . "\settings\Windy\Windy.ini"
-SplitPath,Windy_Profile_Ini,,Windy_Profile_Ini_Dir,,Windy_Profile_Ini_NameNoext
+global Windy_Profile_Ini  := A_ScriptDir . "\settings\Windy\Windy.ini"
+SplitPath,Windy_Profile_Ini,,Windy_Profile_Dir,,Windy_Profile_Ini_NameNoext
 
 ;---------Alt+滚轮调节音量随机颜色---------
 Random,ColorNum,0,6
@@ -133,6 +133,7 @@ global CloseWindowList := []
 global folder := [] 
 IniRead, CloseWindowFolders, %run_iniFile% , CloseWindowList
 CloseWindowList := StrSplit(CloseWindowFolders,"`n")
+Array_Sort(CloseWindowList)
 
 ; Candy，Windy
 	global szMenuIdx:={}      ;菜单用1
@@ -1573,4 +1574,6 @@ RunScript(script) {
 #include %A_ScriptDir%\Lib\Window.ahk
 #include %A_ScriptDir%\Lib\ActiveScript.ahk
 #include %A_ScriptDir%\Lib\_GuiDropFiles.ahk
+#Include *i %A_ScriptDir%\Lib\进制转换.ahk
+#Include *i %A_ScriptDir%\Lib\string.ahk
 #include *i %A_ScriptDir%\Script\AutoInclude.ahk

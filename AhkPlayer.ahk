@@ -58,15 +58,17 @@ Menu, EditMenu, Add, 打开文件位置(单选)(&C), MenuOpenFilePath
 
 Menu, PlayBack, Add, 暂停/播放(&P), MyPause
 Menu, PlayBack, Add, 停止(&S), Stop
-Menu, PlayBack, Add, 随机播放(&R), GoRandom
 Menu, PlayBack, Add, 跳转到(&J), Jump
 Menu, PlayBack, Add, 上一首(&V), Prev
 Menu, PlayBack, Add, 下一首(&N), Next
 Menu, PlayBack, Add
+Menu, PlayBack, Add, 随机播放(&R), GoRandom
 Menu, PlayBack, Add, 单曲循环(&D), PSingleCycle
+Menu, PlayBack, Add
 Menu, PlayBack, Add, 播放列表(&L), PTList
-Menu, PlayBack, Add, --跟随光标播放(&F), PTLF
+Menu, PlayBack, Add, --下一首跟随鼠标(&F), PTLF
 Menu, PlayBack, Add, 播放媒体库(&M), PTLib
+
 
 Menu, Lib, Add, 打开歌词库(&L), OpenLrc
 Menu, Lib, Add, 打开媒体库(&M), OpenLib
@@ -80,16 +82,16 @@ Menu, Lib, Add, 更新媒体库(&U),UpdateMediaLib
 Menu, Lib, Add, 启动自动更新媒体库(&A),AutoUpdateMediaLib
 
 Menu, Help, Add, 关于(&A), About
-Menu,PlayBack,Disable,--跟随光标播放(&F)
+Menu,PlayBack,Disable,--下一首跟随鼠标(&F)
 If (PlayRandom="t")
 Menu,PlayBack,Check,随机播放(&R)
 
 If (PlayListdefalut="t")
 {
-Menu,PlayBack,Enable,--跟随光标播放(&F)
+Menu,PlayBack,Enable,--下一首跟随鼠标(&F)
 Menu,PlayBack,Check,播放列表(&L)
 If (followmouse="t")
-Menu,PlayBack,Check,--跟随光标播放(&F)
+Menu,PlayBack,Check,--下一首跟随鼠标(&F)
 Menu,PlayBack,Disable,播放列表(&L)
 }
 Else
@@ -102,7 +104,6 @@ if (AutoUpdateMediaLib="t")
 Menu, Lib, Check,启动自动更新媒体库(&A)
 if (huifushangci = "t")
 Menu, Lib, Check,启动恢复上次播放(&H)
-
 
 Menu, MyMenuBar, Add, 文件(&F), :FileMenu
 Menu, MyMenuBar, Add, 编辑(&E), :EditMenu
@@ -144,7 +145,6 @@ IniWrite,t, %run_iniFile%, AhkPlayer, huifushangci
 }
 Return
 
-
 AutoUpdateMediaLib:
 IniRead, AutoUpdateMediaLib, %run_iniFile%, AhkPlayer,AutoUpdateMediaLib
 If (AutoUpdateMediaLib ="t")
@@ -158,7 +158,6 @@ Menu,Lib,Check,启动自动更新媒体库(&A)
 IniWrite,t, %run_iniFile%, AhkPlayer, AutoUpdateMediaLib
 }
 Return
-
 
 UpdateMediaLib:
 			Count = 0
@@ -216,9 +215,9 @@ StarPlay:
 		goto SingleCycleplay
 
 	Count :=TF_CountLines(NowPlayFile)
-	IniRead, PlayRandom, %run_iniFile%, AhkPlayer, PlayRandom
-	IniRead, followmouse, %run_iniFile%, AhkPlayer, followmouse
-	IniRead, PlayListdefalut, %run_iniFile%, AhkPlayer, PlayListdefalut
+	;IniRead, PlayRandom, %run_iniFile%, AhkPlayer, PlayRandom
+	;IniRead, followmouse, %run_iniFile%, AhkPlayer, followmouse
+	;IniRead, PlayListdefalut, %run_iniFile%, AhkPlayer, PlayListdefalut
 
 	if (PlayRandom = "t")  ; 随机播放
 	{
@@ -231,8 +230,16 @@ StarPlay:
 					PlaylistIndex:=LV_GetNext(Row)
 					LV_GetText(Mp3,PlaylistIndex,4)
 				}
+				else   ; 鼠标所在行是上一首播放的
+				{
+					Random, Rand, 1, %Count%
+					FileReadLine, Mp3, %NowPlayFile%, %Rand%
+					LV_Modify(0,"-Select")
+					LV_Modify(Rand,"+Select +Focus +Vis")
+					PlaylistIndex:=LV_GetNext(Row)
+				}
 			}
-			else   ; 非跟随鼠标
+			else   ; 不跟随鼠标
 			{
 				Random, Rand, 1, %Count%
 				FileReadLine, Mp3, %NowPlayFile%, %Rand%
@@ -245,9 +252,9 @@ StarPlay:
 		{
 			Random, Rand, 1, %Count%
 			FileReadLine, Mp3, %NowPlayFile%, %Rand%
-			}
+		}
 	}
-	else   ; 非随机播放
+	else   ; 顺序播放
 	{
 		if (PlayListdefalut="t")   ; 播放列表
 		{
@@ -281,8 +288,7 @@ StarPlay:
 			FileReadLine, Mp3, %NowPlayFile%, %PlayIndex%
 		}
 	}
-
-	SingleCycleplay:
+SingleCycleplay:
 	hSound := MCI_Open(Mp3, "myfile")
 	IniWrite, %mp3%, %run_iniFile%, AhkPlayer, Mp3Playing
 	lastptime = 1
@@ -926,6 +932,7 @@ if (playlistfilesize = 0)
 NowPlayFile := AhkMediaLibFile
 Else
 {
+PlayListdefalut := "t"
 IniWrite,t, %run_iniFile%, AhkPlayer, PlayListdefalut
 Menu, PlayBack,Check,播放列表(&L)
 Menu, PlayBack,UnCheck,播放媒体库(&M)
@@ -935,10 +942,10 @@ Menu, PlayBack, Enable,播放媒体库(&M)
 ;IniRead, PlayListdefalut, %run_iniFile%, AhkPlayer, PlayListdefalut
 ;If (PlayListdefalut="t")
 ;{
-Menu,PlayBack,Enable,--跟随光标播放(&F)
+Menu,PlayBack,Enable,--下一首跟随鼠标(&F)
 IniRead, followmouse, %run_iniFile%, AhkPlayer, followmouse
 If (followmouse="t")
-Menu,PlayBack,Check,--跟随光标播放(&F)
+Menu,PlayBack,Check,--下一首跟随鼠标(&F)
 ;}
 }
 gosub,refreshList
@@ -952,8 +959,8 @@ Menu, PlayBack, Check,播放媒体库(&M)
 Menu, PlayBack, Disable,播放媒体库(&M)
 Menu, PlayBack, Enable,播放列表(&L)
 Menu, PlayBack, UnCheck,播放列表(&L)
-Menu, PlayBack, UnCheck,--跟随光标播放(&F)
-Menu, PlayBack, Disable,--跟随光标播放(&F)
+Menu, PlayBack, Disable,--下一首跟随鼠标(&F)
+PlayListdefalut := "f"
 IniWrite,f, %run_iniFile%, AhkPlayer, PlayListdefalut
 LV_Delete()
 Gui,Show,,播放媒体库 - AhkPlayer
@@ -964,13 +971,15 @@ PTLF:
 IniRead, followmouse, %run_iniFile%, AhkPlayer, followmouse
 If (followmouse="t")
 {
-Menu,PlayBack,unCheck,--跟随光标播放(&F)
+Menu,PlayBack,unCheck,--下一首跟随鼠标(&F)
 IniWrite,f, %run_iniFile%, AhkPlayer, followmouse
+followmouse:="f"
 }
 Else
 {
-Menu,PlayBack,Check,--跟随光标播放(&F)
+Menu,PlayBack,Check,--下一首跟随鼠标(&F)
 IniWrite,t, %run_iniFile%, AhkPlayer, followmouse
+followmouse:="t"
 }
 Return
 
@@ -980,11 +989,13 @@ If (PlayRandom="t")
 {
 Menu,PlayBack,unCheck,随机播放(&R)
 IniWrite,f, %run_iniFile%, AhkPlayer, PlayRandom
+PlayRandom :="f"
 }
 Else
 {
 Menu,PlayBack,Check,随机播放(&R)
 IniWrite,t, %run_iniFile%, AhkPlayer, PlayRandom
+PlayRandom :="t"
 }
 Return
 
@@ -1270,7 +1281,13 @@ CheckStatus:
   }
   If playing = 1
   {
-    SB_SetText("正在播放 " SName ,1)
+  if (PlayRandom="t")
+   temp_sb1:="正在播放(随机) " SName 
+if (PlayRandom="f")
+temp_sb1:="正在播放(顺序) " SName 
+    if SingleCycle
+    temp_sb1:="正在播放(单曲循环) " SName 
+   SB_SetText(temp_sb1,1)
     SongTime = %hh%:%mm%:%ss% / %lhh%:%lm%:%ls%
     SB_SetText(SongTime,2)
     opos := (pos/Len)*100

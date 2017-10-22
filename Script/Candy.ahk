@@ -3,86 +3,85 @@
 ;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Candy:
 SkSub_Clear_CandyVar()
-    MouseGetPos,,,Candy_CurWin_id         ;当前鼠标下的进程ID
-    WinGet, Candy_CurWin_Fullpath,ProcessPath,Ahk_ID %Candy_CurWin_id%    ;当前进程的路径
-    WinGetTitle, Candy_Title,Ahk_ID %Candy_CurWin_id%    ;当前进程的标题
-                                                                  
-    Candy_Saved_ClipBoard := ClipboardAll    ;备份剪贴板
-    Clipboard =                   ; 清空剪贴板
-    Send, ^c
-    ClipWait,1
-    If ErrorLevel                              ;如果粘贴板里面没有内容，则有窗口定义
-    {
-        Clipboard := Candy_Saved_ClipBoard    
-        Candy_Saved_ClipBoard =
-        Return
-    }
-    Candy_isFile := DllCall("IsClipboardFormatAvailable", "UInt", 15)   ;是否是文件类型
-    Candy_isHtml := DllCall("RegisterClipboardFormat", "str", "HTML Format")  ;是否Html类型
-    CandySel :=Clipboard
-    CandySel_Rich:=ClipboardAll
-    Clipboard := Candy_Saved_ClipBoard  ;还原粘贴板
-    Candy_Saved_ClipBoard =
-    Transform,Candy_ProFile_Ini,Deref,%Candy_ProFile_Ini%
+	MouseGetPos,,,Candy_CurWin_id         ;当前鼠标下的进程ID
+	WinGet, Candy_CurWin_Fullpath,ProcessPath,Ahk_ID %Candy_CurWin_id%    ;当前进程的路径
+	WinGetTitle, Candy_Title,Ahk_ID %Candy_CurWin_id%    ;当前进程的标题
 
-    IfNotExist %Candy_ProFile_Ini%         ;如果配置文件不存在，则发出警告，且终止
-    {
-        MsgBox 对热键%A_thishotkey% 定义的配置文件不存在! `n--------`n请检查%Candy_ProFile_Ini%
-        Return
-    }
+	Candy_Saved_ClipBoard := ClipboardAll    ;备份剪贴板
+	Clipboard =                   ; 清空剪贴板
+	Send, ^c
+	ClipWait,1
+	If ErrorLevel                              ;如果粘贴板里面没有内容，则有窗口定义
+	{
+		Clipboard := Candy_Saved_ClipBoard    
+		Candy_Saved_ClipBoard =
+		Return
+	}
+	Candy_isFile := DllCall("IsClipboardFormatAvailable", "UInt", 15)   ;是否是文件类型
+	Candy_isHtml := DllCall("RegisterClipboardFormat", "str", "HTML Format")  ;是否Html类型
+	CandySel :=Clipboard
+	CandySel_Rich:=ClipboardAll
+	Clipboard := Candy_Saved_ClipBoard  ;还原粘贴板
+	Candy_Saved_ClipBoard =
+	Transform,Candy_ProFile_Ini,Deref,%Candy_ProFile_Ini%
+
+	IfNotExist %Candy_ProFile_Ini%         ;如果配置文件不存在，则发出警告，且终止
+	{
+		MsgBox 对热键%A_thishotkey% 定义的配置文件不存在! `n--------`n请检查%Candy_ProFile_Ini%
+		Return
+	}
  /*
 ╔══════════════════════════════════════╗
 <<<<选中内容的后缀定义>>>>                                  ║
 ╚══════════════════════════════════════╝
 */
-     If(Fileexist(CandySel) && RegExMatch(CandySel,"^(\\\\|.:\\)")) ;文件或者文件夹,不再支持相对路径的文件路径,但容许“文字模式的全路径”
-    {
-        Candy_isFile:=1     ;如果是“文字型”的有效路径，强制认定为文件
-        SplitPath,CandySel,CandySel_FileNameWithExt,CandySel_ParentPath,CandySel_Ext,CandySel_FileNameNoExt,CandySel_Drive
-        SplitPath,CandySel_ParentPath,CandySel_ParentName,,,, ;用这个提取“所在文件夹名”
-        If InStr(FileExist(CandySel), "D")  ;区分是否文件夹,Attrib= D ,则是文件夹
-        {
-            CandySel_FileNameNoExt:=CandySel_FileNameWithExt
-            CandySel_Ext:=RegExMatch(CandySel,"^.:\\$") ? "Driver":"Folder"            ;细分：盘符或者文件夹
-        }
-        Else  If (CandySel_Ext="")       ;若不是文件夹，且无后缀，则定义为NoExt
-        {
-            CandySel_Ext:="NoExt"
-        }
-        if (CandySel_ParentName="")
-            CandySel_ParentName:=RTrim(CandySel_Drive,":")
-    }
-    Else if(instr(CandySel,"`n") And  Candy_isFile=1)  ;如果包含多行，且粘贴板性质为文件，则是“多文件”
-    {
-        CandySel_Ext:="MultiFiles" ;多文件的后缀=MultiFiles
-        CandySel_FirstFile:=RegExReplace(CandySel,"(.*)\r.*","$1")  ;取第一行
-        SplitPath ,CandySel_FirstFile,,CandySel_ParentPath,,  ;以第一行的父目录为“多文件的父目录”
-        If RegExMatch(CandySel_ParentPath,"\:(|\\)$")  ;如果父目录是磁盘根目录,用盘符做父目录名。
-            CandySel_ParentName:= RTrim(CandySel_ParentPath,":")
-        else  ;否则，提取父目录名
-            CandySel_ParentName:= RegExReplace(CandySel_ParentPath, ".*\\(.*)$", "$1")
-    }
-    Else     ;文本类型
-    {
-        ;-----------特殊文字串辨析-------------------
-        IniRead Candy_User_defined_TextType,%Candy_ProFile_Ini%,user_defined_TextType  ;是否符合用户正则定义的文本类型，有优先顺序的，排在前面的优先
-        loop,parse,Candy_User_defined_TextType,`n
-        {
-            If(RegExMatch(CandySel,RegExReplace(A_LoopField,"^.*?=")))     ;根据ini里面用户自定义段，逐条查看，右侧是正则规则
-            {
-                CandySel_Ext:=RegExReplace(A_LoopField,"=.*?$")   ;左边是“文本某类型”
-                Candy_Cmd:=SkSub_Regex_IniRead(Candy_ProFile_Ini, "TextType", "i)(^|\|)" CandySel_Ext "($|\|)") ;获取该类型的”操作设定“
-                If(Candy_Cmd!="Error")            ;如果有相应后缀组的定义，则跳出去运行。
-                {
-                    Goto Label_Candy_Read_Value
-                    Break
-                }
-            }
-        }
-
-        IniRead,Candy_ShortText_Length,%Candy_ProFile_Ini%,Candy_Settings,ShortText_Length,80   ;没有定义，则根据所选文本的长短，设定为长文本或者短文本
-        CandySel_Ext:=StrLen(CandySel) < Candy_ShortText_Length ? "ShortText" : "LongText" ;区分长短文本
-    } 
+	If(Fileexist(CandySel) && RegExMatch(CandySel,"^(\\\\|.:\\)")) ;文件或者文件夹,不再支持相对路径的文件路径,但容许“文字模式的全路径”
+	{
+		Candy_isFile:=1     ;如果是“文字型”的有效路径，强制认定为文件
+		SplitPath,CandySel,CandySel_FileNameWithExt,CandySel_ParentPath,CandySel_Ext,CandySel_FileNameNoExt,CandySel_Drive
+		SplitPath,CandySel_ParentPath,CandySel_ParentName,,,, ;用这个提取“所在文件夹名”
+		If InStr(FileExist(CandySel), "D")  ;区分是否文件夹,Attrib= D ,则是文件夹
+		{
+			CandySel_FileNameNoExt:=CandySel_FileNameWithExt
+			CandySel_Ext:=RegExMatch(CandySel,"^.:\\$") ? "Driver":"Folder"            ;细分：盘符或者文件夹
+		}
+		Else  If (CandySel_Ext="")       ;若不是文件夹，且无后缀，则定义为NoExt
+		{
+			CandySel_Ext:="NoExt"
+		}
+		if (CandySel_ParentName="")
+			CandySel_ParentName:=RTrim(CandySel_Drive,":")
+	}
+	Else if(instr(CandySel,"`n") And  Candy_isFile=1)  ;如果包含多行，且粘贴板性质为文件，则是“多文件”
+	{
+		CandySel_Ext:="MultiFiles" ;多文件的后缀=MultiFiles
+		CandySel_FirstFile:=RegExReplace(CandySel,"(.*)\r.*","$1")  ;取第一行
+		SplitPath ,CandySel_FirstFile,,CandySel_ParentPath,,  ;以第一行的父目录为“多文件的父目录”
+		If RegExMatch(CandySel_ParentPath,"\:(|\\)$")  ;如果父目录是磁盘根目录,用盘符做父目录名。
+			CandySel_ParentName:= RTrim(CandySel_ParentPath,":")
+		else  ;否则，提取父目录名
+			CandySel_ParentName:= RegExReplace(CandySel_ParentPath, ".*\\(.*)$", "$1")
+	}
+	Else     ;文本类型
+	{
+		;-----------特殊文字串辨析-------------------
+		IniRead Candy_User_defined_TextType,%Candy_ProFile_Ini%,user_defined_TextType  ;是否符合用户正则定义的文本类型，有优先顺序的，排在前面的优先
+		loop,parse,Candy_User_defined_TextType,`n
+		{
+			If(RegExMatch(CandySel,RegExReplace(A_LoopField,"^.*?=")))     ;根据ini里面用户自定义段，逐条查看，右侧是正则规则
+			{
+				CandySel_Ext:=RegExReplace(A_LoopField,"=.*?$")   ;左边是“文本某类型”
+				Candy_Cmd:=SkSub_Regex_IniRead(Candy_ProFile_Ini, "TextType", "i)(^|\|)" CandySel_Ext "($|\|)") ;获取该类型的”操作设定“
+				If(Candy_Cmd!="Error")            ;如果有相应后缀组的定义，则跳出去运行。
+				{
+					Goto Label_Candy_Read_Value
+					Break
+				}
+			}
+		}
+		IniRead,Candy_ShortText_Length,%Candy_ProFile_Ini%,Candy_Settings,ShortText_Length,80   ;没有定义，则根据所选文本的长短，设定为长文本或者短文本
+		CandySel_Ext:=StrLen(CandySel) < Candy_ShortText_Length ? "ShortText" : "LongText" ;区分长短文本
+	} 
 
  /*
 ╔══════════════════════════════════════╗
@@ -91,42 +90,42 @@ SkSub_Clear_CandyVar()
 */
 
 Label_Candy_Read_Value:
-    Candy_Type          :=Candy_isFile> 0 ? "FileType":"TextType"         ;根据Candy_isFile判断类型，在相应的INI段里面查找定义
-    Candy_Type_Any   :=Candy_isFile> 0 ? "AnyFile":"AnyText"         ;根据Candy_isFile判断类型，对应的Any的名称
-    Candy_Cmd:=SkSub_Regex_IniRead(Candy_ProFile_Ini, Candy_Type, "i)(^|\|)" CandySel_Ext "($|\|)")  ;查找后缀群定义
-    If(Candy_Cmd="Error")            ;如果没有相应后缀组的定义；下面这些啰嗦的写法是为了各种容错
-    {
-        IfExist,%Candy_Profile_Dir%\%CandySel_Ext%.ini   ;看是否有 后缀.ini 的配置文件存在
-        {
-            Candy_Cmd:="menu|" CandySel_Ext   ;同时，转化为Menu|命令行写法
-        }
-        Else
-        {
-            IniRead,Candy_Cmd, %Candy_ProFile_Ini%,%Candy_Type%,%Candy_Type_Any%   ;如果没有则看看 Any在ini的定义有没有
-            If(Candy_Cmd="Error")   ;没有对AnyFile（或AnyText）的定义，则看是否有 AnyFile.ini或AnyText.ini配置存在
-            {
-                IfExist,%Candy_Profile_Dir%\%Candy_Type%.ini   ;有，则以此为准
-                {
-                    Candy_Cmd:="menu|" Candy_Type   ;同时，转化为Menu|命令行写法
-                }
-                Else
-                {
-                    Run,%CandySel%, ,UseErrorLevel  ;层层把关都没有么，好失望的说，就直接运行吧
-                    Return
-                }
-            }
-        }
-    }
-    If !(RegExMatch(Candy_Cmd,"i)^Menu\|"))
-    {
-        Goto Label_Candy_RunCommand            ;如果不是menu指令，直接运行应用程序
-    }
+	Candy_Type          :=Candy_isFile> 0 ? "FileType":"TextType"         ;根据Candy_isFile判断类型，在相应的INI段里面查找定义
+	Candy_Type_Any   :=Candy_isFile> 0 ? "AnyFile":"AnyText"         ;根据Candy_isFile判断类型，对应的Any的名称
+	Candy_Cmd:=SkSub_Regex_IniRead(Candy_ProFile_Ini, Candy_Type, "i)(^|\|)" CandySel_Ext "($|\|)")  ;查找后缀群定义
+	If(Candy_Cmd="Error")            ;如果没有相应后缀组的定义；下面这些啰嗦的写法是为了各种容错
+	{
+		IfExist,%Candy_Profile_Dir%\%CandySel_Ext%.ini   ;看是否有 后缀.ini 的配置文件存在
+		{
+			Candy_Cmd:="menu|" CandySel_Ext   ;同时，转化为Menu|命令行写法
+		}
+		Else
+		{
+			IniRead,Candy_Cmd, %Candy_ProFile_Ini%,%Candy_Type%,%Candy_Type_Any%   ;如果没有则看看 Any在ini的定义有没有
+			If(Candy_Cmd="Error")   ;没有对AnyFile（或AnyText）的定义，则看是否有 AnyFile.ini或AnyText.ini配置存在
+			{
+				IfExist,%Candy_Profile_Dir%\%Candy_Type%.ini   ;有，则以此为准
+				{
+					Candy_Cmd:="menu|" Candy_Type   ;同时，转化为Menu|命令行写法
+				}
+				Else
+				{
+					Run,%CandySel%, ,UseErrorLevel  ;层层把关都没有么，好失望的说，就直接运行吧
+					Return
+				}
+			}
+		}
+	}
+	If !(RegExMatch(Candy_Cmd,"i)^Menu\|"))
+	{
+		Goto Label_Candy_RunCommand            ;如果不是menu指令，直接运行应用程序
+	}
 
 ;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 
 ;<<<<制作菜单>>>>  
 ;━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Label_Candy_DrawMenu:
-    Menu,CandyTopLevelMenu,add
+	Menu,CandyTopLevelMenu,add
     Menu,CandyTopLevelMenu,DeleteAll
     CandyMenu_IconSize:=SkSub_IniRead(Candy_ProFile_Ini, "General_Settings", "MenuIconSize",16)
     CandyMenu_IconDir:=SkSub_IniRead(Candy_ProFile_Ini, "General_Settings", "MenuIconDir")  ;菜单图标位置
@@ -445,7 +444,7 @@ Label_Candy_ErrorHandle:
             if (CandyError_From_Menu=1)
             {
                 Candy_This_ini:=szMenuWhichFile[ A_thisMenu "/" A_ThisMenuItem]
-                Candy_ctrl_ini_fullpath:=Candy_Profile_Dir . "\" . szMenuWhichFile[ A_thisMenu "/" A_ThisMenuItem] . ".ini"
+                Candy_ctrl_ini_fullpath:=Candy_Profile_Dir . "\" . Candy_This_ini . ".ini"
                 Candy_Ctrl_Regex:= "=\s*\Q" szMenuContent[ A_thisMenu "/" A_ThisMenuItem] "\E\s*$"
                 SkSub_EditConfig(Candy_ctrl_ini_fullpath,Candy_Ctrl_Regex)
             }
@@ -621,7 +620,7 @@ AssocQueryApp(sExt)
 }
 
 SkSub_Regex_IniRead(ini,sec,reg)      ;正则方式的读取，等号左侧符合正则条件
-{  ;在ini的某个段内，查找符合某正则规则的字符串，并返回value值
+{  ;在ini的某个段内，查找符合某正则规则的字符串，如果找到返回value值。找不到，则返回 Error
 	IniRead,keylist,%ini%,%sec%,
 	Loop,Parse,keylist,`n
 	{
