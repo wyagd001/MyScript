@@ -1486,6 +1486,9 @@ AutoInclude_Path = %A_ScriptDir%\Script\Cando
 s=
 Loop, %AutoInclude_Path%\*.ahk
     s.="#Include *i %A_ScriptDir%\Script\Cando\" A_LoopFileName "`n"
+AutoInclude_Path = %A_ScriptDir%\Script\Windo
+Loop, %AutoInclude_Path%\*.ahk
+    s.="#Include *i %A_ScriptDir%\Script\Windo\" A_LoopFileName "`n"
 AutoInclude_Path = %A_ScriptDir%\Script\Hotkey
 Loop, %AutoInclude_Path%\*.ahk
     s.="#Include *i %A_ScriptDir%\Script\Hotkey\" A_LoopFileName "`n"

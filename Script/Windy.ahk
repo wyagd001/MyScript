@@ -221,11 +221,11 @@ Label_Windy_RunCommand:
 	}
 	If(RegExMatch(Windy_Cmd,"i)^(Windo\|)")) ;如果是以windo|开头，则是运行内置标签
 	{
-		Windy_WindoLabel_str:=RegExReplace(Windy_Cmd,"i)^Windo\|\s?")
-		If IsLabel("Windo_" . Windy_WindoLabel_str)                       ;程序内置的别名
-			Goto % "Windo_" . Windy_WindoLabel_str
-		else If IsLabel( Windy_WindoLabel_str)                       ;程序内置的别名
-			Goto % Windy_WindoLabel_str
+		;Windy_WindoLabel_str:=RegExReplace(Windy_Cmd,"i)^Windo\|\s?")
+		If IsLabel("Windo_" . Splitted_Windy_Cmd2)                       ;程序内置的别名
+			Goto % "Windo_" . Splitted_Windy_Cmd2
+		else If IsLabel(Splitted_Windy_Cmd2)                       ;程序内置的别名
+			Goto % Splitted_Windy_Cmd2
 		Else
 			Goto Label_Windy_ErrorHandle
 	}
@@ -506,7 +506,3 @@ Label_Windy_ErrorHandle:
             }
 		}
 	Return
-
-Windo_发送路径到对话框:
-ControlSetText , edit1, %Windy_CurWin_FolderPath%, ahk_class #32770
-return

@@ -49,7 +49,7 @@ FileGetSize, IntUnZip_FileSize, %CandySel%, M
 
 	If(SmartUnZip_首层多个文件标志=0 && SmartUnZip_首层有文件夹标志=0 )   ;压缩文件内，首层有且仅有一个文件
 	{
-		Run, %程序路径_7ZG% x "%CandySel%" -o"%包目录%"    ;覆盖还是改名，交给7z
+		Run, %7ZG% x "%CandySel%" -o"%包目录%"    ;覆盖还是改名，交给7z
 	}
 
 	Else If(SmartUnZip_首层多个文件标志=0 && SmartUnZip_首层有文件夹标志=1 )   ;压缩文件内，首层有且仅有一个文件夹
@@ -62,11 +62,11 @@ FileGetSize, IntUnZip_FileSize, %CandySel%, M
 				If !FileExist( SmartUnZip_NewFolderName )
 				{
 ; 					MsgBox %SmartUnZip_NewFolderName%
-					Run, %程序路径_7ZG% x "%CandySel%"   -o"%SmartUnZip_NewFolderName%"
+					Run, %7ZG% x "%CandySel%"   -o"%SmartUnZip_NewFolderName%"
 					break
 				}
 			}
-			; Run, %程序路径_7ZG% x "%CandySel%"   -o"%包目录%\%SmartUnZip_文件夹名A%_%A_now%"
+			; Run, %7ZG% x "%CandySel%"   -o"%包目录%\%SmartUnZip_文件夹名A%_%A_now%"
 		}
 		Else  ;没有“首层文件夹命名”的文件夹，那就太好了
 		{
@@ -87,7 +87,7 @@ FileGetSize, IntUnZip_FileSize, %CandySel%, M
 					break
 				}
 			}
-; 			Run, %程序路径_7ZG% x  "%CandySel%" -o"%包目录%\%包文件名%_%A_now%"
+; 			Run, %7ZG% x  "%CandySel%" -o"%包目录%\%包文件名%_%A_now%"
 		}
 		Else ;没有，那就太好了
 		{
