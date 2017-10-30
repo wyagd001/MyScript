@@ -3,7 +3,7 @@
 #SingleInstance force
 ; 开机时启动脚本，等待时间设置长些，使托盘图标可以显示出来
 if(A_TickCount<120000)
-sleep,20000
+	sleep,20000
 
 global run_iniFile := A_ScriptDir "\settings\setting.ini"
 IfNotExist, %run_iniFile%
@@ -660,11 +660,6 @@ SetTimer,FreeAppMem,300000
 ;----------Pin2Desk----------
 Gosub,cSigleMenu
 ;----------Pin2Desk----------
-
-;----------农历节日----------
-if Auto_JCTF
-Gosub,JCTF
-;----------农历节日----------
 ;=========功能加载结束=========
 
 ;=========热键设置=========
@@ -786,33 +781,6 @@ Hotkey, % myhotkey.前缀_功能键发送到虚拟桌面 "F" A_Index,SendActiveToDesktop
 ;----------虚拟桌面----------
 ;=========热键设置=========
 
-;----------不显示托盘图标则重启脚本----------
-Script_pid:=DllCall("GetCurrentProcessId")
-Tray_Icons := {}
-Tray_Icons := TrayIcon_GetInfo(Ahk_Process)
-
-for index, Icon in Tray_Icons {
-trayicons_pid .= Icon.Pid ","
-}
-If trayicons_pid not contains %Script_pid%
-{
-While (120000 - A_TickCount) > 0
-	sleep,100
-
-msgbox,4,错误,未检测到脚本的托盘图标，点"是"重启脚本，点"否"继续运行脚本。`n默认(超时)自动重启脚本。,6
-IfMsgBox Yes    
-	autoreload=1
-else IfMsgBox timeout
-	autoreload=1
-
-if(autoreload=1)
-{
-Reload
-Return
-}
-}
-;----------不显示托盘图标则重启脚本----------
-
 ;----------WinMouse----------
 SetFormat, FLOAT, 0.0	;Round all floating operations
 ScriptINI = %A_ScriptDir%\settings\WinMouse.ini ;Path to INI file
@@ -833,6 +801,42 @@ WinSet, Transparent, %iTrans%	;Set transparency
 ;Establish timer
 SetTimer, ProcessMouse, 500
 SetTimer, ProcessMouse, OFF
+
+;----------不显示托盘图标则重启脚本----------
+if Auto_Trayicon
+{
+Script_pid:=DllCall("GetCurrentProcessId")
+Tray_Icons := {}
+Tray_Icons := TrayIcon_GetInfo(Ahk_Process)
+
+for index, Icon in Tray_Icons {
+trayicons_pid .= Icon.Pid ","
+}
+
+If trayicons_pid not contains %Script_pid%
+{
+While (120000 - A_TickCount) > 0
+	sleep,100
+
+msgbox,4,错误,未检测到脚本的托盘图标，点"是"重启脚本，点"否"继续运行脚本。`n默认(超时)自动重启脚本。,6
+IfMsgBox Yes    
+	autoreload=1
+else IfMsgBox timeout
+	autoreload=1
+
+if(autoreload=1)
+{
+Reload
+Return
+}
+}
+}
+;----------不显示托盘图标则重启脚本----------
+
+;----------农历节日----------
+if Auto_JCTF
+	Gosub,JCTF
+;----------农历节日----------
 
 ;----------loop持续运行，放到loop后面的代码不会执行的----------
 Loop {

@@ -1,19 +1,39 @@
+;https://autohotkey.com/boards/viewtopic.php?f=6&t=3702
 Windo_其他浏览器打开:
-ModernBrowsers := "ApplicationFrameWindow,Chrome_WidgetWin_0,Chrome_WidgetWin_1,Maxthon3Cls_MainFrm,MozillaWindowClass,Slimjet_WidgetWin_1"
+ModernBrowsers := "ApplicationFrameWindow,Chrome_WidgetWin_0,Chrome_WidgetWin_1,Maxthon3Cls_MainFrm,MozillaWindowClass,Slimjet_WidgetWin_1,360se6_Frame"
 LegacyBrowsers := "IEFrame,OperaWindowClass"
-sURL := GetActiveBrowserURL()
+OtherBrowsers :="AuroraMainFrame"
+sURL := GetActiveBrowserURL(Windy_CurWin_Class)
 run,% Splitted_Windy_Cmd3 " " sURL
 return
 
-GetActiveBrowserURL() {
-	global ModernBrowsers, LegacyBrowsers
-	WinGetClass, sClass, A
+GetActiveBrowserURL(sClass) {
+	global ModernBrowsers, LegacyBrowsers,OtherBrowsers
+	if !sclass
+		WinGetClass, sClass, A
 	If sClass In % ModernBrowsers
 		Return GetBrowserURL_ACC(sClass)
 	Else If sClass In % LegacyBrowsers
 		Return GetBrowserURL_DDE(sClass) ; empty string if DDE not supported (or not a browser)
+	Else If sClass In % OtherBrowsers
+		Return GetBrowserURL_hK()
 	Else
 		Return ""
+}
+
+GetBrowserURL_hK()
+{
+	Send, ^l
+	sleep,300
+	Candy_Saved_ClipBoard := ClipboardAll    ;备份剪贴板
+	Clipboard =                   ; 清空剪贴板
+	Send, ^c
+	ClipWait,1
+	if IsURL(Clipboard)
+		sURL:=Clipboard 
+	Clipboard := Candy_Saved_ClipBoard   
+	Candy_Saved_ClipBoard =
+	Return sURL
 }
 
 ; "GetBrowserURL_DDE" adapted from DDE code by Sean, (AHK_L version by maraskan_user)
@@ -70,6 +90,7 @@ GetBrowserURL_ACC(sClass) {
 GetAddressBar(accObj) {
 	Try If ((accObj.accRole(0) == 42) and IsURL(accObj.accValue(0)))
 		Return accObj
+
 	Try If ((accObj.accRole(0) == 42) and IsURL("http://" accObj.accValue(0))) ; Modern browsers omit "http://"
 		Return accObj
 	For nChild, accChild in Acc_Children(accObj)
