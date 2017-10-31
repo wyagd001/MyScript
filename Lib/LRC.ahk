@@ -21,11 +21,11 @@ lrcECHO(lrcfile,GuiTitle){
 	if hidelrc=0
 		Gui, 2:Show, NoActivate, %GuiTitle% - AhkPlayer  ; 不激活窗体避免改变当前激活的窗口
 
-	OlderFileEncoding:=A_FileEncoding
+	FileEncoding
 	file :=FileOpen(lrcfile,"r")
 	encoding := file.encoding
-	if(encoding="UTF-8")
-		FileEncoding, UTF-8
+	if(encoding!="cp936")
+		FileEncoding, %encoding%
 
 	; 读取lrc文件的内容
 	n:=1
@@ -107,7 +107,7 @@ lrcECHO(lrcfile,GuiTitle){
 	starttime := A_TickCount - lrcpos
 	lrcpos = 0
 	maxsec:=n-1
-	FileEncoding,% OlderFileEncoding
+	FileEncoding, CP1200
 	SetTimer, clock, 50
 	Return
 

@@ -17,6 +17,7 @@
 #SingleInstance force
 SetBatchLines, 10ms
 #MaxThreads,255
+FileEncoding,CP1200
 CoordMode, ToolTip
 SingleCycle := false
 run_iniFile = %A_ScriptDir%\settings\setting.ini
@@ -902,7 +903,7 @@ Return
 MenuClear:
 MsgBox,4,清空列表,确实要将列表清空吗？移动列表文件到备份Backups文件夹（只保留一个备份）。
 IfMsgBox Yes
-{
+{*----
 LV_Delete()
 FileGetSize, playlistfilesize, %AhkMediaListFile%
 if (playlistfilesize <> 0)
