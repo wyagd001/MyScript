@@ -1,15 +1,15 @@
 /*
-ä¸‹ä¸€é¦–:^+F5
-ä¸Šä¸€é¦–: ^+F3
-æš‚åœ:^+P
-åŠ å…¥åˆ—è¡¨:!F10
-æ˜¾ç¤ºéšè—æ­Œè¯:!F8
-æ‰‹æ°”ä¸é”™ï¼š!F9
-è·³è½¬åˆ°æŒ‡å®šæ—¶é—´ï¼š!F3
-ç¼–è¾‘æ­Œè¯ï¼š!F5
-æ˜¾ç¤ºéšè—ç•Œé¢ï¼š!F7
-ç§»åŠ¨æ­Œè¯ä½ç½®ï¼š!F6
-é€€å‡ºï¼š^+E
+ÏÂÒ»Ê×:^+F5
+ÉÏÒ»Ê×: ^+F3
+ÔİÍ£:^+P
+¼ÓÈëÁĞ±í:!F10
+ÏÔÊ¾Òş²Ø¸è´Ê:!F8
+ÊÖÆø²»´í£º!F9
+Ìø×ªµ½Ö¸¶¨Ê±¼ä£º!F3
+±à¼­¸è´Ê£º!F5
+ÏÔÊ¾Òş²Ø½çÃæ£º!F7
+ÒÆ¶¯¸è´ÊÎ»ÖÃ£º!F6
+ÍË³ö£º^+E
 */
 
 #Persistent
@@ -26,7 +26,7 @@ IniRead, AutoUpdateMediaLib, %run_iniFile%, AhkPlayer, AutoUpdateMediaLib
 IniRead, Lrcfontcolor, %run_iniFile%, AhkPlayer, Lrcfontcolor
 IniRead, LrcPath, %run_iniFile%, AhkPlayer, LrcPath
 IfnotExist,%LrcPath%
-  IniRead, LrcPath, %run_iniFile%, è·¯å¾„è®¾ç½®, LrcPath
+  IniRead, LrcPath, %run_iniFile%, Â·¾¶ÉèÖÃ, LrcPath
 IniRead, followmouse, %run_iniFile%, AhkPlayer, followmouse
 IniRead, PlayListdefalut, %run_iniFile%, AhkPlayer, PlayListdefalut
 IniRead, PlayRandom, %run_iniFile%, AhkPlayer, PlayRandom
@@ -49,68 +49,68 @@ Gui, 2:add, Text, w1000 r1.9 c%Lrcfontcolor% vlrc,
 posy:=A_ScreenHeight-130
 Gui, 2:Show, Hide x150 y%posy%
 
-Menu, FileMenu, Add, æ·»åŠ æ–‡ä»¶(&F), MenuFileAdd
-Menu, FileMenu, Add, æ·»åŠ æ–‡ä»¶å¤¹(&D), MenuFolderAdd
-Menu, FileMenu, Add, é€€å‡º(&X), Exit
-Menu, EditMenu, Add, æ’­æ”¾æ‰€é€‰(å•é€‰)(&O), MenuOpen
-Menu, EditMenu, Add, ä»åˆ—è¡¨ä¸­åˆ é™¤(&R), MenuRemove
-Menu, EditMenu, Add, æ¸…ç©ºåˆ—è¡¨(&C), MenuClear
-Menu, EditMenu, Add, æ‰“å¼€æ–‡ä»¶ä½ç½®(å•é€‰)(&C), MenuOpenFilePath
+Menu, FileMenu, Add, Ìí¼ÓÎÄ¼ş(&F), MenuFileAdd
+Menu, FileMenu, Add, Ìí¼ÓÎÄ¼ş¼Ğ(&D), MenuFolderAdd
+Menu, FileMenu, Add, ÍË³ö(&X), Exit
+Menu, EditMenu, Add, ²¥·ÅËùÑ¡(µ¥Ñ¡)(&O), MenuOpen
+Menu, EditMenu, Add, ´ÓÁĞ±íÖĞÉ¾³ı(&R), MenuRemove
+Menu, EditMenu, Add, Çå¿ÕÁĞ±í(&C), MenuClear
+Menu, EditMenu, Add, ´ò¿ªÎÄ¼şÎ»ÖÃ(µ¥Ñ¡)(&C), MenuOpenFilePath
 
-Menu, PlayBack, Add, æš‚åœ/æ’­æ”¾(&P), MyPause
-Menu, PlayBack, Add, åœæ­¢(&S), Stop
-Menu, PlayBack, Add, è·³è½¬åˆ°(&J), Jump
-Menu, PlayBack, Add, ä¸Šä¸€é¦–(&V), Prev
-Menu, PlayBack, Add, ä¸‹ä¸€é¦–(&N), Next
+Menu, PlayBack, Add, ÔİÍ£/²¥·Å(&P), MyPause
+Menu, PlayBack, Add, Í£Ö¹(&S), Stop
+Menu, PlayBack, Add, Ìø×ªµ½(&J), Jump
+Menu, PlayBack, Add, ÉÏÒ»Ê×(&V), Prev
+Menu, PlayBack, Add, ÏÂÒ»Ê×(&N), Next
 Menu, PlayBack, Add
-Menu, PlayBack, Add, éšæœºæ’­æ”¾(&R), GoRandom
-Menu, PlayBack, Add, å•æ›²å¾ªç¯(&D), PSingleCycle
+Menu, PlayBack, Add, Ëæ»ú²¥·Å(&R), GoRandom
+Menu, PlayBack, Add, µ¥ÇúÑ­»·(&D), PSingleCycle
 Menu, PlayBack, Add
-Menu, PlayBack, Add, æ’­æ”¾åˆ—è¡¨(&L), PTList
-Menu, PlayBack, Add, --ä¸‹ä¸€é¦–è·Ÿéšé¼ æ ‡(&F), PTLF
-Menu, PlayBack, Add, æ’­æ”¾åª’ä½“åº“(&M), PTLib
+Menu, PlayBack, Add, ²¥·ÅÁĞ±í(&L), PTList
+Menu, PlayBack, Add, --ÏÂÒ»Ê×¸úËæÊó±ê(&F), PTLF
+Menu, PlayBack, Add, ²¥·ÅÃ½Ìå¿â(&M), PTLib
 
 
-Menu, Lib, Add, æ‰“å¼€æ­Œè¯åº“(&L), OpenLrc
-Menu, Lib, Add, æ‰“å¼€åª’ä½“åº“(&M), OpenLib
-Menu, Lib, Add, æ‰“å¼€é…ç½®æ–‡ä»¶å¤¹(&F), OpenOptionFolder
+Menu, Lib, Add, ´ò¿ª¸è´Ê¿â(&L), OpenLrc
+Menu, Lib, Add, ´ò¿ªÃ½Ìå¿â(&M), OpenLib
+Menu, Lib, Add, ´ò¿ªÅäÖÃÎÄ¼ş¼Ğ(&F), OpenOptionFolder
 Menu, Lib, Add
-Menu, Lib, Add, ç¼–è¾‘æ­Œè¯(&E), EditLrc
-Menu, Lib, Add, ç¼–è¾‘é…ç½®æ–‡ä»¶(&O), EditOption
+Menu, Lib, Add, ±à¼­¸è´Ê(&E), EditLrc
+Menu, Lib, Add, ±à¼­ÅäÖÃÎÄ¼ş(&O), EditOption
 Menu, Lib, Add
-Menu, Lib, Add, å¯åŠ¨æ¢å¤ä¸Šæ¬¡æ’­æ”¾(&H),HuiFuShangCiPlay
-Menu, Lib, Add, æ›´æ–°åª’ä½“åº“(&U),UpdateMediaLib
-Menu, Lib, Add, å¯åŠ¨è‡ªåŠ¨æ›´æ–°åª’ä½“åº“(&A),AutoUpdateMediaLib
+Menu, Lib, Add, Æô¶¯»Ö¸´ÉÏ´Î²¥·Å(&H),HuiFuShangCiPlay
+Menu, Lib, Add, ¸üĞÂÃ½Ìå¿â(&U),UpdateMediaLib
+Menu, Lib, Add, Æô¶¯×Ô¶¯¸üĞÂÃ½Ìå¿â(&A),AutoUpdateMediaLib
 
-Menu, Help, Add, å…³äº(&A), About
-Menu,PlayBack,Disable,--ä¸‹ä¸€é¦–è·Ÿéšé¼ æ ‡(&F)
+Menu, Help, Add, ¹ØÓÚ(&A), About
+Menu,PlayBack,Disable,--ÏÂÒ»Ê×¸úËæÊó±ê(&F)
 If (PlayRandom="t")
-Menu,PlayBack,Check,éšæœºæ’­æ”¾(&R)
+Menu,PlayBack,Check,Ëæ»ú²¥·Å(&R)
 
 If (PlayListdefalut="t")
 {
-Menu,PlayBack,Enable,--ä¸‹ä¸€é¦–è·Ÿéšé¼ æ ‡(&F)
-Menu,PlayBack,Check,æ’­æ”¾åˆ—è¡¨(&L)
+Menu,PlayBack,Enable,--ÏÂÒ»Ê×¸úËæÊó±ê(&F)
+Menu,PlayBack,Check,²¥·ÅÁĞ±í(&L)
 If (followmouse="t")
-Menu,PlayBack,Check,--ä¸‹ä¸€é¦–è·Ÿéšé¼ æ ‡(&F)
-Menu,PlayBack,Disable,æ’­æ”¾åˆ—è¡¨(&L)
+Menu,PlayBack,Check,--ÏÂÒ»Ê×¸úËæÊó±ê(&F)
+Menu,PlayBack,Disable,²¥·ÅÁĞ±í(&L)
 }
 Else
 {
-Menu, PlayBack, Check,æ’­æ”¾åª’ä½“åº“(&M)
-Menu,PlayBack,Disable,æ’­æ”¾åª’ä½“åº“(&M)
+Menu, PlayBack, Check,²¥·ÅÃ½Ìå¿â(&M)
+Menu,PlayBack,Disable,²¥·ÅÃ½Ìå¿â(&M)
 }
 
 if (AutoUpdateMediaLib="t")
-Menu, Lib, Check,å¯åŠ¨è‡ªåŠ¨æ›´æ–°åª’ä½“åº“(&A)
+Menu, Lib, Check,Æô¶¯×Ô¶¯¸üĞÂÃ½Ìå¿â(&A)
 if (huifushangci = "t")
-Menu, Lib, Check,å¯åŠ¨æ¢å¤ä¸Šæ¬¡æ’­æ”¾(&H)
+Menu, Lib, Check,Æô¶¯»Ö¸´ÉÏ´Î²¥·Å(&H)
 
-Menu, MyMenuBar, Add, æ–‡ä»¶(&F), :FileMenu
-Menu, MyMenuBar, Add, ç¼–è¾‘(&E), :EditMenu
-Menu, MyMenuBar, Add, æ§åˆ¶(&P), :PlayBack
-Menu, MyMenuBar, Add, é€‰é¡¹(&O), :Lib
-Menu, MyMenuBar, Add, å¸®åŠ©(&H), :Help
+Menu, MyMenuBar, Add, ÎÄ¼ş(&F), :FileMenu
+Menu, MyMenuBar, Add, ±à¼­(&E), :EditMenu
+Menu, MyMenuBar, Add, ¿ØÖÆ(&P), :PlayBack
+Menu, MyMenuBar, Add, Ñ¡Ïî(&O), :Lib
+Menu, MyMenuBar, Add, °ïÖú(&H), :Help
 
 OnExit ExitSub
 
@@ -136,12 +136,12 @@ HuiFuShangCiPlay:
 IniRead, huifushangci, %run_iniFile%, AhkPlayer,huifushangci
 If (huifushangci ="t")
 {
-Menu,Lib,unCheck,å¯åŠ¨æ¢å¤ä¸Šæ¬¡æ’­æ”¾(&H)
+Menu,Lib,unCheck,Æô¶¯»Ö¸´ÉÏ´Î²¥·Å(&H)
 IniWrite,f, %run_iniFile%, AhkPlayer, huifushangci
 }
 Else
 {
-Menu,Lib,Check,å¯åŠ¨æ¢å¤ä¸Šæ¬¡æ’­æ”¾(&H)
+Menu,Lib,Check,Æô¶¯»Ö¸´ÉÏ´Î²¥·Å(&H)
 IniWrite,t, %run_iniFile%, AhkPlayer, huifushangci
 }
 Return
@@ -150,12 +150,12 @@ AutoUpdateMediaLib:
 IniRead, AutoUpdateMediaLib, %run_iniFile%, AhkPlayer,AutoUpdateMediaLib
 If (AutoUpdateMediaLib ="t")
 {
-Menu,Lib,unCheck,å¯åŠ¨è‡ªåŠ¨æ›´æ–°åª’ä½“åº“(&A)
+Menu,Lib,unCheck,Æô¶¯×Ô¶¯¸üĞÂÃ½Ìå¿â(&A)
 IniWrite,f, %run_iniFile%, AhkPlayer, AutoUpdateMediaLib
 }
 Else
 {
-Menu,Lib,Check,å¯åŠ¨è‡ªåŠ¨æ›´æ–°åª’ä½“åº“(&A)
+Menu,Lib,Check,Æô¶¯×Ô¶¯¸üĞÂÃ½Ìå¿â(&A)
 IniWrite,t, %run_iniFile%, AhkPlayer, AutoUpdateMediaLib
 }
 Return
@@ -180,7 +180,7 @@ UpdateMediaLib:
 
 	Count -= 1
 	IniWrite, %Count%, %run_iniFile%, AhkPlayer, Count
-			Tooltip, æ›´æ–°åª’ä½“åº“å®Œæ¯•!%a_tab%%a_tab%
+			Tooltip, ¸üĞÂÃ½Ìå¿âÍê±Ï!%a_tab%%a_tab%
 	Sleep 1000
 	Tooltip
 Return
@@ -188,20 +188,20 @@ Return
 HuifuPlay:
 IniRead, Mp3Playing, %run_iniFile%, AhkPlayer, Mp3Playing
 mp3 := Mp3Playing
-;æ‰“å¼€æ–‡ä»¶
+;´ò¿ªÎÄ¼ş
 	hSound := MCI_Open(Mp3, "myfile")
 
     SetTimer UpdateSlider,off
     GUIControl,,Slider,0
     GUIControl,Disable,Slider
-;æ’­æ”¾æ–‡ä»¶
+;²¥·ÅÎÄ¼ş
 	Gosub, MyPause
 	len := MCI_Length(hSound)
 	GUIControl,Enable,Slider
     SetTimer,UpdateSlider,100
 	SetTimer,CheckStatus,250
 	Gosub, ToolTipMP3
-    ;Gosubå‘½ä»¤ï¼šç¨‹åºè·³è½¬åˆ°ToolTipMP3æ ‡ç­¾ï¼Œæ‰§è¡Œæ ‡ç­¾ä¸‹çš„è¯­å¥ï¼Œé‡åˆ°Returnè¿”å›ï¼Œæ‰ç»§ç»­æ‰§è¡Œè¯¥è¡Œä¸‹é¢çš„è¯­å¥å³ç»§ç»­æ‰§è¡ŒGosub, StarPlay   Gotoå‘½ä»¤åˆ™ä¸ä¼šè¿”å›
+    ;GosubÃüÁî£º³ÌĞòÌø×ªµ½ToolTipMP3±êÇ©£¬Ö´ĞĞ±êÇ©ÏÂµÄÓï¾ä£¬Óöµ½Return·µ»Ø£¬²Å¼ÌĞøÖ´ĞĞ¸ÃĞĞÏÂÃæµÄÓï¾ä¼´¼ÌĞøÖ´ĞĞGosub, StarPlay   GotoÃüÁîÔò²»»á·µ»Ø
 	Gosub, StarPlay
 Return
 
@@ -220,18 +220,18 @@ StarPlay:
 	;IniRead, followmouse, %run_iniFile%, AhkPlayer, followmouse
 	;IniRead, PlayListdefalut, %run_iniFile%, AhkPlayer, PlayListdefalut
 
-	if (PlayRandom = "t")  ; éšæœºæ’­æ”¾
+	if (PlayRandom = "t")  ; Ëæ»ú²¥·Å
 	{
-		if (PlayListdefalut="t")  ; æ’­æ”¾åˆ—è¡¨
+		if (PlayListdefalut="t")  ; ²¥·ÅÁĞ±í
 		{
-			if (followmouse="t")   ; è·Ÿéšé¼ æ ‡
+			if (followmouse="t")   ; ¸úËæÊó±ê
 			{
 				if (PlaylistIndex != LV_GetNext(Row))
 				{
 					PlaylistIndex:=LV_GetNext(Row)
 					LV_GetText(Mp3,PlaylistIndex,4)
 				}
-				else   ; é¼ æ ‡æ‰€åœ¨è¡Œæ˜¯ä¸Šä¸€é¦–æ’­æ”¾çš„
+				else   ; Êó±êËùÔÚĞĞÊÇÉÏÒ»Ê×²¥·ÅµÄ
 				{
 					Random, Rand, 1, %Count%
 					FileReadLine, Mp3, %NowPlayFile%, %Rand%
@@ -240,7 +240,7 @@ StarPlay:
 					PlaylistIndex:=LV_GetNext(Row)
 				}
 			}
-			else   ; ä¸è·Ÿéšé¼ æ ‡
+			else   ; ²»¸úËæÊó±ê
 			{
 				Random, Rand, 1, %Count%
 				FileReadLine, Mp3, %NowPlayFile%, %Rand%
@@ -249,15 +249,15 @@ StarPlay:
 				PlaylistIndex:=LV_GetNext(Row)
 			}
 		}
-		else  ; æ’­æ”¾åª’ä½“åº“
+		else  ; ²¥·ÅÃ½Ìå¿â
 		{
 			Random, Rand, 1, %Count%
 			FileReadLine, Mp3, %NowPlayFile%, %Rand%
 		}
 	}
-	else   ; é¡ºåºæ’­æ”¾
+	else   ; Ë³Ğò²¥·Å
 	{
-		if (PlayListdefalut="t")   ; æ’­æ”¾åˆ—è¡¨
+		if (PlayListdefalut="t")   ; ²¥·ÅÁĞ±í
 		{
 			if (PlaylistIndex>=LV_GetCount())
 				PlaylistIndex:=0
@@ -275,7 +275,7 @@ StarPlay:
 			LV_Modify(0,"-Select")
 			LV_Modify(PlaylistIndex,"+Select +Focus +Vis")
 		}
-		else  ; æ’­æ”¾åª’ä½“åº“
+		else  ; ²¥·ÅÃ½Ìå¿â
 		{
 			IniRead, PlayIndex, %run_iniFile%, AhkPlayer, PlayIndex
 			PlayIndex++
@@ -302,30 +302,30 @@ SingleCycleplay:
 	SetTimer,UpdateSlider,100
 	SetTimer,CheckStatus,250
 	Gosub, ToolTipMP3
-	; Gosubå‘½ä»¤ï¼šç¨‹åºè·³è½¬åˆ°ToolTipMP3æ ‡ç­¾ï¼Œæ‰§è¡Œæ ‡ç­¾ä¸‹çš„è¯­å¥ï¼Œé‡åˆ°Returnè¿”å›ï¼Œ
-	; æ‰ç»§ç»­æ‰§è¡Œè¯¥è¡Œä¸‹é¢çš„è¯­å¥å³ç»§ç»­æ‰§è¡ŒGosub, StarPlay   Gotoå‘½ä»¤åˆ™ä¸ä¼šè¿”å›
-	; æ’­æ”¾ä¸‹ä¸€é¦–æ­Œæ›²
+	; GosubÃüÁî£º³ÌĞòÌø×ªµ½ToolTipMP3±êÇ©£¬Ö´ĞĞ±êÇ©ÏÂµÄÓï¾ä£¬Óöµ½Return·µ»Ø£¬
+	; ²Å¼ÌĞøÖ´ĞĞ¸ÃĞĞÏÂÃæµÄÓï¾ä¼´¼ÌĞøÖ´ĞĞGosub, StarPlay   GotoÃüÁîÔò²»»á·µ»Ø
+	; ²¥·ÅÏÂÒ»Ê×¸èÇú
 	Gosub, StarPlay
 Return
 
 GuiShow:
 Gui, Menu, MyMenuBar
 
-Menu, Context, Add, æ’­æ”¾(å•é€‰), PlayLV
-Menu, Context, Add, æ‰“å¼€æ–‡ä»¶ä½ç½®(å•é€‰), OpenfilePath
-Menu, Context, Add, æ·»åŠ åˆ°åˆ—è¡¨, AddList
-Menu, Context, Add, ä»åˆ—è¡¨ä¸­åˆ é™¤(å¯å¤šé€‰), Remove
-Menu, Context, Add, æ¸…ç©ºåˆ—è¡¨, Remove
-Menu, Context, Add, æ¸…é™¤åˆ—è¡¨ä¸­çš„é‡å¤ä¸æ— æ•ˆé¡¹, RemoveDuplicateInvalid
+Menu, Context, Add, ²¥·Å(µ¥Ñ¡), PlayLV
+Menu, Context, Add, ´ò¿ªÎÄ¼şÎ»ÖÃ(µ¥Ñ¡), OpenfilePath
+Menu, Context, Add, Ìí¼Óµ½ÁĞ±í, AddList
+Menu, Context, Add, ´ÓÁĞ±íÖĞÉ¾³ı(¿É¶àÑ¡), Remove
+Menu, Context, Add, Çå¿ÕÁĞ±í, Remove
+Menu, Context, Add, Çå³ıÁĞ±íÖĞµÄÖØ¸´ÓëÎŞĞ§Ïî, RemoveDuplicateInvalid
 
-Gui, Add,Button,  y5 gPTList,æ’­æ”¾åˆ—è¡¨
-Gui, Add,Button, x+5 yp gPTLib,æ’­æ”¾åª’ä½“åº“
+Gui, Add,Button,  y5 gPTList,²¥·ÅÁĞ±í
+Gui, Add,Button, x+5 yp gPTLib,²¥·ÅÃ½Ìå¿â
 Gui, Add,Edit, x+5 yp  w250 vfind
-Gui, Add,Button, x+5 yp h20 gfind Default,æŸ¥æ‰¾
-Gui, Add,Button, x+5 yp h20 grefreshList,è¿”å›åˆ—è¡¨
-Gui, Add,Button, x+5 yp h20 gFindToList,è¿½åŠ åˆ°åˆ—è¡¨
+Gui, Add,Button, x+5 yp h20 gfind Default,²éÕÒ
+Gui, Add,Button, x+5 yp h20 grefreshList,·µ»ØÁĞ±í
+Gui, Add,Button, x+5 yp h20 gFindToList,×·¼Óµ½ÁĞ±í
 
-Gui, Add,ListView ,xm Grid w600 h400 gListView vListView Altsubmit, åºå·|æ›²å|ç±»å‹|ä½ç½®
+Gui, Add,ListView ,xm Grid w600 h400 gListView vListView Altsubmit, ĞòºÅ|ÇúÃû|ÀàĞÍ|Î»ÖÃ
 Gui, Add,Slider,xm w600 h25 +Disabled +ToolTip vSlider gSlider
 Gui, Add,Picture,xm+150 y+10 vstop gStop,%A_ScriptDir%\pic\AhkPlayer\stop.bmp
 Gui, Add,Picture,x+1 yp-1 gprev,%A_ScriptDir%\pic\AhkPlayer\prev.bmp
@@ -336,13 +336,13 @@ Gui, Add,Slider, x+1 yp+10 w100 h20 vVSlider Range0-100 +ToolTip  gVolumeC
 Gui, font,cred bold s24,Verdana
 Gui, Add, text, x+5 yp-15  vLrcS  gLrcShow ,Lrc
 Gui, font
-Gui, Add, StatusBar, xm yp w600 h30 , æœªæ’­æ”¾æ–‡ä»¶
+Gui, Add, StatusBar, xm yp w600 h30 , Î´²¥·ÅÎÄ¼ş
 vol_Master := VA_GetVolume()
 Guicontrol,,VSlider,%vol_Master%
 SB_SetParts(300,100,220)
 SB_SetProgress(0 ,3,+Smooth BackgroundYellow cBlue)
 If (PlayListdefalut="t"){
-Gui,Show,,æ’­æ”¾åˆ—è¡¨ - AhkPlayer
+Gui,Show,,²¥·ÅÁĞ±í - AhkPlayer
 Loop, read, %AhkMediaListFile%
 	{
 	xuhao++
@@ -354,16 +354,16 @@ Loop, read, %AhkMediaListFile%
 }
 }
 else
-Gui,Show,,æ’­æ”¾åª’ä½“åº“ - AhkPlayer
+Gui,Show,,²¥·ÅÃ½Ìå¿â - AhkPlayer
 Return
 
-; åœæ­¢æ’­æ”¾ï¼Œè¿”å›å¼€å¤´
+; Í£Ö¹²¥·Å£¬·µ»Ø¿ªÍ·
 Stop:
   SetTimer,CheckStatus,Off
   playing=0
   MCI_Stop(hSound)
   MCI_Seek(hSound,0)
-  Menu, PlayBack, Check,åœæ­¢(&S)
+  Menu, PlayBack, Check,Í£Ö¹(&S)
   Gui,2:hide
   lrcclear()
   SetTimer, clock,Off
@@ -373,10 +373,10 @@ Return
 ToolTipMP3:
 	if (Exit = true)
 		Exit
-	;   ä¾‹å¦‚å‰ä¸€ä¸ªçƒ­é”®ä»åœ¨æ‰§è¡Œæ—¶åˆæŒ‰äº†å¦ä¸€ä¸ªçƒ­é”®ï¼Œé‚£ä¹ˆå½“å‰çº¿ç¨‹å°†è¢«ä¸­æ–­(æš‚æ—¶åœ°åœæ­¢)ä»¥å…è®¸æ–°çš„çº¿ç¨‹å˜æˆå½“å‰çš„çº¿ç¨‹
-	;	  StarPlayä¸­çš„ToolTipMP3ä¸ºå½“å‰è¿›ç¨‹ï¼ŒæŒ‰ä¸‹!F9åï¼Œå½“å‰è¿›ç¨‹ç»ˆæ­¢è¿›å…¥ä¼‘çœ çŠ¶æ€,!F1çš„ToolTipMP3å˜ä¸ºå½“å‰çš„çº¿ç¨‹
-	;   å½“!F9çš„ToolTipMP3çº¿ç¨‹è¿è¡Œå®Œæ¯•ä¹‹åï¼ŒStarPlayä¸­çš„ToolTipMP3æ¢å¤
-	;   æ‰€ä»¥æŒ‰ä¸‹!F9æ’­æ”¾åï¼Œçƒ­é”®çš„çº¿ç¨‹åœ¨æŒç»­è¿è¡Œæ—¶ï¼Œå†æ¬¡æŒ‰ä¸‹çƒ­é”®æ²¡ç”¨ï¼Œå› ä¸ºä¸Šä¸€æ¬¡çš„çƒ­é”®è¿˜æ²¡æœ‰ç»“æŸ
+	;   ÀıÈçÇ°Ò»¸öÈÈ¼üÈÔÔÚÖ´ĞĞÊ±ÓÖ°´ÁËÁíÒ»¸öÈÈ¼ü£¬ÄÇÃ´µ±Ç°Ïß³Ì½«±»ÖĞ¶Ï(ÔİÊ±µØÍ£Ö¹)ÒÔÔÊĞíĞÂµÄÏß³Ì±ä³Éµ±Ç°µÄÏß³Ì
+	;	  StarPlayÖĞµÄToolTipMP3Îªµ±Ç°½ø³Ì£¬°´ÏÂ!F9ºó£¬µ±Ç°½ø³ÌÖÕÖ¹½øÈëĞİÃß×´Ì¬,!F1µÄToolTipMP3±äÎªµ±Ç°µÄÏß³Ì
+	;   µ±!F9µÄToolTipMP3Ïß³ÌÔËĞĞÍê±ÏÖ®ºó£¬StarPlayÖĞµÄToolTipMP3»Ö¸´
+	;   ËùÒÔ°´ÏÂ!F9²¥·Åºó£¬ÈÈ¼üµÄÏß³ÌÔÚ³ÖĞøÔËĞĞÊ±£¬ÔÙ´Î°´ÏÂÈÈ¼üÃ»ÓÃ£¬ÒòÎªÉÏÒ»´ÎµÄÈÈ¼ü»¹Ã»ÓĞ½áÊø
 	Exit = false
 	Gosub, sNameTrim
 	len := MCI_Length(hSound)
@@ -459,17 +459,17 @@ SetTimer, clock, Off
 SplitPath, Mp3,,,ext, name
 IfExist,%LrcPath%\%name%.lrc
 {
-Menu,Lib,Enable,ç¼–è¾‘æ­Œè¯(&E)
+Menu,Lib,Enable,±à¼­¸è´Ê(&E)
 lrcECHO(LrcPath . "\" . name . ".lrc",name)
 }
 Else{
 Gui, 2:Show, NoActivate, %name% - AhkPlayer
 Gui, 2:Hide
-Menu,Lib,Disable,ç¼–è¾‘æ­Œè¯(&E)
+Menu,Lib,Disable,±à¼­¸è´Ê(&E)
 }
 Return
 
-;ä¸Šä¸€é¦–
+;ÉÏÒ»Ê×
 ^+F3::
 prev:
 if (PlayListdefalut="t")
@@ -524,7 +524,7 @@ MCI_Seek(hSound, MCI_Length(hSound))
 }
 Return
 
-; æš‚åœ
+; ÔİÍ£
 ^+P::
 MyPause:
 	Status := MCI_Status(hSound)
@@ -534,8 +534,8 @@ MyPause:
 		If Status = stopped
 		{
 			MCI_Play(hSound)
-			Menu, PlayBack, UnCheck,åœæ­¢(&S)
-			Menu, PlayBack, UnCheck,æš‚åœ/æ’­æ”¾(&P)
+			Menu, PlayBack, UnCheck,Í£Ö¹(&S)
+			Menu, PlayBack, UnCheck,ÔİÍ£/²¥·Å(&P)
 			if(hidelrc=0)
 				Gosub, Lrc
 			SetTimer,CheckStatus,100
@@ -548,7 +548,7 @@ MyPause:
 				lrcPause(0)
 				Gui,2:show 
 			}
-			Menu, PlayBack, ToggleCheck,æš‚åœ/æ’­æ”¾(&P)
+			Menu, PlayBack, ToggleCheck,ÔİÍ£/²¥·Å(&P)
 		}
 		GuiControl,,pausepic,	%A_ScriptDir%\pic\AhkPlayer\play.bmp
 		playing = 1
@@ -563,13 +563,13 @@ MyPause:
 			hidelrc=2
 			gosub lrcshow
 		}
-		Menu, PlayBack, ToggleCheck,æš‚åœ/æ’­æ”¾(&P)
+		Menu, PlayBack, ToggleCheck,ÔİÍ£/²¥·Å(&P)
 		playing = 0
 		GuiControl,,pausepic,%A_ScriptDir%\pic\AhkPlayer\pause.bmp
 	}
 Return
 
-; ä¸‹ä¸€é¦–
+; ÏÂÒ»Ê×
 ^+F5::
 Next:
 	MCI_Seek(hSound, MCI_Length(hSound))
@@ -577,7 +577,7 @@ if (hidelrc=0)
 Gosub, Lrc
 Return
 
-; é€€å‡ºç¨‹åº
+; ÍË³ö³ÌĞò
 ^+E::
 Exit:
 ExitSub:
@@ -588,12 +588,12 @@ ExitSub:
 	ExitApp
 Return
 
-; æ’­æ”¾åŒ…å«å…³é”®å­—çš„æ­Œæ›²
+; ²¥·Å°üº¬¹Ø¼ü×ÖµÄ¸èÇú
 !F9::
 PlayMusic:
 ;Exit = true
 
-	InputBox,userInput,æŸ¥æ‰¾,è¾“å…¥è¦æŸ¥æ‰¾çš„æ­Œæ›²
+	InputBox,userInput,²éÕÒ,ÊäÈëÒª²éÕÒµÄ¸èÇú
 	IfEqual,userInput,, Return
 
 	Loop, read, %AhkMediaLibFile%
@@ -631,7 +631,7 @@ Return
 
 !F3::
 Jump:
-	InputBox, Seek,è·³è½¬,è¾“å…¥è¦è·³è½¬åˆ°çš„æ—¶é—´ï¼Œæ­Œè¯ä¸æ”¯æŒè·³è½¬`nä¾‹å­ï¼šè¦è·³è½¬åˆ°2:20è¾“å…¥220
+	InputBox, Seek,Ìø×ª,ÊäÈëÒªÌø×ªµ½µÄÊ±¼ä£¬¸è´Ê²»Ö§³ÖÌø×ª`nÀı×Ó£ºÒªÌø×ªµ½2:20ÊäÈë220
 	IfEqual,Seek,, Return
 	StringLen, Length, Seek
 	If Length = 4
@@ -668,7 +668,7 @@ run,notepad.exe %LrcPath%\%name%.lrc
 run,notepad.exe D:\Program Files\foobar2000\lyrics\%name%.lrc
 }
 Else{
-ToolTip,æ­Œè¯æ–‡ä»¶ä¸å­˜åœ¨!
+ToolTip,¸è´ÊÎÄ¼ş²»´æÔÚ!
 Sleep,3000
 ToolTip
 }
@@ -682,7 +682,7 @@ caption=0
 }
 Else{
 caption=1
-Gui, 2:+Caption	;ç»æµ‹è¯•ï¼Œçš„ç¡®éœ€è¦è¿™æ ·å†™æ‰èƒ½å¤Ÿåœ¨ç¬¬ä¸€æ¬¡ä½¿ç”¨çš„æ—¶å€™ç”Ÿæ•ˆ
+Gui, 2:+Caption	;¾­²âÊÔ£¬µÄÈ·ĞèÒªÕâÑùĞ´²ÅÄÜ¹»ÔÚµÚÒ»´ÎÊ¹ÓÃµÄÊ±ºòÉúĞ§
 Gui, 2:-Caption
 Gui, 2:+LastFound
 WinSet, ExStyle, -0x20
@@ -724,16 +724,16 @@ hide=0
 }
 Else
 {
-IfWinNotActive,æ’­æ”¾åˆ—è¡¨ - AhkPlayer
-WinActivate,æ’­æ”¾åˆ—è¡¨ - AhkPlayer
+IfWinNotActive,²¥·ÅÁĞ±í - AhkPlayer
+WinActivate,²¥·ÅÁĞ±í - AhkPlayer
 else
 {
 gui,hide
 SetTimer,Updatevolume,off
 hide=1
 }
-IfWinNotActive,æ’­æ”¾åª’ä½“åº“ - AhkPlayer
-WinActivate,æ’­æ”¾åª’ä½“åº“ - AhkPlayer
+IfWinNotActive,²¥·ÅÃ½Ìå¿â - AhkPlayer
+WinActivate,²¥·ÅÃ½Ìå¿â - AhkPlayer
 else
 {
 gui,hide
@@ -743,13 +743,13 @@ hide=1
 }
 Return
 
-; å°†æ­£åœ¨æ’­æ”¾çš„æ–‡ä»¶åŠ å…¥åˆ°æ’­æ”¾åˆ—è¡¨
+; ½«ÕıÔÚ²¥·ÅµÄÎÄ¼ş¼ÓÈëµ½²¥·ÅÁĞ±í
 !F10::
 FileRead, NoDoubles, %AhkMediaListFile%
 IfNotInString, NoDoubles, %mp3%
 	Fileappend, %mp3%`n, %AhkMediaListFile%
 else
-MsgBox,,æ·»åŠ å¤±è´¥,è¯¥æ–‡ä»¶å·²åœ¨æ’­æ”¾åˆ—è¡¨ä¸­!
+MsgBox,,Ìí¼ÓÊ§°Ü,¸ÃÎÄ¼şÒÑÔÚ²¥·ÅÁĞ±íÖĞ!
 Return
 
 PgUp::
@@ -773,10 +773,10 @@ VolumeC:
 VA_SetVolume(VSlider)
 Return
 
-; èœå•æ·»åŠ æ–‡ä»¶åˆ°åˆ—è¡¨
+; ²Ëµ¥Ìí¼ÓÎÄ¼şµ½ÁĞ±í
 MenuFileAdd:
 Gui,Submit, NoHide
-FileSelectFile, File, M,, æ·»åŠ æ–‡ä»¶, éŸ³é¢‘æ–‡ä»¶ (*.mp3; *.wma; *.wav; *.mid;)
+FileSelectFile, File, M,, Ìí¼ÓÎÄ¼ş, ÒôÆµÎÄ¼ş (*.mp3; *.wma; *.wav; *.mid;)
 if !File
 	return
 LV_Modify(0, "-Select")
@@ -788,7 +788,7 @@ Loop, % File0-1
 	w:=File%NextIndex%
 	mp3_loop =  %File1%\%w%
 	SplitPath, mp3_loop,,,ext, name
-	If ext in mp3,wma,wmv,wav,mpg,mid			;è¿™æ˜¯æˆ‘ç›®å‰å·²çŸ¥çš„èƒ½ç”¨soundplayæ’­æ”¾çš„æ ¼å¼
+	If ext in mp3,wma,wmv,wav,mpg,mid			;ÕâÊÇÎÒÄ¿Ç°ÒÑÖªµÄÄÜÓÃsoundplay²¥·ÅµÄ¸ñÊ½
 	{
 	SetFormat, float ,03
 	LV_Add("Focus Select",xuhao+0.0,name,ext, mp3_loop)
@@ -799,10 +799,10 @@ LV_ModifyCol()
 LV_Modify(xuhao,"+Vis")
 Return
 
-; èœå•æ·»åŠ æ–‡ä»¶å¤¹åˆ°åˆ—è¡¨
+; ²Ëµ¥Ìí¼ÓÎÄ¼ş¼Ğµ½ÁĞ±í
 MenuFolderAdd:
 Gui,Submit, NoHide
-FileSelectFolder,  Folder,,, é€‰æ‹©éŸ³é¢‘æ–‡ä»¶æ‰€åœ¨æ–‡ä»¶å¤¹
+FileSelectFolder,  Folder,,, Ñ¡ÔñÒôÆµÎÄ¼şËùÔÚÎÄ¼ş¼Ğ
 If !Folder
 	return
 LV_Modify(0, "-Select")
@@ -821,7 +821,7 @@ LV_ModifyCol()
 LV_Modify(xuhao,"+Vis")
 return
 
-; æ‹–æ‹½æ–‡ä»¶åˆ°çª—å£
+; ÍÏ×§ÎÄ¼şµ½´°¿Ú
 GuiDropFiles:
 Gui, Submit, NoHide
 LV_Modify(0, "-Select")
@@ -830,7 +830,7 @@ Loop, Parse, A_GuiEvent, `n
 {
 	xuhao++
 	SplitPath, A_LoopField,,,ext, name
-	If ext in mp3,wma,wmv,wav,mpg,mid			;è¿™æ˜¯æˆ‘ç›®å‰å·²çŸ¥çš„èƒ½ç”¨soundplayæ’­æ”¾çš„æ ¼å¼
+	If ext in mp3,wma,wmv,wav,mpg,mid			;ÕâÊÇÎÒÄ¿Ç°ÒÑÖªµÄÄÜÓÃsoundplay²¥·ÅµÄ¸ñÊ½
 	{
 	SetFormat, float ,03
 	LV_Add("Focus Select",xuhao+0.0, name,ext, A_LoopField)
@@ -841,7 +841,7 @@ Loop, Parse, A_GuiEvent, `n
 LV_Modify(xuhao,"+Vis")
 Return
 
-; èœå•æ’­æ”¾æ‰€é€‰(å•é€‰)
+; ²Ëµ¥²¥·ÅËùÑ¡(µ¥Ñ¡)
 MenuOpen:
 LV_GetText(Mp3, LV_GetNext(Row), 4)
 PlaylistIndex:=LV_GetNext(Row)
@@ -868,7 +868,7 @@ if FileExist(Mp3)
 	}
 Return
 
-; èœå•/å³é”® æ‰“å¼€æ‰€é€‰æ–‡ä»¶ä½ç½®(å•é€‰)
+; ²Ëµ¥/ÓÒ¼ü ´ò¿ªËùÑ¡ÎÄ¼şÎ»ÖÃ(µ¥Ñ¡)
 MenuOpenFilePath:
 OpenfilePath:
 LV_GetText(mp3_loop, LV_GetNext(Row), 4)
@@ -876,13 +876,13 @@ If Fileexist(mp3_loop)
 Run,% "explorer.exe /select," mp3_loop
  Return
 
-; èœå•ä»åˆ—è¡¨ä¸­åˆ é™¤(å¯å¤šé€‰)
+; ²Ëµ¥´ÓÁĞ±íÖĞÉ¾³ı(¿É¶àÑ¡)
 MenuRemove:
 FlieLineCount :=TF_CountLines(AhkMediaListFile)
 LVLineCount :=LV_GetCount()
 if(FlieLineCount - LVLineCount >2)
 {
-msgbox,é”™è¯¯ï¼ä¸æ˜¯æ’­æ”¾åˆ—è¡¨ï¼Œå½“å‰èœå•ä¸å¯ç”¨ã€‚
+msgbox,´íÎó£¡²»ÊÇ²¥·ÅÁĞ±í£¬µ±Ç°²Ëµ¥²»¿ÉÓÃ¡£
 return
 }
 else
@@ -901,7 +901,7 @@ gosub,refreshList
 Return
 
 MenuClear:
-MsgBox,4,æ¸…ç©ºåˆ—è¡¨,ç¡®å®è¦å°†åˆ—è¡¨æ¸…ç©ºå—ï¼Ÿç§»åŠ¨åˆ—è¡¨æ–‡ä»¶åˆ°å¤‡ä»½Backupsæ–‡ä»¶å¤¹ï¼ˆåªä¿ç•™ä¸€ä¸ªå¤‡ä»½ï¼‰ã€‚
+MsgBox,4,Çå¿ÕÁĞ±í,È·ÊµÒª½«ÁĞ±íÇå¿ÕÂğ£¿ÒÆ¶¯ÁĞ±íÎÄ¼şµ½±¸·İBackupsÎÄ¼ş¼Ğ£¨Ö»±£ÁôÒ»¸ö±¸·İ£©¡£
 IfMsgBox Yes
 {
 LV_Delete()
@@ -911,21 +911,21 @@ FileDelete,%A_ScriptDir%\Backups\playlist.txt
 
 	FileMove, %AhkMediaListFile%,%A_ScriptDir%\Backups,0
 if ErrorLevel
-MsgBox,,æ¸…ç©ºåˆ—è¡¨å¤±è´¥,åˆ—è¡¨å·²ç»ä¸ºç©ºæˆ–æ–‡ä»¶ä¸å¯è¯»å†™
+MsgBox,,Çå¿ÕÁĞ±íÊ§°Ü,ÁĞ±íÒÑ¾­Îª¿Õ»òÎÄ¼ş²»¿É¶ÁĞ´
 	Fileappend, , %AhkMediaListFile%
 }
 Return
 
-; å•æ›²å¾ªç¯
+; µ¥ÇúÑ­»·
 PSingleCycle:
 SingleCycle := !SingleCycle
 if(SingleCycle=true)
-Menu,PlayBack,Check,å•æ›²å¾ªç¯(&D)
+Menu,PlayBack,Check,µ¥ÇúÑ­»·(&D)
 else
-Menu,PlayBack,UnCheck,å•æ›²å¾ªç¯(&D)
+Menu,PlayBack,UnCheck,µ¥ÇúÑ­»·(&D)
 Return
 
-; æ’­æ”¾åˆ—è¡¨
+; ²¥·ÅÁĞ±í
 PTList:
 NowPlayFile = %AhkMediaListFile%
 FileGetSize, playlistfilesize, %AhkMediaListFile%
@@ -935,36 +935,36 @@ Else
 {
 PlayListdefalut := "t"
 IniWrite,t, %run_iniFile%, AhkPlayer, PlayListdefalut
-Menu, PlayBack,Check,æ’­æ”¾åˆ—è¡¨(&L)
-Menu, PlayBack,UnCheck,æ’­æ”¾åª’ä½“åº“(&M)
-Menu, PlayBack,Disable,æ’­æ”¾åˆ—è¡¨(&L)
-Menu, PlayBack, Enable,æ’­æ”¾åª’ä½“åº“(&M)
+Menu, PlayBack,Check,²¥·ÅÁĞ±í(&L)
+Menu, PlayBack,UnCheck,²¥·ÅÃ½Ìå¿â(&M)
+Menu, PlayBack,Disable,²¥·ÅÁĞ±í(&L)
+Menu, PlayBack, Enable,²¥·ÅÃ½Ìå¿â(&M)
 
 ;IniRead, PlayListdefalut, %run_iniFile%, AhkPlayer, PlayListdefalut
 ;If (PlayListdefalut="t")
 ;{
-Menu,PlayBack,Enable,--ä¸‹ä¸€é¦–è·Ÿéšé¼ æ ‡(&F)
+Menu,PlayBack,Enable,--ÏÂÒ»Ê×¸úËæÊó±ê(&F)
 IniRead, followmouse, %run_iniFile%, AhkPlayer, followmouse
 If (followmouse="t")
-Menu,PlayBack,Check,--ä¸‹ä¸€é¦–è·Ÿéšé¼ æ ‡(&F)
+Menu,PlayBack,Check,--ÏÂÒ»Ê×¸úËæÊó±ê(&F)
 ;}
 }
 gosub,refreshList
-Gui,Show,,æ’­æ”¾åˆ—è¡¨ - AhkPlayer
+Gui,Show,,²¥·ÅÁĞ±í - AhkPlayer
 Return
 
-; æ’­æ”¾åª’ä½“åº“
+; ²¥·ÅÃ½Ìå¿â
 PTLib:
 NowPlayFile := AhkMediaLibFile
-Menu, PlayBack, Check,æ’­æ”¾åª’ä½“åº“(&M)
-Menu, PlayBack, Disable,æ’­æ”¾åª’ä½“åº“(&M)
-Menu, PlayBack, Enable,æ’­æ”¾åˆ—è¡¨(&L)
-Menu, PlayBack, UnCheck,æ’­æ”¾åˆ—è¡¨(&L)
-Menu, PlayBack, Disable,--ä¸‹ä¸€é¦–è·Ÿéšé¼ æ ‡(&F)
+Menu, PlayBack, Check,²¥·ÅÃ½Ìå¿â(&M)
+Menu, PlayBack, Disable,²¥·ÅÃ½Ìå¿â(&M)
+Menu, PlayBack, Enable,²¥·ÅÁĞ±í(&L)
+Menu, PlayBack, UnCheck,²¥·ÅÁĞ±í(&L)
+Menu, PlayBack, Disable,--ÏÂÒ»Ê×¸úËæÊó±ê(&F)
 PlayListdefalut := "f"
 IniWrite,f, %run_iniFile%, AhkPlayer, PlayListdefalut
 LV_Delete()
-Gui,Show,,æ’­æ”¾åª’ä½“åº“ - AhkPlayer
+Gui,Show,,²¥·ÅÃ½Ìå¿â - AhkPlayer
 Return
 
 
@@ -972,13 +972,13 @@ PTLF:
 IniRead, followmouse, %run_iniFile%, AhkPlayer, followmouse
 If (followmouse="t")
 {
-Menu,PlayBack,unCheck,--ä¸‹ä¸€é¦–è·Ÿéšé¼ æ ‡(&F)
+Menu,PlayBack,unCheck,--ÏÂÒ»Ê×¸úËæÊó±ê(&F)
 IniWrite,f, %run_iniFile%, AhkPlayer, followmouse
 followmouse:="f"
 }
 Else
 {
-Menu,PlayBack,Check,--ä¸‹ä¸€é¦–è·Ÿéšé¼ æ ‡(&F)
+Menu,PlayBack,Check,--ÏÂÒ»Ê×¸úËæÊó±ê(&F)
 IniWrite,t, %run_iniFile%, AhkPlayer, followmouse
 followmouse:="t"
 }
@@ -988,13 +988,13 @@ GoRandom:
 IniRead, PlayRandom, %run_iniFile%, AhkPlayer, PlayRandom
 If (PlayRandom="t")
 {
-Menu,PlayBack,unCheck,éšæœºæ’­æ”¾(&R)
+Menu,PlayBack,unCheck,Ëæ»ú²¥·Å(&R)
 IniWrite,f, %run_iniFile%, AhkPlayer, PlayRandom
 PlayRandom :="f"
 }
 Else
 {
-Menu,PlayBack,Check,éšæœºæ’­æ”¾(&R)
+Menu,PlayBack,Check,Ëæ»ú²¥·Å(&R)
 IniWrite,t, %run_iniFile%, AhkPlayer, PlayRandom
 PlayRandom :="t"
 }
@@ -1022,15 +1022,15 @@ Return
 
 About:
 Gui,3:Default
-Gui,Add,Text, ,åç§°ï¼šAhkPlayer`nä½œè€…ï¼šæ¡‚æ—å°å»–
-Gui,Add,Text,y+10,ä¸»é¡µï¼š
+Gui,Add,Text, ,Ãû³Æ£ºAhkPlayer`n×÷Õß£º¹ğÁÖĞ¡ÁÎ
+Gui,Add,Text,y+10,Ö÷Ò³£º
 Gui,Add,Text,y+10  cBlue gLink_1,https://github.com/wyagd001/MyScript
-Gui,Add,Text,y+10,è‡´è°¢ï¼š
+Gui,Add,Text,y+10,ÖÂĞ»£º
 Gui,Add,Text,y+10  cBlue gLink_2,Sound.ahk - fincs
 Gui,Add,Text,y+10  cBlue gLink_3,MCI Library - jballi
 Gui,Add,Text,y+10  cBlue gLink_4,QuickSound - Stefan V
 Gui,Add,Text,y+10  cBlue gLink_5,NighPlayer - NiGH(dracula004)
-Gui,show,,å…³äº
+Gui,show,,¹ØÓÚ
 Return
 
 Link_1:
@@ -1053,7 +1053,7 @@ Link_5:
 Run,http://ahk8.com/thread-2570.html
 Return
 
-; æŸ¥æ‰¾æ­Œæ›²
+; ²éÕÒ¸èÇú
 find:
 Libxuhao=0
 LV_Delete()
@@ -1076,7 +1076,7 @@ Loop, read, %AhkMediaLibFile%
 LV_ModifyCol()
 Return
 
-; åˆ·æ–°åˆ—è¡¨
+; Ë¢ĞÂÁĞ±í
 refreshList:
 LV_Delete()
 xuhao = 0
@@ -1092,7 +1092,7 @@ Loop, read, %AhkMediaListFile%
 }
 Return
 
-; æŸ¥æ‰¾ç»“æœè¿½åŠ åˆ°åˆ—è¡¨
+; ²éÕÒ½á¹û×·¼Óµ½ÁĞ±í
 FindToList:
 ;Findsave:
 ;FileDelete, %AhkMediaListFile%
@@ -1113,11 +1113,11 @@ FileRead, NoDoubles, %AhkMediaListFile%
 	}
 Return
 
-; å³é”®æ¸…ç©ºåˆ—è¡¨æˆ–ä»åˆ—è¡¨ä¸­åˆ é™¤
+; ÓÒ¼üÇå¿ÕÁĞ±í»ò´ÓÁĞ±íÖĞÉ¾³ı
 Remove:
-If (A_ThisMenuItem = "æ¸…ç©ºåˆ—è¡¨")
+If (A_ThisMenuItem = "Çå¿ÕÁĞ±í")
    {
-MsgBox,4,æ¸…ç©ºåˆ—è¡¨,ç¡®å®è¦å°†åˆ—è¡¨æ¸…ç©ºå—ï¼Ÿç§»åŠ¨åˆ—è¡¨æ–‡ä»¶åˆ°å¤‡ä»½Backupsæ–‡ä»¶å¤¹ï¼ˆåªä¿ç•™ä¸€ä¸ªå¤‡ä»½ï¼‰ã€‚
+MsgBox,4,Çå¿ÕÁĞ±í,È·ÊµÒª½«ÁĞ±íÇå¿ÕÂğ£¿ÒÆ¶¯ÁĞ±íÎÄ¼şµ½±¸·İBackupsÎÄ¼ş¼Ğ£¨Ö»±£ÁôÒ»¸ö±¸·İ£©¡£
 IfMsgBox Yes
 {
 	LV_Delete()
@@ -1126,17 +1126,17 @@ if (playlistfilesize <> 0)
 FileDelete,%A_ScriptDir%\Backups\playlist.txt
 	FileMove, %AhkMediaListFile%,%A_ScriptDir%\Backups,0
 if ErrorLevel
-MsgBox,,æ¸…ç©ºåˆ—è¡¨å¤±è´¥,åˆ—è¡¨å·²ç»ä¸ºç©ºæˆ–æ–‡ä»¶ä¸å¯è¯»å†™
+MsgBox,,Çå¿ÕÁĞ±íÊ§°Ü,ÁĞ±íÒÑ¾­Îª¿Õ»òÎÄ¼ş²»¿É¶ÁĞ´
 	Fileappend, , %AhkMediaListFile%
 	}
 }
-else If (A_ThisMenuItem = "ä»åˆ—è¡¨ä¸­åˆ é™¤(å¯å¤šé€‰)")
+else If (A_ThisMenuItem = "´ÓÁĞ±íÖĞÉ¾³ı(¿É¶àÑ¡)")
 {
 FlieLineCount :=TF_CountLines(AhkMediaListFile)
 LVLineCount :=LV_GetCount()
 if(FlieLineCount - LVLineCount >2)
 {
-msgbox,é”™è¯¯ï¼ä¸æ˜¯æ’­æ”¾åˆ—è¡¨ï¼Œå½“å‰èœå•ä¸å¯ç”¨ã€‚
+msgbox,´íÎó£¡²»ÊÇ²¥·ÅÁĞ±í£¬µ±Ç°²Ëµ¥²»¿ÉÓÃ¡£
 return
 }
 else
@@ -1155,7 +1155,7 @@ gosub,refreshlist
 }
 Return
 
-; å³é”®ç§»é™¤é‡å¤ä¸æ— æ•ˆé¡¹
+; ÓÒ¼üÒÆ³ıÖØ¸´ÓëÎŞĞ§Ïî
 RemoveDuplicateInvalid:
 TF_RemoveDuplicateLines(AhkMediaListFile, "", "", 0,false)
 sleep,200
@@ -1174,7 +1174,7 @@ sleep,200
 gosub,refreshList
 Return
 
-; å³é”®å°†é€‰ä¸­è¡Œæ·»åŠ åˆ°æ’­æ”¾åˆ—è¡¨
+; ÓÒ¼ü½«Ñ¡ÖĞĞĞÌí¼Óµ½²¥·ÅÁĞ±í
 AddList:
 RowNumber = 0
 FileRead, NoDoubles, %AhkMediaListFile%
@@ -1190,7 +1190,7 @@ else
 Repeat .= mp3_loop . "`n"
 }
 if Repeat
-MsgBox,,æ·»åŠ å¤±è´¥, ä»¥ä¸‹æ–‡ä»¶å·²åœ¨åˆ—è¡¨ä¸­!`n%Repeat%
+MsgBox,,Ìí¼ÓÊ§°Ü, ÒÔÏÂÎÄ¼şÒÑÔÚÁĞ±íÖĞ!`n%Repeat%
 
 Repeat =
 Return
@@ -1202,7 +1202,7 @@ else if (A_GuiEvent = "DoubleClick")
 gosub,PlayLV
 return
 
-; å³é”®æ’­æ”¾æ‰€é€‰æ­Œæ›²
+; ÓÒ¼ü²¥·ÅËùÑ¡¸èÇú
 PlayLV:
 LV_GetText(mp3, LV_GetNext(), 4)
 PlaylistIndex:= LV_GetNext()
@@ -1271,23 +1271,23 @@ CheckStatus:
   Status := MCI_Status(hSound)
   If Status = stopped
   {
-    SB_SetText("åœæ­¢æ’­æ”¾ " SName,1)
+    SB_SetText("Í£Ö¹²¥·Å " SName,1)
     SongTime = 0:0:0 / %lhh%:%lm%:%ls%
     SB_SetText(SongTime,2)
     SB_SetProgress(0 ,3)
   }
   If Status = Paused
   {
-    SB_SetText("æš‚åœ " SName,1)
+    SB_SetText("ÔİÍ£ " SName,1)
   }
   If playing = 1
   {
   if (PlayRandom="t")
-   temp_sb1:="æ­£åœ¨æ’­æ”¾(éšæœº) " SName 
+   temp_sb1:="ÕıÔÚ²¥·Å(Ëæ»ú) " SName 
 if (PlayRandom="f")
-temp_sb1:="æ­£åœ¨æ’­æ”¾(é¡ºåº) " SName 
+temp_sb1:="ÕıÔÚ²¥·Å(Ë³Ğò) " SName 
     if SingleCycle
-    temp_sb1:="æ­£åœ¨æ’­æ”¾(å•æ›²å¾ªç¯) " SName 
+    temp_sb1:="ÕıÔÚ²¥·Å(µ¥ÇúÑ­»·) " SName 
    SB_SetText(temp_sb1,1)
     SongTime = %hh%:%mm%:%ss% / %lhh%:%lm%:%ls%
     SB_SetText(SongTime,2)
