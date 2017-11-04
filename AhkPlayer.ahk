@@ -116,7 +116,7 @@ OnExit ExitSub
 
 Gosub,GuiShow
 SetTimer,CheckStatus,250
-SetTimer,Updatevolume,1000
+SetTimer,Updatevolume,2000
 
 if (AutoUpdateMediaLib="t")
 Gosub, UpdateMediaLib
@@ -201,7 +201,6 @@ mp3 := Mp3Playing
     SetTimer,UpdateSlider,100
 	SetTimer,CheckStatus,250
 	Gosub, ToolTipMP3
-    ;Gosub命令：程序跳转到ToolTipMP3标签，执行标签下的语句，遇到Return返回，才继续执行该行下面的语句即继续执行Gosub, StarPlay   Goto命令则不会返回
 	Gosub, StarPlay
 Return
 
@@ -302,7 +301,7 @@ SingleCycleplay:
 	SetTimer,UpdateSlider,100
 	SetTimer,CheckStatus,250
 	Gosub, ToolTipMP3
-	; Gosub命令：程序跳转到ToolTipMP3标签，执行标签下的语句，遇到Return返回，
+	; Gosub命令：程序跳转到ToolTipMP3标签，执行标签下的语句，遇到Return或break返回，
 	; 才继续执行该行下面的语句即继续执行Gosub, StarPlay   Goto命令则不会返回
 	; 播放下一首歌曲
 	Gosub, StarPlay
@@ -326,7 +325,7 @@ Gui, Add,Button, x+5 yp h20 grefreshList,返回列表
 Gui, Add,Button, x+5 yp h20 gFindToList,追加到列表
 
 Gui, Add,ListView ,xm Grid w600 h400 gListView vListView Altsubmit, 序号|曲名|类型|位置
-Gui, Add,Slider,xm w600 h25 +Disabled +ToolTip vSlider gSlider
+Gui, Add,Slider,xm w600 h25 +Disabled -ToolTip vSlider gSlider AltSubmit
 Gui, Add,Picture,xm+150 y+10 vstop gStop,%A_ScriptDir%\pic\AhkPlayer\stop.bmp
 Gui, Add,Picture,x+1 yp-1 gprev,%A_ScriptDir%\pic\AhkPlayer\prev.bmp
 Gui, Add,Picture,x+1 yp-10 gMyPause vpausepic,%A_ScriptDir%\pic\AhkPlayer\play.bmp
@@ -336,13 +335,14 @@ Gui, Add,Slider, x+1 yp+10 w100 h20 vVSlider Range0-100 +ToolTip  gVolumeC
 Gui, font,cred bold s24,Verdana
 Gui, Add, text, x+5 yp-15  vLrcS  gLrcShow ,Lrc
 Gui, font
-Gui, Add, StatusBar, xm yp w600 h30 , 未播放文件
+Gui, Add, StatusBar, xm yp w600 h30, 未播放文件
 vol_Master := VA_GetVolume()
 Guicontrol,,VSlider,%vol_Master%
 SB_SetParts(300,100,220)
-SB_SetProgress(0 ,3,+Smooth BackgroundYellow cBlue)
+SB_SetProgress(0 ,3,"-smooth")
+AhkPlayer_Title:="播放媒体库 - AhkPlayer"
 If (PlayListdefalut="t"){
-Gui,Show,,播放列表 - AhkPlayer
+AhkPlayer_Title:="播放列表 - AhkPlayer"
 Loop, read, %AhkMediaListFile%
 	{
 	xuhao++
@@ -353,8 +353,7 @@ Loop, read, %AhkMediaListFile%
     LV_ModifyCol()
 }
 }
-else
-Gui,Show,,播放媒体库 - AhkPlayer
+Gui,Show,,%AhkPlayer_Title%
 Return
 
 ; 停止播放，返回开头
@@ -394,9 +393,9 @@ ToolTipMP3:
 
 	MCI_ToHHMMSS2(pos, hh, mm, ss)
 	MCI_ToHHMMSS2(len, lhh, lm, ls)
-	If (ToolMode = 0)
-			ToolTip
-	Else If (ToolMode = 1){
+	;If (ToolMode = 0)
+			;tooltip
+	 If (ToolMode = 1){
 		    if lhh=0
 			ToolTip, %sName%`n%mm%:%ss% / Length %lm%:%ls%, %ToolX%, %ToolY%
 			else
@@ -717,29 +716,21 @@ Return
 !F7::
 If hide=1
 {
-SetTimer,Updatevolume,1000
-Sleep,150
-gui,Show
-hide=0
+	SetTimer,Updatevolume,2000
+	Sleep,150
+	gui,Show,,%AhkPlayer_Title%
+	hide=0
 }
 Else
 {
-IfWinNotActive,播放列表 - AhkPlayer
-WinActivate,播放列表 - AhkPlayer
-else
-{
-gui,hide
-SetTimer,Updatevolume,off
-hide=1
-}
-IfWinNotActive,播放媒体库 - AhkPlayer
-WinActivate,播放媒体库 - AhkPlayer
-else
-{
-gui,hide
-SetTimer,Updatevolume,off
-hide=1
-}
+	IfWinNotActive,%AhkPlayer_Title%
+		WinActivate,%AhkPlayer_Title%
+	else
+	{
+		gui,Show,hide,%AhkPlayer_Title%
+		SetTimer,Updatevolume,off
+		hide=1
+	}
 }
 Return
 
@@ -934,6 +925,7 @@ NowPlayFile := AhkMediaLibFile
 Else
 {
 PlayListdefalut := "t"
+AhkPlayer_Title:="播放列表 - AhkPlayer"
 IniWrite,t, %run_iniFile%, AhkPlayer, PlayListdefalut
 Menu, PlayBack,Check,播放列表(&L)
 Menu, PlayBack,UnCheck,播放媒体库(&M)
@@ -950,7 +942,7 @@ Menu,PlayBack,Check,--下一首跟随鼠标(&F)
 ;}
 }
 gosub,refreshList
-Gui,Show,,播放列表 - AhkPlayer
+Gui,Show,,%AhkPlayer_Title%
 Return
 
 ; 播放媒体库
@@ -962,9 +954,10 @@ Menu, PlayBack, Enable,播放列表(&L)
 Menu, PlayBack, UnCheck,播放列表(&L)
 Menu, PlayBack, Disable,--下一首跟随鼠标(&F)
 PlayListdefalut := "f"
+AhkPlayer_Title:="播放媒体库 - AhkPlayer"
 IniWrite,f, %run_iniFile%, AhkPlayer, PlayListdefalut
 LV_Delete()
-Gui,Show,,播放媒体库 - AhkPlayer
+Gui,Show,,%AhkPlayer_Title%
 Return
 
 
@@ -1224,6 +1217,15 @@ SetTimer,CheckStatus,on
 return
 
 Slider:
+Gui,Submit,NoHide
+if(GetKeyState("LButton"))
+{
+MCI_ToHHMMSS2(Len*(Slider/100),thh,tmm,tss)
+tooltip % thh ":" tmm ":" tss
+ SetTimer, RemoveToolTip, 2000
+}
+else
+{
 if hSound
     {
     Status:=MCI_Status(hSound)
@@ -1254,8 +1256,13 @@ if hSound
     ;-- Reset focus
     GUIControl Focus,Stop
     }
-
+}
 Return
+
+RemoveToolTip:
+    SetTimer, RemoveToolTip, Off
+    ToolTip
+return
 
 UpdateSlider:
 if hSound
@@ -1271,14 +1278,36 @@ CheckStatus:
   Status := MCI_Status(hSound)
   If Status = stopped
   {
-    SB_SetText("停止播放 " SName,1)
+  if (PlayRandom="t")
+   temp_sb1:="停止播放(随机) " SName 
+if (PlayRandom="f")
+temp_sb1:="停止播放(顺序) " SName 
+    if SingleCycle
+    temp_sb1:="停止播放(单曲循环) " SName
+if (temp_sb1!=last_temp_sb1)
+{
+   SB_SetText(temp_sb1,1)
+last_temp_sb1:=temp_sb1
+}
     SongTime = 0:0:0 / %lhh%:%lm%:%ls%
     SB_SetText(SongTime,2)
     SB_SetProgress(0 ,3)
   }
   If Status = Paused
   {
-    SB_SetText("暂停 " SName,1)
+  if (PlayRandom="t")
+   temp_sb1:="暂停播放(随机) " SName 
+if (PlayRandom="f")
+temp_sb1:="暂停播放(顺序) " SName 
+    if SingleCycle
+    temp_sb1:="暂停播放(单曲循环) " SName
+if (temp_sb1!=last_temp_sb1)
+{
+   SB_SetText(temp_sb1,1)
+last_temp_sb1:=temp_sb1
+    SendMessage, 0x0410, 0x0003,, msctls_progress321,%AhkPlayer_Title%
+}
+    SB_SetProgress(opos ,3,"cred")
   }
   If playing = 1
   {
@@ -1287,12 +1316,17 @@ CheckStatus:
 if (PlayRandom="f")
 temp_sb1:="正在播放(顺序) " SName 
     if SingleCycle
-    temp_sb1:="正在播放(单曲循环) " SName 
+    temp_sb1:="正在播放(单曲循环) " SName
+if (temp_sb1!=last_temp_sb1)
+{
    SB_SetText(temp_sb1,1)
+last_temp_sb1:=temp_sb1
+    SendMessage, 0x0410, 0x0001,, msctls_progress321,%AhkPlayer_Title%
+}
     SongTime = %hh%:%mm%:%ss% / %lhh%:%lm%:%ls%
     SB_SetText(SongTime,2)
     opos := (pos/Len)*100
-    SB_SetProgress(opos ,3)
+    SB_SetProgress(opos ,3,"c87cefe")
   }
 Return
 

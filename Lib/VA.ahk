@@ -2,7 +2,7 @@
 
 ;
 ; MASTER CONTROLS
-;
+; https://autohotkey.com/board/topic/21984-vista-audio-control-functions/
 
 VA_GetMasterVolume(channel="", device_desc="playback")
 {
@@ -913,6 +913,7 @@ VA_xIPolicyConfigVista_SetDefaultEndpoint(this, DeviceId, Role) {
     return DllCall(NumGet(NumGet(this+0)+12*A_PtrSize), "ptr", this, "wstr", DeviceId, "int", Role)
 }
 
+; 当前窗口静音添加下面所有行
 VA_GetISimpleAudioVolume(Param)
 {
 	static IID_IASM2 := "{77AA99A0-1BD6-484F-8BC7-2C654C9A9B6F}"
@@ -985,7 +986,6 @@ VA_ISimpleAudioVolume_GetMute(this, ByRef Muted) {
 VA_ISimpleAudioVolume_SetMute(this, ByRef Muted, GuidEventContext="") {
 	return DllCall(NumGet(NumGet(this+0)+5*A_PtrSize), "ptr", this, "int", Muted, "ptr", VA_GUID(GuidEventContext))
 }
-
 
 VA_GetAppVolume(App)
 {

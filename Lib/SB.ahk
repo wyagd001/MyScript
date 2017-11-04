@@ -1,7 +1,9 @@
 ; SB_SetProgress
 ; (w) by DerRaphael / Released under the Terms of EUPL 1.0
 ; see http://ec.europa.eu/idabc/en/document/7330 for details
-
+; https://autohotkey.com/board/topic/34593-stdlib-sb-setprogress/
+; When visual styles are enabled, PBM_SETBARCOLOR and PBM_SETBKCOLOR message has no effect.
+; win7 主题下颜色选项无效，需切换到经典主题才能显示出效果
 SB_SetProgress(Value=0,Seg=1,Ops="")
 {
    ; Definition of Constants
@@ -70,6 +72,7 @@ SB_SetProgress(Value=0,Seg=1,Ops="")
          Red:=0xFF0000,Blue:=0x0000FF,Fuchsia:=0xFF00FF,Aqua:=0x00FFFF
 
          If (RegExMatch(ops,"i)\bBackground(?P<C>[a-z0-9]+)\b",bg)) {
+
               if ((strlen(bgC)=6)&&(RegExMatch(bgC,"i)([0-9a-f]{6})")))
                   bgC := "0x" bgC
               else if !(RegExMatch(bgC,"i)^0x([0-9a-f]{1,6})"))
@@ -118,14 +121,13 @@ SB_SetProgress(Value=0,Seg=1,Ops="")
       Return -1
    } else
       Return hWndProg
-
 }
 
 MCI_ToHHMMSS2(milliseconds, ByRef Hour, ByRef Min, ByRef Sec){
 	milliseconds //= 1000
-	Sec := Mod(milliseconds, 60)
+	Sec := Round(Mod(milliseconds, 60))
 	milliseconds //= 60
-	Min := Mod(milliseconds, 60)
+	Min := Round(Mod(milliseconds, 60))
 	milliseconds //= 60
-	Hour := Mod(milliseconds, 60)
+	Hour := Round(Mod(milliseconds, 60))
 }
