@@ -19,7 +19,7 @@ Send, +{Home}^c
 ;Send, +{Home}^x
 ClipWait, 0.5
 StringReplace, Clipboard, Clipboard,==,,all
-q:=% Eval(Clipboard)
+q:=% ZTrim( Eval(Clipboard) )
 ;是否保留公式
 ;Send, {end}=
 SendInput,%q%
@@ -77,6 +77,8 @@ IfEqual y1, r,                Return Eval_(y2)/57.295779513
 IfEqual y1, pi,        Return 3.141592654
 Return %y1%(Eval_(y2))
 }
+
+
 
 /* 算式计算
 http://forum.ahkbbs.cn/thread-1945-1-1.html

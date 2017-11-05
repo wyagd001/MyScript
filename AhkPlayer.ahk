@@ -359,13 +359,13 @@ Return
 ; 停止播放，返回开头
 Stop:
   SetTimer,CheckStatus,Off
-  playing=0
   MCI_Stop(hSound)
   MCI_Seek(hSound,0)
   Menu, PlayBack, Check,停止(&S)
   Gui,2:hide
   lrcclear()
   SetTimer, clock,Off
+  GUIControl,,Slider,0
   gosub,CheckStatus
 Return
 
@@ -537,9 +537,10 @@ MyPause:
 			Menu, PlayBack, UnCheck,暂停/播放(&P)
 			if(hidelrc=0)
 				Gosub, Lrc
-			SetTimer,CheckStatus,100
+			SetTimer,CheckStatus,250
+			SetTimer UpdateSlider,on
 		}
-		Else
+		Else if Status = Paused
 		{
 			MCI_Resume(hSound)
 			if(hidelrc=0)
@@ -550,7 +551,7 @@ MyPause:
 			Menu, PlayBack, ToggleCheck,暂停/播放(&P)
 		}
 		GuiControl,,pausepic,	%A_ScriptDir%\pic\AhkPlayer\play.bmp
-		playing = 1
+		SetTimer UpdateSlider,on
 	}
 	Else
 	{
@@ -563,8 +564,8 @@ MyPause:
 			gosub lrcshow
 		}
 		Menu, PlayBack, ToggleCheck,暂停/播放(&P)
-		playing = 0
 		GuiControl,,pausepic,%A_ScriptDir%\pic\AhkPlayer\pause.bmp
+		SetTimer UpdateSlider,off
 	}
 Return
 
@@ -1217,28 +1218,32 @@ SetTimer,CheckStatus,on
 return
 
 Slider:
-Gui,Submit,NoHide
-if(GetKeyState("LButton"))
-{
-MCI_ToHHMMSS2(Len*(Slider/100),thh,tmm,tss)
-tooltip % thh ":" tmm ":" tss
- SetTimer, RemoveToolTip, 2000
-}
-else
-{
-if hSound
-    {
-    Status:=MCI_Status(hSound)
-    if Status in Playing,Paused
-        {
-        MCI_Play(hSound,"from " . floor(Len*(Slider/100)),"NotifyEndOfPlay")
-
-	IfWinExist, %name% - AhkPlayer
+	Gui,Submit,NoHide
+	SetTimer,CheckStatus,off
+	if(GetKeyState("LButton"))
 	{
-	SetTimer, clock, off
-	lrcpos := %	floor(Len*(Slider/100))
-    gosub,LRC
-   }
+		MCI_ToHHMMSS2(Len*(Slider/100),thh,tmm,tss)
+		if (lhh=0)
+			tooltip % tmm ":" tss
+		else
+			tooltip % thh ":" tmm ":" tss
+		SetTimer, RemoveToolTip, 2000
+	}
+	else
+	{
+		if hSound
+		{
+			Status:=MCI_Status(hSound)
+			if Status in Playing,Paused
+			{
+					MCI_Play(hSound,"from " . floor(Len*(Slider/100)),"NotifyEndOfPlay")
+
+					IfWinExist, %name% - AhkPlayer
+					{
+						SetTimer, clock, off
+						lrcpos := %	floor(Len*(Slider/100))
+						gosub,LRC
+					}
 
             ;-- MCI_Seek is not used to reposition the media in this example
             ;   because the function will cause a Notify interruption for most
@@ -1249,14 +1254,15 @@ if hSound
             ;   callback) while media is playing will abort the original Notify
             ;   condition (if any) and will create a new Notify condition.
 
-        if Status=Paused
-            MCI_Pause(hSound)
-        }
+				if Status=Paused
+					MCI_Pause(hSound)
+			}
 
     ;-- Reset focus
-    GUIControl Focus,Stop
-    }
-}
+			GUIControl Focus,Stop
+		}
+	}
+	SetTimer,CheckStatus,on
 Return
 
 RemoveToolTip:
@@ -1275,59 +1281,78 @@ if hSound
 return
 
 CheckStatus:
-  Status := MCI_Status(hSound)
-  If Status = stopped
-  {
-  if (PlayRandom="t")
-   temp_sb1:="停止播放(随机) " SName 
-if (PlayRandom="f")
-temp_sb1:="停止播放(顺序) " SName 
-    if SingleCycle
-    temp_sb1:="停止播放(单曲循环) " SName
-if (temp_sb1!=last_temp_sb1)
-{
-   SB_SetText(temp_sb1,1)
-last_temp_sb1:=temp_sb1
-}
-    SongTime = 0:0:0 / %lhh%:%lm%:%ls%
-    SB_SetText(SongTime,2)
-    SB_SetProgress(0 ,3)
-  }
-  If Status = Paused
-  {
-  if (PlayRandom="t")
-   temp_sb1:="暂停播放(随机) " SName 
-if (PlayRandom="f")
-temp_sb1:="暂停播放(顺序) " SName 
-    if SingleCycle
-    temp_sb1:="暂停播放(单曲循环) " SName
-if (temp_sb1!=last_temp_sb1)
-{
-   SB_SetText(temp_sb1,1)
-last_temp_sb1:=temp_sb1
-    SendMessage, 0x0410, 0x0003,, msctls_progress321,%AhkPlayer_Title%
-}
-    SB_SetProgress(opos ,3,"cred")
-  }
-  If playing = 1
-  {
-  if (PlayRandom="t")
-   temp_sb1:="正在播放(随机) " SName 
-if (PlayRandom="f")
-temp_sb1:="正在播放(顺序) " SName 
-    if SingleCycle
-    temp_sb1:="正在播放(单曲循环) " SName
-if (temp_sb1!=last_temp_sb1)
-{
-   SB_SetText(temp_sb1,1)
-last_temp_sb1:=temp_sb1
-    SendMessage, 0x0410, 0x0001,, msctls_progress321,%AhkPlayer_Title%
-}
-    SongTime = %hh%:%mm%:%ss% / %lhh%:%lm%:%ls%
-    SB_SetText(SongTime,2)
-    opos := (pos/Len)*100
-    SB_SetProgress(opos ,3,"c87cefe")
-  }
+	Status := MCI_Status(hSound)
+	If Status = stopped
+	{
+		if (PlayRandom="t")
+			temp_sb1:="停止播放(随机) " SName 
+		else if (PlayRandom="f")
+			temp_sb1:="停止播放(顺序) " SName 
+		if SingleCycle
+			temp_sb1:="停止播放(单曲循环) " SName
+		if (lhh=0)
+			SongTime = 0:00 / %lm%:%ls%
+		else
+			SongTime = 0:0:00 / %lhh%:%lm%:%ls%
+		opos:=0
+	}
+	else If Status = Paused
+	{
+		if (PlayRandom="t")
+			temp_sb1:="暂停播放(随机) " SName 
+		else if (PlayRandom="f")
+			temp_sb1:="暂停播放(顺序) " SName 
+		if SingleCycle
+			temp_sb1:="暂停播放(单曲循环) " SName
+		if (lhh=0)
+			SongTime = %mm%:%ss% / %lm%:%ls%
+		else
+			SongTime = %hh%:%mm%:%ss% / %lhh%:%lm%:%ls%
+		opos := (pos/Len)*100
+		opos_color:=red
+		opos_color_win7:=0x0003
+	}
+	else If Status = playing
+	{
+		if (PlayRandom="t")
+			temp_sb1:="正在播放(随机) " SName 
+		else if (PlayRandom="f")
+			temp_sb1:="正在播放(顺序) " SName 
+		if SingleCycle
+			temp_sb1:="正在播放(单曲循环) " SName
+		if (lhh=0)
+			SongTime = %mm%:%ss% / %lm%:%ls%
+		else
+			SongTime = %hh%:%mm%:%ss% / %lhh%:%lm%:%ls%
+		opos := (pos/Len)*100
+		opos_color:=87cefe
+		opos_color_win7:=0x0001
+	}
+		if (temp_sb1!=last_temp_sb1)
+		{
+			SB_SetText(temp_sb1,1)
+			last_temp_sb1:=temp_sb1
+		}
+		if (SongTime!=last_SongTime)
+		{
+			SB_SetText(SongTime,2)
+			last_SongTime:=SongTime
+		}
+		if (opos!=last_opos)
+		{
+			SB_SetProgress(opos ,3)
+			last_opos:=opos
+		}
+		if (opos_color!=last_opos_color)
+		{
+			SB_SetProgress(opos ,3,"c"opos_color)
+			last_opos_color:=opos_color
+		}
+		if (opos_color_win7!=last_opos_color_win7)
+		{
+			SendMessage, 0x0410, opos_color_win7,, msctls_progress321,%AhkPlayer_Title%
+			last_opos_color_win7:=opos_color_win7
+		}
 Return
 
 Updatevolume:
@@ -1347,7 +1372,6 @@ volimage = %A_ScriptDir%\pic\vol.ico
    }
 Return
 
-
 GuiEscape:
 GuiClose:
 SetTimer,Updatevolume,off
@@ -1357,7 +1381,6 @@ Return
 
 3GuiEscape:
 3GuiClose:
-SetTimer,Updatevolume,off
 gui,3:Destroy
 Return
 

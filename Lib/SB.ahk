@@ -126,6 +126,8 @@ SB_SetProgress(Value=0,Seg=1,Ops="")
 MCI_ToHHMMSS2(milliseconds, ByRef Hour, ByRef Min, ByRef Sec){
 	milliseconds //= 1000
 	Sec := Round(Mod(milliseconds, 60))
+	if StrLen( Sec )=1
+    sec:="0" sec
 	milliseconds //= 60
 	Min := Round(Mod(milliseconds, 60))
 	milliseconds //= 60
