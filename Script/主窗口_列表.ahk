@@ -1,16 +1,5 @@
 ;目标文件夹的文件列表
 liebiao:
-/*
-Loop, parse, A_GuiEvent, `n, `r
-{
-   Gui, Submit, NoHide
-SetBatchLines, 3000
-ifNotExist, %Dir%
-{
-msgbox,没有设置目标文件夹，请拖拽文件夹到窗口或选择一个文件夹.
-return
-}
-*/
 if !TargetFolder or !FileExist(TargetFolder)
 {
 TargetFolder=
@@ -22,15 +11,23 @@ return
 rootdir := TargetFolder       ;快捷方式目录
 updatealways =1      ;1自动刷新，0禁止自动刷新
 SetTimer,ini,500
-TrayTip,目录菜单,初始化进行中,
+TrayTip,目录菜单,初始化进行中
+if updatealways = 1
+   gosub createdatabase
+else
+{
 ifnotexist %A_ScriptDir%\settings\tmp\folderlist.txt
    gosub, createdatabase
+}
+
+if !C_error
+{
 Menu,DirMenu,add,%rootdir%,godir
 Menu,DirMenu,disable,%rootdir%
 Menu,DirMenu,add,-`:`:打开 目录`:`:-,godir
-if updatealways = 1
-   gosub createdatabase
 goto createmenu
+}
+C_error=0
 return
 
 CreateMenu:
@@ -63,7 +60,6 @@ Loop, Read, %A_ScriptDir%\settings\tmp\folderlist.txt
       if pardir =
          pardir = DirMenu
       Menu,%pardir%,add,%file%,go
-
    }
 }
 SetTimer,ini,off
@@ -71,7 +67,6 @@ TrayTip
 Menu,DirMenu,show
 Menu,DirMenu,Deleteall
 return
-
 
 go:
    if A_ThisMenu = DirMenu
@@ -88,11 +83,33 @@ if A_ThisMenu = DirMenu
 return
 
 createdatabase:
-   runwait, %comspec% /c dir /s /b /os /a:d "%rootdir%" > "%A_ScriptDir%\settings\tmp\folderlist.txt",,hide
-   runwait, %comspec% /c dir /s /b /os /a:-d "%rootdir%" >> "%A_ScriptDir%\settings\tmp\folderlist.txt",,hide
+settimer,kill_process1,-6000
+   runwait, %comspec% /c dir /s /b /os /a:d "%rootdir%" > "%A_ScriptDir%\settings\tmp\folderlist.txt",,hide,cpid1
+   runwait, %comspec% /c dir /s /b /os /a:-d "%rootdir%" >> "%A_ScriptDir%\settings\tmp\folderlist.txt",,hide,cpid2
 return
 
 ini:
    TrayTip,目录菜单,初始化进行中,30
 return
 
+kill_process1:
+Process,Exist,%cpid1%
+settimer,kill_process2,-1000
+if ErrorLevel 
+{
+Process,Close,%cpid1%
+SetTimer,ini,off
+}
+return
+
+kill_process2:
+Process,Exist,%cpid2%
+if ErrorLevel 
+{
+SetTimer,ini,off
+TrayTip,目录菜单创建失败, 选定文件夹内文件过多`n无法创建目录文件列表，线程超时退出。
+Process,Close,%cpid2%
+FileRecycle, %A_ScriptDir%\settings\tmp\folderlist.txt
+C_error=1
+}
+return

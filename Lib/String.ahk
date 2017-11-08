@@ -209,3 +209,33 @@ SendStr(String)
     }
     SendInput %ascString%
 }
+
+; ·± ¡ú ¼ò
+fzj(trc)
+{
+		If !A_IsUnicode
+			Ansi2Unicode(tmp1, trc, 936)
+		Else
+			tmp1:=trc
+		VarSetCapacity(tmp2, 2*cch:=VarSetCapacity(tmp1)//2), LCMAP_SIMPLIFIED_CHINESE:=0x02000000 
+		DllCall( "LCMapStringW", UInt,0x400, UInt,LCMAP_SIMPLIFIED_CHINESE, Str,tmp1, UInt,cch, Str,tmp2, UInt,cch )
+		If !A_IsUnicode
+			return Unicode2Ansi(tmp2, spc, 936)
+		Else
+			return tmp2
+}
+
+; ¼ò ¡ú ·±
+jzf(spc)
+{
+		If !A_IsUnicode
+			Ansi2Unicode(tmp1, spc, 936)
+		Else
+			tmp1:=spc
+	VarSetCapacity(tmp2, 2*cch:=VarSetCapacity(tmp1)//2), LCMAP_TRADITIONAL_CHINESE := 0x4000000
+	DllCall( "LCMapStringW", UInt,0x400, UInt,LCMAP_TRADITIONAL_CHINESE, Str,tmp1, UInt,cch, Str,tmp2, UInt,cch )
+	If A_IsUnicode
+		return tmp2
+	else
+		return Unicode2Ansi(tmp2, trc,936)
+}

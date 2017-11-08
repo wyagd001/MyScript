@@ -343,7 +343,7 @@ Image = %A_ScriptDir%\pic\MusicPlayer\h_%DefaultPlayer%.bmp
 ;窗口  +无最小化按钮（任务栏无按钮）
 Gui,  +HwndHGUI +ToolWindow
 Gui, Add, Text, x1 y10 w90 h20 +Center, 目标/运行:
-Gui, Add, ComBoBox, x90 y10 w330 h300 HwndhComBoBox vDir,% ComBoBoxShowItems
+Gui, Add, ComBoBox , x90 y10 w330 h300 HwndhComBoBox vDir gAutoComplete,% ComBoBoxShowItems
 Gui, Add, Button, x425 y10 gselectfile,&.
 Gui, Add, Button, x445 y10 gselectfolder,选择(&S)
 Gui, Add, Button, x500 y10 default gopenbutton,打开(&O)
@@ -1027,6 +1027,10 @@ selectfolder:
 	GuiControl, +default,打开(&O)
 Return
 
+AutoComplete:
+CbAutoComplete()
+return
+
 OpenAudioPlayer:
 ;编辑脚本时，判断会出错
 DetectHiddenWindows On
@@ -1558,6 +1562,7 @@ RunScript(script) {
 #include %A_ScriptDir%\Script\主窗口_列表.ahk
 #include %A_ScriptDir%\Script\主窗口_附加功能.ahk
 #include %A_ScriptDir%\Script\主窗口_拖拽移动文件.ahk
+#include %A_ScriptDir%\Script\主窗口_切换编辑下拉列表.ahk
 #include %A_ScriptDir%\Script\USB.ahk
 #include %A_ScriptDir%\Script\光驱.ahk
 #include %A_ScriptDir%\Script\鼠标中键.ahk

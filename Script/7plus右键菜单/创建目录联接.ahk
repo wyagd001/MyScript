@@ -16,7 +16,7 @@ Return
 		Files:=GetCurrentFolder()
 	If !Files
 	{
-		MsgBox,,,获取文件路径失败2。,3
+		MsgBox,,,获取文件路径失败。,3
 		Return
 	}
 	Critical,Off
