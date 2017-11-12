@@ -668,11 +668,11 @@ hotkeycontent:="[快捷键]" . "`n" . hotkeycontent
 myhotkey := IniObj(hotkeycontent,OrderedArray()).快捷键
 for k,v in myhotkey
 {
-IfInString,k,前缀
+IfInString,k,前缀_
 continue
-Else IfInString,k,特定窗口
+Else IfInString,k,特定窗口_
 Hotkey, IfWinActive, %v%
-Else IfInString,k,排除窗口
+Else IfInString,k,排除窗口_
 Hotkey, IfWinNotActive, %v%
 Else If (v && !InStr(v,"@"))
  hotkey, %v%,%k% ;,UseErrorLevel
@@ -1278,6 +1278,15 @@ visable=0
 Return
 
 GuiEscape:
+if Gui_Esc=隐藏
+{
+Gui,hide
+visable=0
+}
+else if Gui_Esc=退出
+gosub,Menu_Tray_Exit
+Return
+
 Menu_Tray_Exit:
 FadeOut(AppTitle,50)
  ExitApp

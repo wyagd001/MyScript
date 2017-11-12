@@ -61,10 +61,12 @@ IniRead,hotkeycontent,%run_iniFile%,快捷键
 hotkeycontent:="[快捷键]" . "`n" . hotkeycontent
 for k,v in IniObj(hotkeycontent,OrderedArray()).快捷键
 {
-	If k contains 特定窗口,排除窗口
-	LV_Add("check",k,v,";" k,A_index)
-	Else
-	LV_Add(InStr(v,"@")?"" : "check",k,v,";",A_index)
+	col3_tmp=
+	if A_index=1
+		col3_tmp:=";全局热键"
+	If k contains 特定窗口_,排除窗口_
+		col3_tmp:=";" k
+	LV_Add(InStr(v,"@")?"" : "check",k,v,col3_tmp?col3_tmp:";",A_index)
 }
 LV_ModifyCol()
 LV_ModifyCol(4,40)
@@ -308,8 +310,8 @@ Gui,Font,CBlue
 Gui,Add,Text,x+ gg vURL,https://github.com/wyagd001/MyScript
 Gui,Font
 Gui,Add,Text,x26 y100,% "版本："AppVersion
-Gui,Add,Text,x26 y120,Autohotkey版本：1.1.26.00(Unicode)
-Gui,Add,Text,x26 y140,系统：Win7 SP1 32bit (主使用环境)
+Gui,Add,Text,x26 y120,推荐Autohotkey版本：1.1.26.00(Unicode)
+Gui,Add,Text,x26 y140,推荐系统：Win7 SP1 32bit 中文版
 Gui,Add,Button,x26 y160 gUpdate,检查更新
 
 ;Gui & Hyperlink - AGermanUser
@@ -984,9 +986,6 @@ WM_NOTIFY( p_w,p_l,p_m )
 				If (Line_Color_%Index%_Text != ""){
 					NumPut( BGR(Line_Color_%Index%_Text),p_l+0,48,"Uint")   ; foreground 
 					NumPut( BGR(Line_Color_%Index%_Back),p_l+0,52,"Uint")   ; background 
-
-					;debug:=Line_Color_%Index%_Text "-" Line_Color_%Index%_Back "-" NumGet( p_l+0,0,"Uint") "-" NumGet(p_l+0,8,"int" ) "-" NumGet(p_l+0,12,"Uint") "-" NumGet( p_l+0,36,"Uint") "-" NumGet( p_l+0,48,"Uint") "-" NumGet( p_l+0,52,"Uint")
-					;fileappend,% debug "`n`n",%A_desktop%\debug.txt
 				}
 			}
 		}

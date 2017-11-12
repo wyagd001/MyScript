@@ -284,7 +284,7 @@ Gui, Add, Text, ys+4 Section BackgroundTrans, Folder Menu
 Gui, Font
 Gui, Add, Text, ys+11 BackgroundTrans, v1.34
 Gui, Add, Text, xs BackgroundTrans, Copyright (c) 2006-2009 rexx
-Gui, Add, Text, xs-45 BackgroundTrans, 该脚本已被修改，请到作者主页获得完整的版本。
+Gui, Add, Text, xs-45 BackgroundTrans, 该脚本已被修改，请到作者主页获得原始的版本。
 Gui, Add, Button, xs+85 y+32 Section gf_GoWebsite, 访问软件主页
 
 Gui, Tab

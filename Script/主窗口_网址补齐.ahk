@@ -1,6 +1,7 @@
 ; Ctrl+Enter×Ô¶¯²¹ÆëÍøÖ·
-#IfWinActive,ahk_Group AppMainWindow
-^Enter::
+;#IfWinActive,ahk_Group AppMainWindow
+;^Enter::
+ÍøÖ·²¹Æë:
   Gui, Submit, NoHide
   if dir
   {
@@ -10,4 +11,4 @@
       Send, {Enter}
   }
 Return
-#IfWinActive
+;#IfWinActive

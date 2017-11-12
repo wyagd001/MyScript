@@ -1,5 +1,6 @@
-#ifwinactive, ahk_Group AppMainWindow
-Del::
+;#ifwinactive, ahk_Group AppMainWindow
+;Del::
+删除运行历史条目:
 GuiControlGet, focused_control, focusV
 ifEqual, focused_control, Dir
 {
@@ -28,8 +29,10 @@ Return
 ;#ifwinactive
 
 ;#ifwinactive, ahk_Group AppMainWindow
-~Enter::
-~Numpadenter::
+;~Enter::
+;~Numpadenter::
+记录运行历史:
+记录运行历史热键二:
 if temp_runhistory
 {
 temp_runhistory=0
@@ -59,4 +62,4 @@ ifEqual, focused_control, Dir
 	}
 }
 Return
-#ifwinactive
+;#ifwinactive
