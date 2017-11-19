@@ -14,10 +14,10 @@ Cando_保存并运行:
 	Run,%A_Desktop%\temp.ahk,%A_Desktop%
 Return
 
-Cando_10秒A版U版主程序交换:
-FileMove,D:\Program Files\AutoHotkey\AutoHotkey_La.exe,D:\Program Files\AutoHotkey\AutoHotkey-La.exe
+Cando_10秒U版A版主程序交换:
+FileMove,% ahklu,% ahklu ".bak"
 sleep,500
-FileMove,D:\Program Files\AutoHotkey\AutoHotkey_Lu.exe,D:\Program Files\AutoHotkey\AutoHotkey_La.exe
+FileMove,% ahkla,% ahklu
 tooltipnum=10
 loop,10{
 toolTip,%tooltipnum%s
@@ -26,15 +26,15 @@ sleep,1000
 toolTip
 }
 tooltipnum=
-FileMove,D:\Program Files\AutoHotkey\AutoHotkey_La.exe,D:\Program Files\AutoHotkey\AutoHotkey_Lu.exe
+FileMove,% ahklu,% ahkla
 sleep,500
-FileMove,D:\Program Files\AutoHotkey\AutoHotkey-La.exe,D:\Program Files\AutoHotkey\AutoHotkey_La.exe
+FileMove,% ahklu ".bak",% ahklu
 return
 
-Cando_10秒A版Basic版主程序交换:
-FileMove,D:\Program Files\AutoHotkey\AutoHotkey_La.exe,D:\Program Files\AutoHotkey\AutoHotkey-La.exe
+Cando_10秒U版Basic版主程序交换:
+FileMove,% ahklu,% ahklu ".bak"
 sleep,800
-FileMove,D:\Program Files\AutoHotkey\AutoHotkey.exe,D:\Program Files\AutoHotkey\AutoHotkey_La.exe
+FileMove,% ahk,% ahklu
 tooltipnum=10
 loop,10{
 toolTip,%tooltipnum%s
@@ -43,9 +43,9 @@ sleep,1000
 toolTip
 }
 tooltipnum=
-FileMove,D:\Program Files\AutoHotkey\AutoHotkey_La.exe,D:\Program Files\AutoHotkey\AutoHotkey.exe
+FileMove,% ahklu,% ahk
 sleep,800
-FileMove,D:\Program Files\AutoHotkey\AutoHotkey-La.exe,D:\Program Files\AutoHotkey\AutoHotkey_La.exe
+FileMove,% ahklu ".bak",% ahklu
 return
 
 cando_迅雷下载:

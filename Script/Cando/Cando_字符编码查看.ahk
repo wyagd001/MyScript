@@ -46,7 +46,6 @@ Cando_字符编码查看:
 	Gui,add,button,x420 y245 w50 h20 vcp932tochinese gTochinese,转日文
 
 	Gui,show,,中文字符编码查看
-	SetFormat, integer, D
 Return
 
 viewcode:
@@ -55,7 +54,7 @@ viewcode:
 		Return
 	Else
 	{
-		CandySel:=Ccharacter
+		CandySel=%Ccharacter%
 		Gosub,Encode
 	  GuiControl, , cp0, % Trim(cp0)
 		GuiControl, , cp936, % Trim(cp936)
@@ -71,6 +70,7 @@ Return
 Encode:
 	If(CandySel="")
 		Return
+	temp_frmt := A_FormatInteger
 	SetFormat, integer, H
 	cp0:=Encode(CandySel, "cp0")
 	cp936:=Encode(CandySel, "cp936")
@@ -102,6 +102,7 @@ Encode:
 		trc :=trc1
 	else
 		Unicode2Ansi(trc1, trc,936)
+	SetFormat, integer, %temp_frmt%
 Return
 
 Tochinese:

@@ -1,4 +1,3 @@
-
 /*
 TODO:
 - find a better way to make context sensitive hotkeys for when listbox is selected
@@ -7,7 +6,6 @@ TODO:
 - use more robust ini functions, maybe existing lib, objects?
 - add button to get active adapter confs
 - preset names containing "|" break the listbox
-
 */
 
 #NoEnv
@@ -29,7 +27,6 @@ if not A_IsAdmin
 presets_ini_file := A_ScriptDir "\网络连接IP设置.ini"
 interfaces_tmpfile := A_ScriptDir "\interfaces.tmp"
 putty := A_ScriptDir "\putty.exe"
-
 Gui, Add, Text, x12 y9 w120 h20 , 网络连接
 Gui, Add, DropDownList, x12 y29 w130 h100 vinterface gupdate_cmd, % get_interfaces_list(interfaces_tmpfile)
 Gui, Add, Button, x12 y59 w130 h20 gchang_interface_state, 切换连接状态
@@ -45,38 +42,45 @@ Gui, Add, CheckBox, x162 y29 w70 h20 vip_ignore gip_toggle, 忽略
 Gui, Add, CheckBox, x242 y29 w70 h20 vip_auto gip_toggle, 自动获取
 
 Gui, Add, Text, x162 y59 w80 h20 , IP地址
-Gui, Add, Custom, ClassSysIPAddress32 x242 y59 w120 h20 vcomp_ip gupdate_cmd, 
+Gui, Add, Custom, ClassSysIPAddress32 x242 y58 w120 h20 hwndhIPControl vcomp_ip gupdate_cmd
 Gui, Add, Text, x162 y79 w80 h20 , 子网掩码
-Gui, Add, Custom, ClassSysIPAddress32 x242 y79 w120 h20 vnetmask gupdate_cmd, 
+;Gui, Add, Custom, ClassSysIPAddress32 x242 y79 w120 h20 vnetmask gupdate_cmd, 
+Gui, Add, Custom, ClassSysIPAddress32 x242 y80 w120 h20  hwndhnetmaskControl vnetmask gip_haschanged
 Gui, Add, Text, x162 y99 w80 h20 , 默认网关
-;Gui, Add, Edit, x242 y59 w120 h20 vgateway gupdate_cmd, 192.168.1.1
-Gui, Add, Custom, ClassSysIPAddress32 x242 y99 w120 h20 hwndhIPControl vgateway gupdate_cmd,
+Gui, Add, Custom, ClassSysIPAddress32 x242 y102 w120 h20 hwndhgatewayControl vgateway gupdate_cmd
 Gui, Add, Button, x372 y59 w30 h20 ggateway2comp_ip, <+1
 
 Gui, Add, GroupBox, x152 y139 w260 h100 , DNS
 Gui, Add, CheckBox, x160 y160 w70 h20 vdns_ignore gdns_toggle, 忽略
-Gui, Add, CheckBox, x242 y159 w70 h20 vdns_auto gdns_toggle, 自动
+Gui, Add, CheckBox, x242 y159 w70 h20 vdns_auto gdns_toggle, 自动获取
 Gui, Add, Button, x312 y159 w90 h20 gset_google_dns, Google DNS
 Gui, Add, Text, x162 y189 w80 h20 , 首选DNS服务器
-Gui, Add, Custom, ClassSysIPAddress32 x242 y189 w120 h20 vdns_1 gupdate_cmd, 8.8.8.8
+Gui, Add, Custom, ClassSysIPAddress32 x242 y189 w120 h20 vdns_1 gupdate_cmd
 Gui, Add, Text, x162 y209 w80 h20 , 备用DNS服务器
-Gui, Add, Custom, ClassSysIPAddress32 x242 y209 w120 h20 vdns_2 gupdate_cmd, 8.8.4.4
+Gui, Add, Custom, ClassSysIPAddress32 x242 y209 w120 h20 vdns_2 gupdate_cmd
 
 Gui, Add, Text, x12 y260 w120 h20 , Cmd
 Gui, Add, Edit, x12 y280 w400 h70 vcmd, Edit
-Gui, Add, Button, x432 y299 w60 h30 grun_cmd, 应用
+Gui, Add, Button, x432 y299 w120 h30 grun_cmd, 应用设置
 
-Gui, Add, Button, x432 y19 w60 h30 gsave, 保存
+Gui, Add, Button, x432 y19 w120 h30 gsave, 保存方案
 
 Gui, Add, Text, x432 y69 w120 h20 , 其它
 Gui, Add, Button, x432 y89 w120 h30 gping, ping 网关
-Gui, Add, Button, x432 y129 w120 h30 gbrowse, 浏览网关
+Gui, Add, Button, x432 y129 w120 h30 gbrowse, 浏览 网关
 Gui, Add, Button, x432 y169 w120 h30 gtelnet, telnet 网关
 Gui, Add, Button, x432 y209 w120 h30 gssh, ssh 网关
+Gui, Add, Text, x610 y340 w40 h20 vshowmoretext gshowmore,更多∨
 
 Gui, Add, Text, xm+2 section
-Gui, Add, Text, yp+10, Ctrl+Enter = 应用    Ctrl+s = 保存    Ctrl+p = Ping    Ctrl+b = 浏览    Ctrl+t = Telnet    Ctrl+h = SSH    Esc = 关闭
-Gui, Add, Text, xs, 当选中预设方案列表时: Del = 删除    Ctrl+up = 向上移动    Ctrl+down = 向下移动    双击 = 应用
+Gui, Add, Text, yp+10, Ctrl+Enter = 应用  Ctrl+s = 保存  Ctrl+p = Ping  Ctrl+b = 浏览  Ctrl+t = Telnet  Ctrl+h = SSH  Esc = 关闭
+Gui, Add, Text, xs, 当选中预设方案列表时: Del = 删除  Ctrl+up = 向上移动  Ctrl+down = 向下移动  双击 = 应用
+
+Gui, Add, GroupBox, x15 y420 w550 h80 , IE 代理设置
+Gui, Add, CheckBox, x25 y440 w100 h20 vieproxy , 使用代理服务器
+Gui, Add, Text,x25 y470 w100 h20,代理服务器:端口:
+Gui, Add, edit,x130 y465 w300 h20 vieproxyserver
+Gui, Add, Button, x432 y445 w120 h30 gieproxy, 应用代理
 
 ; Generated using SmartGUI Creator 4.0
 
@@ -97,7 +101,7 @@ hotkey, ifwinactive, ahk_id %gui_hwnd%
 	;hotkey, ^down, context_preset_down
 	;hotkey, del, context_preset_delete
 hotkey, ifwinactive
-Gui, Show
+Gui, Show,w650 h360
 ComObjError(false)
 objWMIService := ComObjGet("winmgmts:\\.\root\cimv2")
 colItems := objWMIService.ExecQuery("Select * from Win32_NetworkAdapterConfiguration WHERE IPEnabled = True")._NewEnum
@@ -117,7 +121,6 @@ guicontrol,, dns_1,  %dns_1%
 guicontrol,, dns_2,  %dns_2%
 }
 }
-
 Return
 
 ; end of autoexec ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -125,6 +128,23 @@ Return
 GuiClose:
 GuiEscape:
 ExitApp
+
+showmore:
+if !showmore
+{
+GuiControl,,ieproxy,% CF_regread("HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","Proxyenable")
+GuiControl,,ieproxyserver,% CF_regread("HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","ProxyServer")
+gui,show,w650 h510
+GuiControl,,showmoretext,收起∧
+showmore:=1
+}
+else 
+{
+Gui, Show,w650 h360
+GuiControl,,showmoretext,更多∨
+showmore:=
+}
+return
 
 chang_interface_state:
 gui, submit, nohide
@@ -175,6 +195,85 @@ else
 msgbox,,提示信息,% error_msg
 return
 }
+}
+
+ieproxy:
+gui, submit, nohide
+CF_RegWrite("REG_DWORD","HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","Proxyenable",ieproxy)
+CF_RegWrite("REG_SZ","HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","ProxyServer",ieproxyserver)
+dllcall("wininet\InternetSetOptionW","int","0","int","39","int","0","int","0")
+dllcall("wininet\InternetSetOptionW","int","0","int","37","int","0","int","0")
+tooltip,代理设置完毕。
+sleep,1000
+tooltip
+return
+
+
+ip_haschanged:
+ControlGetFocus, WhichControl, A
+if WhichControl=Edit8
+{
+IPoctet1:=IPCtrlGetAddress(hIPControl,1)
+IPoctet2:=IPCtrlGetAddress(hIPControl,2)
+IPoctet3:=IPCtrlGetAddress(hIPControl,3)
+GWoctet4:=IPCtrlGetAddress(hgatewayControl,4)
+if IPoctet1 between 1 and 127
+IPCtrlSetAddress(hnetmaskControl, "255.0.0.0")
+if IPoctet1 between 128 and 191
+IPCtrlSetAddress(hnetmaskControl, "255.255.0.0")
+if (IPoctet1>191)
+IPCtrlSetAddress(hnetmaskControl, "255.255.255.0")
+IPCtrlSetAddress(hgatewayControl, IPoctet1 "." IPoctet2 "." IPoctet3 "." GWoctet4)
+}
+return
+
+/*
+; 消息列表
+; SendMessage(hIpEdit,IPM_CLEARADDRESS,0,0)
+IPM_CLEARADDRESS := WM_USER + 100 ; wparam 为0 Lparam为0
+; nIP=MAKEIPADDRESS(192,168,0,1);   
+; SendMessage(hIpEdit,IPM_SETADDRESS,0,nIP)
+IPM_SETADDRESS := WM_USER + 101 ; wparam 为0 Lparam为32位的IP值
+; SendMessage(hIpEdit,IPM_GETADDRESS,0,int(&nIP))
+IPM_GETADDRESS := WM_USER + 102 ; wparam 为0 Lparam为一个指向Integer变量的指针(指向IP值) 返回值为字段数目
+; SendMessage   (hIpEdit,   IPM_SETRANGE,   0,   200 < <8|100)
+IPM_SETRANGE　:=   WM_USER + 103 ; 设置IP控件4个部分(0,1,2,3)的其中一个的IP取值范围, Wparam指明要设置取值范围的部分(0,1,2,3)；lparam的低16位字为该字段的范围：高字节为上限，低字节为下限(例子 200*256+100)
+; SendMessage(hIpEdit,IPM_SETFOCUS,3,0)
+IPM_SETFOCUS   :=    WM_USER + 104 ; 设输入焦点　Wparam指明哪个部分(0,1,2,3)获取焦点
+; if(!SendMessage(hIpEdit,IPM_ISBLANK,0,0))
+IPM_ISBLANK　 :=　 WM_USER+105 ; IP串是否为空  为空返回非0 不为空返回0
+*/
+
+IPCtrlSetAddress(hControl, ipaddress)
+{
+    static WM_USER := 0x400
+    static IPM_SETADDRESS := WM_USER + 101
+
+    ; 把 IP 地址打包成 32 位字以用于 SendMessage.
+    ipaddrword := 0
+    Loop, Parse, ipaddress, .
+        ipaddrword := (ipaddrword * 256) + A_LoopField
+    SendMessage IPM_SETADDRESS, 0, ipaddrword,, ahk_id %hControl%
+}
+
+IPCtrlGetAddress(hControl,n="")
+{
+    static WM_USER := 0x400
+    static IPM_GETADDRESS := WM_USER + 102
+
+    n :=n?n:0
+    VarSetCapacity(addrword, 4)
+    SendMessage IPM_GETADDRESS, 0, &addrword,, ahk_id %hControl%
+  if n=1
+    return NumGet(addrword, 3, "UChar") 
+  else if n=2
+return  NumGet(addrword, 2, "UChar") 
+  else if n=3
+return NumGet(addrword, 1, "UChar")
+  else if n=4
+return NumGet(addrword, 0, "UChar")
+  else if n=0
+return NumGet(addrword, 3, "UChar") "." NumGet(addrword, 2, "UChar")  "." NumGet(addrword, 1, "UChar") "." NumGet(addrword, 0, "UChar")
 }
 
 ; ip + dns 
@@ -593,3 +692,4 @@ ShellRun(prms*)
 ; ending includefile: shellrun.ahk
 ; ------------------------------------------------------------------------------------
 
+#include %A_ScriptDir%\..\Lib\CF.ahk

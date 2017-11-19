@@ -99,12 +99,6 @@ oaInsertBefore(obj, key, prm*)
     return r
 }
 
-;https://autohotkey.com/boards/viewtopic.php?f=28&t=4416
-FileRead(filename){
-fileread,hfile,%filename%
-return hfile
-}
-
 /*
 有内容并非;开头 (条件A)? 开头为[并结束为](条件B)?段:有等号(条件C)?f[段,键]=值:f[段,键]=空:空
 
@@ -122,7 +116,7 @@ return hfile
 */
 
 IniObj(d,byref n:=""){
-	If d:=Trim(InStr(d,"`n")?d:FileRead(d)," `t`r`n")
+	If d:=Trim(InStr(d,"`n")?d:CF_FileRead(d)," `t`r`n")
 	{
 		f:=n?n:[]
 		Loop, Parse, d, `r`n, `r `t

@@ -428,7 +428,7 @@ _CreateMenu(Item,ParentMenuName,label)    ;ÌõÄ¿£¬ËüËù´¦µÄ¸¸²Ëµ¥Ãû£¬²Ëµ¥´¦ÀíµÄÄ¿±
 
 _GetMenuItem(IniDir,IniNameNoExt,Sec,TopRootMenuName,Parent="")   ;´ÓÒ»¸öiniµÄÄ³¸ö¶Î»ñÈ¡ÌõÄ¿£¬ÓÃÓÚÉú³É²Ëµ¥¡£
 {
-    Items:=SkSub_IniRead_Section(IniDir "\" IniNameNoExt ".ini",sec)         ;±¾´Î²Ëµ¥µÄ·¢ÆğµØ
+    Items:=CF_IniRead_Section(IniDir "\" IniNameNoExt ".ini",sec)         ;±¾´Î²Ëµ¥µÄ·¢ÆğµØ
     StringReplace,Items,Items,¡÷,`t,all
     Loop,parse,Items,`n
     {

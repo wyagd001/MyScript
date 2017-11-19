@@ -73,15 +73,15 @@ Else If (OpenButton_Cmd_Str1="Proxy")
 	{
 		If OpenButton_Cmd_Str2
 		{
-			regwrite,REG_SZ,HKCU,Software\Microsoft\Windows\CurrentVersion\Internet Settings,ProxyServer,%OpenButton_Cmd_Str2%
-			If regread("HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","Proxyenable") = 1
+			CF_RegWrite("REG_SZ","HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","ProxyServer",OpenButton_Cmd_Str2)
+			If CF_regread("HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","Proxyenable") = 1
 			{
-				regwrite,REG_DWORD,HKCU,Software\Microsoft\Windows\CurrentVersion\Internet Settings,Proxyenable,0
+				CF_RegWrite("REG_DWORD","HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","Proxyenable",0)
 				MsgBox,已取消IE代理！
 			}
-			Else If regread("HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","Proxyenable") = 0
+			Else If CF_regread("HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","Proxyenable") = 0
 			{
-				regwrite,REG_DWORD,HKCU,Software\Microsoft\Windows\CurrentVersion\Internet Settings,Proxyenable,1
+				CF_RegWrite("REG_DWORD","HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","Proxyenable",1)
 				MsgBox, IE代理已设置为 ”%OpenButton_Cmd_Str2%”！要取消代理，请再次运行本命令。
 			}
 			dllcall("wininet\InternetSetOptionW","int","0","int","39","int","0","int","0")
@@ -90,18 +90,22 @@ Else If (OpenButton_Cmd_Str1="Proxy")
 		}
 		Else
 		{
-			If regread("HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","Proxyenable") = 1
+			If CF_regread("HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","Proxyenable") = 1
 			{
-				regwrite,REG_DWORD,HKCU,Software\Microsoft\Windows\CurrentVersion\Internet Settings,Proxyenable,0
+				CF_RegWrite("REG_DWORD","HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","Proxyenable",0)
 				MsgBox,已取消IE代理！
 			}
-			Else If regread("HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","Proxyenable") = 0
+			Else If CF_regread("HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","Proxyenable") = 0
 			{
-				ProxyServer :=% regread("HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","ProxyServer")
+				ProxyServer := CF_regread("HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","ProxyServer")
 				if ProxyServer
 				{
-					regwrite,REG_DWORD,HKCU,Software\Microsoft\Windows\CurrentVersion\Internet Settings,Proxyenable,1
+					CF_RegWrite("REG_DWORD","HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","Proxyenable",1)
 					MsgBox, IE代理已设置为“%ProxyServer%”！要取消代理，请再次运行本命令。
+				}
+				else
+				{
+				MsgBox,请输入代理服务器IP:端口号。
 				}
 			}
 			dllcall("wininet\InternetSetOptionW","int","0","int","39","int","0","int","0")
@@ -269,11 +273,6 @@ CreateNamedPipe(Name, OpenMode=3, PipeMode=0, MaxInstances=255)
 	global ptr
 Return DllCall("CreateNamedPipe","str","\\.\pipe\" Name,"uint",OpenMode
         ,"uint",PipeMode,"uint",MaxInstances,"uint",0,"uint",0,ptr,0,ptr,0)
-}
-
-RegRead(RootKey, SubKey, ValueName = "") {
-	RegRead, v, %RootKey%, %SubKey%, %ValueName%
-Return, v
 }
 
 jumptoregedit(dir)

@@ -1005,7 +1005,7 @@ SetDirectory(sPath)
 	Else If (IsDialog())
 		SetDialogDirectory(sPath)
 	Else
-		MsgBox Can't navigate: Wrong window
+		MsgBox 不能导航: 当前窗口不是资源管理器窗口。
 }
 
 SetDialogDirectory(Path)

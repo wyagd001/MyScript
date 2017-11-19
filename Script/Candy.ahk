@@ -127,8 +127,8 @@ Label_Candy_Read_Value:
 Label_Candy_DrawMenu:
 	Menu,CandyTopLevelMenu,add
     Menu,CandyTopLevelMenu,DeleteAll
-    CandyMenu_IconSize:=SkSub_IniRead(Candy_ProFile_Ini, "General_Settings", "MenuIconSize",16)
-    CandyMenu_IconDir:=SkSub_IniRead(Candy_ProFile_Ini, "General_Settings", "MenuIconDir")  ;菜单图标位置
+    CandyMenu_IconSize:=CF_IniRead(Candy_ProFile_Ini, "General_Settings", "MenuIconSize",16)
+    CandyMenu_IconDir:=CF_IniRead(Candy_ProFile_Ini, "General_Settings", "MenuIconDir")  ;菜单图标位置
    Transform,CandyMenu_IconDir,Deref,%CandyMenu_IconDir%
 
  ;加第一行菜单，缩略显示选中的内容，该菜单让你拷贝其内容
@@ -435,7 +435,7 @@ Label_Candy_RunCommand:
 */
 
 Label_Candy_ErrorHandle:
-		If (SkSub_IniRead(Candy_ProFile_Ini,"Candy_Settings","ShowError", 0)=1 )     ;看看出错提示开关打开了没有，打开了的话，就显示出错信息
+		If (CF_IniRead(Candy_ProFile_Ini,"Candy_Settings","ShowError", 0)=1 )     ;看看出错提示开关打开了没有，打开了的话，就显示出错信息
 	{
 		Gui +LastFound +OwnDialogs +AlwaysOnTop
         MsgBox, 4116,, 下述命令行定义出错： `n---------------------`n%Candy_Cmd%`n---------------------`n后缀名: %CandySel_Ext%`n`n立即配置相应ini？
@@ -463,7 +463,7 @@ Label_Candy_ErrorHandle:
 */
 SkSub_GetMenuItem(IniDir,IniNameNoExt,Sec,TopRootMenuName,Parent="")   ;从一个ini的某个段获取条目，用于生成菜单。
 {
-    Items:=SkSub_IniRead_Section(IniDir "\" IniNameNoExt ".ini",sec)         ;本次菜单的发起地
+    Items:=CF_IniRead_Section(IniDir "\" IniNameNoExt ".ini",sec)         ;本次菜单的发起地
     StringReplace,Items,Items,△,`t,all
     Loop,parse,Items,`n
     {
@@ -634,18 +634,6 @@ SkSub_Regex_IniRead(ini,sec,reg)      ;正则方式的读取，等号左侧符合正则条件
 	Return "Error"
 }
 
-SkSub_IniRead(ini, sec, key="", default = "")   ;iniread的函数化
-{
-	IniRead, v, %ini%, %sec%, %key%, %default%
-	Return, v
-}
-
-SkSub_IniRead_Section(ini,sec)
-{  ;返回全部某段的内容，函数化而已
-	IniRead,keylist,%ini%,%sec%              ;提取[sec]段里面所有的群组
-		Return %keylist%
-}
-
 grep(h, n, ByRef v, s = 1, e = 0, d = "")   ; ;by polythene
 {
 	v =
@@ -670,8 +658,8 @@ SkSub_UrlEncode(str, enc="UTF-8")       ;From Ahk Forum
 
 SkSub_WebSearch(Win_Full_Path,Http)
 {
-	all_browser:=SkSub_IniRead(Candy_ProFile_Ini, "General_Settings", "InUse_Browser")
-	DefaultBrowser:=SkSub_EnvTrans(SkSub_IniRead(Candy_ProFile_Ini, "General_Settings", "Default_Browser"))
+	all_browser:=CF_IniRead(Candy_ProFile_Ini, "General_Settings", "InUse_Browser")
+	DefaultBrowser:=SkSub_EnvTrans(CF_IniRead(Candy_ProFile_Ini, "General_Settings", "Default_Browser"))
 	;第①步，看当前当前激活窗口 是否 浏览器
 	If Win_Full_Path Contains %All_Browser%
 	{
@@ -702,7 +690,7 @@ SkSub_WebSearch(Win_Full_Path,Http)
 	If Browser ;如果取到了浏览器
 	{
 		SplitPath,browser,,,,browser_namenoext
-        Browser_Args:=SkSub_IniRead(Candy_ProFile_Ini, "WebBrowser's_CommandLIne", browser_namenoext)
+        Browser_Args:=CF_IniRead(Candy_ProFile_Ini, "WebBrowser's_CommandLIne", browser_namenoext)
 		If (Browser_Args!="Error")  ;有些浏览器，必须带参数,比如config或者单进程限制等待，所以在ini里面提供了一个定义的地方。
 		{
 			Browser := Browser " " Browser_Args
@@ -778,11 +766,11 @@ SkSub_EditConfig(inifile,regex="") ;编辑配置文件！
 			}
 		}
 	}
-Default_TextEditor := SkSub_IniRead(Candy_ProFile_Ini, "General_Settings", "Default_TextEditor")
+Default_TextEditor := CF_IniRead(Candy_ProFile_Ini, "General_Settings", "Default_TextEditor")
 	Default_TextEditor:=SkSub_EnvTrans(Default_TextEditor)  ;默认文本编辑器
 	TextEditor:=FileExist(Default_TextEditor) ? Default_TextEditor:"notepad.exe"       ;文本编辑器
 	SplitPath,TextEditor,,,,namenoext
-	LineJumpArgs:=SkSub_IniRead(Candy_ProFile_Ini, "TextEditor's_CommandLine", namenoext)
+	LineJumpArgs:=CF_IniRead(Candy_ProFile_Ini, "TextEditor's_CommandLine", namenoext)
 	if  (LineJumpArgs="Error" or LineNo="" )
 		cmd :=TextEditor " " inifile
 	else
