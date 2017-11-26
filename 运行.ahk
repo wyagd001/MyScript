@@ -1549,7 +1549,7 @@ RunScript(script) {
     shell := ComObjCreate("WScript.Shell")
     tempworkdir:=A_WorkingDir
     SetWorkingDir %A_ScriptDir%
-    exec := shell.Exec(test_ahk " /ErrorStdOut *")
+    exec := shell.Exec(chr(34) test_ahk chr(34) " /ErrorStdOut *")
     exec.StdIn.WriteLine(script)
     exec.StdIn.Close()  ; Unlike cmd.exe, AutoHotkey needs this.
    SetWorkingDir %tempworkdir%
