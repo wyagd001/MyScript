@@ -1544,16 +1544,20 @@ break
 }
 return
 
-RunScript(script) {
+; 来源帮助文件中的示例
+RunScript(script,result:="false") {
     static test_ahk := A_AhkPath,
     shell := ComObjCreate("WScript.Shell")
     tempworkdir:=A_WorkingDir
     SetWorkingDir %A_ScriptDir%
     exec := shell.Exec(chr(34) test_ahk chr(34) " /ErrorStdOut *")
     exec.StdIn.WriteLine(script)
-    exec.StdIn.Close()  ; Unlike cmd.exe, AutoHotkey needs this.
+    exec.StdIn.Close()
    SetWorkingDir %tempworkdir%
+   if result
     return exec.StdOut.ReadAll()
+  else 
+  return
 }
 
 #include %A_ScriptDir%\Script\脚本管理器.ahk

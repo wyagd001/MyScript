@@ -424,7 +424,7 @@ Label_Candy_RunCommand:
     Else If (Candy_Cmd_Str1="ExeAhk")
 		{      
       ;msgbox % Candy_Cmd_Str2
-			RunScript(Candy_Cmd_Str2)
+			RunScript(Candy_Cmd_Str2,Candy_Cmd_Str3)
 		}
     Return
 
