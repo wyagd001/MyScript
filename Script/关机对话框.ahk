@@ -65,14 +65,14 @@ HookProc(hWinEventHook2, Event, hWnd)
 				ShutdownBlock := false
 		}
 	}
-if Event = 9
-{
-ifWinActive, ¹Ø±Õ Windows ahk_class #32770
-{
-sleep,2000
-ShutdownBlock := true
-}
-}
+	if Event = 9
+	{
+		ifWinActive, ¹Ø±Õ Windows ahk_class #32770
+		{
+			sleep,2000
+			ShutdownBlock := true
+		}
+	}
 	else if Event = 16 ; EVENT_SYSTEM_DIALOGSTART
 	{
 		WinGetClass, Class, ahk_id %hWnd%

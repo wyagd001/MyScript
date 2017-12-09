@@ -130,10 +130,15 @@ y_y2:=work_area_h- 108
 
 ; 最近关闭的资源管理器窗口
 global CloseWindowList := []
-global folder := [] 
+global ClosetextfileList := []
+global folder := []
+global textfile := [] 
 IniRead, CloseWindowFolders, %run_iniFile% , CloseWindowList
 CloseWindowList := StrSplit(CloseWindowFolders,"`n")
 Array_Sort(CloseWindowList)
+IniRead, Closetextfiles, %run_iniFile% , ClosetextfileList
+ClosetextfileList := StrSplit(Closetextfiles,"`n")
+Array_Sort(ClosetextfileList)
 
 ; Candy，Windy
 	global szMenuIdx:={}      ;菜单用1
@@ -603,12 +608,12 @@ RegWrite ,REG_SZ,HKEY_CURRENT_USER,Control Panel\Desktop,AutoEndTasks,0
 ;关机时首先响应  To make a script the last process to terminate change "0x4FF" to "0x0FF".
 ;HKEY_CURRENT_USER,Control Panel\Desktop,AutoEndTasks,0
 ;Vista+关机提示结束进程
-error_temp:=DllCall("ShutdownBlockReasonCreate","Uint",hAHK,"Str",A_ScriptFullPath " is still running")
+error_temp:=DllCall("User32.dll\ShutdownBlockReasonCreate","uint",hAHK,"wstr",A_ScriptFullPath " is still running")
 if !error_temp
-msgbox "ShutdownBlockReasonCreate"
+msgbox ShutdownBlockReasonCreate 创建失败！%A_LastError%
 error_temp :=DllCall("kernel32.dll\SetProcessShutdownParameters", UInt, 0x4FF, UInt, 0)
 if !error_temp
-msgbox "SetProcessShutdownParameters"
+msgbox "SetProcessShutdownParameters" 失败！
 ;监视关机
 HookProcAdr2 := RegisterCallback( "HookProc", "F" )
 hWinEventHook2 := SetWinEventHook( 0x1, 0x17,0, HookProcAdr2, 0, 0, 0 )

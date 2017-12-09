@@ -213,29 +213,48 @@ SendStr(String)
 ; ·± ¡ú ¼ò
 fzj(trc)
 {
-		If !A_IsUnicode
-			Ansi2Unicode(tmp1, trc, 936)
-		Else
-			tmp1:=trc
+		tmp1:= A_IsUnicode ? trc : Ansi2Unicode(tmp1, trc, 936)
 		VarSetCapacity(tmp2, 2*cch:=VarSetCapacity(tmp1)//2), LCMAP_SIMPLIFIED_CHINESE:=0x02000000 
 		DllCall( "LCMapStringW", UInt,0x400, UInt,LCMAP_SIMPLIFIED_CHINESE, Str,tmp1, UInt,cch, Str,tmp2, UInt,cch )
-		If !A_IsUnicode
-			return Unicode2Ansi(tmp2, spc, 936)
-		Else
-			return tmp2
+		return A_IsUnicode ? tmp2 : Unicode2Ansi(tmp2, spc, 936)
 }
 
 ; ¼ò ¡ú ·±
 jzf(spc)
 {
-		If !A_IsUnicode
-			Ansi2Unicode(tmp1, spc, 936)
-		Else
-			tmp1:=spc
+	tmp1:= A_IsUnicode ? spc : Ansi2Unicode(tmp1, spc, 936)
 	VarSetCapacity(tmp2, 2*cch:=VarSetCapacity(tmp1)//2), LCMAP_TRADITIONAL_CHINESE := 0x4000000
 	DllCall( "LCMapStringW", UInt,0x400, UInt,LCMAP_TRADITIONAL_CHINESE, Str,tmp1, UInt,cch, Str,tmp2, UInt,cch )
-	If A_IsUnicode
-		return tmp2
-	else
-		return Unicode2Ansi(tmp2, trc,936)
+	return A_IsUnicode ? tmp2 : Unicode2Ansi(tmp2, trc,936)
+}
+
+; https://autohotkey.com/board/topic/33510-functionstringcheck/
+InStrW(String, Text0)
+{
+RegExReplace(Asc(SubStr(String, Pos0 := InStr(String, Text0), 1)) > 127 ? SubStr(String, 1, Pos0+1) : SubStr(String, 1, Pos0), "(?:[^[:ascii:]]{2}|[[:ascii:]])", "", ErrorLevel)
+return ErrorLevel
+}
+
+SubStrW(String, Pos0, Len0 = 360)
+{
+RegExMatch(String, "(?:[^[:ascii:]]{2}|[[:ascii:]]){" (Pos0 > 0 ? Pos0-1 : -Pos0 < (StrLenW := StrLenW(String)) ? StrLenW+Pos0-1 : 0) "}((?:[^[:ascii:]]{2}|[[:ascii:]]){0," Len0 "})", SubStrW)
+return SubStrW1
+}
+
+StrLenW(String)
+{
+RegExReplace(String, "(?:[^[:ascii:]]{2}|[[:ascii:]])", "", ErrorLevel)
+return ErrorLevel
+}
+
+SubStr0(String, Pos0, Len0 = 360, StrCheck = 3)
+{
+If (Pos0 <> 1 && Pos0+StrLen(String) <> 1 && StrLenW(String0 := SubStr(String, 1, Pos0 > 0 ? Pos0-1 : StrLen(String) + Pos0 - 1)) = StrLenW(SubStr(String0, 1, StrLen(String0)-1)))
+  Len0 := Mod(StrCheck, 2) = 1 ? Len0 + 1 : Pos0 = 0 ? 0 : Len0 - 1, Pos0 := Mod(StrCheck, 2) = 1 ? Pos0 - 1 : Pos0 + 1
+return SubStr(String, Pos0, (StrLenW(SubStr(String, Pos0, Len0-1)) = StrLenW(SubStr(String, Pos0, Len0))) ? StrCheck // 2 = 1 ? Len0+1 : Len0-1 : Len0)
+}
+
+StrCheck(String)
+{
+return RegExReplace(String, "^[^[:ascii:]]?((?:[^[:ascii:]]{2})*(?:[[:ascii:]].*[[:ascii:]]|[[:ascii:]])(?:[^[:ascii:]]{2})*)[^[:ascii:]]?$", "$1")
 }

@@ -797,15 +797,3 @@ SkSub_Clear_CandyVar()
 	Config_files:=
 	CandyError_From_Menu:=0
 }
-
-SubStrW(String, Pos0, Len0 = 360)
-{
-RegExMatch(String, "(?:[^[:ascii:]]{2}|[[:ascii:]]){" (Pos0 > 0 ? Pos0-1 : -Pos0 < (StrLenW := StrLenW(String)) ? StrLenW+Pos0-1 : 0) "}((?:[^[:ascii:]]{2}|[[:ascii:]]){0," Len0 "})", SubStrW)
-return SubStrW1
-}
-
-StrLenW(String)
-{
-RegExReplace(String, "(?:[^[:ascii:]]{2}|[[:ascii:]])", "", ErrorLevel)
-return ErrorLevel
-}

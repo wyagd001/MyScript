@@ -19,7 +19,8 @@ CbAutoComplete()
 	If (ErrorLevel)
 	{
 		ControlSetText,, %CurContent%, ahk_id %lHwnd%
-		PostMessage, 0x0142, 0, MakeLong(Start, End),, ahk_id %lHwnd%
+		;PostMessage, 0x0142, 0, MakeLong(Start, End),, ahk_id %lHwnd%
+		PostMessage, 0x0142, 0, MakeLong(Start, StrLen(CurContent)),, ahk_id %lHwnd%
 		return
 	}
 	GuiControlGet, CurContent,, %lHwnd%
