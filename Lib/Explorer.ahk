@@ -9,7 +9,7 @@
 If(WinActive("ahk_group ccc"))
 {
 	hWnd:=WinExist("A")
-	qqq:= ShellFolder(hwnd,3,0)
+	qqq:= ShellFolder(hwnd,2)
 	MsgBox %qqq%
 }
 Return
@@ -69,7 +69,7 @@ ShellFolder(hWnd=0,returntype=0,onlyname=0)
 		Return ErrorLevel := "ERROR"
 	If (window="desktop")
 	{
-		If (returntype=3)
+		If (returntype=2) or (returntype=3)
 			selection=1
 		If (returntype=4)
 			selection=0

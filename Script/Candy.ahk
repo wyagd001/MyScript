@@ -132,7 +132,7 @@ Label_Candy_DrawMenu:
    Transform,CandyMenu_IconDir,Deref,%CandyMenu_IconDir%
 
  ;加第一行菜单，缩略显示选中的内容，该菜单让你拷贝其内容
-    CandyMenu_FirstItem:=Strlen(CdSel_NoSpace:=Trim(CandySel)) >20 ? SubStrW(CdSel_NoSpace,1,10) . "..." . SubStrW(CdSel_NoSpace,-10) : CdSel_NoSpace
+    CandyMenu_FirstItem:=Strlen(CdSel_NoSpace:=Trim(CandySel)) >20 ? SubStr0(CdSel_NoSpace,1,10) . "..." . SubStr0(CdSel_NoSpace,-10) : CdSel_NoSpace
     Menu CandyTopLevelMenu,Add,%CandyMenu_FirstItem%,Label_Candy_CopyFullpath
     Candy_Firstline_Icon:=SkSub_Get_Firstline_Icon(CandySel_Ext,CandySel,CandyMenu_IconDir "\Extension")
     Menu CandyTopLevelMenu,icon,%CandyMenu_FirstItem%,%Candy_Firstline_Icon%,,%CandyMenu_IconSize%

@@ -4,7 +4,7 @@ sleep,200
 GuiControlGet, EditContent,,dir
 if EditContent=@
 {
-Temp_ComboBoxShowItems:="@ExeAhk@|@Cmd@|@Proxy@|@regedit@|@转换@@UrlDecode@|@转换@@UrlEncode@|@转换@10→16@|@转换@16→10@|@转换@农历→公历@|@转换@公历→农历@|@转换@简→繁@|@转换@繁→简@"
+Temp_ComboBoxShowItems:="@ExeAhk@|@Cmd@|@Proxy@|@regedit@|@转换@UrlDecode@|@转换@UrlEncode@|@转换@10→16@|@转换@16→10@|@转换@农历→公历@|@转换@公历→农历@|@转换@简→繁@|@转换@繁→简@"
 GuiControl, , dir, |%Temp_ComboBoxShowItems%
 changeComboBox=1
 send @

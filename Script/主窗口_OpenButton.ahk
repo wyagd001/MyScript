@@ -18,12 +18,12 @@ changeComboBox=0
 	Return
 	}
 
-OpenButton_All_cmd:="@Cmd@|@ExeAhk@|@Proxy@|@regedit@|@转换@@UrlDecode@|@转换@@UrlEncode@|@转换@10→16@|@转换@16→10@|@转换@农历→公历@|@转换@公历→农历@|@转换@简→繁@|@转换@繁→简@"
+OpenButton_All_cmd:="@Cmd@|@ExeAhk@|@Proxy@|@regedit@|@转换@UrlDecode@|@转换@UrlEncode@|@转换@10→16@|@转换@16→10@|@转换@农历→公历@|@转换@公历→农历@|@转换@简→繁@|@转换@繁→简@"
  If RegExMatch(dir,"i)^\s*(" OpenButton_All_cmd ")\s*")
 {
 StringTrimLeft,dir,dir,1
 arrOpenButton_Cmd_Str:=StrSplit(dir,"@"," `t")
-;msgbox % Array_ToString(arrOpenButton_Cmd_Str)
+msgbox % Array_ToString(arrOpenButton_Cmd_Str)
 OpenButton_Cmd_Str1:=arrOpenButton_Cmd_Str[1]
 OpenButton_Cmd_Str2:=arrOpenButton_Cmd_Str[2]
 OpenButton_Cmd_Str3:=arrOpenButton_Cmd_Str[3]

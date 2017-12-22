@@ -3,7 +3,7 @@
 #SingleInstance force
 ; 开机时启动脚本，等待时间设置长些，使托盘图标可以显示出来
 if(A_TickCount<120000)
-	sleep,20000
+	sleep,25000
 
 global run_iniFile := A_ScriptDir "\settings\setting.ini"
 IfNotExist, %run_iniFile%
@@ -668,6 +668,7 @@ Gosub,cSigleMenu
 ;=========功能加载结束=========
 
 ;=========热键设置=========
+Hotkey, IfWinActive ; 容错
 IniRead,  hotkeycontent, %run_iniFile%,快捷键
 hotkeycontent:="[快捷键]" . "`n" . hotkeycontent
 myhotkey := IniObj(hotkeycontent,OrderedArray()).快捷键
