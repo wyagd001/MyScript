@@ -34,6 +34,7 @@ Loop 8
 IniRead,baoshionoff,%run_iniFile%,时间,baoshionoff
 IniRead,baoshilx,%run_iniFile%,时间,baoshilx
 IniRead,renwu,%run_iniFile%,时间,renwu
+IniRead,renwu2,%run_iniFile%,时间,renwu2
 IniRead,rh,%run_iniFile%,时间,rh
 IniRead,rm,%run_iniFile%,时间,rm
 IniRead,renwucx,%run_iniFile%,时间,renwucx
@@ -210,22 +211,52 @@ Gui,Add,Button,x370 y280 w70 h30 gregsvr32dll,注册Dll
 Gui,Add,Button,x450 y280 w70 h30 gunregsvr32dll,卸载Dll
 
 Gui,Tab,整点报时
-Gui,Add,CheckBox,x26 y40 w200 h20 vbaoshionoff gbaoshi,开启整点报时
-Gui,Add,Text,x26 y70 vbaoshi1,选择报时类型:
-Gui,Add,Radio,x26 y90 w80 h20 vbaoshilx1 glx,语音报时
-Gui,Add,Radio,x106 y90 w80 h20 vbaoshilx2 glx,整点敲钟
+Gui, Add, GroupBox, x20 y30 w200 h90 vgbbs,整点报时(已开启)
+Gui,Add,Text,x26 y65 vbaoshi1,选择报时类型:
+Gui,Add,Radio,x26 y85 w80 h20 vbaoshilx1 glx,语音报时
+Gui,Add,Radio,x106 y85 w80 h20 vbaoshilx2 glx,整点敲钟
 
-Gui,Add,Text,x26 y140,定时任务:
-Gui,Add,CheckBox,x26 y160 w200 h20 vrenwu gdingshi,开启定时任务
-Gui,Add,Text,x26 y190 vdingshi1,指定时间:
-Gui,Add,Edit,x85 y188 w30 h20 vrh,%rh%
-Gui,Add,Text,x118 y190 vdingshi2,时
-Gui,Add,Edit,x135 y188 w30 h20 vrm,%rm%
-Gui,Add,Text,x167 y190 vdingshi3,分
-Gui,Add,Text,x26 y220 vdingshi4,指定执行的程序:
-Gui,Add,Edit,x120 y218 w350 h20 vrenwucx,%renwucx%
-Gui,Add,Button,x475 y215 w30 h25 vdingshi5 grenwusl,...
-Gui,Add,Button,x505 y215 w35 h25 vdingshi6 grenwucs,测试
+Gui, Add, GroupBox, x230 y30 w200 h95,
+Gui,Add,CheckBox,Checked%Auto_JCTF% x236 y40 w180 h20 vAuto_JCTF,传统节日五天前提醒
+Gui,Add,CheckBox,x236 y60 w180 h20 vbaoshionoff gbaoshi,开启整点报时
+Gui,Add,CheckBox,x236 y80 w180 h20 vrenwu gdingshi,开启定时任务
+Gui,Add,CheckBox,Checked%renwu2% x236 y100 w180 h20 vrenwu2 gupdategbnz,开启闹钟
+
+Gui, Add, GroupBox, x20 y125 w530 h90 vgbds,定时任务(已开启)
+Gui,Add,Text,x26 y150 vdingshi1,指定时间:
+Gui,Add,Edit,x85 y148 w30 h20 vrh,%rh%
+Gui,Add,Text,x118 y150 vdingshi2,时
+Gui,Add,Edit,x135 y148 w30 h20 vrm,%rm%
+Gui,Add,Text,x167 y150 vdingshi3,分
+Gui,Add,Text,x26 y180 vdingshi4,指定执行的程序:
+Gui,Add,Edit,x120 y178 w350 h20 vrenwucx,%renwucx%
+Gui,Add,Button,x475 y175 w30 h25 vdingshi5 grenwusl,...
+Gui,Add,Button,x505 y175 w35 h25 vdingshi6 grenwucs,测试
+
+Gui, Add, GroupBox, x20 y215 w530 h100 vgbnz,闹钟(已开启)
+Gui,Add,Text,x26 y237 w60 h20 ,时间序列：
+Gui, Add, Radio, x85 y237 w27 Checked vMyRadiorh gupdaterh,
+Gui, Add, Radio, x172 y237 w27 gupdaterh,
+Gui, Add, Radio, x257 y237 w27 gupdaterh,
+Gui, Add, Radio, x344 y237 w27 gupdaterh,
+Gui, Add, Radio, x431 y237 w27 gupdaterh,
+Gui,Add,Edit,x112 y235 w55 h20 vrh1 ,%rh1%
+Gui,Add,Edit,x197 y235 w55 h20 vrh2 ,%rh2%
+Gui,Add,Edit,x284 y235 w55 h20 vrh3 ,%rh3%
+Gui,Add,Edit,x371 y235 w55 h20 vrh4 ,%rh4%
+Gui,Add,Edit,x458 y235 w55 h20 vrh5 ,%rh5%
+
+Gui,Add,CheckBox,x26 y265 w60 h20 vcxq1 grxq,星期一
+Gui,Add,CheckBox,x90 y265 w60 h20 vcxq2 grxq,星期二
+Gui,Add,CheckBox,x154 y265 w60 h20 vcxq3 grxq,星期三
+Gui,Add,CheckBox,x218 y265 w60 h20 vcxq4 grxq,星期四
+Gui,Add,CheckBox,x282 y265 w60 h20 vcxq5 grxq,星期五
+Gui,Add,CheckBox,x346 y265 w60 h20 vcxq6 grxq,星期六
+Gui,Add,CheckBox,x410 y265 w60 h20 vcxq7 grxq,星期日
+Gui,Add,CheckBox,x474 y265 w60 h20 vcxq8 gexq,每天
+
+Gui,Add,Text,x26 y292 w60 h20,提示消息
+Gui,Add,Edit,x85 y290 w400 h20 vmsgtp grmsgtp,
 
 GuiControl,,baoshionoff,%baoshionoff%
 If baoshilx
@@ -237,6 +268,7 @@ If(baoshionoff = 0)
 	GuiControl,Disable,baoshi1
 	GuiControl,Disable,baoshilx1
 	GuiControl,Disable,baoshilx2
+	GuiControl,,gbbs,整点报时(已关闭)
 }
 GuiControl,,renwu,%renwu%
 If(renwu = 0)
@@ -249,7 +281,11 @@ If(renwu = 0)
 	GuiControl,Disable,dingshi4
 	GuiControl,Disable,renwucx
 	GuiControl,Disable,dingshi5
+GuiControl,,gbds,定时任务(已关闭)
 }
+if(renwu2=0)
+GuiControl,,gbnz,闹钟(已关闭)
+gosub updaterh
 
 Gui,Tab,播放器
 Gui,Add,Text,x26 y43,Foobar2000:
@@ -310,8 +346,8 @@ Gui,Font,CBlue
 Gui,Add,Text,x+ gg vURL,https://github.com/wyagd001/MyScript
 Gui,Font
 Gui,Add,Text,x26 y100,% "版本："AppVersion
-Gui,Add,Text,x26 y120,推荐Autohotkey版本：1.1.26.00(Unicode)
-Gui,Add,Text,x26 y140,推荐系统：Win7 SP1 32bit 中文版
+Gui,Add,Text,x26 y120,Autohotkey：1.1.26.00(Unicode)
+Gui,Add,Text,x26 y140,适配系统：Win7 SP1 32bit 中文版
 Gui,Add,Button,x26 y160 gUpdate,检查更新
 
 ;Gui & Hyperlink - AGermanUser
@@ -377,19 +413,20 @@ GuiControl,,hover_any_window,0
 }
 Return
 
-
 baoshi:
 If(baoshionoff := !baoshionoff)
 {
 	GuiControl,Enable,baoshi1
 	GuiControl,Enable,baoshilx1
 	GuiControl,Enable,baoshilx2
+GuiControl,,gbbs,整点报时(已开启)
 }
 Else
 {
 	GuiControl,Disable,baoshi1
 	GuiControl,Disable,baoshilx1
 	GuiControl,Disable,baoshilx2
+GuiControl,,gbbs,整点报时(已关闭)
 }
 Return
 
@@ -412,6 +449,7 @@ If(renwu := !renwu)
 	GuiControl,Enable,dingshi4
 	GuiControl,Enable,renwucx
 	GuiControl,Enable,dingshi5
+GuiControl,,gbds,定时任务(已开启)
 }
 Else
 {
@@ -423,6 +461,7 @@ Else
 	GuiControl,Disable,dingshi4
 	GuiControl,Disable,renwucx
 	GuiControl,Disable,dingshi5
+GuiControl,,gbds,定时任务(已关闭)
 }
 Return
 
@@ -723,6 +762,62 @@ gosub, Edithotkey
 }
 Return
 
+updaterh:
+Gui Submit,nohide
+Iniread,xq%MyRadiorh%,%run_iniFile%,时间,xq%MyRadiorh%
+if (xq%MyRadiorh%=1234567)
+{
+GuiControl,,cxq8,1
+}
+else
+GuiControl,,cxq8,0
+
+xqdsArray:=""
+xqdsArray := StrSplit(xq%MyRadiorh%)
+loop 7
+GuiControl,,cxq%A_index%,0
+for k,v in xqdsArray
+{
+ GuiControl,,cxq%v%,% (v=0)?0:1
+}
+Iniread,msgtp,%run_iniFile%,时间,msgtp%MyRadiorh%
+GuiControl,,msgtp,% msgtp
+return
+
+rxq:
+Gui Submit,nohide
+xqtemp:=(cxq1=0?0:1)*10**6+(cxq2=0?0:2)*10**5+(cxq3=0?0:3)*10**4+(cxq4=0?0:4)*10**3+(cxq5=0?0:5)*10**2+(cxq6=0?0:6)*10+(cxq7=0?0:7)
+IniWrite,%xqtemp%,%run_iniFile%,时间,xq%MyRadiorh%
+Iniread,xq%MyRadiorh%,%run_iniFile%,时间,xq%MyRadiorh%
+if (xq%MyRadiorh%=1234567)
+{
+GuiControl,,cxq8,1
+}
+else
+GuiControl,,cxq8,0
+return
+
+rmsgtp:
+Gui Submit,nohide
+IniWrite,%msgtp%,%run_iniFile%,时间,msgtp%MyRadiorh%
+return
+
+exq:
+Gui Submit,nohide
+if (cxq8=1)
+{
+IniWrite,1234567,%run_iniFile%,时间,xq%MyRadiorh%
+gosub updaterh
+}
+return
+
+updategbnz:
+if(renwu2:=!renwu2)
+guicontrol,,gbnz,闹钟(已开启)
+else
+guicontrol,,gbnz,闹钟(已关闭)
+return
+
 Load_PluginsList:
 Gui,99:ListView,Pluginslistview
 LV_Delete()
@@ -890,6 +985,13 @@ IniWrite,%renwu%,%run_iniFile%,时间,renwu
 IniWrite,%rh%,%run_iniFile%,时间,rh
 IniWrite,%rm%,%run_iniFile%,时间,rm
 IniWrite,%renwucx%,%run_iniFile%,时间,renwucx
+IniWrite,%rh1%,%run_iniFile%,时间,rh1
+IniWrite,%rh2%,%run_iniFile%,时间,rh2
+IniWrite,%rh3%,%run_iniFile%,时间,rh3
+IniWrite,%rh4%,%run_iniFile%,时间,rh4
+IniWrite,%rh5%,%run_iniFile%,时间,rh5
+IniWrite,%renwu2%,%run_iniFile%,时间,renwu2
+IniWrite,%Auto_JCTF%,%run_iniFile%,功能开关,Auto_JCTF
 
 IniWrite,%ap1%,%run_iniFile%,AudioPlayer,Foobar2000
 IniWrite,%ap2%,%run_iniFile%,AudioPlayer,iTunes

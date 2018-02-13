@@ -23,7 +23,7 @@ OpenButton_All_cmd:="@Cmd@|@ExeAhk@|@Proxy@|@regedit@|@×ª»»@UrlDecode@|@×ª»»@Url
 {
 StringTrimLeft,dir,dir,1
 arrOpenButton_Cmd_Str:=StrSplit(dir,"@"," `t")
-msgbox % Array_ToString(arrOpenButton_Cmd_Str)
+;msgbox % Array_ToString(arrOpenButton_Cmd_Str)
 OpenButton_Cmd_Str1:=arrOpenButton_Cmd_Str[1]
 OpenButton_Cmd_Str2:=arrOpenButton_Cmd_Str[2]
 OpenButton_Cmd_Str3:=arrOpenButton_Cmd_Str[3]

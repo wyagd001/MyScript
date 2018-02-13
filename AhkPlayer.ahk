@@ -22,6 +22,7 @@ CoordMode, ToolTip
 SingleCycle := false
 run_iniFile = %A_ScriptDir%\settings\setting.ini
 IniRead, AhkMediaLib, %run_iniFile%, AhkPlayer, AhkMediaLib
+IniRead, TTPlayer, %run_iniFile%, AudioPlayer, TTPlayer
 IniRead, AutoUpdateMediaLib, %run_iniFile%, AhkPlayer, AutoUpdateMediaLib
 IniRead, Lrcfontcolor, %run_iniFile%, AhkPlayer, Lrcfontcolor
 IniRead, LrcPath, %run_iniFile%, AhkPlayer, LrcPath
@@ -311,6 +312,7 @@ GuiShow:
 Gui, Menu, MyMenuBar
 
 Menu, Context, Add, 播放(单选), PlayLV
+Menu, Context, Add, 千千静听打开(单选), TTplayerOpen
 Menu, Context, Add, 打开文件位置(单选), OpenfilePath
 Menu, Context, Add, 添加到列表, AddList
 Menu, Context, Add, 从列表中删除(可多选), Remove
@@ -1216,6 +1218,12 @@ SetTimer,CheckStatus,on
 	MCI_ToHHMMSS2(pos, hh, mm, ss)
 	MCI_ToHHMMSS2(len, hh, lm, ls)
 return
+
+TTPlayerOpen:
+LV_GetText(mp3, LV_GetNext(), 4)
+run,%TTPlayer% " %mp3%"
+return
+
 
 Slider:
 	Gui,Submit,NoHide

@@ -238,11 +238,9 @@ return
 	Youdao_网络释义:= json(Youdao_译文, "web.value")
 	If Youdao_基本释义<>
 	{
-	ToolTip,%Youdao_keyword%:`n基本释义:%Youdao_基本释义%`n网络释义:%Youdao_网络释义%
-		spovice:=ComObjCreate("sapi.spvoice")
-		spovice.Speak(Youdao_keyword)
-	sleep,4000
-	ToolTip
+		ToolTip,%Youdao_keyword%:`n基本释义:%Youdao_基本释义%`n网络释义:%Youdao_网络释义%
+		gosub,soundpaly
+		ToolTip
 	}
 else
 MsgBox,,有道网络翻译,网络错误或查询不到该单词的翻译。

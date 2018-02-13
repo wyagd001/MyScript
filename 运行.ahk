@@ -3,7 +3,7 @@
 #SingleInstance force
 ; 开机时启动脚本，等待时间设置长些，使托盘图标可以显示出来
 if(A_TickCount<120000)
-	sleep,25000
+	sleep,40000
 
 global run_iniFile := A_ScriptDir "\settings\setting.ini"
 IfNotExist, %run_iniFile%
@@ -634,6 +634,9 @@ OnMessage(0x11, "WM_QUERYENDSESSION")
 
 If renwu
 SetTimer, renwu, 30000
+
+If renwu2
+SetTimer, renwu2, 30000
 ;----------整点报时功能----------
 
 ;----------鼠标提示----------
@@ -821,14 +824,19 @@ trayicons_pid .= Icon.Pid ","
 
 If trayicons_pid not contains %Script_pid%
 {
-While (120000 - A_TickCount) > 0
+While (180000 - A_TickCount) > 0
 	sleep,100
 
+if Auto_Trayicon_showmsgbox
+{
 msgbox,4,错误,未检测到脚本的托盘图标，点"是"重启脚本，点"否"继续运行脚本。`n默认(超时)自动重启脚本。,6
-IfMsgBox Yes    
+IfMsgBox Yes
 	autoreload=1
 else IfMsgBox timeout
 	autoreload=1
+}
+else
+autoreload=1
 
 if(autoreload=1)
 {

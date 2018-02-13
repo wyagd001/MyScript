@@ -57,7 +57,7 @@ lrcECHO(lrcfile,GuiTitle){
 					If sec%n% is not Number
 						Break
 					lrc%n%:=SubStr(A_LoopReadLine, InStr(A_LoopReadLine,"]","",1)+1)
-					lrc%n%:= RegExReplace(lrc%n%, "[\[\:0-9\.\]]")
+					lrc%n%:= RegExReplace(lrc%n%, "\[[0-9]+\:[0-9]+\.[0-9]+\]")
 					; 原代码从右到左查找“]”，找到后从“]”位置+1，开始复制（复制全部）
 					; lrc%n%:=SubStr(A_LoopReadLine, InStr(A_LoopReadLine,"]","",0)+1)
 					n:=n+1

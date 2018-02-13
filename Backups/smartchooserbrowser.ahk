@@ -1,5 +1,9 @@
 #NoTrayIcon
 IniRead, DefaultBrowser, %A_ScriptDir%\smartchooserbrowser.ini, DefaultBrowser, DefaultBrowser
+IfNotExist,%DefaultBrowser%
+{
+DefaultBrowser:="iexplore.exe"
+}
 IniRead, url, %A_ScriptDir%\smartchooserbrowser.ini, DefaultUrl, url
 IniRead, BrowserAppList, %A_ScriptDir%\smartchooserbrowser.ini, BrowserApp, BrowserAppList
 

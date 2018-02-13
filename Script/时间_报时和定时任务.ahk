@@ -20,6 +20,24 @@ if ErrorLevel
 }
 Return
 
+renwu2:
+loop 5
+{
+If  (A_Hour A_Min = rh%A_index% )
+{
+	xqArray := {"星期一": 1, "星期二": 2,  "星期三": 3,  "星期四": 4,  "星期五": 5,  "星期六": 6,  "星期日": 7}
+xqdsArray := StrSplit(xq%A_index%)
+msgtptemp:=msgtp%A_index%
+for v in xqdsArray
+{
+if(v = xqArray[A_DDDD])
+  MsgBox,,提示,% msgtptemp
+}
+xqdsArray:=""
+}
+}
+Return
+
 JA_VoiceCheckTime:
   If !((A_Min = 59 || A_Min = 29) && (A_Sec = 57 || A_Sec = 58)) ;因为提示音是“滴滴滴嘟”，到“嘟”才是0秒。所以检查是否还差3秒就整点或半点，不是就返回。不过由于某些原因，比如游戏时可能计时器会有延迟，所以设定成在57秒或58秒都放。
     return

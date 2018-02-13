@@ -75,7 +75,7 @@ Cando_查新版帮助:
 			if !DllCall("HHCtrl.ocx\HtmlHelp", "Ptr", hAHK, "str", Ahkl新版帮助路径, "UInt", 0x000D, "ptr", &ak)
 			{
 				Run, %Ahkl新版帮助路径%
-				WinWait,%Ahk帮助标题%,,4
+				WinWait,%Ahk帮助标题%,,5
 				WinActivate,%Ahk帮助标题%
 				sleep,2000
 				wb := WBGet("ahk_class HH Parent")
@@ -100,7 +100,7 @@ Cando_查新版帮助:
 		IfWinNotExist,%Ahk帮助标题%
 		{
 			Run, %Ahkl新版帮助路径%
-			WinWait,%Ahk帮助标题%,,4
+			WinWait,%Ahk帮助标题%,,5
 		}
 		WinActivate,%Ahk帮助标题%
 		send !s
@@ -109,11 +109,11 @@ Cando_查新版帮助:
 Return
 
 monishuru:
-sleep,200
+sleep,500
 WinActivate,%Ahk帮助标题%
 wb := WBGet("ahk_class HH Parent")
+sleep,300
 wb.document.getElementsByTagName("input")[0].value := CandySel
-sleep,100
 wb.document.getElementsByTagName("input")[0].focus()
 
 sleep,100
@@ -123,10 +123,10 @@ ControlSend,Internet Explorer_Server1,{enter},%Ahk帮助标题%
 return
 
 monishuru2:
-sleep,200
+sleep,500
 wb := WBGet("ahk_class HH Parent")
+sleep,300
 wb.document.getElementsByTagName("input")[1].value := CandySel
-sleep,100
 wb.document.getElementsByTagName("input")[1].focus()
 
 sleep,100

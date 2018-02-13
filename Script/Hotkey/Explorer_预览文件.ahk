@@ -25,22 +25,38 @@ $Space::
 goto PreWWinGuiClose
 #ifWinActive
 
+PreWWinGuiEscape:
 PreWWinGuiClose:
 Gui,PreWWin:Destroy
 if pipa
-ObjRelease( pipa )
+ObjRelease(pipa)
+if pToken
+Gdip_ShutDown(pToken)
 return
 
 PreWWinGuiSize:
 GuiControl, Move, displayArea, x0 y0 w%A_GuiWidth% h%A_GuiHeight%
 GuiControl, Move, WMP,x0 y0 w%A_GuiWidth% h%A_GuiHeight%
-   return
+return
 
 IsFolder(Path) {
 	return InStr(FileExist(Path), "D") ? True : False
 }
 
 Cando_pdf_prew:
+gosub,IE_Open
+WB.Navigate("https://mozilla.github.io/pdf.js/web/viewer.html?file=blank.pdf")
+sleep,3000
+settimer,autoopenpdf,-1000 
+wb.document.getElementById("openFile").click()
+return
+
+Cando_html_prew:
+gosub,IE_Open
+WB.Navigate(Files)
+return
+
+IE_Open:
 GUI, PreWWin:Default
 GUI, PreWWin:Destroy
 Gui, +ReSize
@@ -54,11 +70,6 @@ OnMessage( 0x0100, "WM_KeyPress" ) ; WM_KEYDOWN
 OnMessage( 0x0101, "WM_KeyPress" ) ; WM_KEYUP   
 
 Gui, PreWWin:Show,,% Files " - 文件预览"
-WB.Navigate("https://mozilla.github.io/pdf.js/web/viewer.html?file=blank.pdf")
-sleep,3000
-settimer,autoopenpdf,-1000 
-wb.document.getElementById("openFile").click()
-tooltip
 return
 
 autoopenpdf:
@@ -123,23 +134,33 @@ return
 Cando_pic_prew:
 GUI, PreWWin:Destroy
 GUI, PreWWin:Default
-        GUI, -Caption +AlwaysOnTop +Owner
-        Gui, Margin, 0, 0
-        Gui, Add, Picture, vpicpre, %files%
-        Gui, Show, AutoSize Center
-        WinGetPos, Xpos, Ypos, Width, Height, A
-        picwidth := A_ScreenWidth*0.8
-        if (Width>picwidth)
-        {
-            GuiControl,,picpre,*w%picwidth% *h-1 %files%
-            Gui, Show, AutoSize Center
-        }
-        picheight := A_ScreenHeight*0.8
-        if (Height>picheight)
-        {
-            GuiControl,,picpre,*w-1 *h%picheight% %files%
-            Gui, Show, AutoSize Center,% Files " - 文件预览"
-        }
+pToken := Gdip_Startup()        
+GUI, -Caption +AlwaysOnTop +Owner
+Gui, Margin, 0, 0
+pBitmap:=Gdip_CreateBitmapFromFile(files)
+WidthO  :=Gdip_GetImageWidth(pBitmap)
+HeightO := Gdip_GetImageHeight(pBitmap)
+Gdip_DisposeImage(pBitmap)
+Propor  := (A_ScreenHeight/HeightO < A_ScreenWidth/WidthO ? A_ScreenHeight/HeightO : A_ScreenWidth/WidthO)
+Propor:=Propor > 1?1:Propor
+	hW  := Floor(WidthO * Propor)
+	hH := Floor(HeightO * Propor)
+Gui, Add, Picture,w%hw% h%hh%, %files%
+Gui, Show,  Center, % Files " - 文件预览"
+return
+
+Cando_gif_prew:
+GUI, PreWWin:Destroy
+GUI, PreWWin:Default
+pToken := Gdip_Startup()
+GUI, -Caption +AlwaysOnTop +Owner
+Gui, Margin, 0, 0
+pBitmap:=Gdip_CreateBitmapFromFile(files)
+Gdip_GetImageDimensions(pBitmap, width, height)
+Gui, Add, Picture,w%width% h%height% 0xE hwndhwndGif1
+gif1 := new Gif(Files, hwndGif1)
+Gui, Show, AutoSize Center, % Files " - 文件预览"
+gif1.Play()
 return
 
 Cando_text_prew:
@@ -164,3 +185,76 @@ GuiControl,, displayArea,%textvalue%
 textvalue=
 return
 
+class Gif
+{	
+	__New(file, hwnd)
+	{
+		this.file := file
+		this.hwnd := hwnd
+		this.pBitmap := Gdip_CreateBitmapFromFile(this.file)
+		Gdip_GetImageDimensions(this.pBitmap, width, height)
+		this.width := width, this.height := height
+		this.isPlaying := false
+		
+		DllCall("Gdiplus\GdipImageGetFrameDimensionsCount", "ptr", this.pBitmap, "uptr*", frameDimensions)
+		this.SetCapacity("dimensionIDs", 32)
+		DllCall("Gdiplus\GdipImageGetFrameDimensionsList", "ptr", this.pBitmap, "uptr", this.GetAddress("dimensionIDs"), "int", frameDimensions)
+		DllCall("Gdiplus\GdipImageGetFrameCount", "ptr", this.pBitmap, "uptr", this.GetAddress("dimensionIDs"), "int*", count)
+		this.frameCount := count
+		this.frameCurrent := -1
+		this.frameDelay := this.GetFrameDelay(this.pBitmap)
+	}
+
+	; Return a zero-based array, containing the frames delay (in milliseconds)
+	GetFrameDelay(pImage) {
+		static PropertyTagFrameDelay := 0x5100
+
+		DllCall("Gdiplus\GdipGetPropertyItemSize", "Ptr", pImage, "UInt", PropertyTagFrameDelay, "UInt*", ItemSize)
+		VarSetCapacity(Item, ItemSize, 0)
+		DllCall("Gdiplus\GdipGetPropertyItem"    , "Ptr", pImage, "UInt", PropertyTagFrameDelay, "UInt", ItemSize, "Ptr", &Item)
+
+		PropLen := NumGet(Item, 4, "UInt")
+		PropVal := NumGet(Item, 8 + A_PtrSize, "UPtr")
+
+		outArray := []
+		Loop, % PropLen//4 {
+			if !n := NumGet(PropVal+0, (A_Index-1)*4, "UInt")
+				n := 10
+			outArray[A_Index-1] := n * 10
+		}
+		return outArray
+	}
+	
+	Play()
+	{
+		this.isPlaying := true
+		fn := this._Play.Bind(this)
+		this._fn := fn
+		SetTimer, % fn, -1
+	}
+	
+	Pause()
+	{
+		this.isPlaying := false
+		fn := this._fn
+		SetTimer, % fn, Delete
+	}
+	
+	_Play()
+	{
+		this.frameCurrent := (this.frameCurrent = this.frameCount-1) ? 0 : this.frameCurrent + 1
+		DllCall("Gdiplus\GdipImageSelectActiveFrame", "ptr", this.pBitmap, "uptr", this.GetAddress("dimensionIDs"), "int", this.frameCurrent)
+		hBitmap := Gdip_CreateHBITMAPFromBitmap(this.pBitmap)
+		SetImage(this.hwnd, hBitmap)
+		DeleteObject(hBitmap)
+
+		fn := this._fn
+		SetTimer, % fn, % -1 * this.frameDelay[this.frameCurrent]
+	}
+	
+	__Delete()
+	{
+		Gdip_DisposeImage(this.pBitmap)
+		Object.Delete("dimensionIDs")
+	}
+}
