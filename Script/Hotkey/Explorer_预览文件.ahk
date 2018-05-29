@@ -30,8 +30,8 @@ PreWWinGuiClose:
 Gui,PreWWin:Destroy
 if pipa
 ObjRelease(pipa)
-if pToken
-Gdip_ShutDown(pToken)
+if prewpToken
+Gdip_ShutDown(prewpToken)
 return
 
 PreWWinGuiSize:
@@ -134,8 +134,8 @@ return
 Cando_pic_prew:
 GUI, PreWWin:Destroy
 GUI, PreWWin:Default
-pToken := Gdip_Startup()        
-GUI, -Caption +AlwaysOnTop +Owner
+prewpToken := Gdip_Startup()        
+GUI, +AlwaysOnTop +Owner
 Gui, Margin, 0, 0
 pBitmap:=Gdip_CreateBitmapFromFile(files)
 WidthO  :=Gdip_GetImageWidth(pBitmap)
@@ -152,7 +152,7 @@ return
 Cando_gif_prew:
 GUI, PreWWin:Destroy
 GUI, PreWWin:Default
-pToken := Gdip_Startup()
+prewpToken := Gdip_Startup()
 GUI, -Caption +AlwaysOnTop +Owner
 Gui, Margin, 0, 0
 pBitmap:=Gdip_CreateBitmapFromFile(files)

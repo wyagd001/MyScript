@@ -116,7 +116,7 @@ oaInsertBefore(obj, key, prm*)
 */
 
 IniObj(d,byref n:=""){
-	If d:=Trim(InStr(d,"`n")?d:CF_FileRead(d)," `t`r`n")
+	If d:=Trim(InStr(d,"`n") ? d : CF_FileRead(d)," `t`r`n")
 	{
 		f:=n?n:[]
 		Loop, Parse, d, `r`n, `r `t

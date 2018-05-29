@@ -34,16 +34,21 @@ SaveDesktopIconsPositions:
     MsgBox,无法保存桌面图标，请重试！
     Return
     }
+FileRead, read_coords, %SaveDeskIcons_inifile%
+
+if(read_coords!= coords)
+FileAppend, %read_coords%,*%A_ScriptDir%\settings\tmp\SaveDeskIcons_%A_Now%.ini
+
 	FileDelete,%SaveDeskIcons_inifile%
-    FileAppend, %coords%,%SaveDeskIcons_inifile%
-    coords=
+    FileAppend, %coords%,*%SaveDeskIcons_inifile%
+    read_coords=coords=
     IfExist,%SaveDeskIcons_inifile%
     Menu, addf, Enable,  恢复桌面图标
     Else
     MsgBox,保存桌面图标出现错误，请重试！
 Return
 
-SaveDesktopIconsPositionsdelay:
+SaveDesktopIconsPositionsDelay:
 coords := DeskIcons()
 if (coords = "")
     {
@@ -51,9 +56,14 @@ if (coords = "")
     SetTimer,SaveDesktopIconsPositionsdelay,Off
     Return
     }
+FileRead, read_coords, %SaveDeskIcons_inifile%
+
+if(read_coords!= coords)
+FileAppend, %read_coords%,*%A_ScriptDir%\settings\tmp\SaveDeskIcons_%A_Now%.ini
+
 FileDelete,%SaveDeskIcons_inifile%
-FileAppend, %coords%,%SaveDeskIcons_inifile%
-coords=
+FileAppend, %coords%,*%SaveDeskIcons_inifile%
+read_coords=coords=
 Critical,Off
 IfExist,%SaveDeskIcons_inifile%
 {

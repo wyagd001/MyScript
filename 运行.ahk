@@ -705,6 +705,38 @@ for k,v in Pluginshotkey
 If v
  hotkey, %v%,Plugins_Run ;,UseErrorLevel
 
+global DBPATH:= A_ScriptDir . "\Settings\cliphistory.db"
+global PREV_FILE := A_ScriptDir . "\Settings\tmp\prev.html" 
+global DB := new SQLiteDB
+STORE:={}
+
+if (!FileExist(DBPATH))
+	isnewdb := 1
+else
+	isnewdb := 0
+
+if (!DB.OpenDB(DBPATH))
+    MsgBox, 16, SQLite错误, % "消息:`t" . DB.ErrorMsg . "`n代码:`t" . DB.ErrorCode
+
+sleep,300
+if (isnewdb == 1){
+	migrateHistory()
+}
+
+;复制时  
+;复制1→复制2→复制3→复制1
+;粘贴时
+;1→3→2→1
+;2→1→3→2
+;3→2→1→3
+
+first=0
+clipid=0
+cliptip=0
+monitor=0
+SetTimer, shijianCheck, 50
+st:=A_TickCount
+
 ;快捷键打开C,D,E,F盘...设置其快捷键，loop 15循环15次，到达字母Q
 Loop 15
    HotKey % myhotkey.前缀_快速打开磁盘 Chr(A_Index+66), ExploreDrive
@@ -956,6 +988,29 @@ Continue
 EmptyMem()
 Return
 
+onClipboardChange:
+if !monitor
+{
+monitor=1
+sleep 200
+return
+}
+sleep,100
+if GetClipboardFormat(1)=1
+{
+clipid+=1
+if clipid>3
+clipid=1
+ClipSaved%clipid% := Clipboard
+addHistoryText(Clipboard, A_Now)
+sleep,100
+}
+else
+{
+tempid=1
+}
+	return
+
 EmptyMem(PID="AHK Rocks"){
     pid:=(pid="AHK Rocks") ? DllCall("GetCurrentProcessId") : pid
     h:=DllCall("OpenProcess", "UInt", 0x001F0FFF, "Int", 0, "Int", pid)
@@ -964,31 +1019,21 @@ EmptyMem(PID="AHK Rocks"){
 }
 
 检测:
-DetectHiddenWindows On
-SetTitleMatchMode 2
-If(DefaultPlayer="AhkPlayer")
+activeplayer:=activeplayer(DefaultPlayer)
+If activeplayer
 {
-    If WinExist(" - AhkPlayer")
-    Image = %A_ScriptDir%\pic\MusicPlayer\h_%DefaultPlayer%.bmp
-    Else
-    Image = %A_ScriptDir%\pic\MusicPlayer\%DefaultPlayer%.bmp
-}
-Else{
-Process, Exist, %DefaultPlayer%.exe
-If ErrorLevel = 0
-{
-Image = %A_ScriptDir%\pic\MusicPlayer\%DefaultPlayer%.bmp
-GuiControl,Disable,fhc
-}
-Else
-{
-Image = %A_ScriptDir%\pic\MusicPlayer\h_%DefaultPlayer%.bmp
-If (DefaultPlayer="Foobar2000")
+    Image = %A_ScriptDir%\pic\MusicPlayer\h_%activeplayer%.bmp
+If (activeplayer="Foobar2000")
           {
               If WinExist("foo_httpcontrol")
               GuiControl,Enable,fhc
           }
+
 }
+Else
+{
+Image = %A_ScriptDir%\pic\MusicPlayer\%DefaultPlayer%.bmp
+GuiControl,Disable,fhc
 }
 
 SoundGet,vol_Master
@@ -1072,68 +1117,96 @@ Return
 GB4_down:
 Return
 
+activeplayer(DefaultPlayer){
+DetectHiddenWindows On
+SetTitleMatchMode 2
+if ProcessExist(DefaultPlayer ".exe")
+return DefaultPlayer
+else If WinExist(" - AhkPlayer")
+return "AhkPlayer"
+else if ProcessExist("foobar2000.exe")
+return "foobar2000"
+else if ProcessExist("iTunes.exe")
+return "iTunes"
+else if ProcessExist("Wmplayer.exe")
+return "Wmplayer"
+else if ProcessExist("TTPlayer.exe")
+return "TTPlayer"
+else if ProcessExist("Winamp.exe")
+return "Winamp"
+}
+
+ProcessExist(Name){
+	Process,Exist,%Name%
+	return Errorlevel
+}
+
 GB1_down_up:
 ;prev:
-If (DefaultPlayer="AhkPlayer")
+activeplayer:=activeplayer(DefaultPlayer)
+If (activeplayer="AhkPlayer")
 Send,^+{F3}
-If (DefaultPlayer="foobar2000")
+If (activeplayer="foobar2000")
 Run %foobar2000% /prev,,UseErrorLevel
-If (DefaultPlayer="wmplayer")
+If (activeplayer="wmplayer")
 postMessage 0x111,18810,,,ahk_class WMPlayerApp
-If (DefaultPlayer="Winamp")
+If (activeplayer="Winamp")
 postMessage 0x111,40044 ,,,ahk_class Winamp v1.x
-If (DefaultPlayer="ttplayer")
+If (activeplayer="ttplayer")
 postMessage 0x111,0x7d05 ,,,ahk_class TTPlayer_PlayerWnd
-If (DefaultPlayer="itunes")
+If (activeplayer="itunes")
 ControlSend, ahk_parent, ^{left}, iTunes ahk_class iTunes
 Return
 
 
 GB2_down_up:
 ;pause:
-If (DefaultPlayer="AhkPlayer")
+activeplayer:=activeplayer(DefaultPlayer)
+If (activeplayer="AhkPlayer")
 Send,^+P
-If (DefaultPlayer="foobar2000")
+If (activeplayer="foobar2000")
 Run %foobar2000% /playpause,,UseErrorLevel
-If (DefaultPlayer="wmplayer")
+If (activeplayer="wmplayer")
 SendMessage 0x111,18808, , ,ahk_class WMPlayerApp
-If (DefaultPlayer="Winamp")
+If (activeplayer="Winamp")
 postMessage 0x111,40046 ,,,ahk_class Winamp v1.x
-If (DefaultPlayer="ttplayer")
+If (activeplayer="ttplayer")
 postMessage 0x111,0x7d00 ,,,ahk_class TTPlayer_PlayerWnd
-If (DefaultPlayer="itunes")
+If (activeplayer="itunes")
 ControlSend, ahk_parent, {space}, iTunes ahk_class iTunes
 Return
 
 GB3_down_up:
 ;next:
-If (DefaultPlayer="AhkPlayer")
+activeplayer:=activeplayer(DefaultPlayer)
+If (activeplayer="AhkPlayer")
 Send,^+{F5}
-If (DefaultPlayer="foobar2000")
+If (activeplayer="foobar2000")
 Run %foobar2000% /next,,UseErrorLevel
-If (DefaultPlayer="wmplayer")
+If (activeplayer="wmplayer")
 SendMessage 0x111,18811, , ,ahk_class WMPlayerApp
-If (DefaultPlayer="Winamp")
+If (activeplayer="Winamp")
 postMessage 0x111,40048 ,,,ahk_class Winamp v1.x
-If (DefaultPlayer="ttplayer")
+If (activeplayer="ttplayer")
 postMessage 0x111,0x7d06,,,ahk_class TTPlayer_PlayerWnd
-If (DefaultPlayer="itunes")
+If (activeplayer="itunes")
 ControlSend, ahk_parent, ^{right}, iTunes ahk_class iTunes
 Return
 
 GB4_down_up:
 ;close:
-If (DefaultPlayer="AhkPlayer")
+activeplayer:=activeplayer(DefaultPlayer)
+If (activeplayer="AhkPlayer")
 Send,^+E
-If (DefaultPlayer="foobar2000")
+If (activeplayer="foobar2000")
 Run %foobar2000% /quit,,UseErrorLevel
-If (DefaultPlayer="wmplayer")
+If (activeplayer="wmplayer")
 SendMessage 0x111,57665, , ,ahk_class WMPlayerApp
-If (DefaultPlayer="Winamp")
+If (activeplayer="Winamp")
 postMessage 0x111,40001 ,,,ahk_class Winamp v1.x
-If (DefaultPlayer="ttplayer")
+If (activeplayer="ttplayer")
 postMessage 0x0010,0 ,,,ahk_class TTPlayer_PlayerWnd
-If (DefaultPlayer="itunes")
+If (activeplayer="itunes")
 Process,Close,itunes.exe
 gosub 检测
 Return
@@ -1452,6 +1525,7 @@ Return
 menu,audioplayer,Check,%A_ThisMenuItem%
 menu,audioplayer,unCheck,%DefaultPlayer%
 DefaultPlayer := A_ThisMenuItem
+Gosub,OpenAudioPlayer
 Gosub,检测
 IniWrite,%A_ThisMenuItem%, %run_iniFile%,固定的程序, DefaultPlayer
 Return
@@ -1577,19 +1651,19 @@ RunScript(script,result:="false") {
 #include %A_ScriptDir%\Script\脚本管理器.ahk
 #include %A_ScriptDir%\Script\配置.ahk
 #include %A_ScriptDir%\Script\FolderMenu.ahk
-#include %A_ScriptDir%\Script\主窗口_OpenButton.ahk
-#include %A_ScriptDir%\Script\主窗口_runhistory.ahk
-#include %A_ScriptDir%\Script\主窗口_检查更新.ahk
-#include %A_ScriptDir%\Script\主窗口_网址补齐.ahk
-#include %A_ScriptDir%\Script\主窗口_IE收藏夹.ahk
-#include %A_ScriptDir%\Script\主窗口_收藏夹.ahk
-#include %A_ScriptDir%\Script\主窗口_桌面快捷方式.ahk
-#include %A_ScriptDir%\Script\主窗口_图片按钮.ahk
-#include %A_ScriptDir%\Script\主窗口_常用.ahk
-#include %A_ScriptDir%\Script\主窗口_列表.ahk
-#include %A_ScriptDir%\Script\主窗口_附加功能.ahk
-#include %A_ScriptDir%\Script\主窗口_拖拽移动文件.ahk
-#include %A_ScriptDir%\Script\主窗口_切换编辑下拉列表.ahk
+#include %A_ScriptDir%\Script\主窗口\OpenButton.ahk
+#include %A_ScriptDir%\Script\主窗口\runhistory.ahk
+#include %A_ScriptDir%\Script\主窗口\检查更新.ahk
+#include %A_ScriptDir%\Script\主窗口\网址补齐.ahk
+#include %A_ScriptDir%\Script\主窗口\IE收藏夹.ahk
+#include %A_ScriptDir%\Script\主窗口\收藏夹.ahk
+#include %A_ScriptDir%\Script\主窗口\桌面快捷方式.ahk
+#include %A_ScriptDir%\Script\主窗口\图片按钮.ahk
+#include %A_ScriptDir%\Script\主窗口\常用.ahk
+#include %A_ScriptDir%\Script\主窗口\列表.ahk
+#include %A_ScriptDir%\Script\主窗口\附加功能.ahk
+#include %A_ScriptDir%\Script\主窗口\拖拽移动文件.ahk
+#include %A_ScriptDir%\Script\主窗口\切换编辑下拉列表.ahk
 #include %A_ScriptDir%\Script\USB.ahk
 #include %A_ScriptDir%\Script\光驱.ahk
 #include %A_ScriptDir%\Script\鼠标中键.ahk
@@ -1608,11 +1682,13 @@ RunScript(script,result:="false") {
 #include %A_ScriptDir%\Script\Dock To Edge.ahk
 #include %A_ScriptDir%\Script\地址栏粘贴并打开.ahk
 #include %A_ScriptDir%\Script\关机对话框.ahk
+#include %A_ScriptDir%\Script\cliphistory.ahk
 #include %A_ScriptDir%\Lib\Explorer.ahk
 #include %A_ScriptDir%\Lib\Menu.ahk
 #include %A_ScriptDir%\Lib\Window.ahk
 #include %A_ScriptDir%\Lib\ActiveScript.ahk
 #include %A_ScriptDir%\Lib\_GuiDropFiles.ahk
+#include %A_ScriptDir%\Lib\Class_SQLiteDB.ahk
 #Include *i %A_ScriptDir%\Lib\进制转换.ahk
 #Include *i %A_ScriptDir%\Lib\string.ahk
 #include *i %A_ScriptDir%\Script\AutoInclude.ahk

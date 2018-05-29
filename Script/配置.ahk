@@ -48,14 +48,14 @@ IniRead,winamp,%run_iniFile%,AudioPlayer,winamp
 Gui,99:Default
 Gui,+LastFound
 Gui,Destroy
-Gui,Add,Button,x370 y325 w70 h30 gwk,确定
-Gui,Add,Button,x450 y325 w70 h30 g99GuiClose Default,取消
-Gui,Add,Tab,x-4 y1 w640 h320 ,快捷键|Plugins|常规|自动激活|7Plus菜单|整点报时|播放器|运行|关于
+Gui,Add,Button,x370 y335 w70 h30 gwk,确定
+Gui,Add,Button,x450 y335 w70 h30 g99GuiClose Default,取消
+Gui,Add,Tab,x-4 y1 w640 h330 ,快捷键|Plugins|常规|自动激活|7Plus菜单|整点报时|播放器|运行|关于
 
 Gui,Tab,快捷键
 Gui,Add,text,x10 y30 w550,注意:#表示Win,!表示Alt,+表示Shift,^表示Ctrl,Space表示空格键,Up表示向上箭头,~表示按键原功能不会被屏蔽，*表示有其它键同时按下时快捷键仍然生效
 
-Gui,Add,ListView,x6 y60 w550 h245 vhotkeysListview ghotkeysListview checked Grid -Multi +NoSortHdr -LV0x10 +LV0x4000 +AltSubmit,快捷键标签|快捷键|适用窗口|序号
+Gui,Add,ListView,x6 y60 w570 h245 vhotkeysListview ghotkeysListview checked Grid -Multi +NoSortHdr -LV0x10 +LV0x4000 +AltSubmit,快捷键标签|快捷键|适用窗口|序号
 Gui,listview,hotkeysListview 
 LV_Delete()
 IniRead,hotkeycontent,%run_iniFile%,快捷键
@@ -78,7 +78,7 @@ LV_Modify(1,"Vis")
 LV_ColorInitiate(99)
 sleep,500
 Gui,Tab,Plugins
-Gui,Add,ListView,x6 y30 w550 h245 vPluginsListview ghotkeysListview Grid -Multi -LV0x10 +LV0x4000 +AltSubmit,名称|快捷键|其他调用方法|序号
+Gui,Add,ListView,x6 y30 w570 h245 vPluginsListview ghotkeysListview Grid -Multi -LV0x10 +LV0x4000 +AltSubmit,名称|快捷键|其他调用方法|序号
 Gosub, Load_PluginsList
 Gui,Add,Button,x10 y280 w80 h30 gEdit_PluginsHotkey,编辑菜单(&E)
 Gui,Add,Button,x90 y280 w80 h30 gLoad_PluginsList,刷新菜单(&R)
@@ -201,7 +201,7 @@ If(Auto_Raise=1){
 }
 
 Gui,Tab,7Plus菜单
-Gui,Add,ListView,r12 w550 h245 v7pluslistview Grid -Multi +NoSortHdr Checked AltSubmit -LV0x10 g7plusListView,激活|ID  |菜单名称
+Gui,Add,ListView,r12 w570 h245 v7pluslistview Grid -Multi +NoSortHdr Checked AltSubmit -LV0x10 g7plusListView,激活|ID  |菜单名称
 ;如果窗口含有多个 ListView 控件,默认情况下函数操作于最近添加的那个. 要改变这种情况,请指定 Gui,ListView,ListViewName
 Gosub, Load_List
 Gui,Add,Button,x10 y280 w80 h30 gButtun_Edit,编辑菜单(&E)
@@ -240,11 +240,11 @@ Gui, Add, Radio, x172 y237 w27 gupdaterh,
 Gui, Add, Radio, x257 y237 w27 gupdaterh,
 Gui, Add, Radio, x344 y237 w27 gupdaterh,
 Gui, Add, Radio, x431 y237 w27 gupdaterh,
-Gui,Add,Edit,x112 y235 w55 h20 vrh1 ,%rh1%
-Gui,Add,Edit,x197 y235 w55 h20 vrh2 ,%rh2%
-Gui,Add,Edit,x284 y235 w55 h20 vrh3 ,%rh3%
-Gui,Add,Edit,x371 y235 w55 h20 vrh4 ,%rh4%
-Gui,Add,Edit,x458 y235 w55 h20 vrh5 ,%rh5%
+Gui,Add,Edit,x112 y235 w55 h20 vrh1 grrh ,%rh1%
+Gui,Add,Edit,x197 y235 w55 h20 vrh2 grrh,%rh2%
+Gui,Add,Edit,x284 y235 w55 h20 vrh3 grrh,%rh3%
+Gui,Add,Edit,x371 y235 w55 h20 vrh4 grrh,%rh4%
+Gui,Add,Edit,x458 y235 w55 h20 vrh5 grrh,%rh5%
 
 Gui,Add,CheckBox,x26 y265 w60 h20 vcxq1 grxq,星期一
 Gui,Add,CheckBox,x90 y265 w60 h20 vcxq2 grxq,星期二
@@ -346,9 +346,9 @@ Gui,Font,CBlue
 Gui,Add,Text,x+ gg vURL,https://github.com/wyagd001/MyScript
 Gui,Font
 Gui,Add,Text,x26 y100,% "版本："AppVersion
-Gui,Add,Text,x26 y120,Autohotkey：1.1.26.00(Unicode)
-Gui,Add,Text,x26 y140,适配系统：Win7 SP1 32bit 中文版
-Gui,Add,Button,x26 y160 gUpdate,检查更新
+Gui,Add,Text,x26 y120,适配 Autohotkey：1.1.28.00(Unicode) 系统：Win7 SP1 32bit 中文版
+Gui,Add,Text,x26 y140,% "当前 Autohotkey：" A_AhkVersion "(" (A_IsUnicode?"Unicode":"ansi") ") 系统：" A_OSVersion " " (A_Is64bitOS?64:32) "bit"
+Gui,Add,Button,x26 y165 gUpdate,检查更新
 
 ;Gui & Hyperlink - AGermanUser
 ;http://www.autohotkey.com/forum/viewtopic.php?p=107703
@@ -368,7 +368,7 @@ OnMessage(WM_SETCURSOR,"HandleMessage")
 WM_MOUSEMOVE = 0x200
 OnMessageEx(0x200,"HandleMessage")
 
-Gui,Show,xCenter yCenter w570 h355,选项
+Gui,Show,xCenter yCenter w590 h370,选项
 Return
 
 autoraise:
@@ -795,6 +795,16 @@ GuiControl,,cxq8,1
 }
 else
 GuiControl,,cxq8,0
+return
+
+rrh:
+Gui Submit,nohide
+rhnum:=SubStr(A_GuiControl,0)
+if %A_GuiControl% =
+{
+IniWrite,0,%run_iniFile%,时间,xq%rhnum%
+gosub updaterh
+}
 return
 
 rmsgtp:
