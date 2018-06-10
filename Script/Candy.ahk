@@ -519,8 +519,8 @@ SkSub_CreateMenu(Item,ParentMenuName,label,IconDir,IconSize)    ;ÌõÄ¿£¬ËüËù´¦µÄ¸
     _s:=arrS[1]
     if arrS.Maxindex()= 1      ;Èç¹ûÀïÃæÃ»ÓÐ /£¬¾ÍÊÇ×îÖÕµÄ¡±²Ëµ¥Ïî¡°¡£Ìí¼Óµ½¡±ËüµÄ¸¸²Ëµ¥¡±ÉÏ¡£
     {
-        If InStr(_s,"-") = 1       ;-·Ö¸îÏß
-        Menu, %ParentMenuName%, Add
+        If InStr(_s,"-") = 1       ;¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª ·Ö¸îÏß
+          Menu, %ParentMenuName%, Add
         Else If InStr(_s,"*") = 1       ;* »Ò²Ëµ¥
         {
             _s:=Ltrim(_s,"*")
@@ -535,7 +535,7 @@ SkSub_CreateMenu(Item,ParentMenuName,label,IconDir,IconSize)    ;ÌõÄ¿£¬ËüËù´¦µÄ¸
             Menu, %ParentMenuName%, icon,  %_s%,%z%,,%IconSize%
         }
     }
-    Else     ;Èç¹ûÓÐ/£¬ËµÃ÷»¹²»ÊÇ×îÖÕµÄ²Ëµ¥Ïî£¬»¹µÃÒ»²ãÒ»²ã·Ö²¦³öÀ´¡£
+    Else     ;Èç¹ûÓÐ /£¬ËµÃ÷»¹²»ÊÇ×îÖÕµÄ²Ëµ¥Ïî£¬»¹µÃÒ»²ãÒ»²ã·Ö²¦³öÀ´¡£
     {
         _Sub_ParentName=%ParentMenuName%/%_s%
         StringTrimLeft,_subItem,Item,strlen(_s)+1
@@ -554,7 +554,7 @@ SkSub_EnvTrans(v)
 
 SkSub_Get_Firstline_Icon(ext,fullpath,iconpath)
 {
-;dllÎÄ¼þÌáÈ¡²»µ½Í¼±ê»á±¨´í
+ ; dllÎÄ¼þÌáÈ¡²»µ½Í¼±ê»á±¨´í
  Menu, tray,UseErrorLevel
 	IfExist,%iconpath%\%ext%.ico             ;Èç¹û¹Ì¶¨µÄÎÄ¼þ¼ÐÀïÃæ´æÔÚ¸ÃÀàÐÍµÄÍ¼±ê
 		x := iconpath "\" ext ".ico"
@@ -584,23 +584,23 @@ SkSub_Get_MenuItem_Icon(item,iconpath)   ; item=ÐèÒª»ñÈ¡Í¼±êµÄÌõÄ¿£¬iconpath=Äã¶
 	if RegExMatch(item,"i)^(ow|openwith|rot|run|roa|runp|rund)\|") ;ÔËÐÐÃüÁîÀà
 	{
    		cmd_removed:=RegExReplace(item,"^.*?\|")      ;ÀïÃæ´¿´âµÄ Ó¦ÓÃ³ÌÐò Â·¾¶
-		x:=RegExReplace(cmd_removed,"i)exe[^!]*[^>]*", "exe")
+		x:=RegExReplace(cmd_removed,"i)\.exe[^!]*[^>]*", ".exe")
    if(Fileexist(x))
     Return %x%  ;Ô­½Å±¾Ö»ÓÐÕâÒ»¾ä
+   else if(Fileexist(A_WinDir "\system32\" x))
+    Return %x%
 /*
       ;Ô­°æÌáÈ¡²»µ½Í¼±ê£¬²Ëµ¥´´½¨²»»á³ö´í, ×Ô¼ºµÄ½Å±¾³ö´í
-     ;Ìí¼ÓÒÔÏÂÅÐ¶¨
-     if instr(x,".exe") 
-     Return %x%
-     else    
-    Return
+      ;Menu, Tray, UseErrorLevel  ;²Ëµ¥³ö´í²»ÌáÊ¾
 */
 	}
 	Else if instr(item,".exe") ;Ê¡ÂÔÁËÖ¸ÁîµÄopenwith|
 	{
 		x:=RegExReplace(item,"i)\.exe[^!]*[^>]*", ".exe")
-     if(Fileexist(x))
+    if(Fileexist(x))
 		Return %x%
+   else if(Fileexist(A_WinDir "\system32\" x))
+    Return %x%
 	}
 	Else
 	{

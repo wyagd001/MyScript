@@ -285,6 +285,7 @@ GoSub tsk_openAll
 ;测试启动时间
 ;ElapsedTime := A_TickCount - StartTime
 ;msgbox % ElapsedTime
+
 ;----------托盘菜单----------
 ; 菜单出错不提示，影响脚本中所有菜单，例如candy提取不到图标不会报错
 Menu, Tray, UseErrorLevel
@@ -989,27 +990,30 @@ EmptyMem()
 Return
 
 onClipboardChange:
-if !monitor
-{
-monitor=1
-sleep 200
-return
-}
-sleep,100
-if GetClipboardFormat(1)=1
-{
-clipid+=1
-if clipid>3
-clipid=1
-ClipSaved%clipid% := Clipboard
-addHistoryText(Clipboard, A_Now)
-sleep,100
-}
-else
-{
-tempid=1
-}
+	if !monitor
+	{
+		monitor=1
+		sleep 200
 	return
+	}
+	sleep,100
+	if GetClipboardFormat(1)=1
+	{
+		clipid+=1
+		if clipid>3
+			clipid=1
+		ClipSaved%clipid% := Clipboard
+		if writecliphistory=1
+			addHistoryText(Clipboard, A_Now)
+		else
+			writecliphistory=1
+		sleep,100
+	}
+	else
+	{
+		tempid=1
+	}
+return
 
 EmptyMem(PID="AHK Rocks"){
     pid:=(pid="AHK Rocks") ? DllCall("GetCurrentProcessId") : pid

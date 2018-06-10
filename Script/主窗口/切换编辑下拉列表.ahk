@@ -8,7 +8,7 @@ Temp_ComboBoxShowItems:="@ExeAhk@|@Cmd@|@Proxy@|@regedit@|@×ª»»@UrlDecode@|@×ª»»
 GuiControl, , dir, |%Temp_ComboBoxShowItems%
 changeComboBox=1
 send @
-settimer,huifu_ComboBox,-20000
+settimer,huifu_ComboBox,-40000
 }
 return
 
@@ -27,7 +27,7 @@ Sort, Temp_ComboBoxShowItems,D|
 GuiControl, , dir, |%Temp_ComboBoxShowItems%
 changeComboBox=1
 favorites_link=1
-settimer,huifu_ComboBox,-20000
+settimer,huifu_ComboBox,-40000
 }
 return
 #ifwinactive

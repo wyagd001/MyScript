@@ -1,42 +1,32 @@
 addfavorites:
-tempworkdir:=A_WorkingDir
 Loop, parse, A_GuiEvent, `n, `r
 {
    Gui, Submit, NoHide
-
-   w = %A_ScriptDir%\favorites
-   SetWorkingDir, %w%
+   myfav = %A_ScriptDir%\favorites
    ifNotExist, %Dir%
    {
    msgbox,没有选择文件或文件夹。
-   SetWorkingDir,%tempworkdir%
    return
    }
 
    SplitPath,Dir, OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive
    InputBox,shortName,,请输入快捷方式的名称?,,,,,,,,%OutNameNoExt%
    if ErrorLevel{
-   SetWorkingDir,%tempworkdir%
    return
    }
    else
    {
-   IfExist,%w%\%shortName%.lnk
+   IfExist,%myfav%\%shortName%.lnk
    {
    msgbox,4,,同名的快捷方式已经存在，是否替换?
    IfMsgBox No
-   {
-   SetWorkingDir,%tempworkdir%
    return
-   }
    else{
-   FileCreateShortcut,%dir%,%shortName%.lnk,%w%
-   SetWorkingDir,%tempworkdir%
+   FileCreateShortcut,%dir%,%myfav%\%shortName%.lnk
    return
    }
    }
-   FileCreateShortcut,%dir%,%shortName%.lnk,%w%
-   SetWorkingDir,%tempworkdir%
+   FileCreateShortcut,%dir%,%myfav%\%shortName%.lnk
    return
 }
 return
@@ -44,31 +34,38 @@ return
 return
 
 showfavorites:
-   tempworkdir:=A_WorkingDir
-   w2 = %A_ScriptDir%\favorites
-   SetWorkingDir, %w2%
+   myfav = %A_ScriptDir%\favorites
    kShortcutExt = lnk
 
 FileCount := 0
-Loop, %A_WorkingDir%\*.%kShortcutExt%,,   ; for each shortcut in the directory, add a menu item for it
+Loop, %myfav%\*.%kShortcutExt%,,   ; for each shortcut in the directory, add a menu item for it
 {
    FileCount++
-   SplitPath,A_LoopFileName, , , , menuName2
+   SplitPath,A_LoopFilePath, , , , menuName2
    Menu, mymenu2, Add, %menuName2%, RunThisMenuItem
+    SplitPath, A_LoopFilePath, , , , menuName,      ; remove extension
+    Menu, mymenu2, Add, %menuName%, RunThisMenuItem
+    FileGetShortcut, %A_LoopFilePath%, OutItem, , , , OutIcon, OutIconNum
+			try{
+				if(OutIcon){
+					Menu,mymenu2,Icon,%menuName%,%OutIcon%,%OutIconNum%
+				}else{
+					Menu,mymenu2,Icon,%menuName%,%OutItem%
+				}
+			} catch e {
+				Menu,mymenu2,Icon,%menuName%,shell32.dll,1
+			}
 }
 
 if(FileCount != 0)
 Menu, mymenu2, Add
 
 FileCount := 0
-Loop, %A_ScriptDir%\Favorites\*, 2    ;获取文件夹
+Loop, %myfav%\*, 2    ;获取文件夹
 {
-FileCount := 0
-Filename_%FileCount%:=A_LoopFileName
-fname:=Filename_%FileCount%
-
+fname:=A_LoopFileName
 FileList =
-   Loop, %A_ScriptDir%\Favorites\%fname%\*.lnk  ;不排序默认顺序  ntfs 字母   fat32  按创建时间排序
+   Loop, %myfav%\%fname%\*.lnk  ;不排序默认顺序  ntfs 字母   fat32  按创建时间排序
     FileList = %FileList%%A_LoopFileName%`n
       Sort, FileList     ;排序  ntfs 字母   fat32  按创建时间排序
       Loop, parse, FileList, `n
@@ -78,6 +75,19 @@ FileList =
       FileCount++
       SplitPath,A_LoopField, , , , pos
       Menu, %fname%, add, %pos%, MenuHandler   ; 创建子菜单项。
+    FileGetShortcut, %myfav%\%fname%\%A_LoopField%, OutItem, , , , OutIcon, OutIconNum
+			try{
+				if(OutIcon){
+					Menu,%fname%,Icon,%pos%,%OutIcon%,%OutIconNum%
+				}else{
+          if InStr(FileExist(OutItem), "D")
+					Menu,%fname%,Icon,%pos%,%a_scriptdir%\pic\candy\extension\folder.ico
+					else
+					Menu,%fname%,Icon,%pos%,%OutItem%
+				}
+			} catch e {
+				Menu,%fname%,Icon,%pos%,shell32.dll,1
+			}
        }
 if(FileCount != 0)                          ;忽略空的子文件夹，否则出错
 Menu,mymenu2, add, %fname%, :%fname%  ; 创建父菜单项。
@@ -86,7 +96,6 @@ Menu,mymenu2, add, %fname%, :%fname%  ; 创建父菜单项。
  Menu, mymenu2, Add,管理收藏,o
 Menu,mymenu2,show
 Menu,mymenu2,deleteall
-SetWorkingDir,%tempworkdir%
 /*
 Loop, %w2%\*.*, 2, 0
 {
@@ -103,16 +112,18 @@ Loop, %w2%\*.*, 2, 0
 return
 
 o:
-run %A_ScriptDir%\favorites
+run %myfav%
 return
 
 RunThisMenuItem:
 ; Runs the shortcut corresponding to the last selected tray meny item
-    Run %A_ThisMenuItem%.%kShortcutExt%
+    Run %myfav%\%A_ThisMenuItem%.%kShortcutExt%
+        if ErrorLevel
+        MsgBox,,,系统找不到指定的文件。,3
     return
 
 MenuHandler:   ;运行程序
-RunFileName = %A_ScriptDir%\favorites\%A_ThisMenu%\%A_ThisMenuItem%.lnk
+RunFileName = %myfav%\%A_ThisMenu%\%A_ThisMenuItem%.lnk
 run, %RunFileName%,,UseErrorLevel
         if ErrorLevel
         MsgBox,,,系统找不到指定的文件。,3
