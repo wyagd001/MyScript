@@ -581,7 +581,7 @@ SkSub_Get_MenuItem_Icon(item,iconpath)   ; item=ÐèÒª»ñÈ¡Í¼±êµÄÌõÄ¿£¬iconpath=Äã¶
 		Return  iconpath "\Command\" cmd ".ico"
 	}
 	item:=SkSub_envtrans(item)
-	if RegExMatch(item,"i)^(ow|openwith|rot|run|roa|runp|rund)\|") ;ÔËÐÐÃüÁîÀà
+	if RegExMatch(item,"i)^(ow|openwith|rot|run|roa|runp|rund|exeahk)\|") ;ÔËÐÐÃüÁîÀà
 	{
    		cmd_removed:=RegExReplace(item,"^.*?\|")      ;ÀïÃæ´¿´âµÄ Ó¦ÓÃ³ÌÐò Â·¾¶
 		x:=RegExReplace(cmd_removed,"i)\.exe[^!]*[^>]*", ".exe")
@@ -787,13 +787,6 @@ Default_TextEditor := CF_IniRead(Candy_ProFile_Ini, "General_Settings", "Default
 SkSub_Clear_CandyVar()
 {
 	Global
-    CandySel:=
-    CandySel_LinkTarget:=
-    CandySel_Ext:=
-    CandySel_FileNamenoExt:=
-    CandySel_ParentPath:=
-    CandySel_ParentName:=
-    CandySel_Drive:=
-	Config_files:=
+    CandySel:= CandySel_LinkTarget:= CandySel_Ext:=CandySel_FileNamenoExt:=CandySel_ParentPath:=CandySel_ParentName:=CandySel_Drive:=Config_files:=""
 	CandyError_From_Menu:=0
 }

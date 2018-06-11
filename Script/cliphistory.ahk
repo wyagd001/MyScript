@@ -8,6 +8,8 @@ tempid=0
 SetTimer, ctrlCheck, 50
 return
 }
+if !ClipSaved1
+return
 first+=1
 if first=4
 {
@@ -35,8 +37,15 @@ return
 
 cliptip(clipnum)
 {
-sleep,200
-tooltip % "文字剪贴板之" clipnum "`n" ClipSaved%clipnum%
+sleep,100
+Outputtooltip=
+if StrLen(ClipSaved%clipnum%)>300
+{
+StringLeft, Outputtooltip1, ClipSaved%clipnum%, 150
+StringRight, Outputtooltip2, ClipSaved%clipnum%, 150
+Outputtooltip:=Outputtooltip1 "`n`n★☆★☆★☆★☆中间部分省略★☆★☆★☆★☆`n`n" Outputtooltip2
+}
+tooltip % "文字剪贴板之" clipnum "`n"(Outputtooltip ? Outputtooltip : ClipSaved%clipnum%)
 return
 }
 
@@ -170,7 +179,7 @@ h=500
 
 	Gui, Add, Button, h23 Section Default	 ghistory_ButtonPreview vhistory_ButtonPreview	, 预览(&P)
 	Gui, Add, Button, x+6 ys h23			vhistory_ButtonDelete	ghistory_ButtonDelete, 删除(&T)
-	Gui, Add, Button, x+6 ys h23 			vhistory_ButtonDeleteAll ghistory_ButtonDeleteAll, 清空(&H)
+	Gui, Add, Button, x+6 ys h23 			vhistory_ButtonDeleteAll ghistory_ButtonDeleteAll, 重置(&H)
 	Gui, Add, Text, x+35 ys+5 					vhistory_SearchText, 搜索过滤(&F)
 	Gui, Add, Checkbox, x+10 ys+5 Checked%history_partial% vhistory_partial ghistory_SearchBox, 部分(&R)
 	Gui, Add, Edit, ys  	ghistory_SearchBox	vhistory_SearchBox
@@ -189,6 +198,7 @@ h=500
   Menu, HisMenu, Add, 删除(&D), history_ButtonDelete 
   Menu, HisMenu, Default, 预览(&P)
 	historyUpdate()
+	history_UpdateSTB()
 	LV_ModifyCol(what_sort, how_sort ? "Sort" : "SortDesc")
 
 	if ((h+0) == WORKINGHT)
@@ -255,7 +265,7 @@ historyUpdate(crit="", create=true, partial=false){
 	}
 ;msgbox % Row[1] "`n二" Row[2] "`n三" Row[3] "`n四" Row[4] "`n五" Row[5] "`n六" Row[6]
 
-	;history_UpdateSTB("" totalSize/1024)
+	history_UpdateSTB("" totalSize/1024)
 
 	if create
 	{
@@ -379,7 +389,7 @@ getFromTable(tbl, cols, condition){
  * copy previewed clip to clipboard
  */
 button_Copy_to_Clipboard:
-	monitor=0
+	writecliphistory=0
 	Gui, Preview:Submit, nohide
 		try Clipboard := prev_handle.Document.body.innerText
 	sleep 500
@@ -425,11 +435,10 @@ history_ButtonDelete(){
 	loop, parse, list_clipfilepath, `n
 	{
 		deleteHistoryById(A_loopfield)
-
 	}
 	
 	Guicontrol, History:Focus, history_SearchBox
-	;history_UpdateSTB()
+	history_UpdateSTB()
 }
 
 deleteHistoryById(id){
@@ -441,12 +450,18 @@ deleteHistoryById(id){
  */
 history_ButtonDeleteAll:
 	Gui, +OwnDialogs
-	MsgBox, 257, Clear History,确定要清空剪贴板的历史记录？
+	MsgBox, 257, 删除重置,确定要删除剪贴板历史记录的数据库，重新开始记录吗？
 	IfMsgBox, OK
 	{
-		execSql("delete from history")
+db.closedb()
+filedelete,%DBPATH%
+DB.OpenDB(DBPATH)
+migrateHistory()
+		;execSql("Truncate TABLE history")
+		;execSql("drop TABLE history")
+		;execSql("delete * from history")
 		historyUpdate()
-		;history_UpdateSTB()
+		history_UpdateSTB()
 	}
 	return
 
@@ -586,7 +601,7 @@ history_MenuPreview:
 	return
 
 history_clipboard:
-  monitor=0
+  writecliphistory=0
 	hhhh:=history_clipboard()
 return
 
@@ -603,7 +618,6 @@ history_clipboard(sTartRow=0){
 		return 0
 	LV_GetText(clip_id, row_selected, 4)
 
-		;FileRead, temp_Read, cache\history\%clip_id%
 		temp_read := getFromTable("history", "data", "id=" clip_id)[1]
 		try Clipboard := temp_Read
 
@@ -681,4 +695,31 @@ historyCleanup(){
 		deleteHistoryById(Row[1])
 	}
 	DB.Exec("COMMIT TRANSACTION")
+}
+
+/**
+ * reutrns the size of history
+ * @param  {String} option no idea
+ * @return {number} size in kb
+ */
+history_GetSize(option := ""){
+	If (option == ""){
+    	data := getFromTable("history", "sum(size)", "id>-1")
+    	R := data[1]
+	} else {
+
+	}
+
+    return R/1024
+}
+
+/**
+ * update size in status bar
+ * @param  {String} size size to show
+ * @return {void}
+ */
+history_UpdateSTB(size=""){
+	; If size is passed, that size is used
+	Gui, History:Default
+	SB_SetText("占用硬盘 : " ( size="" ? history_GetSize() : size ) " KB")
 }

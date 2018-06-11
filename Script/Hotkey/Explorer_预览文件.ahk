@@ -1,5 +1,6 @@
 #ifWinActive ahk_Group ccc
 $Space::
+;重命名时，或中文输入法时，直接发送空格
 if(A_Cursor="IBeam") or IsRenaming() or (IME_GetSentenceMode(_mhwnd())= 0)
 {
  send {space}
@@ -31,7 +32,11 @@ Gui,PreWWin:Destroy
 if pipa
 ObjRelease(pipa)
 if prewpToken
+{
+msgbox,,, % prewpToken,1
 Gdip_ShutDown(prewpToken)
+sleep,1000
+}
 return
 
 PreWWinGuiSize:

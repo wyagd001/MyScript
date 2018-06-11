@@ -42,7 +42,7 @@ startzimu:=RegExMatch(FileFullPath, "i)^[a-z]")
 RegExMatch(FileFullPath, "i).*?\s+(.*)", fff_)
 FileFullPath:=fff_1
 }
-startzimu=ff_=ff_1=fff_=fff_1=
+startzimu:=ff_:=ff_1:=fff_:=fff_1:=""
 if FileFullPath<>
   return FileFullPath
 }

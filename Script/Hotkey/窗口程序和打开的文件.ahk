@@ -113,7 +113,7 @@ IfInString,_Title,记事本
 {
 If(_Title="无标题 - 记事本")
 {
-FileFullPath=_Title=pid=ProcessPath=startzimu=ff_=ff_1=fff_=fff_1=
+FileFullPath:=_Title:=pid:=ProcessPath:=startzimu:=ff_:=ff_1:=fff_:=fff_1=""
 Return
 }
 WinGet, hWnd, ID, A
@@ -123,7 +123,7 @@ if FileFullPath<>
 }
 
 ; 结束清理
-FileFullPath=_Title=pid=ProcessPath=startzimu=ff_=ff_1=fff_=fff_1=
+FileFullPath:=_Title:=pid:=ProcessPath:=startzimu:=ff_:=ff_1:=fff_:=fff_1=""
 Return
 
 OpenFileFullPath:
@@ -132,7 +132,7 @@ OpenFileFullPath:
 	If Fileexist(FileFullPath)
 	{
 		Run,% "explorer.exe /select," FileFullPath
-		FileFullPath=_Title=pid=ProcessPath=
+		FileFullPath:=_Title:=pid:=ProcessPath:=""
 		Return
 	}
 	else
@@ -141,16 +141,15 @@ OpenFileFullPath:
 		If Fileexist(FileFullPath)
 		{
 			Run,% "explorer.exe /select," FileFullPath
-			FileFullPath=_Title=pid=ProcessPath=
+			FileFullPath:=_Title:=pid:=ProcessPath:=""
 			Return
 		}
 		Splitpath,FileFullPath,,Filepath
-		;msgbox % Fileexist(filepath) "-" filepath
 		If Fileexist(Filepath)
 		{
 			Msgbox,% "目标文件不存在 " FileFullPath "，`r`n" "打开文件所在目录 " Filepath "。"
 			Run,% Filepath
-			FileFullPath=_Title=pid=ProcessPath=Filepath=
+			FileFullPath:=_Title:=pid:=ProcessPath:=""
 			Return
 		}
 	}
