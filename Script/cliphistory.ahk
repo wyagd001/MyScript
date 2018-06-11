@@ -457,9 +457,10 @@ db.closedb()
 filedelete,%DBPATH%
 DB.OpenDB(DBPATH)
 migrateHistory()
-		;execSql("Truncate TABLE history")
-		;execSql("drop TABLE history")
-		;execSql("delete * from history")
+		; 直接删除数据库文件，最方便。减小硬盘占用
+		;execSql("Truncate TABLE history")  ; 测试未能正确执行，无效果
+		;execSql("drop TABLE history")   ; 磁盘占用减小，再次添加条目报错
+		;execSql("delete from history")  ; 删除所有条目，磁盘占用变化不大(数据内容未删除)
 		historyUpdate()
 		history_UpdateSTB()
 	}

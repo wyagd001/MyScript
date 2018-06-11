@@ -36,6 +36,9 @@ return
 showfavorites:
    myfav = %A_ScriptDir%\favorites
    kShortcutExt = lnk
+; 变量 menushowicon  控制菜单是否显示图标
+; 快捷方式文件太多菜单如果显示图标的话，菜单弹出速度变慢
+menushowicon=0  
 
 FileCount := 0
 Loop, %myfav%\*.%kShortcutExt%,,   ; for each shortcut in the directory, add a menu item for it
@@ -75,6 +78,8 @@ FileList =
       FileCount++
       SplitPath,A_LoopField, , , , pos
       Menu, %fname%, add, %pos%, MenuHandler   ; 创建子菜单项。
+if menushowicon  
+{
     FileGetShortcut, %myfav%\%fname%\%A_LoopField%, OutItem, , , , OutIcon, OutIconNum
 			try{
 				if(OutIcon){
@@ -88,6 +93,7 @@ FileList =
 			} catch e {
 				Menu,%fname%,Icon,%pos%,shell32.dll,1
 			}
+}
        }
 if(FileCount != 0)                          ;忽略空的子文件夹，否则出错
 Menu,mymenu2, add, %fname%, :%fname%  ; 创建父菜单项。

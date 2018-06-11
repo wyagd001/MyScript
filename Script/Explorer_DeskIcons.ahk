@@ -41,7 +41,7 @@ FileAppend, %read_coords%,*%A_ScriptDir%\settings\tmp\SaveDeskIcons_%A_Now%.ini
 
 	FileDelete,%SaveDeskIcons_inifile%
     FileAppend, %coords%,*%SaveDeskIcons_inifile%
-    read_coords=coords=
+    read_coords:=coords:=""
     IfExist,%SaveDeskIcons_inifile%
     Menu, addf, Enable,  »Ö¸´×ÀÃæÍ¼±ê
     Else
@@ -63,7 +63,7 @@ FileAppend, %read_coords%,*%A_ScriptDir%\settings\tmp\SaveDeskIcons_%A_Now%.ini
 
 FileDelete,%SaveDeskIcons_inifile%
 FileAppend, %coords%,*%SaveDeskIcons_inifile%
-read_coords=coords=
+read_coords:=coords:=""
 Critical,Off
 IfExist,%SaveDeskIcons_inifile%
 {
