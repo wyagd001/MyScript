@@ -1,0 +1,186 @@
+﻿[Config]
+CreateSendToLnk=1
+; 是否创建“发送到”菜单，1 创建，0 删除
+CreateStartupLnk=0
+; 是否开机自启动
+SearchFileDir=A_ProgramsCommon | A_StartMenu
+; 搜索的目录，可以使用 全路径 或 ahk 以 A_ 开头的变量，必须以 " | " 分隔
+; 路径可包含空格，无需加引号
+SearchFileType=*.lnk | *.exe
+; 搜索的文件类型，必须以 " | " 分隔
+SearchFileExclude=卸载
+; 排除的文件，正则表达式
+SearchFullPath=0
+; 搜索完整路径，否则只搜文件名
+ShowFileExt=0
+; 在界面显示文件扩展名
+TCMatchPath=Lib\TCMatch\tcmatch.dll
+; tcmatch.dll 地址，如果没有则使用 InStr 匹配
+SaveInputText=0
+; 退出时保存编辑框内容
+KeepInputText=1
+; 窗口隐藏时不清空编辑框内容
+RunOnce=0
+; 运行一次命令就退出，对展示信息的命令无效
+TCPath=c:\totalcmd\totalcmd.exe
+; TotalCommander 路径，如果为空则使用资源管理器打开
+RunInBackground=1
+; 在后台运行
+RunIfOnlyOne=0
+; 如果结果中只有一个则直接运行
+LoadControlPanelFunctions=1
+; 加载控制面板中的功能
+ExitIfInactivate=0
+; 窗口失去焦点后窗口关闭，启用后窗口置顶显示功能失效
+WindowAlwaysOnTop=0
+; 窗口置顶显示
+SaveHistory=1
+; 记录历史
+HistorySize=15
+; 记录历史的数量
+AutoRank=1
+; 自动根据使用频率调节顺序，因为效率问题，结果不能实时体现，重启或 ctrl + r 后更新
+ClickToRun=1
+; 是否单击执行鼠标处命令，0 则只定位到该处
+SwitchToEngIME=0
+; 每次激活窗口自动切换到英文输入法
+ChangeCommandOnMouseMove=0
+; 当鼠标移动时，定位到鼠标所在命令，会消耗一些 CPU，并且造成文字闪烁
+ClearInputWithEsc=0
+; 输入 Esc 时，如果输入框有内容则清空，无内容才关闭窗口
+Editor=
+; 用来打开配置文件的编辑器，默认为资源管理器关联的编辑器，可以右键->属性->打开方式修改
+SendToMenuSimpleMode=1
+; 使用简单模式的发送到菜单
+SendToMenuReadLnkFile=1
+; 如果使用发送到菜单发送的文件是 .lnk 的快捷方式，从文件读取路径后添加目标文件
+DebugMode=0
+; 开启调试模式，可以看到更多错误信息
+
+[Gui]
+; Skin=New
+; 指定皮肤名，如果为空则使用此 [Gui] 中的配置，否则 [Gui] 其他字段失效
+HideTitle=1
+; 隐藏标题栏
+ShowTrayIcon=1
+; 是否显示托盘图标
+ShowCurrentCommand=1
+; 在下方详情框显示当前命令
+DisplayRows=15
+; 在列表中显示的行数，请不要在显示区域下方留空隙，否则鼠标定位会有偏差
+DisplayCol3MaxLength=30
+; 在列表中第三列的宽度
+DisplayCol4MaxLength=36
+; 在列表中第四列的宽度
+HideCol2=0
+; 隐藏第二列，即显示 文件、功能 的一列
+; 如果隐藏，第二列的空间会分给第三列
+HideCol4IfEmpty=1
+; 当第四列内容为空时，隐藏第四列，展开第三列
+FontName=宋体
+; 字体名称
+; 如果想更换，需要使用等宽字体，可以用 Inziu Iosevka Slab SC，在 http://pan.baidu.com/s/1i5Ndii5
+; 可下载，其中也包含一张截图。下载后安装，然后 FontName=Inziu Iosevka Slab SC 即可
+; 但需要合理修改 FontSize DisplayRows DisplayCol3MaxLength DisplayCol4MaxLength 等字段，以免折行
+FontSize=12
+; 字体大小
+FontColor=000000
+; 字体颜色
+WidgetWidth=650
+; 输入框和输出框宽度
+EditHeight=24
+; 输入框和详情框高度
+DisplayAreaHeight=246
+; 输出框高度
+FirstChar=a
+; 列表第一行的首字母或数字
+EditColor=f0f0f0
+; 输入框颜色
+BackgroundColor=f0f0f0
+; 背景色，包括边框、输出框和详情框颜色
+BackgroundPicture=Background1.jpg
+; 背景图片，需要放在 Conf\Skins 目录内，背景图片只能在边框部分显示
+; 如果使用图片后有闪屏现象， 先将图片大小调整为解决窗口大小，提高加载速度
+; 如果闪屏依然明显，请将图片上文本框的位置挖空填充为和文本背景相似的颜色，或者修改成 png 的透明色
+BorderSize=15
+; 边框宽度
+ShowInputBoxOnlyIfEmpty=0
+; 当输入框为空时只显示输入框
+RoundCorner=0
+; 如果不为 0，使用圆形边角，数字代表程度，大于 10 才比较明显，可以修改后试验效果
+
+[Command]
+
+
+
+; 这里的 command 优先显示
+;
+; 文件类型（直接使用 AHK 的 Run() 运行）：
+; file | 文件路径 | 注释
+; 如：
+; file | notepad | 记事本
+; 注释里可以包含要搜索的字符串，也可以没有：
+; file | c:\mine\mine.exe
+;
+; url 类型：
+; url | www.baidu.com | 百度
+; 可包括 http://，也可不包含
+;
+; cmd 类型，在 cmd.exe 运行命令，运行后会自动暂停：
+; 如：
+; cmd | ipconfig | 查看 IP 地址
+
+[Hotkey]
+
+
+
+; 映射 RunZ 自身使用的按键：
+; key=label
+; 等同于
+; Hotkey, key, label
+; 如（可使用 Test 测试）：
+; f1=Test
+; 具体功能请直接在代码里搜 Hotkey 对应的标签
+; key=Default 可取消代码中的按键映射
+; 注意优先级比默认的 Alt + 字母数字 系列按键高，如无特殊原因不要修改 Alt 的映射
+
+[GlobalHotkey]
+#j=ToggleWindow
+!space=ToggleWindow
+
+
+
+; 语法和 [Hotkey] 一样，但作用范围是全局的
+
+[Plugins]
+Core=1
+; 核心功能，禁用需谨慎
+System=1
+; 操作系统相关功能
+Misc=1
+; 实用工具集合
+QRCode=1
+; 生成二维码
+Kanji=0
+; 简体繁体转换
+Demo=0
+; 插件示例
+
+
+
+; 插件名=1 启用插件
+; 插件名=0 禁用插件
+; 这里没有的插件，默认是启用的
+
+[FallbackCommand]
+function | AhkRun | 使用 Ahk 的 Run() 运行 ; command
+function | CmdRun | 使用 cmd 运行 : command
+function | WinRRun | 使用 win + r 运行
+function | RunAndDisplay | 使用 cmd 运行，并显示结果
+function | SearchOnBaidu | 使用 百度 搜索剪切板或输入内容
+function | SearchOnGoogle | 使用 谷歌 搜索剪切板或输入内容
+function | SearchOnBing | 使用 必应 搜索剪切板或输入内容
+
+
+
+; 回退命令指当搜索不到结果时显示哪些命令，按顺序排列，第一个为回车使用的

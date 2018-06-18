@@ -1,4 +1,6 @@
-[ & w::gui_History()
+gui_clipHistory:
+gui_History()
+return
 
 $^V::
 monitor=0

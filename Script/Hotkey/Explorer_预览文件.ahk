@@ -31,12 +31,13 @@ PreWWinGuiClose:
 Gui,PreWWin:Destroy
 if pipa
 ObjRelease(pipa)
-if prewpToken
-{
-msgbox,,, % prewpToken,1
-Gdip_ShutDown(prewpToken)
-sleep,1000
-}
+;if prewpToken
+;{
+;msgbox,,, % prewpToken,1
+;sleep,1000
+;Gdip_ShutDown(prewpToken)
+;sleep,1000
+;}
 return
 
 PreWWinGuiSize:
@@ -51,7 +52,7 @@ IsFolder(Path) {
 Cando_pdf_prew:
 gosub,IE_Open
 WB.Navigate("https://mozilla.github.io/pdf.js/web/viewer.html?file=blank.pdf")
-sleep,3000
+sleep,4000
 settimer,autoopenpdf,-1000 
 wb.document.getElementById("openFile").click()
 return
@@ -78,7 +79,7 @@ Gui, PreWWin:Show,,% Files " - ÎÄ¼þÔ¤ÀÀ"
 return
 
 autoopenpdf:
-WinWaitActive,ahk_class #32770,,5000
+WinWaitActive,ahk_class #32770,,6000
 ControlSetText , edit1, %Files%, ahk_class #32770
 sleep,100
 send {enter}
@@ -139,6 +140,7 @@ return
 Cando_pic_prew:
 GUI, PreWWin:Destroy
 GUI, PreWWin:Default
+if !prewpToken
 prewpToken := Gdip_Startup()        
 GUI, +AlwaysOnTop +Owner
 Gui, Margin, 0, 0

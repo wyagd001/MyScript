@@ -50,7 +50,7 @@ Gui,+LastFound
 Gui,Destroy
 Gui,Add,Button,x370 y335 w70 h30 gwk,È·¶¨
 Gui,Add,Button,x450 y335 w70 h30 g99GuiClose Default,È¡Ïû
-Gui,Add,Tab,x-4 y1 w640 h330 ,¿ì½İ¼ü|Plugins|³£¹æ|×Ô¶¯¼¤»î|7Plus²Ëµ¥|Õûµã±¨Ê±|²¥·ÅÆ÷|ÔËĞĞ|¹ØÓÚ
+Gui,Add,Tab,x-4 y1 w640 h330 ,¿ì½İ¼ü|Plugins|³£¹æ|×Ô¶¯¼¤»î|7Plus²Ëµ¥|Õûµã±¨Ê±|²¥·ÅÆ÷|ÔËĞĞ|ÆäËû£¨Î´ÉúĞ§£©|¹ØÓÚ
 
 Gui,Tab,¿ì½İ¼ü
 Gui,Add,text,x10 y30 w550,×¢Òâ:#±íÊ¾Win,!±íÊ¾Alt,+±íÊ¾Shift,^±íÊ¾Ctrl,Space±íÊ¾¿Õ¸ñ¼ü,Up±íÊ¾ÏòÉÏ¼ıÍ·,~±íÊ¾°´¼üÔ­¹¦ÄÜ²»»á±»ÆÁ±Î£¬*±íÊ¾ÓĞÆäËü¼üÍ¬Ê±°´ÏÂÊ±¿ì½İ¼üÈÔÈ»ÉúĞ§
@@ -336,6 +336,18 @@ Gui,Add,Text,x26 y135,ÔËĞĞÊäÈë¿òÖĞ×Ô¶¨Òå¶ÌÓï(Ò»ĞĞÒ»¸ö,ÀıÈç¡°c = c:\¡±£¬Ö»¶Ô±¾³ÌĞ
 Gui,Add,Edit,x26 y155 w530 r8 vop,%otherProgram%
 Gui,Add,Text,x26 y290,ÏµÍ³×¢²á±íÖĞÒÑ×¢²áµÄÃüÁî¶Ô±¾³ÌĞòÍ¬ÑùÓĞĞ§
 Gui,Add,Button,x490 y285 g×Ô¶¨ÒåÔËĞĞÃüÁî_click,²é¿´ĞŞ¸Ä
+
+Gui,Tab,ÆäËû
+Gui,Add,CheckBox,x26 y41 w200 h20 vvAuto_DisplayMainWindow Checked%Auto_DisplayMainWindow%,Æô¶¯Ê±ÏÔÊ¾Ö÷´°¿Ú
+Gui,Add,CheckBox,x26 y61 w500 h20 vvAuto_Trayicon Checked%Auto_Trayicon%,Æô¶¯Ê±¼ì²âÍĞÅÌÍ¼±ê
+Gui,Add,CheckBox,x44 y81 w250 h20 vvAuto_Trayicon_showmsgbox Checked%Auto_Trayicon_showmsgbox%,Ã»ÓĞÍĞÅÌÍ¼±êÏÔÊ¾ÖØÆô½Å±¾¶Ô»°¿ò
+Gui,Add,CheckBox,x26 y101 w410 h20 vvShutdownMonitor Checked%ShutdownMonitor%,¼àÊÓ¹Ø»ú³öÏÖ¹Ø»ú¶Ô»°¿ò
+Gui,Add,CheckBox,x26 y121 w410 h20 vvPasteAndOpen Checked%PasteAndOpen%,Õ³Ìù²¢´ò¿ª
+Gui,Add,CheckBox,x26 y141 w410 h20 ,¼ôÌù°å
+Gui,Add,CheckBox,x26 y161 w200 h20 ,¼ôÌù°åÀúÊ·
+Gui,Font,cgreen
+Gui,Add,text,x240 y161 w410 h20 ggui_clipHistory,²é¿´¼ôÌù°åÀúÊ·
+Gui,Font
 
 Gui,Tab,¹ØÓÚ
 Gui,Add,Text,x26 y40,Ãû³Æ£ºÔËĞĞ - Ahk

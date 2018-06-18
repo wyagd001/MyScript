@@ -1,6 +1,7 @@
 ; 在一个脚本已经运行时，如果再次打开它，
 ; 将跳过对话框，并自动地运行（替换原来打开的脚本）。
 #SingleInstance force
+#NoTrayIcon
 ; 开机时启动脚本，等待时间设置长些，使托盘图标可以显示出来
 if(A_TickCount<120000)
 	sleep,40000
@@ -377,7 +378,6 @@ Gui, Add, Text,x10 y64 cgreen gchangyong,常用
 Gui, Add, Text,x100 y64 cgreen gDesktoplnk,桌面
 Gui, Add, Text,x200 y64 cgreen vfhc gfoo_httpcontrol_click,Foo_HttpControl
 Gui, Add, Text,x340 y64 cgreen gIEfavorites,IE收藏夹
-
 
 ;----------音量----------
 SoundGet,vol_Master
@@ -845,44 +845,69 @@ SetTimer, ProcessMouse, 500
 SetTimer, ProcessMouse, OFF
 
 ;----------不显示托盘图标则重启脚本----------
+Menu, Tray, Icon
 if Auto_Trayicon
 {
-Script_pid:=DllCall("GetCurrentProcessId")
-Tray_Icons := {}
-Tray_Icons := TrayIcon_GetInfo(Ahk_Process)
+  While (180000 - A_TickCount) > 0
+   sleep,100
+ Script_pid:=DllCall("GetCurrentProcessId")
+ Tray_Icons := {}
+ Tray_Icons := TrayIcon_GetInfo(Ahk_Process)
+ for index, Icon in Tray_Icons {
+  trayicons_pid .= Icon.Pid ","
+ }
 
-for index, Icon in Tray_Icons {
-trayicons_pid .= Icon.Pid ","
-}
+ If trayicons_pid not contains %Script_pid%
+ {
+  Menu, Tray, NoIcon
+  sleep,300
+  Menu, Tray, Icon
+  Tray_Icons := {}
+  trayicons_pid := ""
+  Tray_Icons := TrayIcon_GetInfo(Ahk_Process)
+  for index, Icon in Tray_Icons {
+   trayicons_pid .= Icon.Pid ","
+  }
+ }
 
-If trayicons_pid not contains %Script_pid%
-{
-While (180000 - A_TickCount) > 0
-	sleep,100
+ If trayicons_pid not contains %Script_pid%
+ {
+  if Auto_Trayicon_showmsgbox
+  {
+   msgbox,4,错误,未检测到脚本的托盘图标，点"是"重启脚本，点"否"继续运行脚本。`n默认(超时)自动重启脚本。,6
+   IfMsgBox Yes
+    autoreload=1
+   else IfMsgBox timeout
+    autoreload=1
+  }
+  else
+   autoreload=1
 
-if Auto_Trayicon_showmsgbox
-{
-msgbox,4,错误,未检测到脚本的托盘图标，点"是"重启脚本，点"否"继续运行脚本。`n默认(超时)自动重启脚本。,6
-IfMsgBox Yes
-	autoreload=1
-else IfMsgBox timeout
-	autoreload=1
-}
-else
-autoreload=1
+  连续重启次数:=CF_IniRead(run_iniFile,"时间","连续重启次数",0)
+  if 连续重启次数 > 5
+  {
+   IniWrite,0,% run_iniFile,时间,连续重启次数
+   IniWrite,0,% run_iniFile,功能开关,Auto_Trayicon
+   Msgbox 脚本多次运行都不能检测到托盘图标，脚本下次启动将不再检测托盘图标。
+  }
+  else
+  {
+   连续重启次数 += 1
+   IniWrite,% 连续重启次数,% run_iniFile,时间,连续重启次数
+  }
 
-if(autoreload=1)
-{
-Reload
-Return
-}
-}
+  if(autoreload=1)
+  {
+   Reload
+  Return
+  }
+ }
 }
 ;----------不显示托盘图标则重启脚本----------
 
 ;----------农历节日----------
 if Auto_JCTF
-	if 每七小时结果为真()
+	if 每隔几小时结果为真(6)
 		Gosub,JCTF
 ;----------农历节日----------
 
@@ -1006,17 +1031,22 @@ onClipboardChange:
 		ClipSaved%clipid% := Clipboard
 		if writecliphistory=1
 		{
-if clipid > 1
-{
-if (ClipSaved3 != ClipSaved2) or (ClipSaved2 != ClipSaved1)
-addHistoryText(Clipboard, A_Now)
-}
-if clipid = 1
-{
-if (ClipSaved1 != ClipSaved3)
-addHistoryText(Clipboard, A_Now)
-}
-}
+			if clipid = 1
+			{
+				if (ClipSaved1 != ClipSaved3) &&  (ClipSaved1 != ClipSaved2)
+					addHistoryText(Clipboard, A_Now)
+			}
+			else if clipid = 2
+			{
+				if (ClipSaved2 != ClipSaved1) &&  (ClipSaved2 != ClipSaved3)
+					addHistoryText(Clipboard, A_Now)
+			}
+			else if clipid = 3
+			{
+				if (ClipSaved3 != ClipSaved2) &&  (ClipSaved3 != ClipSaved1)
+					addHistoryText(Clipboard, A_Now)
+			}
+		}
 		else
 			writecliphistory=1
 		sleep,100
@@ -1316,6 +1346,9 @@ WinActivate,ahk_class Shell_TrayWnd
 ;msgbox,6   ;退出有时出现异常(概率非常高，直接退出，托盘图标残留)
 UnhookWinEvent()
 }
+if prewpToken
+Gdip_ShutDown(prewpToken)
+
 SoundPlay ,%A_ScriptDir%\Sound\Windows Error.wav
 sleep,300
  ExitApp

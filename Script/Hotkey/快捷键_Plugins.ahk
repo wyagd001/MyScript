@@ -41,3 +41,10 @@ Else
 	Old_ClipBoard = 
 }
 Return
+
+Runz:
+IfWinExist, %A_ScriptDir%\Plugins\RunZ.ahk ahk_class AutoHotkey
+send % RunZ
+else
+Run,%A_AhkPath% "%A_ScriptDir%\Plugins\RunZ.ahk" --show
+return
