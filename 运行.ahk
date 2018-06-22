@@ -706,23 +706,7 @@ for k,v in Pluginshotkey
 If v
  hotkey, %v%,Plugins_Run ;,UseErrorLevel
 
-global DBPATH:= A_ScriptDir . "\Settings\cliphistory.db"
-global PREV_FILE := A_ScriptDir . "\Settings\tmp\prev.html" 
-global DB := new SQLiteDB
-STORE:={}
-
-if (!FileExist(DBPATH))
-	isnewdb := 1
-else
-	isnewdb := 0
-
-if (!DB.OpenDB(DBPATH))
-    MsgBox, 16, SQLite错误, % "消息:`t" . DB.ErrorMsg . "`n代码:`t" . DB.ErrorCode
-
-sleep,300
-if (isnewdb == 1){
-	migrateHistory()
-}
+;;;;;;;;;; 剪贴板  ;;;;;;;;;;;;
 
 ;复制时  
 ;复制1→复制2→复制3→复制1
@@ -730,13 +714,37 @@ if (isnewdb == 1){
 ;1→3→2→1
 ;2→1→3→2
 ;3→2→1→3
+if Auto_Clip
+{
+	first=0
+	clipid=0
+	cliptip=0
+	monitor=0
+	SetTimer, shijianCheck, 50
+	st:=A_TickCount
 
-first=0
-clipid=0
-cliptip=0
-monitor=0
-SetTimer, shijianCheck, 50
-st:=A_TickCount
+	if Auto_Cliphistory
+	{
+		global DBPATH:= A_ScriptDir . "\Settings\cliphistory.db"
+		global PREV_FILE := A_ScriptDir . "\Settings\tmp\prev.html" 
+		global DB := new SQLiteDB
+		STORE:={}
+
+		if (!FileExist(DBPATH))
+			isnewdb := 1
+		else
+			isnewdb := 0
+
+		if (!DB.OpenDB(DBPATH))
+			MsgBox, 16, SQLite错误, % "消息:`t" . DB.ErrorMsg . "`n代码:`t" . DB.ErrorCode
+
+		sleep,300
+		if (isnewdb == 1){
+			migrateHistory()
+		}
+	}
+}
+;;;;;;;;;; 剪贴板  ;;;;;;;;;;;;
 
 ;快捷键打开C,D,E,F盘...设置其快捷键，loop 15循环15次，到达字母Q
 Loop 15
@@ -1016,6 +1024,11 @@ EmptyMem()
 Return
 
 onClipboardChange:
+	if !Auto_Clip
+	{
+		hotkey,$^V,off
+	return
+	}
 	if !monitor
 	{
 		monitor=1
@@ -1029,27 +1042,31 @@ onClipboardChange:
 		if clipid>3
 			clipid=1
 		ClipSaved%clipid% := Clipboard
-		if writecliphistory=1
+		
+		if Auto_Cliphistory
 		{
-			if clipid = 1
+			if (writecliphistory=1) 
 			{
-				if (ClipSaved1 != ClipSaved3) &&  (ClipSaved1 != ClipSaved2)
-					addHistoryText(Clipboard, A_Now)
+				if clipid = 1
+				{
+					if (ClipSaved1 != ClipSaved3) &&  (ClipSaved1 != ClipSaved2)
+						addHistoryText(Clipboard, A_Now)
+				}
+				else if clipid = 2
+				{
+					if (ClipSaved2 != ClipSaved1) &&  (ClipSaved2 != ClipSaved3)
+						addHistoryText(Clipboard, A_Now)
+				}
+				else if clipid = 3
+				{
+					if (ClipSaved3 != ClipSaved2) &&  (ClipSaved3 != ClipSaved1)
+						addHistoryText(Clipboard, A_Now)
+				}
 			}
-			else if clipid = 2
-			{
-				if (ClipSaved2 != ClipSaved1) &&  (ClipSaved2 != ClipSaved3)
-					addHistoryText(Clipboard, A_Now)
-			}
-			else if clipid = 3
-			{
-				if (ClipSaved3 != ClipSaved2) &&  (ClipSaved3 != ClipSaved1)
-					addHistoryText(Clipboard, A_Now)
-			}
+			else
+				writecliphistory=1
+			sleep,100
 		}
-		else
-			writecliphistory=1
-		sleep,100
 	}
 	else
 	{

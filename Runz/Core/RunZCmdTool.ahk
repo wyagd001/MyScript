@@ -39,7 +39,7 @@ Loop, %0%
                 ExitApp
             }
             FileMove, %inputFileName%, %A_ScriptDir%\..\Plugins\%pluginName%.ahk
-            FileAppend, #include *i `%A_ScriptDir`%\Plugins\%pluginName%.ahk`n
+            FileAppend, #include *i `%A_ScriptDir`%\RunZ\Plugins\%pluginName%.ahk`n
                 , %A_ScriptDir%\..\Core\Plugins.ahk
             ToolTip, %pluginName% 插件安装成功，请手动重启 RunZ 以生效
             sleep 1500
@@ -107,7 +107,7 @@ if (g_Conf.Config.SendToMenuSimpleMode)
 }
 
 FileMove, %g_UserFunctionsAutoFileName%, %g_UserFunctionsAutoFileName%.bak, 1
-FileAppend, %g_FileContent%, %g_UserFunctionsAutoFileName%, utf-8
+FileAppend, %g_FileContent%, %g_UserFunctionsAutoFileName%
 
 ; 打开文件来编辑
 if (g_Conf.Config.Editor != "")

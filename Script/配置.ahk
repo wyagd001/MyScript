@@ -50,7 +50,7 @@ Gui,+LastFound
 Gui,Destroy
 Gui,Add,Button,x370 y335 w70 h30 gwk,确定
 Gui,Add,Button,x450 y335 w70 h30 g99GuiClose Default,取消
-Gui,Add,Tab,x-4 y1 w640 h330 ,快捷键|Plugins|常规|自动激活|7Plus菜单|整点报时|播放器|运行|其他（未生效）|关于
+Gui,Add,Tab,x-4 y1 w640 h330 ,快捷键|Plugins|常规|自动激活|7Plus菜单|整点报时|播放器|运行|其他|关于
 
 Gui,Tab,快捷键
 Gui,Add,text,x10 y30 w550,注意:#表示Win,!表示Alt,+表示Shift,^表示Ctrl,Space表示空格键,Up表示向上箭头,~表示按键原功能不会被屏蔽，*表示有其它键同时按下时快捷键仍然生效
@@ -338,15 +338,15 @@ Gui,Add,Text,x26 y290,系统注册表中已注册的命令对本程序同样有效
 Gui,Add,Button,x490 y285 g自定义运行命令_click,查看修改
 
 Gui,Tab,其他
-Gui,Add,CheckBox,x26 y41 w200 h20 vvAuto_DisplayMainWindow Checked%Auto_DisplayMainWindow%,启动时显示主窗口
-Gui,Add,CheckBox,x26 y61 w500 h20 vvAuto_Trayicon Checked%Auto_Trayicon%,启动时检测托盘图标
-Gui,Add,CheckBox,x44 y81 w250 h20 vvAuto_Trayicon_showmsgbox Checked%Auto_Trayicon_showmsgbox%,没有托盘图标显示重启脚本对话框
-Gui,Add,CheckBox,x26 y101 w410 h20 vvShutdownMonitor Checked%ShutdownMonitor%,监视关机出现关机对话框
-Gui,Add,CheckBox,x26 y121 w410 h20 vvPasteAndOpen Checked%PasteAndOpen%,粘贴并打开
-Gui,Add,CheckBox,x26 y141 w410 h20 ,剪贴板
-Gui,Add,CheckBox,x26 y161 w200 h20 ,剪贴板历史
+Gui,Add,CheckBox,x26 y41 w120 h20 vvAuto_DisplayMainWindow Checked%Auto_DisplayMainWindow%,启动时显示主窗口
+Gui,Add,CheckBox,x26 y61 w140 h20 vvAuto_Trayicon Checked%Auto_Trayicon%,启动时检测托盘图标
+Gui,Add,CheckBox,x44 y81 w210 h20 vvAuto_Trayicon_showmsgbox Checked%Auto_Trayicon_showmsgbox%,没有托盘图标显示重启脚本对话框
+Gui,Add,CheckBox,x26 y101 w160 h20 vvShutdownMonitor Checked%ShutdownMonitor%,监视关机出现关机对话框
+Gui,Add,CheckBox,x26 y121 w100 h20 vvPasteAndOpen Checked%PasteAndOpen%,粘贴并打开
+Gui,Add,CheckBox,x26 y141 w180 h20 vvAuto_Clip Checked%Auto_Clip%,三重剪贴板(复制文字时生效)
+Gui,Add,CheckBox,x44 y161 w130 h20 vvAuto_Cliphistory Checked%Auto_Cliphistory%,剪贴板历史(文字)
 Gui,Font,cgreen
-Gui,Add,text,x240 y161 w410 h20 ggui_clipHistory,查看剪贴板历史
+Gui,Add,text,x200 y164 w100 h20 ggui_clipHistory,查看剪贴板历史
 Gui,Font
 
 Gui,Tab,关于
@@ -978,6 +978,14 @@ IniWrite,%filetp%,%run_iniFile%,截图,filetp
 IniWrite,%update%,%run_iniFile%,功能开关,Auto_Update
 IniWrite,%autorun%,%run_iniFile%,功能开关,run_with_sys
 IniWrite,%mtp%,%run_iniFile%,功能开关,mousetip
+IniWrite,% vAuto_DisplayMainWindow,%run_iniFile%,功能模式选择,Auto_DisplayMainWindow
+IniWrite,% vAuto_Trayicon,%run_iniFile%,功能开关,Auto_Trayicon
+IniWrite,% vAuto_Trayicon_showmsgbox,%run_iniFile%,功能模式选择,Auto_Trayicon_showmsgbox
+IniWrite,% vShutdownMonitor,%run_iniFile%,功能开关,ShutdownMonitor
+IniWrite,% vPasteAndOpen,%run_iniFile%,功能开关,PasteAndOpen
+IniWrite,% vAuto_Clip,%run_iniFile%,功能开关,Auto_Clip
+IniWrite,% vAuto_Cliphistory,%run_iniFile%,功能开关,Auto_Cliphistory
+
 IniWrite,%txt%,%run_iniFile%,常规,txt
 IniWrite,%TextEditor%,%run_iniFile%,常规,TextEditor
 IniWrite,%ImageEditor%,%run_iniFile%,常规,ImageEditor

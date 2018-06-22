@@ -270,6 +270,11 @@ ClipboardCode( RunInScite=0 ) {
       Clipboard := r
    else
       return
-
-
       */
+
+Runz:
+IfWinExist, %A_ScriptDir%\RunZ.ahk ahk_class AutoHotkey
+send % RunZ
+else
+Run,%A_AhkPath% "%A_ScriptDir%\RunZ.ahk" --show
+return

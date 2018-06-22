@@ -180,5 +180,5 @@ UrlEncode:
 return
 
 
-#include %A_ScriptDir%\..\Lib\Eval.ahk
-#include %A_ScriptDir%\..\Lib\class_JSON.ahk
+#include %A_ScriptDir%\Lib\Eval.ahk
+#include %A_ScriptDir%\Lib\class_JSON.ahk

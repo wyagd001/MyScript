@@ -8,13 +8,13 @@ SendMode Input
 ;SetWorkingDir %A_ScriptDir%
 
 ; 自动生成的待搜索文件列表
-global g_SearchFileList := A_ScriptDir . "\..\Settings\Runz\SearchFileList.txt"
+global g_SearchFileList := A_ScriptDir . "\Settings\Runz\SearchFileList.txt"
 ; 用户配置的待搜索文件列表
-global g_UserFileList := A_ScriptDir . "\..\Settings\Runz\UserFileList.txt"
+global g_UserFileList := A_ScriptDir . "\Settings\Runz\UserFileList.txt"
 ; 配置文件
-global g_ConfFile := A_ScriptDir . "\..\Settings\Runz\RunZ.ini"
+global g_ConfFile := A_ScriptDir . "\Settings\Runz\RunZ.ini"
 ; 自动写入的配置文件
-global g_AutoConfFile := A_ScriptDir . "\..\Settings\Runz\RunZ.auto.ini"
+global g_AutoConfFile := A_ScriptDir . "\Settings\Runz\RunZ.auto.ini"
 
 if !FileExist(g_ConfFile)
 {
@@ -39,7 +39,7 @@ global g_AutoConf := class_EasyIni(g_AutoConfFile)
 
 if (g_Conf.Gui.Skin != "")
 {
-    global g_SkinConf := class_EasyIni(A_ScriptDir "\..\Settings\Runz\Skins\" g_Conf.Gui.Skin ".ini").Gui
+    global g_SkinConf := class_EasyIni(A_ScriptDir "\Settings\Runz\Skins\" g_Conf.Gui.Skin ".ini").Gui
 }
 else
 {
@@ -99,12 +99,16 @@ global g_InputArea := "Edit1"
 global g_DisplayArea := "Edit3"
 global g_CommandArea := "Edit4"
 
-FileRead, currentPlugins, %A_ScriptDir%\..\Runz\Core\Plugins.ahk
+FileRead, currentPlugins, %A_ScriptDir%\Runz\Core\Plugins.ahk
 needRestart := false
 
-Loop, Files, %A_ScriptDir%\..\Runz\Plugins\*.ahk
+Loop, Files, %A_ScriptDir%\Runz\Plugins\*.ahk
 {
     FileReadLine, firstLine, %A_LoopFileLongPath%, 1
+    if (StrSplit(firstLine, ":")[1]!="; RunZ")
+    {
+      continue
+    }
     pluginName := StrSplit(firstLine, ":")[2]
     if (!(g_Conf.GetValue("Plugins", pluginName) == 0))
     {
@@ -114,8 +118,8 @@ Loop, Files, %A_ScriptDir%\..\Runz\Plugins\*.ahk
         }
         else
         {
-            FileAppend, #include *i `%A_ScriptDir`%\..\Runz\Plugins\%pluginName%.ahk`n
-                , %A_ScriptDir%\..\Runz\Core\Plugins.ahk
+            FileAppend, #include *i `%A_ScriptDir`%\Runz\Plugins\%pluginName%.ahk`n
+                , %A_ScriptDir%\Runz\Core\Plugins.ahk
             needRestart := true
         }
     }
@@ -141,7 +145,7 @@ if (g_SkinConf.ShowTrayIcon)
     Menu, Tray, Add,
     Menu, Tray, Add, 重启 &R, RestartRunZ
     Menu, Tray, Add, 退出 &X, ExitRunZ
-    Menu, Tray, Icon, %A_ScriptDir%\..\pic\RunZ.ico
+    Menu, Tray, Icon, %A_ScriptDir%\pic\RunZ.ico
 }
 
 if (FileExist(g_SearchFileList))
@@ -155,9 +159,9 @@ else
 
 Gui, Color, % g_SkinConf.BackgroundColor, % g_SkinConf.EditColor
 
-if (FileExist(A_ScriptDir "\..\Settings\Runz\Skins\" g_SkinConf.BackgroundPicture))
+if (FileExist(A_ScriptDir "\Settings\Runz\Skins\" g_SkinConf.BackgroundPicture))
 {
-    Gui, Add, Picture, x0 y0, % A_ScriptDir "\..\Settings\Runz\Skins\" g_SkinConf.BackgroundPicture
+    Gui, Add, Picture, x0 y0, % A_ScriptDir "\Settings\Runz\Skins\" g_SkinConf.BackgroundPicture
 }
 
 border := 10
@@ -196,7 +200,7 @@ if (g_SkinConf.HideTitle)
 }
 
 cmdlineArg = %1%
-if (cmdlineArg == "--hide") or g_Conf.Config.firstrunshowwindow
+if (cmdlineArg == "--hide") or !g_Conf.Config.firstrunshowwindow
 {
     hideWindow := " Hide"
 }
@@ -260,7 +264,7 @@ Hotkey, ^k, PrevCommand
 Hotkey, Down, NextCommand
 Hotkey, Up, PrevCommand
 Hotkey, ~LButton, ClickFunction
-Hotkey, RButton, OpenContextMenu
+;Hotkey, RButton, OpenContextMenu
 Hotkey, AppsKey, OpenContextMenu
 Hotkey, ^Enter, SaveResultAsArg
 
@@ -441,6 +445,7 @@ ClickFunction:
     }
 return
 
+GuiContextMenu:
 OpenContextMenu:
     if (!g_UseDisplay)
     {
@@ -453,14 +458,16 @@ OpenContextMenu:
         {
             currentCommandText .= Chr(g_FirstChar + g_CurrentLine - 1)
         }
-        Menu, ContextMenu, Add, %currentCommandText%>  运行 &Z, RunCurrentCommand
+Menu, ContextMenu, Add
+    Menu, ContextMenu, DeleteAll
+        Menu, ContextMenu, Add, %currentCommandText% > 运行 &Z, RunCurrentCommand
         Menu, ContextMenu, Add
     }
 
     Menu, ContextMenu, Add, 编辑配置 &E, EditConfig
     Menu, ContextMenu, Add, 重建索引 &S, ReindexFiles
     Menu, ContextMenu, Add, 显示历史 &H, DisplayHistoryCommands
-    Menu, ContextMenu, Add, 更新路径 &C, ChangePath
+    Menu, ContextMenu, Add, 添加快捷方式到启动和发送到 &C, ChangePath
     Menu, ContextMenu, Add
     Menu, ContextMenu, Add, 显示帮助 &A, Help
     Menu, ContextMenu, Add, 重新启动 &R, RestartRunZ
@@ -1447,7 +1454,7 @@ LoadFiles(loadRank := true)
         }
         else
         {
-            MsgBox, 未在 %A_ScriptDir%\..\Runz\Plugins\%element%.ahk 中发现 %element% 标签，请修改！
+            MsgBox, 未在 %A_ScriptDir%\Runz\Plugins\%element%.ahk 中发现 %element% 标签，请修改！
         }
     }
 
@@ -1462,10 +1469,10 @@ LoadFiles(loadRank := true)
 
     if (g_FallbackCommands.Length() == 0)
     {
-        g_FallbackCommands.Push("function | AhkRun | 使用 Ahk 的 Run() 运行")
+        g_FallbackCommands.Push("function | AhkRun | 使用 Ahk 的 Run 命令")
     }
 
-    if (FileExist(A_ScriptDir "\..\Settings\Runz\UserFunctionsAuto.txt"))
+    if (FileExist(A_ScriptDir "\Settings\Runz\UserFunctionsAuto.txt"))
     {
         userFunctionLabel := "UserFunctionsAuto"
         if (IsLabel(userFunctionLabel))
@@ -1474,7 +1481,7 @@ LoadFiles(loadRank := true)
         }
         else
         {
-            MsgBox, 未在 %A_ScriptDir%\..\Settings\Runz\UserFunctionsAuto.txt 中发现 %userFunctionLabel% 标签，请修改！
+            MsgBox, 未在 %A_ScriptDir%\Settings\Runz\UserFunctionsAuto.txt 中发现 %userFunctionLabel% 标签，请修改！
         }
     }
 
@@ -1493,7 +1500,7 @@ LoadFiles(loadRank := true)
 
     if (g_Conf.Config.LoadControlPanelFunctions)
     {
-        Loop, Read, %A_ScriptDir%\..\Runz\Core\ControlPanelFunctions.txt
+        Loop, Read, %A_ScriptDir%\Runz\Core\ControlPanelFunctions.txt
         {
             g_Commands.Push(A_LoopReadLine)
         }
@@ -1575,7 +1582,7 @@ return
 {
     if (!IsLabel(label))
     {
-        MsgBox, 未找到 %label% 标签，请检查 %A_ScriptDir%\..\Settings\Runz\UserFunctions.ahk 文件格式！
+        MsgBox, 未找到 %label% 标签，请检查 %A_ScriptDir%\Settings\Runz\UserFunctions.ahk 文件格式！
         return
     }
 
@@ -1791,9 +1798,9 @@ UpdateSendTo(create = true, overwrite = false)
         return
     }
 
-    FileCreateShortcut, %A_AhkPath%, % A_ScriptDir "\..\Runz\Core\SendToRunZ.lnk"
-        , , "%A_ScriptDir%\..\Runz\Core\RunZCmdTool.ahk", 发送到 RunZ, % A_ScriptDir "\..\pic\RunZ.ico"
-    FileCopy, % A_ScriptDir "\..\Runz\Core\SendToRunZ.lnk"
+    FileCreateShortcut, %A_AhkPath%, % A_ScriptDir "\Runz\Core\SendToRunZ.lnk"
+        , , "%A_ScriptDir%\Runz\Core\RunZCmdTool.ahk", 发送到 RunZ, % A_ScriptDir "\pic\RunZ.ico"
+    FileCopy, % A_ScriptDir "\Runz\Core\SendToRunZ.lnk"
         , % StrReplace(A_StartMenu, "\Start Menu", "\SendTo\") "RunZ.lnk", 1
 }
 
@@ -1809,7 +1816,7 @@ UpdateStartupLnk(create = true, overwrite = false)
 
     if (!FileExist(lnkFilePath) || overwrite)
     {
-        FileCreateShortcut, %A_AhkPath%, %lnkFilePath%, %A_ScriptDir%, RunZ.ahk --hide, RunZ, % A_ScriptDir "\..\pic\RunZ.ico"
+        FileCreateShortcut, %A_AhkPath%, %lnkFilePath%, %A_ScriptDir%, RunZ.ahk --hide, RunZ, % A_ScriptDir "\pic\RunZ.ico"
     }
 }
 
@@ -2020,11 +2027,10 @@ KeyHelp:
     SetTimer, RemoveToolTip, 5000
 return
 
-
-#include %A_ScriptDir%\..\Lib\EasyIni.ahk
-#include %A_ScriptDir%\..\Lib\TCMatch.ahk
-#include %A_ScriptDir%\..\Lib\Eval.ahk
-#include %A_ScriptDir%\..\Runz\Core\Common.ahk
-#include *i %A_ScriptDir%\..\Runz\Core\Plugins.ahk
+#include %A_ScriptDir%\Lib\EasyIni.ahk
+#include %A_ScriptDir%\Lib\TCMatch.ahk
+#include %A_ScriptDir%\Lib\Eval.ahk
+#include %A_ScriptDir%\Runz\Core\Common.ahk
+#include *i %A_ScriptDir%\Runz\Core\Plugins.ahk
 ; 发送到菜单自动生成的命令
-#include *i %A_ScriptDir%\..\Runz\Conf\UserFunctionsAuto.txt
+#include *i %A_ScriptDir%\Runz\Conf\UserFunctionsAuto.txt

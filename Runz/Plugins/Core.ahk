@@ -4,7 +4,7 @@
 Core:
     @("Help", "帮助信息")
     @("KeyHelp", "置顶的按键帮助信息")
-    @("AhkRun", "使用 Ahk 的 Run() 运行 `; command")
+    @("AhkRun", "使用 Ahk 的 Run 命令")
     @("CmdRun", "使用 cmd 运行 : command")
     @("CmdRunOnly", "只使用 cmd 运行")
     @("WinRRun", "使用 win + r 运行")
@@ -36,7 +36,7 @@ AhkRun:
     {
         try
         {
-            Run, %Arg%
+            Run, "%Arg%"
         }
         catch e
         {
@@ -45,7 +45,7 @@ AhkRun:
     }
     else
     {
-        Run, %Arg%
+        Run, "%Arg%"
     }
 return
 
@@ -103,15 +103,15 @@ InstallPlugin:
         }
 
         pluginName := StrSplit(firstLine, "; RunZ:")[2]
-        if (FileExist(A_ScriptDir "\Plugins\" pluginName ".ahk"))
+        if (FileExist(A_ScriptDir "\Runz\Plugins\" pluginName ".ahk"))
         {
             DisplayResult("该插件已存在")
             return
         }
 
-        FileMove, %pluginPath%, %A_ScriptDir%\Plugins\%pluginName%.ahk
-        FileAppend, #include *i `%A_ScriptDir`%\Plugins\%pluginName%.ahk`n
-            , %A_ScriptDir%\Core\Plugins.ahk
+        FileMove, %pluginPath%, %A_ScriptDir%\Runz\Plugins\%pluginName%.ahk
+        FileAppend, #include *i `%A_ScriptDir`%\Runz\Plugins\%pluginName%.ahk`n
+            , %A_ScriptDir%\Runz\Core\Plugins.ahk
 
         DisplayResult(pluginName " 插件安装成功，RunZ 将重启并启用该插件")
         Sleep, 1000
@@ -125,18 +125,18 @@ return
 
 RemovePlugin:
     pluginName := Arg
-    if (!FileExist(A_ScriptDir "\Plugins\" pluginName ".ahk"))
+    if (!FileExist(A_ScriptDir "\Runz\Plugins\" pluginName ".ahk"))
     {
         DisplayResult("未安装该插件")
         return
     }
 
-    FileRead, currentPlugins, %A_ScriptDir%\Core\Plugins.ahk
+    FileRead, currentPlugins, %A_ScriptDir%\Runz\Core\Plugins.ahk
     StringReplace, currentPlugins, currentPlugins
-        , #include *i `%A_ScriptDir`%\Plugins\%pluginName%.ahk`r`n
-    FileDelete, %A_ScriptDir%\Core\Plugins.ahk
-    FileAppend, %currentPlugins%, %A_ScriptDir%\Core\Plugins.ahk
-    FileDelete, %A_ScriptDir%\Plugins\%pluginName%.ahk
+        , #include *i `%A_ScriptDir`%\Runz\Plugins\%pluginName%.ahk`r`n
+    FileDelete, %A_ScriptDir%\Runz\Core\Plugins.ahk
+    FileAppend, %currentPlugins%, %A_ScriptDir%\Runz\Core\Plugins.ahk
+    FileDelete, %A_ScriptDir%\Runz\Plugins\%pluginName%.ahk
 
     DisplayResult(pluginName " 插件删除成功，RunZ 将重启以生效")
     Sleep, 1000
@@ -145,7 +145,7 @@ return
 
 ListPlugin:
     result := ""
-    Loop, Files, %A_ScriptDir%\Plugins\*.ahk
+    Loop, Files, %A_ScriptDir%\Runz\Plugins\*.ahk
     {
         pluginName := StrReplace(A_LoopFileName, ".ahk")
         FileReadLine, secondLine, %A_LoopFileLongPath%, 2
@@ -166,7 +166,7 @@ return
 
 CleanupPlugin:
     result := ""
-    FileRead, currentPlugins, %A_ScriptDir%\Core\Plugins.ahk
+    FileRead, currentPlugins, %A_ScriptDir%\Runz\Core\Plugins.ahk
     Loop, Parse, currentPlugins, `n, `r
     {
         SplitPath, A_LoopField , , , , pluginName,
@@ -174,15 +174,15 @@ CleanupPlugin:
         {
             result .= pluginName " 插件已被清理，下次运行 RunZ 将不再引入`n"
             StringReplace, currentPlugins, currentPlugins
-                , #include *i `%A_ScriptDir`%\Plugins\%pluginName%.ahk`r`n
+                , #include *i `%A_ScriptDir`%\Runz\Plugins\%pluginName%.ahk`r`n
         }
     }
 
     if (result != "")
     {
         DisplayResult(result)
-        FileDelete, %A_ScriptDir%\Core\Plugins.ahk
-        FileAppend, %currentPlugins%, %A_ScriptDir%\Core\Plugins.ahk
+        FileDelete, %A_ScriptDir%\Runz\Core\Plugins.ahk
+        FileAppend, %currentPlugins%, %A_ScriptDir%\Runz\Core\Plugins.ahk
     }
     else
     {
