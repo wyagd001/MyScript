@@ -19,7 +19,6 @@ If IsLabel("Cando_" . Candy_Cmd . "_prew")
 	Goto % "Cando_" .  Candy_Cmd . "_prew"
 } 
 return
-#ifWinActive
 
 #ifWinActive ÎÄ¼þÔ¤ÀÀ ahk_class AutoHotkeyGUI
 $Space::
@@ -29,12 +28,10 @@ goto PreWWinGuiClose
 PreWWinGuiEscape:
 PreWWinGuiClose:
 Gui,PreWWin:Destroy
-if pipa
-ObjRelease(pipa)
+;if pipa
+;ObjRelease(pipa)
 ;if prewpToken
 ;{
-;msgbox,,, % prewpToken,1
-;sleep,1000
 ;Gdip_ShutDown(prewpToken)
 ;sleep,1000
 ;}

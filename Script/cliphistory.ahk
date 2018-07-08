@@ -32,7 +32,6 @@ clipnum:=clipid+1
 if clipnum=4
 clipnum = 1
 }
-Clipboard := ClipSaved%clipnum%
 st1:=A_TickCount
 SetTimer, ctrlCheck, 50
 return
@@ -57,10 +56,14 @@ if lt1-st1>300
 cliptip(clipnum)
 if !GetKeyState("Ctrl")
 {
+Clipboard := ClipSaved%clipnum%
 SetTimer, ctrlCheck, Off
-Send, ^{vk56}
-first=0
 tooltip
+Send, ^{vk56}
+sleep,200
+Clipboard := ClipSaved%clipid%
+sleep,200
+first=0
 cliptip=0
 monitor=1
 }
@@ -87,7 +90,7 @@ GetClipboardFormat(type=1){		;Thanks nnnik
 
 shijianCheck:
 lt:=A_TickCount
-if (lt-st>5000)
+if (lt-st>8000)
 {
 SetTimer, shijianCheck,off
 monitor=1

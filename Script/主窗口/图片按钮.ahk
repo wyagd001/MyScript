@@ -72,6 +72,12 @@ Return, %VariableName%_img ; Return the handle to the image
 MouseMove(wParam, lParam, msg, hwnd)
 {
    Global
+   if !visable
+   {
+    sleep, 50
+   return
+   }
+
    local Current_Hover_Image
    local Current_Main_Image
    local Current_GUI
@@ -100,6 +106,11 @@ MouseMove(wParam, lParam, msg, hwnd)
 MouseLDown(wParam, lParam, msg, hwnd)
 {
    Global
+   if !visable
+   {
+    sleep, 50
+   return
+   }
    Local Current_Down_Image
    Local Current_GUI
       if (A_Gui>50 &&  A_Gui<fi+50){
@@ -126,6 +137,11 @@ MouseLDown(wParam, lParam, msg, hwnd)
 MouseLUp(wParam, lParam, msg, hwnd)
 {
    Global
+   if !visable
+   {
+    sleep, 50
+   return
+   }
    local Current_Main_Image
    Local Current_GUI
    loop, parse, Graphic_Button_List, |

@@ -3,7 +3,7 @@ WM_QUERYENDSESSION(wParam, lParam)
    global ShutdownBlock
    If not ShutdownBlock
       Exit
-   SetTimer, ShutdownDialog, 10
+   SetTimer, ShutdownDialog, 30
    Return false
    /*   ;XP
     ENDSESSION_LOGOFF = 0x80000000

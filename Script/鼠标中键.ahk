@@ -106,10 +106,11 @@ Else ;指针在任务栏窗口按钮上
 Send {Shift down}
 		click right
 If(!IsContextMenuActive())
-			sleep 10
+			sleep 50
 Send {Shift up}
+sleep,30
 	Send {up}{enter}
-;send , C
+sleep,500
 return
 }
 }
@@ -437,20 +438,6 @@ ChangeTransparency1:
 
 	}
 Return
-
-MouseIsOverTitlebar(HeightOfTitlebar = 30)
-{
-
-	CoordMode,Mouse,Screen
-	SysGet, HeightOfTitlebar, 4
-
-	MouseGetPos, xPos, yPos, id, control
-	WinGetPos, X, Y, W, H, ahk_id %id%
-	If ( (yPos-Y) < 28 ) and ( (yPos-Y) > 0 )
-		return, true
-	Else
-		return, false
-}
 
 vol_MasterUp:
 SoundSet +%vol_Step%

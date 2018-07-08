@@ -338,16 +338,20 @@ Gui,Add,Text,x26 y290,系统注册表中已注册的命令对本程序同样有效
 Gui,Add,Button,x490 y285 g自定义运行命令_click,查看修改
 
 Gui,Tab,其他
-Gui,Add,CheckBox,x26 y41 w120 h20 vvAuto_DisplayMainWindow Checked%Auto_DisplayMainWindow%,启动时显示主窗口
-Gui,Add,CheckBox,x26 y61 w140 h20 vvAuto_Trayicon Checked%Auto_Trayicon%,启动时检测托盘图标
-Gui,Add,CheckBox,x44 y81 w210 h20 vvAuto_Trayicon_showmsgbox Checked%Auto_Trayicon_showmsgbox%,没有托盘图标显示重启脚本对话框
-Gui,Add,CheckBox,x26 y101 w160 h20 vvShutdownMonitor Checked%ShutdownMonitor%,监视关机出现关机对话框
-Gui,Add,CheckBox,x26 y121 w100 h20 vvPasteAndOpen Checked%PasteAndOpen%,粘贴并打开
-Gui,Add,CheckBox,x26 y141 w180 h20 vvAuto_Clip Checked%Auto_Clip%,三重剪贴板(复制文字时生效)
+Gui,Add,CheckBox,x26 y41 w210 h20 vvAuto_DisplayMainWindow Checked%Auto_DisplayMainWindow%,启动时显示主窗口
+Gui,Add,CheckBox,x26 y61 w210 h20 vvAuto_Trayicon Checked%Auto_Trayicon%,启动时检测托盘图标
+Gui,Add,CheckBox,x44 y81 w200 h20 vvAuto_Trayicon_showmsgbox Checked%Auto_Trayicon_showmsgbox%,没有托盘图标显示重启脚本对话框
+Gui,Add,CheckBox,x26 y101 w210 h20 vvShutdownMonitor Checked%ShutdownMonitor%,监视关机出现关机对话框
+Gui,Add,CheckBox,x26 y121 w210 h20 vvPasteAndOpen Checked%PasteAndOpen%,粘贴并打开
+Gui,Add,CheckBox,x26 y141 w210 h20 vvAuto_Clip Checked%Auto_Clip%,三重剪贴板(复制文字时生效)
 Gui,Add,CheckBox,x44 y161 w130 h20 vvAuto_Cliphistory Checked%Auto_Cliphistory%,剪贴板历史(文字)
 Gui,Font,cgreen
-Gui,Add,text,x200 y164 w100 h20 ggui_clipHistory,查看剪贴板历史
+Gui,Add,text,x190 y164 w60 h20 ggui_clipHistory,查看
 Gui,Font
+Gui,Add,CheckBox,x26 y181 w210 h20 vvAuto_Capslock Checked%Auto_Capslock%, 按住 Capslock 改变窗口大小位置
+Gui,Add,CheckBox,x26 y201 w210 h20 vvAuto_mouseclick Checked%Auto_mouseclick%, 鼠标左键增强(热键)
+Gui,Add,CheckBox,x26 y221 w210 h20 vvAuto_midmouse Checked%Auto_midmouse%, 鼠标中键增强(热键)
+Gui,Add,CheckBox,x26 y241 w210 h20 vvAuto_Spacepreview Checked%Auto_Spacepreview%, Space 预览文件(热键)
 
 Gui,Tab,关于
 Gui,Add,Text,x26 y40,名称：运行 - Ahk
@@ -985,6 +989,10 @@ IniWrite,% vShutdownMonitor,%run_iniFile%,功能开关,ShutdownMonitor
 IniWrite,% vPasteAndOpen,%run_iniFile%,功能开关,PasteAndOpen
 IniWrite,% vAuto_Clip,%run_iniFile%,功能开关,Auto_Clip
 IniWrite,% vAuto_Cliphistory,%run_iniFile%,功能开关,Auto_Cliphistory
+IniWrite,% vAuto_Capslock,%run_iniFile%,功能开关,Auto_Capslock
+IniWrite,% vAuto_mouseclick,%run_iniFile%,功能开关,Auto_mouseclick
+IniWrite,% vAuto_midmouse,%run_iniFile%,功能开关,Auto_midmouse
+IniWrite,% vAuto_Spacepreview,%run_iniFile%,功能开关,Auto_Spacepreview
 
 IniWrite,%txt%,%run_iniFile%,常规,txt
 IniWrite,%TextEditor%,%run_iniFile%,常规,TextEditor

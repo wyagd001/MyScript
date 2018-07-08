@@ -89,3 +89,17 @@ IsFullscreen(sWinTitle = "A", UseExcludeList = true, UseIncludeList=true) {     
         Return bCovers ? iMonitor : False
     } Else Return False
 }
+
+MouseIsOverTitlebar(HeightOfTitlebar = 30)
+{
+
+	CoordMode,Mouse,Screen
+	SysGet, HeightOfTitlebar, 4
+
+	MouseGetPos, xPos, yPos, id, control
+	WinGetPos, X, Y, W, H, ahk_id %id%
+	If ( (yPos-Y) < 28 ) and ( (yPos-Y) > 0 )
+		return, true
+	Else
+		return, false
+}

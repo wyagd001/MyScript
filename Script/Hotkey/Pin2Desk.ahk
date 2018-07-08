@@ -2,10 +2,11 @@
 ;+MButton::
 Pin2Desk:
 	WinGetClass,WinClass,A
+;msgbox % WinClass
 	If WinClass In Progman,Manager,Shell_TrayWnd,WorkerW
-	{
 		Return
-	}
+ if !WinClass
+  Return
 ; 	WinGet,WinID,ID,A
 	MouseGetPos,MouseX,MouseY,WinID
 	If StrAr_Find(ToggleList,WinID)

@@ -10,6 +10,8 @@ global run_iniFile := A_ScriptDir "\settings\setting.ini"
 IfNotExist, %run_iniFile%
 	FileCopy, %A_ScriptDir%\Backups\setting.ini, %run_iniFile%
 
+global visable
+
 IniRead, content, %run_iniFile%,功能开关
 Gosub, GetAllKeys
 
@@ -455,6 +457,7 @@ visable = 1
 }
 else
 {
+是否检测:=0
 Gui, Show, hide x%x_x% y%y_y% w624 h78, %AppTitle%
 visable= 0
 }
@@ -480,7 +483,7 @@ Else
 		Menu, addf, UnCheck, 智能浏览器
 }
 
-If ( Auto_SaveDeskIcons=1)
+If (Auto_SaveDeskIcons=1)
 	{
         Menu, addf, Check, 启动时记忆桌面图标
         SetTimer,SaveDesktopIconsPositionsdelay,30000
@@ -646,8 +649,9 @@ SetTimer,aaa,2000
 ;----------鼠标提示----------
 
 ;每5秒检测foobar2000是否运行，显示不同的图标,检测系统音量，更改音量条
-settimer,检测,5000
-
+settimer,检测,2000
+if !是否检测
+settimer,检测,off
 ;----------开启鼠标自动激活功能----------
 If(Auto_Raise=1)
 SetTimer, hovercheck, 100
@@ -662,7 +666,7 @@ GroupAdd, ActiveDisableHover, ahk_class %A_LoopField%
 ;----------开启鼠标自动激活功能----------
 
 ;----------内存优化----------
-AppList:="QQ.exe|firefox.exe|foobar2000.exe"
+AppList:="QQ.exe|chrome.exe|foobar2000.exe"
 SetTimer,FreeAppMem,300000
 ;----------内存优化----------
 
@@ -744,6 +748,8 @@ if Auto_Clip
 		}
 	}
 }
+else
+hotkey,$^V,off
 ;;;;;;;;;; 剪贴板  ;;;;;;;;;;;;
 
 ;快捷键打开C,D,E,F盘...设置其快捷键，loop 15循环15次，到达字母Q
@@ -831,27 +837,6 @@ Hotkey, % myhotkey.前缀_功能键发送到虚拟桌面 "F" A_Index,SendActiveToDesktop
 ;----------虚拟桌面----------
 ;=========热键设置=========
 
-;----------WinMouse----------
-SetFormat, FLOAT, 0.0	;Round all floating operations
-ScriptINI = %A_ScriptDir%\settings\WinMouse.ini ;Path to INI file
-
-;Get monitor count and stats
-SysGet, iMonitorCount, 80	;SM_CMONITORS
-Loop %iMonitorCount%	;Loop through each monitor
-	SysGet, Mon%A_Index%, MonitorWorkArea, %A_Index%
-
-;Load settings
-ReadINI()
-
-;Prep GUI
-Gui,4: +AlwaysOnTop -Caption +ToolWindow +LastFound
-Gui,4: Color, %cShade%	;Set backcolor
-WinSet, Transparent, %iTrans%	;Set transparency
-
-;Establish timer
-SetTimer, ProcessMouse, 500
-SetTimer, ProcessMouse, OFF
-
 ;----------不显示托盘图标则重启脚本----------
 Menu, Tray, Icon
 if Auto_Trayicon
@@ -913,13 +898,46 @@ if Auto_Trayicon
 }
 ;----------不显示托盘图标则重启脚本----------
 
+;---------鼠标增强空格预览的热键-----------
+if !Auto_mouseclick
+hotkey,~LButton,off
+if !Auto_midmouse
+hotkey,$MButton,off
+if !Auto_Spacepreview
+hotkey,$Space,off
+;---------鼠标增强空格预览的热键-----------
+
 ;----------农历节日----------
 if Auto_JCTF
 	if 每隔几小时结果为真(6)
 		Gosub,JCTF
 ;----------农历节日----------
 
+;----------WinMouse----------
+;----------按住 Capslock 使用鼠标改变窗口的大小和位置 ----------
 ;----------loop持续运行，放到loop后面的代码不会执行的----------
+if Auto_Capslock
+{
+SetFormat, FLOAT, 0.0	;Round all floating operations
+ScriptINI = %A_ScriptDir%\settings\WinMouse.ini ;Path to INI file
+
+;Get monitor count and stats
+SysGet, iMonitorCount, 80	;SM_CMONITORS
+Loop %iMonitorCount%	;Loop through each monitor
+	SysGet, Mon%A_Index%, MonitorWorkArea, %A_Index%
+
+;Load settings
+ReadINI()
+
+;Prep GUI
+Gui,4: +AlwaysOnTop -Caption +ToolWindow +LastFound
+Gui,4: Color, %cShade%	;Set backcolor
+WinSet, Transparent, %iTrans%	;Set transparency
+
+;Establish timer
+SetTimer, ProcessMouse, 500
+SetTimer, ProcessMouse, OFF
+
 Loop {
 	;Check state
 	If GetKeyState("Capslock", "P") {
@@ -962,6 +980,7 @@ Loop {
 		;bQuit := False
 	}
 	Sleep 50
+}
 }
 ;----------WinMouse----------
 ;----------脚本启动自动加载结束----------
@@ -1025,16 +1044,9 @@ Return
 
 onClipboardChange:
 	if !Auto_Clip
-	{
-		hotkey,$^V,off
 	return
-	}
 	if !monitor
-	{
-		monitor=1
-		sleep 200
 	return
-	}
 	sleep,100
 	if GetClipboardFormat(1)=1
 	{
@@ -1042,7 +1054,9 @@ onClipboardChange:
 		if clipid>3
 			clipid=1
 		ClipSaved%clipid% := Clipboard
-		
+		;tooltip % ClipSaved1 "`n" ClipSaved2 "`n" ClipSaved3
+;sleep 1000
+;tooltip
 		if Auto_Cliphistory
 		{
 			if (writecliphistory=1) 
@@ -1217,6 +1231,7 @@ Pause,Toggle,1
 Return
 
 GuiClose:
+settimer,检测,off
 Gui,hide
 visable=0
 Return
@@ -1225,11 +1240,13 @@ show:
 If !visable
 {
 Gui,Show
+settimer,检测,on
 visable=1
 }
 Else
 {
 Gui,hide
+settimer,检测,off
 visable=0
 }
 Return
@@ -1269,7 +1286,6 @@ FadeOut(AppTitle,50)
 Return
 
 ExitSub:
-
 FileDelete, %A_Temp%\7plus\hwnd.txt
 
 ; 释放监视关机的资源
@@ -1277,15 +1293,22 @@ if ShutdownMonitor
 {
 DllCall("ShutdownBlockReasonDestroy", UInt, hAHK)
 UnhookWinEvent2()
+;msgbox,0
 }
 
-;msgbox,0
+
 if CloseWindowList_showmenu
+{
 DllCall("DeregisterShellHookWindow","uint",hAHK)
+;msgbox,1
+}
 
 If !smartchooserbrowser
+{
 delahkurl()
-;msgbox,1
+;msgbox,2
+}
+
 
 ;还原缩为缩略图的窗口
 If miniMizeOn
@@ -1301,8 +1324,8 @@ If miniMizeOn
 		Title2MiniMize:=data1
 		Winshow, ahk_id %Title2MiniMize%
 	}
+;msgbox,3
 }
-;msgbox,2
 
 ; 还原pin2desk钉住的窗口
 If ToggleList
@@ -1315,14 +1338,15 @@ If ToggleList
 		WinSet,Region,,ahk_id %A_LoopField%
 		ToggleList:=StrAr_DeletElement(ToggleList,A_LoopField,1)
 }
+;msgbox,4
 }
 
 ;还原虚拟桌面隐藏的窗口
 DetectHiddenWindows Off
 Loop, %numDesktops%
    ShowHideWindows(A_Index, true)
+;msgbox,5
 
-;msgbox,3
 ;是否隐藏了桌面图标，是的话还原
 If hidedektopicon
 {
@@ -1333,9 +1357,9 @@ ControlGet, HWND, Hwnd,, SysListView321, ahk_class Progman
       ControlGet, HWND, Hwnd,, SysListView321, ahk_class WorkerW
       WinShow, ahk_id %HWND%
 }
+;msgbox,6
 }
 
-;msgbox,4
 DetectHiddenWindows On
 ;退出子脚本
     Loop, %scriptCount%
@@ -1349,11 +1373,14 @@ DetectHiddenWindows On
             StringRePlace menuName, thisScript, .ahk
         }
 }
+;msgbox,7
 
 If md5type=1
+{
   DllCall("FreeLibrary", "Ptr", hModule_Md5)
+;msgbox,8
+}
 
-;msgbox,5
 ; 释放粘贴并打开的资源
 If PasteAndOpen
 {
@@ -1362,9 +1389,14 @@ WinShow,开始 ahk_class Button
 WinActivate,ahk_class Shell_TrayWnd
 ;msgbox,6   ;退出有时出现异常(概率非常高，直接退出，托盘图标残留)
 UnhookWinEvent()
+;msgbox,9
 }
+
 if prewpToken
+{
 Gdip_ShutDown(prewpToken)
+;msgbox,10
+}
 
 SoundPlay ,%A_ScriptDir%\Sound\Windows Error.wav
 sleep,300
