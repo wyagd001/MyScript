@@ -100,10 +100,10 @@ onChange="javascript:document.getElementById('ccdd').value=document.getElementBy
 <!--下面的option的样式是为了使字体为灰色，只是视觉问题，看起来像是注释一样-->
 <option value="" style="color:#c2c2c2;">---请选择---</option>
 <option value="%stableitem1%">hichat2626</option>
-<option value="%stableitem2%">闲人BLOG</option>
-<option value="%stableitem3%">闲人设计</option>
-<option value="%stableitem4%">闲人软件</option>
-<option value="%stableitem5%">闲人软件</option>
+<option value="%stableitem2%">项目二</option>
+<option value="%stableitem3%">项目三</option>
+<option value="%stableitem4%">项目四</option>
+<option value="%stableitem5%">项目五</option>
 </select> 
 </span> 
 <span style="position:absolute;border-top:1pt solid #c1c1c1;border-left:1pt solid #c1c1c1;border-bottom:1pt solid #c1c1c1;width:700px;height:50px;"> 
@@ -165,6 +165,7 @@ Logo(ByRef req, ByRef res, ByRef server) {
     res.status := 200
 }
 
+;获取正在播放的歌曲  暂只支持 foobar2000和ahkplayer
 Index(ByRef req, ByRef res) {
 Global
 NowPlaying:=""
