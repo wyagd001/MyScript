@@ -913,6 +913,27 @@ if Auto_JCTF
 		Gosub,JCTF
 ;----------农历节日----------
 
+
+;----------网页控制电脑----------
+; 127.0.0.1:8000  http://localhost:2525/  手机访问 电脑IP：2525
+buttonSize:=rINI("serverConfig","buttonSize", "40px")
+serverPort:=rINI("serverConfig","serverPort", "8000")
+textFontSize:=rINI("serverConfig","textFontSize", "16px")
+pagePadding:=rINI("serverConfig","pagePadding", "50px")
+mp3file:=rINI("serverConfig","mp3file")
+excelfile:=rINI("serverConfig","excelfile")
+txtfile:=rINI("serverConfig","txtfile")
+loop,5
+{
+stableitem%a_index%:=rINI("serverConfig","stableitem" . a_index)
+}
+mOn:=1
+scheduleDelay:=0	;time before a standby/hibernate command is executed
+SHT:=scheduleDelay//60000	;standby/hibernate timer abstracted in minutes
+
+gosub indexInit
+;----------网页控制电脑----------
+
 ;----------WinMouse----------
 ;----------按住 Capslock 使用鼠标改变窗口的大小和位置 ----------
 ;----------loop持续运行，放到loop后面的代码不会执行的----------
@@ -1577,6 +1598,7 @@ RunScript(script,result:="false") {
 #include %A_ScriptDir%\Script\主窗口\拖拽移动文件.ahk
 #include %A_ScriptDir%\Script\主窗口\切换编辑下拉列表.ahk
 #include %A_ScriptDir%\Script\主窗口\播放器和音量控制.ahk
+#include %A_ScriptDir%\Script\网页远程控制.ahk
 #include %A_ScriptDir%\Script\USB.ahk
 #include %A_ScriptDir%\Script\光驱.ahk
 #include %A_ScriptDir%\Script\鼠标中键.ahk
@@ -1604,4 +1626,6 @@ RunScript(script,result:="false") {
 #include %A_ScriptDir%\Lib\Class_SQLiteDB.ahk
 #Include *i %A_ScriptDir%\Lib\进制转换.ahk
 #Include *i %A_ScriptDir%\Lib\string.ahk
+#include, %A_ScriptDir%\lib\AHKhttp.ahk
+#include <AHKsock>
 #include *i %A_ScriptDir%\Script\AutoInclude.ahk

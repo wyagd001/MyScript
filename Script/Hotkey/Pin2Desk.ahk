@@ -7,8 +7,10 @@ Pin2Desk:
 		Return
  if !WinClass
   Return
-; 	WinGet,WinID,ID,A
+ 	WinGet,vWinID,ID,ahk_class Shell_TrayWnd
 	MouseGetPos,MouseX,MouseY,WinID
+if (vWinID=WinID)
+return
 	If StrAr_Find(ToggleList,WinID)
 	{
 ; 		»¹Ô­´°¿Ú

@@ -664,7 +664,7 @@ Jump:
 Return
 
 !F5::
-IfExist,%LrcPath%\%name%.lrc
+IfExist,D:\Program Files\foobar2000\lyrics\%name%.lrc
 {
 run,notepad.exe %LrcPath%\%name%.lrc
 run,notepad.exe D:\Program Files\foobar2000\lyrics\%name%.lrc

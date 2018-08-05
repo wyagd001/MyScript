@@ -1,3 +1,10 @@
+#ifWinActive
+#ifWinActive 文件预览 ahk_class AutoHotkeyGUI
+$Space::
+msgbox
+gosub PreWWinGuiClose
+return
+
 #ifWinActive ahk_Group ccc
 $Space::
 ;重命名时，或中文输入法时，直接发送空格
@@ -16,13 +23,9 @@ Candy_Cmd:=SkSub_Regex_IniRead(Candy_ProFile_Ini, "FilePrew", "i)(^|\|)" Files_E
 if Candy_Cmd
 {
 If IsLabel("Cando_" . Candy_Cmd . "_prew")
-	Goto % "Cando_" .  Candy_Cmd . "_prew"
+	Gosub % "Cando_" .  Candy_Cmd . "_prew"
 } 
 return
-
-#ifWinActive 文件预览 ahk_class AutoHotkeyGUI
-$Space::
-goto PreWWinGuiClose
 #ifWinActive
 
 PreWWinGuiEscape:
@@ -150,7 +153,7 @@ Propor:=Propor > 1?1:Propor
 	hW  := Floor(WidthO * Propor)
 	hH := Floor(HeightO * Propor)
 Gui, Add, Picture,w%hw% h%hh%, %files%
-Gui, Show,  Center, % Files " - 文件预览"
+Gui,PreWWin: Show,  Center, % Files " - 文件预览"
 return
 
 Cando_gif_prew:
@@ -163,7 +166,7 @@ pBitmap:=Gdip_CreateBitmapFromFile(files)
 Gdip_GetImageDimensions(pBitmap, width, height)
 Gui, Add, Picture,w%width% h%height% 0xE hwndhwndGif1
 gif1 := new Gif(Files, hwndGif1)
-Gui, Show, AutoSize Center, % Files " - 文件预览"
+Gui,PreWWin: Show, AutoSize Center, % Files " - 文件预览"
 gif1.Play()
 return
 
@@ -184,7 +187,7 @@ GUI, PreWWin:Default
 Gui, +ReSize
 Gui, Add,text,,qqqq
 Gui, Add, Edit, w800 h600 ReadOnly vdisplayArea,
-Gui, Show, AutoSize Center, % Files " - 文件预览"
+Gui,PreWWin: Show, AutoSize Center, % Files " - 文件预览"
 GuiControl,, displayArea,%textvalue%
 textvalue=
 return
