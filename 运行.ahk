@@ -904,7 +904,10 @@ hotkey,~LButton,off
 if !Auto_midmouse
 hotkey,$MButton,off
 if !Auto_Spacepreview
+{
+msgbox
 hotkey,$Space,off
+}
 ;---------鼠标增强空格预览的热键-----------
 
 ;----------农历节日----------
@@ -913,9 +916,13 @@ if Auto_JCTF
 		Gosub,JCTF
 ;----------农历节日----------
 
-
 ;----------网页控制电脑----------
 ; 127.0.0.1:8000  http://localhost:2525/  手机访问 电脑IP：2525
+if Auto_AhkServer
+{
+StoredLogin:=rINI("serverConfig","StoredLogin", "admin")
+StoredPass:=rINI("serverConfig","StoredPass", 1234)
+LoginPass:=rINI("serverConfig","LoginPass", 0)
 buttonSize:=rINI("serverConfig","buttonSize", "40px")
 serverPort:=rINI("serverConfig","serverPort", "8000")
 textFontSize:=rINI("serverConfig","textFontSize", "16px")
@@ -932,6 +939,7 @@ scheduleDelay:=0	;time before a standby/hibernate command is executed
 SHT:=scheduleDelay//60000	;standby/hibernate timer abstracted in minutes
 
 gosub indexInit
+}
 ;----------网页控制电脑----------
 
 ;----------WinMouse----------
@@ -1068,16 +1076,13 @@ onClipboardChange:
 	return
 	if !monitor
 	return
-	sleep,100
 	if GetClipboardFormat(1)=1
 	{
 		clipid+=1
 		if clipid>3
 			clipid=1
 		ClipSaved%clipid% := Clipboard
-		;tooltip % ClipSaved1 "`n" ClipSaved2 "`n" ClipSaved3
-;sleep 1000
-;tooltip
+
 		if Auto_Cliphistory
 		{
 			if (writecliphistory=1) 
@@ -1100,7 +1105,9 @@ onClipboardChange:
 			}
 			else
 				writecliphistory=1
-			sleep,100
+		tooltip "复制完毕"
+sleep 500
+tooltip
 		}
 	}
 	else

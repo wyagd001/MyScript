@@ -52,6 +52,7 @@ Gui, 2:Show, Hide x150 y%posy%
 
 Menu, FileMenu, Add, 添加文件(&F), MenuFileAdd
 Menu, FileMenu, Add, 添加文件夹(&D), MenuFolderAdd
+Menu, FileMenu, Add, 保存列表, saveplaylist
 Menu, FileMenu, Add, 退出(&X), Exit
 Menu, EditMenu, Add, 播放所选(单选)(&O), MenuOpen
 Menu, EditMenu, Add, 从列表中删除(&R), MenuRemove
@@ -464,8 +465,7 @@ Menu,Lib,Enable,编辑歌词(&E)
 lrcECHO(LrcPath . "\" . name . ".lrc",name)
 }
 Else{
-Gui, 2:Show, NoActivate, %name% - AhkPlayer
-Gui, 2:Hide
+Gui, 2:Show, Hide NoActivate, %name% - AhkPlayer
 Menu,Lib,Disable,编辑歌词(&E)
 }
 Return
@@ -946,6 +946,15 @@ Menu,PlayBack,Check,--下一首跟随鼠标(&F)
 }
 gosub,refreshList
 Gui,Show,,%AhkPlayer_Title%
+Return
+
+saveplaylist:
+FileSelectFile, file_playlist, S, % A_Desktop,保存当前列表
+	Loop, % LV_GetCount()
+	{
+	LV_GetText(mp3_loop, A_Index, 4)
+	Fileappend, %mp3_loop%`n, %file_playlist%
+	}
 Return
 
 ; 播放媒体库

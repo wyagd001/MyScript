@@ -214,6 +214,24 @@ return
 	clipboard =
 	Send, ^c
 	ClipWait,3
+CF_HTML := DllCall("RegisterClipboardFormat", "str", "HTML Format")
+bin := ClipboardAll
+n := 0
+while format := NumGet(bin, n, "uint")
+{
+    size := NumGet(bin, n + 4, "uint")
+    if (format = CF_HTML)
+    {
+        html := StrGet(&bin + n + 8, size, "UTF-8")
+        RegExMatch(html, "(*ANYCRLF)SourceURL:\K.*", sourceURL)
+        break
+    }
+    n += 8 + size
+}
+if !sourceURL
+    return
+Clipboard := ";À´Ô´ÍøÖ·: " sourceURL "`r`n" Clipboard
+
 if clipboard 
 {
 	clipboard = %clipboard%

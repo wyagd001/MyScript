@@ -1,12 +1,11 @@
-#ifWinActive
-#ifWinActive 文件预览 ahk_class AutoHotkeyGUI
+#ifWinActive, - 文件预览 ahk_class AutoHotkeyGUI
 $Space::
-msgbox
 gosub PreWWinGuiClose
 return
 
 #ifWinActive ahk_Group ccc
 $Space::
+SetTitleMatchMode,2
 ;重命名时，或中文输入法时，直接发送空格
 if(A_Cursor="IBeam") or IsRenaming() or (IME_GetSentenceMode(_mhwnd())= 0)
 {

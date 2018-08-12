@@ -1,5 +1,6 @@
 indexInit:
 mytext:=rINI("serverConfig","mytext")
+
 Index_Html =
 (
 <!doctype html>
@@ -67,14 +68,12 @@ body {
 <a href="/standby"> <button> 待机 </button> </a>
 <a href="/hibernate"> <button> 休眠 </button> </a>
 <a href="/monitorOnOff"> <button> 屏幕开关 </button> </a>
+<a href="/logout"> <button> 退出登录 </button> </a>
 <a href="/serverReload"> <button> 重启服务 </button> </a>
 </p>
 
 <p> &nbsp; </p>
 
-<p> 
-<a href="/ceshi"> <button> 测试 </button> </a>
-</p> 
 <p>文件下载</p>
 <p> 
 <a href="/music"> <button> mp3 文件</button> </a> 
@@ -118,6 +117,46 @@ onChange="javascript:document.getElementById('ccdd').value=document.getElementBy
 </html>
 )
 
+SiteContents =
+(LTrim
+	<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<meta name="viewport" content="width=device-width">
+			<title>网页控制</title>
+			<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+			<style>
+				html {
+					font-family: Ubuntu;
+				}
+				body {
+					margin:25px;
+					margin-top:5px;
+				}
+				h4 {
+					font-size: 20px;
+					color:green;
+				}
+				h5 {
+					font-size: 16px;
+					color:teal;
+				}
+			</style>
+			<script type="text/javascript">
+				[ScriptTagContents]
+			</script>
+		</head>
+		<body>
+			[BodyTagContents]
+		</body>
+	</html>
+)
+
+global UserLogin
+global UserPass
+global StoredReqBody
+
 if indexInit_activated
 	Return	;to return only after first initilisation,i.e from a 'Gosub'
 indexInit_activated++
@@ -125,6 +164,7 @@ indexInit_activated++
 paths := {}
 paths["/"] := Func("Index")
 paths["/logo"] := Func("Logo")
+paths["/page"] := Func("MainPage")
 
 paths["/startaudioplayer"] := Func("startaudioplayer")
 paths["/previous"] := Func("previous")
@@ -142,11 +182,11 @@ paths["/vLow"] := Func("vLow")
 paths["/standby"] := Func("standby")
 paths["/hibernate"] := Func("hibernate")
 paths["/monitorOnOff"] := Func("monitorOnOff")
+paths["/logout"] := Func("logout")
 paths["/serverReload"] := Func("serverReload")
 
 paths["/submit"] := Func("submit")
 paths["/runcom"] :=Func("runcom")
-paths["/ceshi"] := Func("ceshi")
 
 paths["/music"] := Func("music")
 paths["/excel"] := Func("excel")
@@ -168,6 +208,8 @@ Logo(ByRef req, ByRef res, ByRef server) {
 ;获取正在播放的歌曲  暂只支持 foobar2000和ahkplayer
 Index(ByRef req, ByRef res) {
 Global
+if loginpass
+{
 NowPlaying:=""
 DetectHiddenWindows, On
 SetTitleMatchMode,2
@@ -176,9 +218,71 @@ sleep,1500
 WinGetTitle, NowPlaying, % " - " activeplayer
 sleep,1500
 WinGetTitle, NowPlaying, % " - " activeplayer
+
 	Gosub, indexInit	;to refresh page
     res.SetBodyText(Index_Html)
     res.status := 200
+}
+else
+{
+ContentsOfScript = <!--...-->
+ContentsToDisplay=
+	(LTrim
+		<div class="container" align="center">
+			<section id="content">
+				<form action="/page" method="post">
+					<h4>登录</h4>
+					<div id="username">
+						<input type="text" placeholder="用户名" required="" name="username" />
+					</div>
+					<div id="password">
+						<input type="password" placeholder="密码" required="" name="password" />
+					</div>
+					<br />
+					<div id="button1">
+						<input type="submit" value="登录" />
+					</div>
+				</form>
+				<div class="button">
+				</div>
+			</section>
+		</div>
+	)
+	StringReplace, ServeTemp, SiteContents, [ScriptTagContents], %ContentsOfScript%, All
+	StringReplace, Serve, ServeTemp, [BodyTagContents], %ContentsToDisplay%, All
+	res.SetBodyText(Serve)
+	res.status := 200
+}
+}
+
+MainPage(ByRef req, ByRef res){
+Global
+	UserLogin = ;Wipe all contents
+	UserPass = ;Wipe all contents
+	HttpReqBodyArray := "" ;Release the object
+	HttpReqBodyArray := Object()
+	For each, Pair in StrSplit(req.body,"&")
+	{
+		Part := StrSplit(Pair, "=")
+		HttpReqBodyArray.Push([Part[1], Part[2]])
+	}
+	UserLogin := HttpReqBodyArray[1,2]
+	UserPass := HttpReqBodyArray[2,2]
+	If (UserLogin != StoredLogin) || (UserPass != StoredPass)
+	{
+		ContentsToDisplay = <p>用户名或密码错误</p>
+	StringReplace, ServeTemp, SiteContents, [ScriptTagContents], %ContentsOfScript%, All
+	StringReplace, Serve, ServeTemp, [BodyTagContents], %ContentsToDisplay%, All
+	res.SetBodyText(Serve)
+	res.status := 200
+	}
+	Else
+	{
+LoginPass:=1
+;StoredReqBody := req.body
+	res.SetBodyText(Index_Html)
+	res.status := 200
+}
 }
 
 resetScheduleTimer(ByRef req, ByRef res){
@@ -212,9 +316,10 @@ Msg(, "StandBy/Hibernate Timer Decreased 30min, NOW: " . SHT . "min")
 	Index(req, res)
 }
 
-
 standby(ByRef req, ByRef res){
 Global
+if loginpass
+{
 	Index(req, res)
 if scheduleDelay
 	{
@@ -229,9 +334,12 @@ if scheduleDelay
 ; Parameter #3: Pass 1 instead of 0 to disable all wake events.
 DllCall("PowrProf\SetSuspendState", "int", 0, "int", 0, "int", 0)
 }
+}
 
 hibernate(ByRef req, ByRef res){
 Global
+if loginpass
+{
 	Index(req, res)
 if scheduleDelay
 	{
@@ -245,6 +353,7 @@ if scheduleDelay
 ; Parameter #2: Pass 1 instead of 0 to suspend immediately rather than asking each application for permission.
 ; Parameter #3: Pass 1 instead of 0 to disable all wake events.
 DllCall("PowrProf\SetSuspendState", "int", 1, "int", 0, "int", 0)
+}
 }
 
 monitorOnOff(ByRef req, ByRef res){
@@ -269,8 +378,15 @@ if !mOn
 ; Use 1 in place of 2 to activate the monitor's low-power mode.
 }
 
+logout(ByRef req, ByRef res){
+Global
+loginpass:=0
+	Index(req, res)
+}
+
 serverReload(ByRef req, ByRef res){
 	Index(req, res)
+if loginpass
 Reload
 }
 ; 空格会变+号 使用★代替+号
@@ -285,13 +401,15 @@ return
 }
 
 runcom(ByRef req, ByRef res){
-Global run_iniFile
+Global
 pp:=req.queries["ccdd"]
 qq:=StringToHex(pp)
 MCode(varchinese, qq)
 command:=StrGet(&varchinese,"cp65001")
 command := StrReplace(command, "+", " ")
 command := StrReplace(command, "★", "+")
+if loginpass
+{
 if IsLabel(command)
 {
 gosub % command
@@ -305,7 +423,7 @@ If % %dir%<>""
 			Run,% %Dir%,,UseErrorLevel
 }
 }
-
+}
 	Index(req, res)
 return
 }
@@ -374,14 +492,6 @@ Msg(, "Un/Mute")
 	Send {Volume_Mute} ;  mute volume toggle
 }
 
-ceshi(ByRef req, ByRef res){	;also works with kmplayer,just coz i use it.
-Msg(, "测试")
-HttpHandler("SEND",,,,,"我是你爸爸")
-;msgbox
-;tooltip sdsadsadsadsadsad
-	Index(req, res)
-}
-
 music(ByRef req, ByRef res){
 Global
 Msg(, "Music")
@@ -404,7 +514,6 @@ Msg(, "excel")
     ;res.headers["Content-Type"] := "audio/x-mpequrl"
 res.headers["content-disposition"] := "attachment;filename=通服工作日志.xls"
     res.SetBody(data, length)
-	;Index(req, res)
 }
 
 txt(ByRef req, ByRef res){
@@ -417,17 +526,10 @@ Msg(, "txt")
     ;res.headers["Content-Type"] := "audio/x-mpequrl"
 res.headers["content-disposition"] := "attachment;filename=中文歌曲.txt"
     res.SetBody(data, length)
-	;Index(req, res)
 }
-
 
 NotFound(ByRef req, ByRef res) {
     res.SetBodyText("Page not found")
-}
-
-HelloWorld(ByRef req, ByRef res) {
-    res.SetBodyText("Hello World")
-    res.status := 200
 }
 
 ;====================================================================
@@ -439,7 +541,6 @@ Global
 FileAppend, `n, %run_iniFile%
 IniWrite, %keyValue%, %run_iniFile%, %sectionName%, %keyName%
 }
-
 
 rINI(sectionName:="MediaFolders", keyName:=0, defaultKeyValue:=0)	;read from ini
 {

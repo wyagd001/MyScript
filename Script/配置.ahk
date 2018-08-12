@@ -39,6 +39,7 @@ IniRead,rh,%run_iniFile%,时间,rh
 IniRead,rm,%run_iniFile%,时间,rm
 IniRead,renwucx,%run_iniFile%,时间,renwucx
 
+IniRead,LoginPass,%run_iniFile%,serverConfig,LoginPass
 IniRead,foobar2000,%run_iniFile%,AudioPlayer,foobar2000
 IniRead,iTunes,%run_iniFile%,AudioPlayer,iTunes
 IniRead,wmplayer,%run_iniFile%,AudioPlayer,wmplayer
@@ -352,6 +353,8 @@ Gui,Add,CheckBox,x26 y181 w210 h20 vvAuto_Capslock Checked%Auto_Capslock%, 按住 
 Gui,Add,CheckBox,x26 y201 w210 h20 vvAuto_mouseclick Checked%Auto_mouseclick%, 鼠标左键增强(热键)
 Gui,Add,CheckBox,x26 y221 w210 h20 vvAuto_midmouse Checked%Auto_midmouse%, 鼠标中键增强(热键)
 Gui,Add,CheckBox,x26 y241 w210 h20 vvAuto_Spacepreview Checked%Auto_Spacepreview%, Space 预览文件(热键)
+Gui,Add,CheckBox,x26 y261 w210 h20 vvAuto_AhkServer Checked%Auto_AhkServer%, ahk 网页控制
+Gui,Add,CheckBox,x46 y281 w210 h20 vvLoginPass Checked%LoginPass%, 启动默认已登录状态
 
 Gui,Tab,关于
 Gui,Add,Text,x26 y40,名称：运行 - Ahk
@@ -993,6 +996,8 @@ IniWrite,% vAuto_Capslock,%run_iniFile%,功能开关,Auto_Capslock
 IniWrite,% vAuto_mouseclick,%run_iniFile%,功能开关,Auto_mouseclick
 IniWrite,% vAuto_midmouse,%run_iniFile%,功能开关,Auto_midmouse
 IniWrite,% vAuto_Spacepreview,%run_iniFile%,功能开关,Auto_Spacepreview
+IniWrite,% vAuto_AhkServer,%run_iniFile%,功能开关,Auto_AhkServer
+IniWrite,% vLoginPass,%run_iniFile%,serverConfig,LoginPass
 
 IniWrite,%txt%,%run_iniFile%,常规,txt
 IniWrite,%TextEditor%,%run_iniFile%,常规,TextEditor
