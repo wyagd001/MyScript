@@ -109,7 +109,7 @@ If(!IsContextMenuActive())
 			sleep 50
 Send {Shift up}
 sleep,30
-	Send {up}{enter}
+	SendEvent {up}{enter}
 sleep,500
 return
 }

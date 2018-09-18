@@ -228,9 +228,7 @@ while format := NumGet(bin, n, "uint")
     }
     n += 8 + size
 }
-if !sourceURL
-    return
-Clipboard := ";来源网址: " sourceURL "`r`n" Clipboard
+Clipboard := sourceURL ? (";来源网址: " sourceURL "`r`n" Clipboard) : Clipboard
 
 if clipboard 
 {

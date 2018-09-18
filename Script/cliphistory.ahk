@@ -14,10 +14,7 @@ if !ClipSaved1
 return
 first+=1
 if first=4
-{
 first=1
-cliptip=1
-}
 if first=1
 clipnum:=clipid
 else if first=2
@@ -32,39 +29,39 @@ clipnum:=clipid+1
 if clipnum=4
 clipnum = 1
 }
+
 st1:=A_TickCount
 SetTimer, ctrlCheck, 50
 return
 
-cliptip(clipnum)
+cliptip(num)
 {
 sleep,100
 Outputtooltip=
-if StrLen(ClipSaved%clipnum%)>300
+if StrLen(ClipSaved%num%)>300
 {
-StringLeft, Outputtooltip1, ClipSaved%clipnum%, 150
-StringRight, Outputtooltip2, ClipSaved%clipnum%, 150
+StringLeft, Outputtooltip1, ClipSaved%num%, 150
+StringRight, Outputtooltip2, ClipSaved%num%, 150
 Outputtooltip:=Outputtooltip1 "`n`n★☆★☆★☆★☆中间部分省略★☆★☆★☆★☆`n`n" Outputtooltip2
 }
-tooltip % "文字剪贴板之" clipnum "`n"(Outputtooltip ? Outputtooltip : ClipSaved%clipnum%)
+tooltip % "文字剪贴板之" num "`n"(Outputtooltip ? Outputtooltip : ClipSaved%num%)
 return
 }
 
 ctrlCheck:
 lt1:=A_TickCount
-if lt1-st1>300
+if lt1-st1>400
 cliptip(clipnum)
 if !GetKeyState("Ctrl")
 {
-Clipboard := ClipSaved%clipnum%
 SetTimer, ctrlCheck, Off
+Clipboard := ClipSaved%clipnum%
 tooltip
 Send, ^{vk56}
-sleep,200
+sleep,400
 Clipboard := ClipSaved%clipid%
-sleep,200
+sleep,400
 first=0
-cliptip=0
 monitor=1
 }
 return

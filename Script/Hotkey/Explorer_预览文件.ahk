@@ -1,11 +1,10 @@
-#ifWinActive, - 文件预览 ahk_class AutoHotkeyGUI
+#ifWinActive, ahk_group MyPreWWinGroup
 $Space::
 gosub PreWWinGuiClose
 return
 
 #ifWinActive ahk_Group ccc
 $Space::
-SetTitleMatchMode,2
 ;重命名时，或中文输入法时，直接发送空格
 if(A_Cursor="IBeam") or IsRenaming() or (IME_GetSentenceMode(_mhwnd())= 0)
 {
@@ -21,6 +20,10 @@ if(Files_Ext="")
 Candy_Cmd:=SkSub_Regex_IniRead(Candy_ProFile_Ini, "FilePrew", "i)(^|\|)" Files_Ext "($|\|)")
 if Candy_Cmd
 {
+GUI, PreWWin:Default
+GUI, PreWWin:Destroy
+GUI, PreWWin:+hwndmyguihwnd
+GroupAdd, MyPreWWinGroup, ahk_id %myguihwnd%
 If IsLabel("Cando_" . Candy_Cmd . "_prew")
 	Gosub % "Cando_" .  Candy_Cmd . "_prew"
 } 
@@ -51,8 +54,8 @@ IsFolder(Path) {
 Cando_pdf_prew:
 gosub,IE_Open
 WB.Navigate("https://mozilla.github.io/pdf.js/web/viewer.html?file=blank.pdf")
-sleep,4000
-settimer,autoopenpdf,-1000 
+sleep,6000
+settimer,autoopenpdf,-2000 
 wb.document.getElementById("openFile").click()
 return
 
@@ -62,8 +65,6 @@ WB.Navigate(Files)
 return
 
 IE_Open:
-GUI, PreWWin:Default
-GUI, PreWWin:Destroy
 Gui, +ReSize
 Gui Add, ActiveX,xm w1050 h800 vWB, Shell.Explorer
 WB.silent := true
@@ -74,7 +75,7 @@ TranslateAccelerator := NumGet( NumGet( pipa+0 ) + 5*A_PtrSize )
 OnMessage( 0x0100, "WM_KeyPress" ) ; WM_KEYDOWN 
 OnMessage( 0x0101, "WM_KeyPress" ) ; WM_KEYUP   
 
-Gui, PreWWin:Show,,% Files " - 文件预览"
+Gui, PreWWin:Show ,,% Files " - 文件预览"
 return
 
 autoopenpdf:
@@ -128,8 +129,6 @@ Static Vars := "hWnd | nMsg | wParam | lParam | A_EventInfo | A_GuiX | A_GuiY"
 }
 
 Cando_music_prew:
-GUI, PreWWin:Default
-GUI, PreWWin:Destroy
 Gui, +LastFound +Resize
 Gui, Add, ActiveX, x0 y0 w0 h0 vWMP, WMPLayer.OCX
 WMP.Url := files
@@ -137,8 +136,6 @@ Gui, PreWWin:Show, w500 h300 Center,% Files " - 文件预览"
 return
 
 Cando_pic_prew:
-GUI, PreWWin:Destroy
-GUI, PreWWin:Default
 if !prewpToken
 prewpToken := Gdip_Startup()        
 GUI, +AlwaysOnTop +Owner
@@ -155,9 +152,44 @@ Gui, Add, Picture,w%hw% h%hh%, %files%
 Gui,PreWWin: Show,  Center, % Files " - 文件预览"
 return
 
+/*
+Cando_rar_prew:
+textvalue:= cmdSilenceReturn("for /f ""eol=- skip=8 tokens=5*"" `%a in ('D:\Progra~1\Tool\WinRAR\unRAR.exe l -c- " """" files """') do @echo `%a `%b")
+Gui, +ReSize
+Gui, Add, Edit, w800 h600 ReadOnly vdisplayArea,
+Gui,PreWWin: Show, AutoSize Center, % Files " - 文件预览"
+GuiControl,, displayArea,%textvalue%
+textvalue=
+return
+*/
+
+Cando_rar_prew:
+textvalue:= cmdSilenceReturn("for /f ""skip=14 tokens=6,* eol=-"" `%a in ('D:\Progra~1\Direct~1\VFSPlugins\7z.exe l " """" files """') do @echo `%a `%b")
+if (InStr(textvalue, "name", false) =1)
+StringTrimLeft , textvalue, textvalue, 8
+StringTrimRight, textvalue, textvalue, 11
+Gui, +ReSize
+Gui, Add, Edit, w800 h600 ReadOnly vdisplayArea,
+Gui,PreWWin: Show, AutoSize Center, % Files " - 文件预览"
+GuiControl,, displayArea,%textvalue%
+textvalue=
+return
+
+cmdSilenceReturn(command){
+	CMDReturn:=""
+	cmdFN:="RunAnyCtrlCMD.log"
+	try{
+    fullCommand = %ComSpec% /C "%command% >> %cmdFN%"
+;msgbox % fullCommand
+		RunWait, %fullCommand%, %A_Temp%, Hide
+
+		FileRead, CMDReturn, %A_Temp%\%cmdFN%
+		FileDelete,%A_Temp%\%cmdFN%
+	}catch{}
+return  CMDReturn
+}
+
 Cando_gif_prew:
-GUI, PreWWin:Destroy
-GUI, PreWWin:Default
 prewpToken := Gdip_Startup()
 GUI, -Caption +AlwaysOnTop +Owner
 Gui, Margin, 0, 0
@@ -181,10 +213,8 @@ break
 }
 else
 FileRead,textvalue,%files%
-GUI, PreWWin:Destroy
-GUI, PreWWin:Default
 Gui, +ReSize
-Gui, Add,text,,qqqq
+;Gui, Add,text,,qqqq
 Gui, Add, Edit, w800 h600 ReadOnly vdisplayArea,
 Gui,PreWWin: Show, AutoSize Center, % Files " - 文件预览"
 GuiControl,, displayArea,%textvalue%

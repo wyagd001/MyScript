@@ -722,7 +722,6 @@ if Auto_Clip
 {
 	first=0
 	clipid=0
-	cliptip=0
 	monitor=0
 	SetTimer, shijianCheck, 50
 	st:=A_TickCount
@@ -1076,6 +1075,10 @@ onClipboardChange:
 	return
 	if !monitor
 	return
+	if !clipboard
+	return
+	if(clipboard = ClipSaved1) or (clipboard = ClipSaved2) or (clipboard = ClipSaved3)
+	return
 	if GetClipboardFormat(1)=1
 	{
 		clipid+=1
@@ -1105,7 +1108,7 @@ onClipboardChange:
 			}
 			else
 				writecliphistory=1
-		tooltip "复制完毕"
+tooltip "剪贴板"%clipid%" 复制完毕"
 sleep 500
 tooltip
 		}

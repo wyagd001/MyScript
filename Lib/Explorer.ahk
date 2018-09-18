@@ -44,9 +44,11 @@ Return 0
 
 ShellNavigate(sPath, bExplore=False, hWnd=0)
 {
+tmm := A_TitleMatchMode
 	SetTitleMatchMode, RegEx
 	If hWnd || (hWnd :=	WinExist("ahk_class (?:Cabinet|Explore)WClass"))
 	{
+SetTitleMatchMode, %tmm%
 		For window in ComObjCreate("Shell.Application").Windows
 			If	(window.hWnd = hWnd)
 				window.Navigate2[sPath]
