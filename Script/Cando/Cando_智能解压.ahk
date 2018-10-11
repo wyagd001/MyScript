@@ -6,7 +6,6 @@ cando_智能解压:
 	SmartUnZip_文件夹名B:=
 
 	包列表=%A_Temp%\wannianshuyaozhinengjieya_%A_Now%.txt
-; 	包列表=c:\1.txt
 
 	SplitPath ,CandySel,,包目录,,包文件名,IntUnZip_FileDrive
 	DriveSpaceFree , IntUnZip_FreeSpace, %IntUnZip_FileDrive%

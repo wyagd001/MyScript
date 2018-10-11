@@ -1,4 +1,9 @@
 ; Ô´ÍøÖ·£ºhttp://thinkai.net/p/537
+; https://www.jianshu.com/p/38a65d8d3e80
+; https://blog.csdn.net/hujingshuang/article/details/80180294
+; https://www.jianshu.com/p/5f3177943b91
+; https://blog.csdn.net/master_ning/article/details/81002474
+
 Cando_°Ù¶ÈÍøÂç·­Òë:
 	Gui,66:Default
 	Gui,Destroy

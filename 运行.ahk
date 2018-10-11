@@ -1079,6 +1079,7 @@ onClipboardChange:
 	return
 	if(clipboard = ClipSaved1) or (clipboard = ClipSaved2) or (clipboard = ClipSaved3)
 	return
+	ClipWait, 1.5
 	if GetClipboardFormat(1)=1
 	{
 		clipid+=1
@@ -1108,9 +1109,7 @@ onClipboardChange:
 			}
 			else
 				writecliphistory=1
-tooltip "¼ôÌù°å"%clipid%" ¸´ÖÆÍê±Ï"
-sleep 500
-tooltip
+			CF_ToolTip("¼ôÌù°å" clipid " ¸´ÖÆÍê±Ï.",500)
 		}
 	}
 	else

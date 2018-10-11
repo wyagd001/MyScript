@@ -107,7 +107,6 @@ Return, Res
 ; cp10002是MAC机上的big5编码，
 ; 950是ANSI的标准
 
-
 UrlDecode(Url, Enc = "UTF-8")
 {
 Pos := 1

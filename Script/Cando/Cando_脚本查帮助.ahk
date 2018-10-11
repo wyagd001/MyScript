@@ -166,7 +166,5 @@ ShowFunction( function, lang="ahk" ) {
   Transform ThisUrl, DeRef, % BaseURL_%lang%
   Run hh.exe %ThisUrl%
 
-  	ToolTip,蠟試試脤戙賸ㄩ%function%
-    sleep 2000
-    tooltip
+  	CF_ToolTip("蠟試試脤戙賸ㄩ" function,2500)
 }

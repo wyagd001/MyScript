@@ -96,10 +96,8 @@ Else ;没找到文件夹
 
 结束:
 ;SoundPlay C:\Program Files\Messenger\type.wav, 1
-ToolTip,文件解压完成！
-Sleep,2000
-ToolTip
-文件数 = ;将这个和下面的变量都清空，以便在下一个压缩包的4种情况判断中重新使用。
-文件夹数 =
+CF_ToolTip("文件解压完成！", 2000)
+;将这个和下面的变量都清空，以便在下一个压缩包的4种情况判断中重新使用。
+文件夹数 := 文件数 := ""
 }
 Return

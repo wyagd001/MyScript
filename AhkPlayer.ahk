@@ -72,7 +72,6 @@ Menu, PlayBack, Add, 播放列表(&L), PTList
 Menu, PlayBack, Add, --下一首跟随鼠标(&F), PTLF
 Menu, PlayBack, Add, 播放媒体库(&M), PTLib
 
-
 Menu, Lib, Add, 打开歌词库(&L), OpenLrc
 Menu, Lib, Add, 打开媒体库(&M), OpenLib
 Menu, Lib, Add, 打开配置文件夹(&F), OpenOptionFolder
@@ -182,9 +181,7 @@ UpdateMediaLib:
 
 	Count -= 1
 	IniWrite, %Count%, %run_iniFile%, AhkPlayer, Count
-			Tooltip, 更新媒体库完毕!%a_tab%%a_tab%
-	Sleep 1000
-	Tooltip
+			CF_ToolTip("更新媒体库完毕!		",2500)
 Return
 
 HuifuPlay:
@@ -670,9 +667,7 @@ run,notepad.exe %LrcPath%\%name%.lrc
 run,notepad.exe D:\Program Files\foobar2000\lyrics\%name%.lrc
 }
 Else{
-ToolTip,歌词文件不存在!
-Sleep,3000
-ToolTip
+CF_ToolTip("歌词文件不存在!",3000)
 }
 Return
 
@@ -1241,10 +1236,9 @@ Slider:
 	{
 		MCI_ToHHMMSS2(Len*(Slider/100),thh,tmm,tss)
 		if (lhh=0)
-			tooltip % tmm ":" tss
+			CF_ToolTip(tmm ":" tss, 2000)
 		else
-			tooltip % thh ":" tmm ":" tss
-		SetTimer, RemoveToolTip, 2000
+			CF_ToolTip(thh ":" tmm ":" tss, 2000)
 	}
 	else
 	{
@@ -1281,11 +1275,6 @@ Slider:
 	}
 	SetTimer,CheckStatus,on
 Return
-
-RemoveToolTip:
-    SetTimer, RemoveToolTip, Off
-    ToolTip
-return
 
 UpdateSlider:
 if hSound

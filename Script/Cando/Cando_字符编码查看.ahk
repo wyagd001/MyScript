@@ -27,11 +27,11 @@ Cando_字符编码查看:
 	Gui,add,Edit,x120 y125 w300 h20 vcp65001,% Trim(cp65001)
 	Gui,add,button,x420 y125 w50 h20 vcp65001tochinese gTochinese,转中文
 
-	Gui, add, text,x5 y+10 ,UTF-16(CP1200):
+	Gui, add, text,x5 y+10 ,UTF-16 LE(CP1200):
 	Gui,add,Edit,x120 y155 w300 h20 vcp1200,% Trim(cp1200)
 	Gui,add,button,x420 y155 w50 h20 vcp1200tochinese gTochinese,转中文
 
-	Gui, add, text,x5 y+10 ,UTF-16(CP1201):
+	Gui, add, text,x5 y+10 ,UTF-16 BE(CP1201):
 	Gui,add,Edit,x120 y185 w300 h20 vcp1201,% Trim(cp1201)
 	Gui,add,button,x420 y185 w50 h20 vcp1201tochinese gTochinese,转中文
 	Gui,add,button,x480 y185 w20 h20 vcp1201toDec gToDec,十

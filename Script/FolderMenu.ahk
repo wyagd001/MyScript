@@ -1942,7 +1942,7 @@ f_CreateSystemRecentMenu()
 	else
 		RecentPath = %UserProfile%\Recent ; For XP
 
-	ToolTip, Loading Recent Items...
+	ToolTip, 加载最近的项目...
 	Loop, %RecentPath%\*.lnk
 	{
     ; ToolTip, Loading Recent Items...`nItem %A_Index%
@@ -2114,7 +2114,7 @@ f_CreateTempMenu(ThisFolderPath, ShowAll)
 	else
 	{
 		; Create items
-		ToolTip, Loading Items...
+		ToolTip, 加载项目...
  		Loop, parse, SubFolderList, `n
 		{
 ;	 ToolTip, Loading Items...`nItem %A_Index%

@@ -56,11 +56,11 @@ if !GetKeyState("Ctrl")
 {
 SetTimer, ctrlCheck, Off
 Clipboard := ClipSaved%clipnum%
+ClipWait,2
 tooltip
 Send, ^{vk56}
 sleep,400
 Clipboard := ClipSaved%clipid%
-sleep,400
 first=0
 monitor=1
 }
@@ -302,9 +302,7 @@ history_ButtonPreview:
 	else v := LV_GetNext()
 if !v
 {
- tooltip, 未选中行。
-sleep 1000
- tooltip
+ CF_ToolTip("未选中行。", 1000)
 return
 }
 	LV_GetText(clip_id, v, 4)
@@ -361,7 +359,7 @@ gui_Clip_Preview(path, searchBox="", owner="History")
 
 genHTMLforPreview(code){
 	FileDelete, % PREV_FILE
-	FileAppend, % "<pre style=""word-break: break-all; word-wrap: break-word;"">" deActivateHtml(code), % PREV_FILE
+	FileAppend, % "<meta http-equiv=""Content-Type"" content=""text/html; charset=utf-8"">`n<pre style=""word-break: break-all; word-wrap: break-word;"">" deActivateHtml(code), % PREV_FILE,cp65001
 }
 
 deactivateHtml(code){

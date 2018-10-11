@@ -28,3 +28,13 @@ CF_RegWrite(ValueType, RootKey, SubKey, ValueName="", Value="") {
 	RegWrite, % ValueType, % RootKey, % SubKey, % ValueName, % Value
 Return
 }
+
+CF_ToolTip(tipText, delay := 1000)
+{
+ToolTip, % tipText
+SetTimer, RemoveToolTip, % "-" delay
+return
+RemoveToolTip:
+ToolTip
+return
+}

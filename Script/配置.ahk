@@ -770,9 +770,7 @@ FocusedRowNumber:=0
 FocusedRowNumber := LV_GetNext(0,"F")
 If not FocusedRowNumber
 {
-	ToolTip,未选中编辑行
-	Sleep,3000
-	ToolTip
+	CF_ToolTip("未选中编辑行!",3000)
 	Return
 }
 else{
@@ -878,9 +876,7 @@ FocusedRowNumber:=0
 FocusedRowNumber := LV_GetNext(0,"F")
 If not FocusedRowNumber
 {
-	ToolTip,未选中编辑行
-	Sleep,3000
-	ToolTip
+	CF_ToolTip("未选中编辑行!",3000)
 	Return
 }
 else
@@ -896,9 +892,7 @@ FocusedRowNumber := LV_GetNext(0,"F")
 ;MsgBox % FocusedRowNumber
 If not FocusedRowNumber
 {
-	ToolTip,未选中
-	Sleep,3000
-	ToolTip
+	CF_ToolTip("未选中!",3000)
 	Return
 }
 Else

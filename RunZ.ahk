@@ -711,8 +711,7 @@ ReindexFiles:
 
     if (WinActive(g_WindowName))
     {
-        ToolTip, 重建索引完毕
-        SetTimer, RemoveToolTip, 800
+        CF_ToolTip("重建索引完毕",1000)
     }
 return
 
@@ -1202,11 +1201,11 @@ RunCommand(originCmd)
 
         if (Arg == "")
         {
-            Run, %cmd%, %fileDir%
+            Run, "%cmd%", "%fileDir%"
         }
         else
         {
-            Run, %cmd% "%Arg%", %fileDir%
+            Run, "%cmd%" "%Arg%", "%fileDir%"
         }
     }
     else if (splitedOriginCmd[1] == "function")
@@ -1319,8 +1318,7 @@ ChangeRank(cmd, show = false, inc := 1)
 
     if (show)
     {
-        ToolTip, 调整 %cmd% 的权重到 %cmdRank%
-        SetTimer, RemoveToolTip, 800
+        CF_ToolTip("调整" cmd "的权重到" cmdRank,1000)
     }
 }
 
@@ -1682,15 +1680,8 @@ return
 
 ShowCurrentFile:
     clipboard := StrSplit(g_CurrentCommand, " | ")[2]
-    ToolTip, % clipboard
-    SetTimer, RemoveToolTip, 800
+    CF_ToolTip(clipboard, 1000)
 return
-
-RemoveToolTip:
-    ToolTip
-    SetTimer, RemoveToolTip, Off
-return
-
 
 WM_MOUSEMOVE(wParam, lParam)
 {
@@ -2023,8 +2014,7 @@ Help:
 return
 
 KeyHelp:
-    ToolTip, % KeyHelpText()
-    SetTimer, RemoveToolTip, 5000
+    CF_ToolTip(KeyHelpText(),5000)
 return
 
 #include %A_ScriptDir%\Lib\EasyIni.ahk

@@ -5,7 +5,6 @@
 帖子： http://forum.ahkbbs.cn/thread-979-1-1.html
 */
 
-
 ;#IfWinActive,ahk_group ccc
 ;F4::    ;;用F4修改文件属性
 修改文件属性:
@@ -248,14 +247,8 @@ Else
 Return
 
 ShowFile:
-ToolTip,%files%
-SetTimer,RemoveToolTip,1000
+CF_ToolTip(files,1000)
 Return
-
-RemoveToolTip:
-SetTimer, RemoveToolTip, Off
-ToolTip
-return
 
 MultiDate:
 Gui,6:Default

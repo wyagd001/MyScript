@@ -216,8 +216,6 @@ SetTitleMatchMode,2
 activeplayer:=activeplayer(DefaultPlayer)
 sleep,1500
 WinGetTitle, NowPlaying, % " - " activeplayer
-sleep,1500
-WinGetTitle, NowPlaying, % " - " activeplayer
 
 	Gosub, indexInit	;to refresh page
     res.SetBodyText(Index_Html)

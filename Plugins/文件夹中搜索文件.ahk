@@ -411,7 +411,8 @@ OnGetDispInfo(pnmv)
                   Continue
               }
           }
-
+          ;if A_LoopFileAttrib contains H
+          ;    Continue
           ; Name|In Folder|Modified|Size (KB)|Type
           FormatTime, FileTimeModified, %A_LoopFileTimeModified% LSys R D1    ;, MM/dd/yyyy HH:mm
 

@@ -740,7 +740,7 @@ UpdateKeyMenu:
         Menu KeyEdit, Enable, Copy Key`tCtrl+C
     }
     
-    Menu MyMenuBar, Delete
+    ;Menu MyMenuBar, Delete
     Menu MyMenuBar, Add, File, :FileMenu
     Menu, MyMenuBar, Add, Edit, :KeyEdit
     Menu MyMenuBar, Add, Help, :About
@@ -766,8 +766,8 @@ UpdateSectionMenu:
         Menu SecEdit, Enable, Cut Section`tCtrl+X
         Menu SecEdit, Enable, Copy Section`tCtrl+C
     }
-    
-    Menu MyMenuBar, Delete
+     
+    ;Menu MyMenuBar, Delete
     Menu MyMenuBar, Add, File, :FileMenu
     Menu, MyMenuBar, Add, Edit, :SecEdit
     Menu MyMenuBar, Add, Help, :About
@@ -787,8 +787,8 @@ MakeGui:
     Gui Main:Margin, 8, 8
     Gui Main:+Resize +MinSize410x215
     Gui Main:Font, s10, Verdana
-	Gui Main:Add, Text, r1 Section, Now Editing:
-	Gui Main:Add, Text, x+8 yp w590 r1 0x8000 vIniFile
+    Gui Main:Add, Text, r1 Section, Now Editing:
+    Gui Main:Add, Text, x+8 yp w590 r1 0x8000 vIniFile
     Gui Main:Add, ListView, % "AltSubmit NoSortHdr Grid -Multi xm y+8 "
                             . "r20 w75 gSectionProc HWNDSectionListHwnd "
                             . "vSectionList ", Section
@@ -969,3 +969,4 @@ Anchor(i, a = "", r = false) {
 }
 
 #Include %A_ScriptDir%\..\Lib\IniObj.ahk
+#Include %A_ScriptDir%\..\Lib\CF.ahk

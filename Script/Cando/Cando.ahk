@@ -23,8 +23,8 @@ loop,10{
 toolTip,%tooltipnum%s
 tooltipnum--
 sleep,1000
-toolTip
 }
+toolTip
 tooltipnum=
 FileMove,% ahklu,% ahkla
 sleep,500
@@ -40,8 +40,8 @@ loop,10{
 toolTip,%tooltipnum%s
 tooltipnum--
 sleep,1000
-toolTip
 }
+toolTip
 tooltipnum=
 FileMove,% ahklu,% ahk
 sleep,800
