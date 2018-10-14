@@ -1,5 +1,4 @@
 Cando_Google网络翻译:
-	;  后台打开IE获取翻译结果
 	Gui,66:Default
 	Gui,Destroy
 	res=
@@ -19,8 +18,10 @@ Return
 
 soundpaly3:
 	Gui, Submit, NoHide
-	tk:=TK(Google_keyword)
-
+webs := URLDownloadToVar("https://translate.google.cn","UTF-8",,,,,,"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36")
+RegExMatch(webs,"TKK='(.*?)'" , tkkkk)
+tk:=TK(Google_keyword,tkkkk1)
+msgbox % tk
 IfExist,%A_SCRIPTDIR%\Settings\tmp\google_tts.mp3
 	FileDelete,%A_SCRIPTDIR%\Settings\tmp\google_tts.mp3
 sleep,1000
@@ -39,72 +40,27 @@ Return
 
 GoogleApi(KeyWord)
 {
-; 缺陷打开IE，IE进程残留
 	if RegExMatch(KeyWord,"[^a-zA-Z0-9\.\?\-\!\s]")
-		LangOut := "en",LangIn := "zh-CN"
+		LangOut := "en",LangIn := "zh"
 	else
-		LangOut := "zh-CN",LangIn := "en"
-base := "https://translate.google.cn/?hl=zh-CN&tab=wT#"
-path := base . LangIn . "/" . LangOut . "/" . UrlEncode(KeyWord,"UTF-8")
+		LangOut := "zh",LangIn := "en"
+url := "https://translate.google.cn/translate_a/single?client=gtx&dt=t&dj=1&ie=UTF-8&sl=" LangIn "&tl=" LangOut "&q=" UrlEncode(KeyWord,"UTF-8")
+response := URLDownloadToVar(url,"UTF-8",,,,,,"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36")
 
-IE := ComObjCreate("InternetExplorer.Application")
-; IE.Visible := true  ; 前台打开IE
-; 如果打开的是360浏览器说明注册表被修改了
-; [HKEY_LOCAL_MACHINE\SOFTWARE\Classes\CLSID\{0002DF01-0000-0000-C000-000000000046}]
-; [HKEY_CLASSES_ROOT\CLSID\{0002DF01-0000-0000-C000-000000000046}]
-IE.Navigate(path)
-StartTime := A_TickCount
-While IE.readyState!=4 || IE.document.readyState!="complete" || IE.busy
-{
-        Sleep 50
-ElapsedTime := A_TickCount - StartTime
-if ElapsedTime > 25000
-break
+json_obj := JSON.Load(response)
+        trans := ""
+        for value, sentence in json_obj.sentences
+        {
+            trans .= sentence.trans . "`n"
 }
- RegExMatch(IE.Document.body.innerHTML,"TKK.*?\)\;" , tkkkk)
-
-Result := IE.document.all.result_box.innertext
-IE.Quit
+Result := trans
 return Result
 }
 
-TK(string)  {
+TK(string,tkk)  {
 	js := new ActiveScript("JScript")
 	js.Exec(GetJScript())
-	Return js.tk(string)
+	Return js.token(string,tkk)
 }
 
-GetJScript()
-{
-	script =
-	(
-  %tkkkk%
-
-		function b(a, b) {
-		  for (var d = 0; d < b.length - 2; d += 3) {
-				var c = b.charAt(d + 2),
-					 c = "a" <= c ? c.charCodeAt(0) - 87 : Number(c),
-					 c = "+" == b.charAt(d + 1) ? a >>> c : a << c;
-				a = "+" == b.charAt(d) ? a + c & 4294967295 : a ^ c
-		  }
-		  return a
-		}
-
-		function tk(a) {
-			 for (var e = TKK.split("."), h = Number(e[0]) || 0, g = [], d = 0, f = 0; f < a.length; f++) {
-				  var c = a.charCodeAt(f);
-				  128 > c ? g[d++] = c : (2048 > c ? g[d++] = c >> 6 | 192 : (55296 == (c & 64512) && f + 1 < a.length && 56320 == (a.charCodeAt(f + 1) & 64512) ?
-				  (c = 65536 + ((c & 1023) << 10) + (a.charCodeAt(++f) & 1023), g[d++] = c >> 18 | 240,
-				  g[d++] = c >> 12 & 63 | 128) : g[d++] = c >> 12 | 224, g[d++] = c >> 6 & 63 | 128), g[d++] = c & 63 | 128)
-			 }
-			 a = h;
-			 for (d = 0; d < g.length; d++) a += g[d], a = b(a, "+-a^+6");
-			 a = b(a, "+-3^+b+-f");
-			 a ^= Number(e[1]) || 0;
-			 0 > a && (a = (a & 2147483647) + 2147483648);
-			 a `%= 1E6;
-			 return a.toString() + "." + (a ^ h)
-		}
-	)
-	Return script
-}
+#Include %A_ScriptDir%\lib\Class_JSON.ahk

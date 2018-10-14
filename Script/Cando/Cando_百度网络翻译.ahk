@@ -11,41 +11,7 @@ Cando_百度网络翻译:
 	Baidu_keyword=%CandySel%
 	Baidu_译文:=BaiduApi(Baidu_keyword)
 	obj := Jxon_Load(Baidu_译文)
-	Baidu_基本释义:= decodeu(obj.trans_result.data.1.dst)
-dict_result := obj.dict_result.simple_means.symbols
-if IsObject(dict_result.1)
-{
-    res .= "词典结果:`n"
-    for k,v in dict_result.1.parts
-    {
-        res .= k ". " v.part
-        if IsObject(v.means)
-        {
-
-            for x,y in v.means
-            {
-
-                if IsObject(y)
-{
-
-                    res .= decodeu(y.word_mean) ";"
-}
-                else
-{
-                    res .= decodeu(y) ";"
-}
-            }
-            res .= "`n"
-        }
-    }
-}  
-if IsObject(obj.dict_result.cizu)
-{
-    res .= "`n词组结果:`n"
-    for k,v in obj.dict_result.cizu
-        res .= k ". " decodeu(v.fanyi) "(" decodeu(v.cz_name) ")：" v.jx.1.jx_en " " decodeu(v.jx.1.jx_zh) "`n"
-}
-	Baidu_网络释义:= res
+	gosub baidujson
 	If Baidu_基本释义<>
 	{
 		Gui,add,Edit,x10 y10 w260 h80 vBaidu_keyword,%Baidu_keyword%
@@ -81,13 +47,57 @@ FileDelete,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3
 else
 {
 CandySel:=Baidu_keyword
-res:=Baidu_基本释义:=Baidu_译文=
+res:=Baidu_基本释义:=Baidu_译文=""
 
 GuiControl, Disable, transandplay
 
 Baidu_译文:=BaiduApi(Baidu_keyword)
 	obj := Jxon_Load(Baidu_译文)
-	Baidu_基本释义:= decodeu(obj.trans_result.data.1.dst)
+gosub baidujson
+	If Baidu_基本释义<>
+{
+GuiControl, , Baidu_基本释义, % Baidu_基本释义
+GuiControl, , Baidu_网络释义, % Baidu_网络释义
+	;spovice:=ComObjCreate("sapi.spvoice")
+	;spovice.Speak(Baidu_keyword)
+	IfExist,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3
+		FileDelete,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3
+	speechurl=http://fanyi.baidu.com/gettts?lan=uk&text=%Baidu_keyword%&spd=3&source=web
+
+	if RegExMatch(Baidu_keyword,"[a-zA-Z0-9\.\?\-\!\s]")
+{
+		URLDownloadToFile,%speechurl%,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3
+sleep,2000
+SoundPlay,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3,wait
+FileDelete,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3
+}
+}
+GuiControl, Enable, transandplay
+}
+Return
+
+BaiduApi(KeyWord)
+{
+webs := URLDownloadToVar("http://fanyi.baidu.com","UTF-8",,,,"chrome开发者工具获取cookies内容替换",,"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36")
+RegExMatch(webs,"window.gtk = '(.*?)';" , gtk)
+RegExMatch(webs,"token: '(.*?)'" , token)
+
+	js := new ActiveScript("JScript")
+	js.Exec(GetJScript())
+  sign:=js.token(keyword,gtk1)
+
+if RegExMatch(KeyWord,"[^a-zA-Z0-9\.\?\-\!\s]")
+    slang := "zh",dlang := "en"
+else
+    slang := "en",dlang := "zh"
+url := "http://fanyi.baidu.com/v2transapi?from=" slang "&to=" dlang "&query=" UrlEncode(KeyWord,"UTF-8") "&transtype=translang&simple_means_flag=3&sign=" sign "&token=" token1
+; 错误代码：997，没有cookie； 998，cookie 过期；999，内部错误。
+   json := URLDownloadToVar(url,"UTF-8",,,,"chrome开发者工具获取cookies头内容替换 BAIDUID=80F544D622A8D8F0HKJJHK7w3242;locale=zh;",,"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36")
+    Return json
+}
+
+baidujson:
+Baidu_基本释义:= decodeu(obj.trans_result.data.1.dst)
 dict_result := obj.dict_result.simple_means.symbols
 if IsObject(dict_result.1)
 {
@@ -122,41 +132,7 @@ if IsObject(obj.dict_result.cizu)
         res .= k ". " decodeu(v.fanyi) "(" decodeu(v.cz_name) ")：" v.jx.1.jx_en " " decodeu(v.jx.1.jx_zh) "`n"
 }
 	Baidu_网络释义:= res
-	If Baidu_基本释义<>
-{
-GuiControl, , Baidu_基本释义, % Baidu_基本释义
-GuiControl, , Baidu_网络释义, % Baidu_网络释义
-	;spovice:=ComObjCreate("sapi.spvoice")
-	;spovice.Speak(Baidu_keyword)
-	IfExist,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3
-		FileDelete,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3
-	speechurl=http://fanyi.baidu.com/gettts?lan=uk&text=%Baidu_keyword%&spd=3&source=web
-
-	if RegExMatch(Baidu_keyword,"[a-zA-Z0-9\.\?\-\!\s]")
-{
-		URLDownloadToFile,%speechurl%,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3
-sleep,2000
-SoundPlay,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3,wait
-FileDelete,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3
-}
-}
-GuiControl, Enable, transandplay
-}
-Return
-
-BaiduApi(KeyWord)
-{
-url := "http://fanyi.baidu.com/v2transapi"
-if RegExMatch(KeyWord,"[^a-zA-Z0-9\.\?\-\!\s]")
-    slang := "zh",dlang := "en"
-else
-    slang := "en",dlang := "zh"
-post := "from=" slang "&to=" dlang "&query=" UrlEncode(KeyWord,"UTF-8") "&transtype=realtime&simple_means_flag=3"
-
-   json := URLDownloadToVar(url,"UTF-8","POST",post)
-
-    Return json
-}
+return
 
 Jxon_Load(ByRef src, args*)
 {
@@ -320,42 +296,4 @@ ustr := StrReplace(ustr, ">", "")
         }
     }
     return out
-}
-
-URLDownloadToVar(url, Encoding = "",Method="GET",postData=""){
-    hObject:=ComObjCreate("WinHttp.WinHttpRequest.5.1")
-    if Method = GET
-    {
-        hObject.Open("GET",url)
-        Try
-            hObject.Send()
-        catch e
-            return -1
-    }
-    else if Method = POST
-    {
-        hObject.Open("POST",url,False)
-        hObject.SetRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8")
-        hObject.SetRequestHeader("Accept", "*/*")
-        hObject.SetRequestHeader("Referer", "http://fanyi.baidu.com/")
-        hObject.SetRequestHeader("X-Requested-With", "XMLHttpRequest")
-        Try
-            hObject.Send(postData)
-        catch e
-            return -1
-    }
- 
-    if Encoding
-    {
-        oADO := ComObjCreate("adodb.stream")
-        oADO.Type := 1
-        oADO.Mode := 3
-        oADO.Open()
-        oADO.Write(hObject.ResponseBody)
-        oADO.Position := 0
-        oADO.Type := 2
-        oADO.Charset := Encoding
-        return oADO.ReadText(), oADO.Close()
-    }
-    return hObject.ResponseText
 }

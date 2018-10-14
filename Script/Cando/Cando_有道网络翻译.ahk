@@ -21,3 +21,9 @@ soundpaly:
 	spovice:=ComObjCreate("sapi.spvoice")
 	spovice.Speak(Youdao_keyword)
 Return
+
+YouDaoApi(KeyWord)
+{
+	url:="http://fanyi.youdao.com/fanyiapi.do?keyfrom=xxxxxxxx&key=1360116736&type=data&doctype=json&version=1.1&q=" . SkSub_UrlEncode(KeyWord,"utf-8")
+    Return UrlDownloadToVar(url)
+}
