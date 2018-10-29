@@ -2,6 +2,18 @@
 ; 将跳过对话框，并自动地运行（替换原来打开的脚本）。
 #SingleInstance force
 #NoTrayIcon
+; 探测“隐藏"的窗口
+DetectHiddenWindows, On
+; 设置脚本的执行速度
+SetBatchLines -1
+ComObjError(0)
+AutoTrim, On
+SetWinDelay, 0
+; 匹配模式 窗口标题包含有指定文字时符合匹配 。
+SetTitleMatchMode 2
+; 设置鼠标的坐标模式为相对于整个屏幕的坐标模式
+CoordMode, Mouse, Screen
+
 ; 开机时启动脚本，等待时间设置长些，使托盘图标可以显示出来
 if(A_TickCount<120000)
 	sleep,40000
@@ -9,7 +21,6 @@ if(A_TickCount<120000)
 global run_iniFile := A_ScriptDir "\settings\setting.ini"
 IfNotExist, %run_iniFile%
 	FileCopy, %A_ScriptDir%\Backups\setting.ini, %run_iniFile%
-
 global visable
 
 IniRead, content, %run_iniFile%,功能开关
@@ -26,29 +37,14 @@ If(!A_IsAdmin)
 		Loop %0%
 			params .= " " (InStr(%A_Index%, " ") ? """" %A_Index% """" : %A_Index%)
 		uacrep := DllCall("shell32\ShellExecute", uint, 0, str, "RunAs", str, A_AhkPath, str, """" A_ScriptFullPath """" params, str, A_WorkingDir, int, 1)
-		If(uacrep = 42) ;UAC Prompt confirmed, application may Run as admin
+		If(uacrep = 42) ; UAC Prompt confirmed, application may Run as admin
 			MsgBox, 成功启用管理员权限
 		Else
 			MsgBox, 没有启用管理员权限
 }
 
-; 探测“隐藏"的窗口
-DetectHiddenWindows, On
-; 设置脚本的执行速度
-SetBatchLines -1
-ComObjError(0)
-AutoTrim, On
-SetWinDelay, 0
-
-; 匹配模式 窗口标题包含有指定文字时符合匹配 。
-SetTitleMatchMode 2
-; AHK脚本管理器初始计数值
-scriptCount = 0
 ; 退出脚本时，执行ExitSub，关闭自动启动的脚本、恢复窗口等等操作。
 OnExit, ExitSub
-
-; 设置鼠标的坐标模式为相对于整个屏幕的坐标模式
-CoordMode, Mouse, Screen
 
 ;========变量设置开始========
 FileRead, AppVersion, %A_ScriptDir%\version.txt
@@ -261,6 +257,8 @@ Menu scripts_reload, ToggleEnable, 重载脚本
 Menu scripts_reload, Default, 重载脚本
 Menu scripts_reload, Add
 
+; AHK脚本管理器初始计数值
+scriptCount = 0
 ; 遍历"脚本管理器"目录下所有ahk文件
 Loop, %ScriptManager_Path%\*.ahk
 {
@@ -406,50 +404,6 @@ Menu,  addf, Add, 启动时记忆桌面图标,AutoSaveDeskIcons
 Menu,  addf, Add, 记忆桌面图标, SaveDesktopIconsPositions
 Menu,  addf, Add, 恢复桌面图标, RestoreDesktopIconsPositions
 
-If(Auto_Update=1){
-;connected:=DllCall("Wininet.dll\InternetGetConnectedState", "Str", 0x40,"Int",0)
-;If connected=1
-URL := "http://www.baidu.com"
-If InternetCheckConnection(URL)
-{
-UrlDownloadToFile, https://raw.githubusercontent.com/wyagd001/MyScript/master/version.txt, %update_txtFile%
-IfNotExist,%update_txtFile%
-{
-msgbox, ,升级通知,无法下载更新文件，请检查您的网络连接。
-Return
-}
-If(sizeq>20)
-{
-msgbox, ,升级通知,下载的更新文件大小不符，请检查您的网络连接。
-FileDelete, %update_txtFile%
-Return
-}
-FileRead, CurVer, %update_txtFile%
-If not ErrorLevel
-{
-If(CurVer!=AppVersion)
-{
-msgbox,4,升级通知,当前版本为:%AppVersion%`n最新版本为:%CurVer%`n是否前往主页下载?
-     IfMsgBox Yes
-     {
-     Run,https://github.com/wyagd001/MyScript
-	 FileDelete, %update_txtFile%
-     }
-     IfMsgBox No
-{
-msgbox,4,更新设置,下次启动时是否仍然检测更新。
-IfMsgBox No
-IniWrite,0,%run_iniFile%,功能开关,Auto_Update
-FileDelete, %update_txtFile%
-}
-}
-}
-Else
-FileDelete, %update_txtFile%
-}
-FileDelete, %update_txtFile%
-}
-
 if Auto_DisplayMainWindow
 {
 Gui, Show, x%x_x% y%y_y% w624 h78, %AppTitle%
@@ -518,6 +472,67 @@ GuiDropFiles.config(HGUI, "GuiDropFiles_Begin", "GuiDropFiles_End")
 ;拖拽到ComboBox或Edit1控件上不复制文件
 ControlGet,hComboBoxEdit,hWnd,,Edit1,ahk_id %HGUI%
 ;=========图形界面的"绘制"2=========
+
+;----------不显示托盘图标则重启脚本----------
+Menu, Tray, Icon
+if Auto_Trayicon
+{
+  While (180000 - A_TickCount) > 0
+   sleep,100
+ Script_pid:=DllCall("GetCurrentProcessId")
+ Tray_Icons := {}
+ Tray_Icons := TrayIcon_GetInfo(Ahk_Process)
+ for index, Icon in Tray_Icons {
+  trayicons_pid .= Icon.Pid ","
+ }
+
+ If trayicons_pid not contains %Script_pid%
+ {
+  Menu, Tray, NoIcon
+  sleep,300
+  Menu, Tray, Icon
+  Tray_Icons := {}
+  trayicons_pid := ""
+  Tray_Icons := TrayIcon_GetInfo(Ahk_Process)
+  for index, Icon in Tray_Icons {
+   trayicons_pid .= Icon.Pid ","
+  }
+ }
+
+ If trayicons_pid not contains %Script_pid%
+ {
+  if Auto_Trayicon_showmsgbox
+  {
+   msgbox,4,错误,未检测到脚本的托盘图标，点"是"重启脚本，点"否"继续运行脚本。`n默认(超时)自动重启脚本。,6
+   IfMsgBox Yes
+    autoreload=1
+   else IfMsgBox timeout
+    autoreload=1
+  }
+  else
+   autoreload=1
+
+  连续重启次数:=CF_IniRead(run_iniFile,"时间","连续重启次数",0)
+  if 连续重启次数 > 5
+  {
+   IniWrite,0,% run_iniFile,时间,连续重启次数
+   IniWrite,0,% run_iniFile,功能开关,Auto_Trayicon
+   Msgbox 脚本多次运行都不能检测到托盘图标，脚本下次启动将不再检测托盘图标。
+  }
+  else
+  {
+   连续重启次数 += 1
+   IniWrite,% 连续重启次数,% run_iniFile,时间,连续重启次数
+  }
+
+  if(autoreload=1)
+  {
+   Reload
+  Return
+  }
+ }
+}
+;----------不显示托盘图标则重启脚本----------
 
 ;=========窗口分组=========
 ;依次将桌面，显示桌面，我的电脑，资源管理器,另存为窗口加入"组" "ccc"中,应用于定位文件,复制路径,智能重命名等
@@ -836,102 +851,63 @@ Hotkey, % myhotkey.前缀_功能键发送到虚拟桌面 "F" A_Index,SendActiveToDesktop
 ;----------虚拟桌面----------
 ;=========热键设置=========
 
-;----------不显示托盘图标则重启脚本----------
-Menu, Tray, Icon
-if Auto_Trayicon
-{
-  While (180000 - A_TickCount) > 0
-   sleep,100
- Script_pid:=DllCall("GetCurrentProcessId")
- Tray_Icons := {}
- Tray_Icons := TrayIcon_GetInfo(Ahk_Process)
- for index, Icon in Tray_Icons {
-  trayicons_pid .= Icon.Pid ","
- }
-
- If trayicons_pid not contains %Script_pid%
- {
-  Menu, Tray, NoIcon
-  sleep,300
-  Menu, Tray, Icon
-  Tray_Icons := {}
-  trayicons_pid := ""
-  Tray_Icons := TrayIcon_GetInfo(Ahk_Process)
-  for index, Icon in Tray_Icons {
-   trayicons_pid .= Icon.Pid ","
-  }
- }
-
- If trayicons_pid not contains %Script_pid%
- {
-  if Auto_Trayicon_showmsgbox
-  {
-   msgbox,4,错误,未检测到脚本的托盘图标，点"是"重启脚本，点"否"继续运行脚本。`n默认(超时)自动重启脚本。,6
-   IfMsgBox Yes
-    autoreload=1
-   else IfMsgBox timeout
-    autoreload=1
-  }
-  else
-   autoreload=1
-
-  连续重启次数:=CF_IniRead(run_iniFile,"时间","连续重启次数",0)
-  if 连续重启次数 > 5
-  {
-   IniWrite,0,% run_iniFile,时间,连续重启次数
-   IniWrite,0,% run_iniFile,功能开关,Auto_Trayicon
-   Msgbox 脚本多次运行都不能检测到托盘图标，脚本下次启动将不再检测托盘图标。
-  }
-  else
-  {
-   连续重启次数 += 1
-   IniWrite,% 连续重启次数,% run_iniFile,时间,连续重启次数
-  }
-
-  if(autoreload=1)
-  {
-   Reload
-  Return
-  }
- }
-}
-;----------不显示托盘图标则重启脚本----------
-
 ;---------鼠标增强空格预览的热键-----------
 if !Auto_mouseclick
-hotkey,~LButton,off
+	hotkey,~LButton,off
 if !Auto_midmouse
-hotkey,$MButton,off
+	hotkey,$MButton,off
 if !Auto_Spacepreview
-{
-msgbox
-hotkey,$Space,off
-}
+	hotkey,$Space,off
 ;---------鼠标增强空格预览的热键-----------
 
+if (Auto_JCTF or Auto_Update) and 每隔几小时结果为真(6)
+{
 ;----------农历节日----------
 if Auto_JCTF
-	if 每隔几小时结果为真(6)
 		Gosub,JCTF
 ;----------农历节日----------
+
+;---------启动检查更新-----------
+If Auto_Update
+{
+	URL := "http://www.baidu.com"
+	If InternetCheckConnection(URL)
+	{
+		WinHttp.URLGet("https://raw.githubusercontent.com/wyagd001/MyScript/master/version.txt",,, update_txtFile)
+		FileGetSize, sizeq,%update_txtFile%
+		If(sizeq<20)
+		{
+			FileRead, CurVer, %update_txtFile%
+			If(CurVer!=AppVersion)
+			{
+				msgbox,4,升级通知,当前版本为:%AppVersion%`n最新版本为:%CurVer%`n是否前往主页下载?
+				IfMsgBox Yes
+					Run,https://github.com/wyagd001/MyScript
+			}
+		}
+		FileDelete, %update_txtFile%
+	}
+}
+;---------启动检查更新-----------
+}
 
 ;----------网页控制电脑----------
 ; 127.0.0.1:8000  http://localhost:2525/  手机访问 电脑IP：2525
 if Auto_AhkServer
 {
-StoredLogin:=rINI("serverConfig","StoredLogin", "admin")
-StoredPass:=rINI("serverConfig","StoredPass", 1234)
-LoginPass:=rINI("serverConfig","LoginPass", 0)
-buttonSize:=rINI("serverConfig","buttonSize", "40px")
-serverPort:=rINI("serverConfig","serverPort", "8000")
-textFontSize:=rINI("serverConfig","textFontSize", "16px")
-pagePadding:=rINI("serverConfig","pagePadding", "50px")
-mp3file:=rINI("serverConfig","mp3file")
-excelfile:=rINI("serverConfig","excelfile")
-txtfile:=rINI("serverConfig","txtfile")
+StoredLogin:=CF_IniRead(run_iniFile, "serverConfig","StoredLogin", "admin")
+StoredPass:=CF_IniRead(run_iniFile, "serverConfig","StoredPass", 1234)
+LoginPass:=CF_IniRead(run_iniFile, "serverConfig","LoginPass", 0)
+buttonSize:=CF_IniRead(run_iniFile, "serverConfig","buttonSize", "40px")
+serverPort:=CF_IniRead(run_iniFile, "serverConfig","serverPort", "8000")
+textFontSize:=CF_IniRead(run_iniFile, "serverConfig","textFontSize", "16px")
+pagePadding:=CF_IniRead(run_iniFile, "serverConfig","pagePadding", "50px")
+mp3file:=CF_IniRead(run_iniFile, "serverConfig","mp3file")
+excelfile:=CF_IniRead(run_iniFile, "serverConfig","excelfile")
+txtfile:=CF_IniRead(run_iniFile, "serverConfig","txtfile")
 loop,5
 {
-stableitem%a_index%:=rINI("serverConfig","stableitem" . a_index)
+stableitem%a_index%:=CF_IniRead(run_iniFile, "serverConfig","stableitem" . a_index)
 }
 mOn:=1
 scheduleDelay:=0	;time before a standby/hibernate command is executed
@@ -1079,7 +1055,7 @@ onClipboardChange:
 	return
 	if(clipboard = ClipSaved1) or (clipboard = ClipSaved2) or (clipboard = ClipSaved3)
 	return
-	ClipWait, 1.5
+	ClipWait, 0.5, 1
 	if GetClipboardFormat(1)=1
 	{
 		clipid+=1
@@ -1109,7 +1085,7 @@ onClipboardChange:
 			}
 			else
 				writecliphistory=1
-			CF_ToolTip("剪贴板" clipid " 复制完毕.",500)
+			CF_ToolTip("剪贴板" clipid " 复制完毕.",700)
 		}
 	}
 	else
@@ -1547,7 +1523,7 @@ if RegExReplace(fs,"\s+") != RegExReplace(s,"\s+")
 {
   FileDelete, %f%
   FileAppend, %s%, %f%
-  msgbox,,脚本重启,Include 文件发生了变化，点"确定"后重启脚本，应用更新
+  msgbox,,脚本重启,自动 Include 的文件发生了变化，点击"确定"后重启脚本，应用更新。
 IfMsgBox OK
 {
 fs:=s:=AutoInclude_Path:=f:=""
@@ -1575,19 +1551,20 @@ break
 return
 
 ; 来源帮助文件中的示例
-RunScript(script,result:="false") {
-    static test_ahk := A_AhkPath,
-    shell := ComObjCreate("WScript.Shell")
-    tempworkdir:=A_WorkingDir
-    SetWorkingDir %A_ScriptDir%
-    exec := shell.Exec(chr(34) test_ahk chr(34) " /ErrorStdOut *")
-    exec.StdIn.WriteLine(script)
-    exec.StdIn.Close()
-   SetWorkingDir %tempworkdir%
-   if result
-    return exec.StdOut.ReadAll()
-  else 
-  return
+RunScript(script, WaitResult:="false")
+{
+	static test_ahk := A_AhkPath,
+	shell := ComObjCreate("WScript.Shell")
+	tempworkdir:= A_WorkingDir
+	SetWorkingDir %A_ScriptDir%
+	exec := shell.Exec(chr(34) test_ahk chr(34) " /ErrorStdOut *")
+	exec.StdIn.Write(script)
+	exec.StdIn.Close()
+	SetWorkingDir %tempworkdir%
+	if WaitResult
+		return exec.StdOut.ReadAll()
+	else 
+return
 }
 
 #include %A_ScriptDir%\Script\脚本管理器.ahk
@@ -1633,6 +1610,8 @@ RunScript(script,result:="false") {
 #include %A_ScriptDir%\Lib\ActiveScript.ahk
 #include %A_ScriptDir%\Lib\_GuiDropFiles.ahk
 #include %A_ScriptDir%\Lib\Class_SQLiteDB.ahk
+#include %A_ScriptDir%\Lib\Class_JSON.ahk
+#include %A_ScriptDir%\Lib\Class_WinHttp.ahk
 #Include *i %A_ScriptDir%\Lib\进制转换.ahk
 #Include *i %A_ScriptDir%\Lib\string.ahk
 #include, %A_ScriptDir%\lib\AHKhttp.ahk

@@ -1,5 +1,5 @@
 indexInit:
-mytext:=rINI("serverConfig","mytext")
+mytext:=CF_IniRead(run_iniFile, "serverConfig","mytext")
 
 Index_Html =
 (
@@ -94,7 +94,7 @@ body {
 <!--有name属性都会提交-->
 <form action="/runcom" method="get">
 <span style="position:absolute;border:1pt solid #c1c1c1;overflow:hidden;width:740px;height:54px;">
-<select id="aabb" style="width:742px;height:55px;" 
+<select name="aabb" id="aabb" style="width:742px;height:55px;" 
 onChange="javascript:document.getElementById('ccdd').value=document.getElementById('aabb').options[document.getElementById('aabb').selectedIndex].value;">
 <!--下面的option的样式是为了使字体为灰色，只是视觉问题，看起来像是注释一样-->
 <option value="" style="color:#c2c2c2;">---请选择---</option>
@@ -387,17 +387,19 @@ serverReload(ByRef req, ByRef res){
 if loginpass
 Reload
 }
-; 空格会变+号 使用★代替+号
+
+; 空格会变+号
 submit(ByRef req, ByRef res){
 Global run_iniFile
 pp:=req.queries["mytext"]
 qq:=StringToHex(pp)
 MCode(varchinese, qq)
-iniwrite, % StrGet(&varchinese,"cp65001"),%run_iniFile%, serverConfig, mytext
+iniwrite, % StrGet(&varchinese, "cp65001"), %run_iniFile%, serverConfig, mytext
 	Index(req, res)
 return
 }
 
+; 空格会变+号 使用★代替+号
 runcom(ByRef req, ByRef res){
 Global
 pp:=req.queries["ccdd"]
@@ -413,6 +415,8 @@ if IsLabel(command)
 gosub % command
 return
 }
+if IsStingFunc(command)
+ RunStingFunc(command)
 Run,%command%,,UseErrorLevel
 If ErrorLevel
 	{
@@ -530,47 +534,6 @@ NotFound(ByRef req, ByRef res) {
     res.SetBodyText("Page not found")
 }
 
-;====================================================================
-;=========================INI FUNCTIONS==============================			;defaults for keynames are specified because ahk won't allow preceding params to have defaults and others not.
-;====================================================================
-wINI(sectionName:="MediaFolders", keyName:=0, keyValue:=0)	;write to ini
-{
-Global
-FileAppend, `n, %run_iniFile%
-IniWrite, %keyValue%, %run_iniFile%, %sectionName%, %keyName%
-}
-
-rINI(sectionName:="MediaFolders", keyName:=0, defaultKeyValue:=0)	;read from ini
-{
-Global
-	IniRead, keyVariableOut_var, %run_iniFile%, %sectionName%, %keyName%
-if !keyVariableOut_var
-	IniRead, keyVariableOut_var, %run_iniFile%, %sectionName%, %keyName%, %defaultKeyValue%
-
-return %keyVariableOut_var%
-}
-
-
-dINI(sectionName:="MediaFolders", keyName:=0)	;delete ini key or section
-{
-Global
-if !keyName
-	IniDelete, %run_iniFile%, %sectionName%
-Else
-	IniDelete, %run_iniFile%, %sectionName%, %keyName%
-}
-
-
-boolINI(sectionName:="MediaFolders", keyName:=0)	;to check if an ini value exists so as to proceed to read it's value if does
-{
-Global
-IniRead, currentKeyValue, %run_iniFile%, %sectionName%, %keyName%
-
-IfEqual, currentKeyValue, Error
-	Return, False
-Else Return, True
-}
-
 ;========================================================================================================================================================================================
 ;---------------------------------------------------------------
 ; Msg Monolog
@@ -632,8 +595,7 @@ MsgFadeOut:
 	}
 Return
 
-
-Goto, unintendedStdBy_Hib_JUMP	;so that standby/hibernate is not activated on script exit & labels can only be reached if called
+;Goto, unintendedStdBy_Hib_JUMP	;so that standby/hibernate is not activated on script exit & labels can only be reached if called
 scheduledStandby:
 	SetTimer, scheduledStandby, off
 	scheduleDelay:=0	;reset timer to allow going into standby/hibernate
@@ -644,29 +606,7 @@ scheduledHibernate:
 	scheduleDelay:=0	;reset timer to allow going into standby/hibernate
 	hibernate(req, res)
 Return
-unintendedStdBy_Hib_JUMP:
+;unintendedStdBy_Hib_JUMP:
 
-
-::mrcexit::
-ExitApp
-
-StringToHex(String) {
-/*	Original script author: ahklerner
-	autohotkey.com/board/topic/15831-convert-string-to-hex/?p=102873
-*/
-	
-	formatInteger := A_FormatInteger 	;Save the current Integer format
-	SetFormat, Integer, Hex ; Set the format of integers to their Hex value
-	
-	;Parse the String
-	Loop, Parse, String 
-	{
-		CharHex := Asc(A_LoopField) ; Get the ASCII value of the Character (will be converted to the Hex value by the SetFormat Line above)
-		 StringTrimLeft, CharHex, CharHex, 2 ; Comment out the following line to leave the '0x' intact
-		HexString .= CharHex ;. " "     ; Build the return string
-	}
-	SetFormat, Integer,% formatInteger ; Set the integer format to what is was prior to the call
-	
-	HexString = %HexString% ; Remove blankspaces	
-	Return HexString
-}
+;::mrcexit::
+;ExitApp

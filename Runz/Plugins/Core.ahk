@@ -205,5 +205,6 @@ CountNumber:
 return
 
 Open:
-    Run, % StrSplit(FullPipeArg, "`r")[1]
+    runtar:= StrSplit(FullPipeArg, "`r")[1]
+    Run, "%runtar%"
 return

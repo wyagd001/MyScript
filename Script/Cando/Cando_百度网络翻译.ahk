@@ -3,6 +3,7 @@
 ; https://blog.csdn.net/hujingshuang/article/details/80180294
 ; https://www.jianshu.com/p/5f3177943b91
 ; https://blog.csdn.net/master_ning/article/details/81002474
+; https://blog.csdn.net/hongquan1991/article/details/80616491
 
 Cando_百度网络翻译:
 	Gui,66:Default
@@ -32,55 +33,76 @@ soundpaly2:
 	; spovice:=ComObjCreate("sapi.spvoice")
 	; spovice.Speak(Baidu_keyword)
 	
-	IfExist,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3
-		FileDelete,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3
-	speechurl=http://fanyi.baidu.com/gettts?lan=uk&text=%Baidu_keyword%&spd=3&source=web
+		IfExist,%A_SCRIPTDIR%\Settings\tmp\tts.mp3
+		{
+			SoundPlay,%A_SCRIPTDIR%\Settings\tmp\tts.mp3,wait
+		Return
+		}
+		else
+		{
+			if RegExMatch(Baidu_keyword,"[a-zA-Z0-9\.\?\-\!\s]")
+			{
+				speechurl=http://fanyi.baidu.com/gettts?lan=uk&text=%Baidu_keyword%&spd=3&source=web
+				WinHttp.URLGet(speechurl,,,A_SCRIPTDIR "\Settings\tmp\tts.mp3")
+				sleep,1500
+				SoundPlay,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3,wait
+				deltts=1
+			Return
+			}
+		}
+	}
+	else
+	{
+		CandySel:=Baidu_keyword
+		res:=Baidu_基本释义:=Baidu_译文=""
+		GuiControl, Disable, transandplay
+		Baidu_译文:=BaiduApi(Baidu_keyword)
+		obj := Jxon_Load(Baidu_译文)
+		gosub baidujson
+		If Baidu_基本释义<>
+		{
+			GuiControl, , Baidu_基本释义, % Baidu_基本释义
+			GuiControl, , Baidu_网络释义, % Baidu_网络释义
+			;spovice:=ComObjCreate("sapi.spvoice")
+			;spovice.Speak(Baidu_keyword)
+			IfExist,%A_SCRIPTDIR%\Settings\tmp\tts.mp3
+				FileDelete,%A_SCRIPTDIR%\Settings\tmp\tts.mp3
 
-	if RegExMatch(Baidu_keyword,"[a-zA-Z0-9\.\?\-\!\s]")
-{
-		URLDownloadToFile,%speechurl%,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3
-sleep,2000
-SoundPlay,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3,wait
-FileDelete,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3
-}
-}
-else
-{
-CandySel:=Baidu_keyword
-res:=Baidu_基本释义:=Baidu_译文=""
-
-GuiControl, Disable, transandplay
-
-Baidu_译文:=BaiduApi(Baidu_keyword)
-	obj := Jxon_Load(Baidu_译文)
-gosub baidujson
-	If Baidu_基本释义<>
-{
-GuiControl, , Baidu_基本释义, % Baidu_基本释义
-GuiControl, , Baidu_网络释义, % Baidu_网络释义
-	;spovice:=ComObjCreate("sapi.spvoice")
-	;spovice.Speak(Baidu_keyword)
-	IfExist,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3
-		FileDelete,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3
-	speechurl=http://fanyi.baidu.com/gettts?lan=uk&text=%Baidu_keyword%&spd=3&source=web
-
-	if RegExMatch(Baidu_keyword,"[a-zA-Z0-9\.\?\-\!\s]")
-{
-		URLDownloadToFile,%speechurl%,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3
-sleep,2000
-SoundPlay,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3,wait
-FileDelete,%A_SCRIPTDIR%\Settings\tmp\baidu_tts.mp3
-}
-}
-GuiControl, Enable, transandplay
-}
+			if RegExMatch(Baidu_keyword,"[a-zA-Z0-9\.\?\-\!\s]")
+			{
+				speechurl=http://fanyi.baidu.com/gettts?lan=uk&text=%Baidu_keyword%&spd=3&source=web
+				WinHttp.URLGet(speechurl,,,A_SCRIPTDIR "\Settings\tmp\tts.mp3")
+				sleep,1500
+				SoundPlay,%A_SCRIPTDIR%\Settings\tmp\tts.mp3,wait
+				deltts=1
+				GuiControl, Enable, transandplay
+			Return
+			}
+		}
+		GuiControl, Enable, transandplay
+	}
 Return
 
 BaiduApi(KeyWord)
 {
-webs := URLDownloadToVar("http://fanyi.baidu.com","UTF-8",,,,"chrome开发者工具获取cookies内容替换",,"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36")
+IfExist,%A_ScriptDir%\Settings\tmp\baidu.ini
+	IniRead, baiducookie, %A_ScriptDir%\Settings\tmp\baidu.ini, baidu, cookie
+else
+{
+webs := WinHttp.URLGet("https://fanyi.baidu.com","Charset:UTF-8","User-Agent:Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36")
+baiduobj:=WinHttp.ResponseHeaders
+baiducookie:=baiduobj["Set-Cookie"]
+StringReplace, baiducookie, baiducookie,`r`n,`;, All
+IniWrite,% baiducookie, %A_ScriptDir%\Settings\tmp\baidu.ini, baidu, cookie
+}
+
+header := {"Cookie": baiducookie,"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Safari/537.36"}
+
+webs := WinHttp.URLGet("https://fanyi.baidu.com","Charset:UTF-8",header)
 RegExMatch(webs,"window.gtk = '(.*?)';" , gtk)
 RegExMatch(webs,"token: '(.*?)'" , token)
+if !token1
+return
 
 	js := new ActiveScript("JScript")
 	js.Exec(GetJScript())
@@ -90,9 +112,11 @@ if RegExMatch(KeyWord,"[^a-zA-Z0-9\.\?\-\!\s]")
     slang := "zh",dlang := "en"
 else
     slang := "en",dlang := "zh"
-url := "http://fanyi.baidu.com/v2transapi?from=" slang "&to=" dlang "&query=" UrlEncode(KeyWord,"UTF-8") "&transtype=translang&simple_means_flag=3&sign=" sign "&token=" token1
+url := "https://fanyi.baidu.com/v2transapi?from=" slang "&to=" dlang "&query=" UrlEncode(KeyWord,"UTF-8") "&transtype=translang&simple_means_flag=3&sign=" sign "&token=" token1
+
+   json := WinHttp.URLGet(url,"Charset:UTF-8",header)
 ; 错误代码：997，没有cookie； 998，cookie 过期；999，内部错误。
-   json := URLDownloadToVar(url,"UTF-8",,,,"chrome开发者工具获取cookies头内容替换 BAIDUID=80F544D622A8D8F0HKJJHK7w3242;locale=zh;",,"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36")
+;msgbox % json
     Return json
 }
 

@@ -45,14 +45,14 @@ system(x,InPutType="D",OutPutType="H")
 		Else If OutPutType=D
 		r:=hex2dec(x)
 	}
-	Return,r
+Return,r
 }
 
 dec2Bin(x)
 {                ;dec-bin
 	while x
 	r:=1&x r,x>>=1
-	return r
+return r
 }
 
 bin2Dec(x)
@@ -60,18 +60,5 @@ bin2Dec(x)
 	b:=StrLen(x),r:=0
 	loop,parse,x
 	r|=A_LoopField<<--b
-	return r
-}
-
-toHex( ByRef V, ByRef H, dataSz:=0 )
-{ ; http://goo.gl/b2Az0W (by SKAN)
-	P := ( &V-1 ), VarSetCapacity( H,(dataSz*2) ), Hex := "123456789ABCDEF0"
-	Loop, % dataSz ? dataSz : VarSetCapacity( V )
-		H  .=  SubStr(Hex, (*++P >> 4), 1) . SubStr(Hex, (*P & 15), 1)
-}
-
-ZTrim( N := "" ) { ; SKAN /  CD:01-Jul-2017 | LM:03-Jul-2017 | Topic: goo.gl/TgWDb5
-Local    V  := StrSplit( N, ".", A_Space ) 
-Local    V0 := SubStr( V.1,1,1 ),   V1 := Abs( V.1 ),      V2 :=  RTrim( V.2, "0" )
-Return ( V0 = "-" ? "-" : ""   )  ( V1 = "" ? 0 : V1 )   ( V2 <> "" ? "." V2 : "" )
+return r
 }

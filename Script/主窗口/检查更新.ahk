@@ -12,37 +12,40 @@ Update:
 ;DllCall("SENSAPI.DLL\IsDestinationReachableA" , Str,"www.google.com", Int,0 )
 URL := "http://www.baidu.com"
 If InternetCheckConnection(URL)
-;if connected=1
 {
-UrlDownloadToFile, https://raw.githubusercontent.com/wyagd001/MyScript/master/version.txt, %update_txtFile%
-IfNotExist,%update_txtFile%
-{
-msgbox,,升级通知,无法下载更新文件，请检查您的网络连接。
-return
-}
-FileGetSize, sizeq,%update_txtFile%
-if(sizeq>20)
-{
-msgbox,,升级通知,下载的更新文件大小不符，请检查您的网络连接。
-FileDelete, %update_txtFile%
-return
-}
-FileRead, CurVer, %update_txtFile%
-if(CurVer=AppVersion)
-	{msgbox,262144,升级通知,该版本已是最新版本:%AppVersion%。
-FileDelete, %update_txtFile%
+	WinHttp.URLGet("https://raw.githubusercontent.com/wyagd001/MyScript/master/version.txt",,, update_txtFile)
+	IfNotExist,%update_txtFile%
+	{
+		msgbox,,升级通知,无法下载更新文件，请检查您的网络连接。
 	return
 	}
-else{
-msgbox,262148,升级通知,当前版本为:%AppVersion%`n最新版本为:%CurVer%`n是否前往主页下载？
-     IfMsgBox Yes
-     Run,https://github.com/wyagd001/MyScript
-FileDelete, %update_txtFile%
-return
-}
+	FileGetSize, sizeq,%update_txtFile%
+	if(sizeq>20)
+	{
+		msgbox,,升级通知,下载的更新文件大小不符，请检查您的网络连接。
+		FileDelete, %update_txtFile%
+	return
+	}
+	FileRead, CurVer, %update_txtFile%
+	If not ErrorLevel
+	{
+		FileDelete, %update_txtFile%
+		if(CurVer!=AppVersion)
+		{
+			msgbox,262148,升级通知,当前版本为:%AppVersion%`n最新版本为:%CurVer%`n是否前往主页下载？
+			IfMsgBox Yes
+				Run,https://github.com/wyagd001/MyScript
+		return
+		}
+		else
+		{
+			msgbox,262144,升级通知,该版本已是最新版本:%AppVersion%。
+		return
+		}
+	}
 }
 else
-msgbox,,升级通知,无法连接网络，请检查您的网络连接。
+	msgbox,,升级通知,无法连接网络，请检查您的网络连接。
 return
 
 InternetCheckConnection(Url="",FIFC=1) {

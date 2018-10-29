@@ -373,6 +373,17 @@ Label_Candy_RunCommand:
         Else
             Goto Label_Candy_ErrorHandle
     }
+    Else If (Candy_Cmd_Str1="Canfunc")  ;如果是以Canfunc|开头，则是运行函数，方便与你的其它脚本进行挂接
+    {
+        CandySelected:=CandySel    ;兼容以前的cando变量写法
+        If IsStingFunc(Candy_Cmd_Str2)
+			{
+          RunStingFunc(Candy_Cmd_Str2)
+			return
+			}
+        Else
+            Goto Label_Candy_ErrorHandle
+    }
     Else If (Candy_Cmd_Str1="Cango")   ;如果是以Cango|开头，则是运行一些外部ahk程序，方便与你的其它脚本进行挂接
     {
         IfExist,%Candy_Cmd_Str2%

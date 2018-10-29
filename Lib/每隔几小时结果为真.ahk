@@ -1,4 +1,4 @@
-每隔几小时结果为真(hours:=7){
+每隔几小时结果为真(period:=7){
  lasttime:=CF_IniRead(run_iniFile,"时间","上次运行日期")
  if (lasttime="") or (lasttime="error")
   lasttime:=10001001
@@ -17,8 +17,8 @@
   if time3=
    time3=0
   FormatTime,time4,A_now,HH
-  if (Abs(time4 - time3) < hours)
-  return false
+  if (Abs(time4 - time3) < period)
+   return false
   else
   {
    IniWrite,% time4,% run_iniFile,时间,上次运行时间

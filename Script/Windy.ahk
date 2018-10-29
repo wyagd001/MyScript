@@ -219,14 +219,24 @@ Label_Windy_RunCommand:
 		SkSub_EditConfig(Windy_Profile_Ini,Windy_Ctrl_Regex)
 		return
 	}
-	If(RegExMatch(Windy_Cmd,"i)^(Windo\|)")) ;如果是以windo|开头，则是运行内置标签
+	Else If (RegExMatch(Windy_Cmd,"i)^(Windo\|)")) ;如果是以windo|开头，则是运行内置标签
 	{
-		;Windy_WindoLabel_str:=RegExReplace(Windy_Cmd,"i)^Windo\|\s?")
-		If IsLabel("Windo_" . Splitted_Windy_Cmd2)                       ;程序内置的别名
+		
+		If IsLabel("Windo_" . Splitted_Windy_Cmd2)                  ; Windo_开头的标签
 			Goto % "Windo_" . Splitted_Windy_Cmd2
-		else If IsLabel(Splitted_Windy_Cmd2)                       ;程序内置的别名
+		else If IsLabel(Splitted_Windy_Cmd2)                       ; 标签
 			Goto % Splitted_Windy_Cmd2
 		Else
+			Goto Label_Windy_ErrorHandle
+	}
+	Else If (RegExMatch(Windy_Cmd,"i)^(Winfunc\|)")) ;如果是以winfunc|开头，则是运行函数
+	{
+		if IsStingFunc(Splitted_Windy_Cmd2)
+		{
+			RunStingFunc(Splitted_Windy_Cmd2)
+		return
+		}
+		else
 			Goto Label_Windy_ErrorHandle
 	}
 	Else If (RegExMatch(Windy_Cmd,"i)^Wingo\|")) ;如果是以Wingo|开头，则是运行一些外部ahk程序，方便与你的其它脚本进行挂接

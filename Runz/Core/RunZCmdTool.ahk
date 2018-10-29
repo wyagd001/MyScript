@@ -34,15 +34,13 @@ Loop, %0%
             pluginName := StrSplit(firstLine, "; RunZ:")[2]
             if (FileExist(A_ScriptDir "\..\Plugins\" pluginName ".ahk"))
             {
-                ToolTip, %pluginName% 插件已存在
-                sleep 1500
+                CF_ToolTip(pluginName "插件已存在",1500)
                 ExitApp
             }
             FileMove, %inputFileName%, %A_ScriptDir%\..\Plugins\%pluginName%.ahk
             FileAppend, #include *i `%A_ScriptDir`%\RunZ\Plugins\%pluginName%.ahk`n
                 , %A_ScriptDir%\..\Core\Plugins.ahk
-            ToolTip, %pluginName% 插件安装成功，请手动重启 RunZ 以生效
-            sleep 1500
+            CF_ToolTip(pluginName, "插件安装成功，请手动重启 RunZ 以生效。", 1500)
             ExitApp
         }
     }
@@ -101,8 +99,7 @@ Loop, %0%
 
 if (g_Conf.Config.SendToMenuSimpleMode)
 {
-    ToolTip, 文件添加完毕，3 秒内生效
-    sleep 1500
+    CF_ToolTip("文件添加完毕，3 秒内生效", 1500)
     ExitApp
 }
 

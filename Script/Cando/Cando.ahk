@@ -2,6 +2,12 @@
 66GuiClose:
 66Guiescape:
 	Gui,66:Destroy
+	if deltts
+	{
+		SoundPlay, none
+		FileDelete, %A_SCRIPTDIR%\Settings\tmp\tts.mp3
+		dletts=0
+	}
 Return
 
 Cando_±£´æµ½×ÀÃæ:

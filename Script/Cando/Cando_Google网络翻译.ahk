@@ -18,24 +18,25 @@ Return
 
 soundpaly3:
 	Gui, Submit, NoHide
-webs := URLDownloadToVar("https://translate.google.cn","UTF-8",,,,,,"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36")
-RegExMatch(webs,"TKK='(.*?)'" , tkkkk)
-tk:=TK(Google_keyword,tkkkk1)
-msgbox % tk
-IfExist,%A_SCRIPTDIR%\Settings\tmp\google_tts.mp3
-	FileDelete,%A_SCRIPTDIR%\Settings\tmp\google_tts.mp3
-sleep,1000
-textlen:=StrLen(Google_keyword)
+	IfExist,%A_SCRIPTDIR%\Settings\tmp\tts.mp3
+	{
+		SoundPlay,%A_SCRIPTDIR%\Settings\tmp\tts.mp3,wait
+	Return
+	}
+	else
+	{
+		webs := WinHttp.URLGet("https://translate.google.cn","Charset:UTF-8","User-Agent:Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36")
+		RegExMatch(webs,"TKK='(.*?)'" , tkkkk)
+		tk:=TK(Google_keyword,tkkkk1)
+		webs=
 
-SpeechUrl = https://translate.google.cn/translate_tts?ie=UTF-8&q=%Google_keyword%&sl=zh-CN&tl=en&total=1&idx=0&textlen=%textlen%&tk=%tk%&client=t&prev=input&ttsspeed=0.5
-
-$CMD = "%A_SCRIPTDIR%\Bin\wget.exe"  -U "Lynx 1.2.3.4" -O "%A_SCRIPTDIR%\Settings\tmp\google_tts.mp3" --no-check-certificate  "%SpeechUrl%"
-Run, %comspec% /c "%$CMD%"  , , Hide
-sleep,3000
-SoundPlay,%A_SCRIPTDIR%\Settings\tmp\google_tts.mp3
-sleep,2000
-SoundPlay,none
-FileDelete,%A_SCRIPTDIR%\Settings\tmp\google_tts.mp3
+		textlen:=StrLen(Google_keyword)
+		SpeechUrl = https://translate.google.cn/translate_tts?ie=UTF-8&q=%Google_keyword%&sl=zh-CN&tl=en&total=1&idx=0&textlen=%textlen%&tk=%tk%&client=t&prev=input&ttsspeed=0.5
+		WinHttp.URLGet(speechurl,,"User-Agent:Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36",A_SCRIPTDIR "\Settings\tmp\tts.mp3")
+		sleep,1500
+		SoundPlay,%A_SCRIPTDIR%\Settings\tmp\tts.mp3,wait
+		deltts=1
+	}
 Return
 
 GoogleApi(KeyWord)
@@ -44,16 +45,16 @@ GoogleApi(KeyWord)
 		LangOut := "en",LangIn := "zh"
 	else
 		LangOut := "zh",LangIn := "en"
-url := "https://translate.google.cn/translate_a/single?client=gtx&dt=t&dj=1&ie=UTF-8&sl=" LangIn "&tl=" LangOut "&q=" UrlEncode(KeyWord,"UTF-8")
-response := URLDownloadToVar(url,"UTF-8",,,,,,"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36")
+	url := "https://translate.google.cn/translate_a/single?client=gtx&dt=t&dj=1&ie=UTF-8&sl=" LangIn "&tl=" LangOut "&q=" UrlEncode(KeyWord,"UTF-8")
+	response := WinHttp.URLGet(url,"Charset:UTF-8","User-Agent:Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36")
 
-json_obj := JSON.Load(response)
-        trans := ""
-        for value, sentence in json_obj.sentences
-        {
-            trans .= sentence.trans . "`n"
-}
-Result := trans
+	json_obj := JSON.Load(response)
+	trans := ""
+	for value, sentence in json_obj.sentences
+	{
+		trans .= sentence.trans . "`n"
+	}
+	Result := trans
 return Result
 }
 
@@ -62,5 +63,3 @@ TK(string,tkk)  {
 	js.Exec(GetJScript())
 	Return js.token(string,tkk)
 }
-
-#Include %A_ScriptDir%\lib\Class_JSON.ahk
