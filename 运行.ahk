@@ -1471,7 +1471,6 @@ Menu,SigleMenu,Check,ĞéÄâ×ÀÃæ 1
 
 #initial:
 ActDeskNum:=1
-
 numDesktops := 4   ; maximum number of desktops
 curDesktop := 1      ; index number of current desktop
 
