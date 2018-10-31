@@ -125,39 +125,3 @@ SubStrByByte(text, length)
 
     return result
 }
-
-; 修改自万年书妖的 Candy 里的 SksSub_UrlEncode 函数，用于转换编码。感谢！
-UrlEncode(url, enc = "UTF-8")
-{
-    enc := Trim(enc)
-    If enc=
-        return url
-    formatInteger := A_FormatInteger
-    SetFormat, IntegerFast, H
-    VarSetCapacity(buff, StrPut(url, enc))
-    Loop % StrPut(url, &buff, enc) - 1
-    {
-        byte := NumGet(buff, A_Index-1, "UChar")
-        encoded .= byte > 127 or byte < 33 ? "%" SubStr(byte, 3) : Chr(byte)
-    }
-    SetFormat, IntegerFast, %formatInteger%
-    return encoded
-}
-
-UrlDownloadToString(url, headers := "")
-{
-    static whr := ComObjCreate("WinHttp.WinHttpRequest.5.1")
-    whr.Open("GET", url, true)
-
-    if (headers != "")
-    {
-        for key, value in headers
-        {
-            whr.SetRequestHeader(key, value)
-        }
-    }
-
-    whr.Send()
-    whr.WaitForResponse()
-    return whr.ResponseText
-}

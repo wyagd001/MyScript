@@ -111,7 +111,6 @@ global Vista7 := Vista7 >= 6.0.7
 
 ;---------水平垂直最大化---------
 VarSetCapacity( work_area, 16 )
-
 DllCall( "SystemParametersInfo"
          , "uint", 0x30                                          ; SPI_GETWORKAREA
          , "uint", 0

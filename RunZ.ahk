@@ -2020,6 +2020,8 @@ return
 #include %A_ScriptDir%\Lib\EasyIni.ahk
 #include %A_ScriptDir%\Lib\TCMatch.ahk
 #include %A_ScriptDir%\Lib\Eval.ahk
+#include %A_ScriptDir%\Lib\String.ahk
+#include %A_ScriptDir%\Lib\Class_WinHttp.ahk
 #include %A_ScriptDir%\Runz\Core\Common.ahk
 #include *i %A_ScriptDir%\Runz\Core\Plugins.ahk
 ; 发送到菜单自动生成的命令

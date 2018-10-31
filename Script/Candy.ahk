@@ -655,18 +655,6 @@ grep(h, n, ByRef v, s = 1, e = 0, d = "")   ; ;by polythene
 		Else Return, SubStr(p, 2), v := SubStr(v, 2)
 }
 
-SkSub_UrlEncode(str, enc="UTF-8")       ;From Ahk Forum
-{
-    enc:=trim(enc)
-    If enc=
-        Return str
-   hex := "00", func := "msvcrt\" . (A_IsUnicode ? "swprintf" : "sprintf")
-   VarSetCapacity(buff, size:=StrPut(str, enc)), StrPut(str, &buff, enc)
-   While (code := NumGet(buff, A_Index - 1, "UChar")) && DllCall(func, "Str", hex, "Str", "%%%02X", "UChar", code, "Cdecl")
-   encoded .= hex
-   Return encoded
-}
-
 SkSub_WebSearch(Win_Full_Path,Http)
 {
 	all_browser:=CF_IniRead(Candy_ProFile_Ini, "General_Settings", "InUse_Browser")

@@ -11,53 +11,11 @@ Misc:
     @("SearchOnJD", "使用 京东 搜索剪切板或输入内容")
     @("ShowIp", "显示 IP")
     @("Calendar", "用浏览器打开万年历")
-    @("CurrencyRate", "汇率 使用示例： hl JPY EUR 2")
-    @("CNY2USD", "汇率 人民币兑换美元")
-    @("USD2CNY", "汇率 美元兑换人民币")
+    ;@("CurrencyRate", "汇率 使用示例： hl JPY EUR 2")  ; API 失效，原因不明
+    ;@("CNY2USD", "汇率 人民币兑换美元")
+    ;@("USD2CNY", "汇率 美元兑换人民币")
     @("UrlEncode", "URL 编码")
 return
-
-CNY2USD:
-    DisplayResult("查询中，可能会比较慢或者查询失败，请稍后...")
-    DisplayResult(QueryCurrencyRate("CNY", "USD", Arg))
-return
-
-USD2CNY:
-    DisplayResult("查询中，可能会比较慢或者查询失败，请稍后...")
-    DisplayResult(QueryCurrencyRate("USD", "CNY", Arg))
-return
-
-CurrencyRate:
-    args := StrSplit(Arg, " ")
-    if (args.Length() != 3)
-    {
-        DisplayResult("使用示例：`n    CurrencyRate USD CNY 2")
-        return
-    }
-
-    DisplayResult("查询中，可能会比较慢或者查询失败，请稍后...")
-    DisplayResult(QueryCurrencyRate(args[1], args[2], args[3]))
-return
-
-QueryCurrencyRate(fromCurrency, toCurrency, amount)
-{
-    headers := Object()
-    headers["apikey"] := "c9098c96599be340bbd9551e2b061f63"
-
-    jsonText := UrlDownloadToString("http://apis.baidu.com/apistore/currencyservice/currency?"
-        . "fromCurrency=" fromCurrency "&toCurrency=" toCurrency "&amount=" amount, headers)
-    parsed := JSON.Load(jsonText)
-
-    if (parsed.errNum != 0 && parsed.errMsg != "success")
-    {
-        return "查询失败，错误信息：`n`n" jsonText
-    }
-
-    result := fromCurrency " 兑换 " toCurrency " 当前汇率：`n`n" parsed.retData.currency "`n`n`n"
-    result .= amount " " fromCurrency " = " parsed.retData.convertedamount " " toCurrency "`n"
-
-    return result
-}
 
 ShowIp:
     DisplayResult(A_IPAddress1
@@ -72,7 +30,7 @@ Dictionary:
     url := "http://fanyi.youdao.com/openapi.do?keyfrom=YouDaoCV&key=659600698&"
             . "type=data&doctype=json&version=1.2&q=" UrlEncode(word)
 
-    jsonText := StrReplace(UrlDownloadToString(url), "-phonetic", "_phonetic")
+    jsonText := StrReplace(WinHttp.URLGet(url), "-phonetic", "_phonetic")
 
     if (jsonText == "no query")
     {
