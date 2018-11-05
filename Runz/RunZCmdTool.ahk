@@ -32,14 +32,14 @@ Loop, %0%
         if (InStr(firstLine, " RunZ:"))
         {
             pluginName := StrSplit(firstLine, "; RunZ:")[2]
-            if (FileExist(A_ScriptDir "\..\Plugins\" pluginName ".ahk"))
+            if (FileExist(A_ScriptDir "\Plugins\" pluginName ".ahk"))
             {
                 CF_ToolTip(pluginName "插件已存在",1500)
                 ExitApp
             }
-            FileMove, %inputFileName%, %A_ScriptDir%\..\Plugins\%pluginName%.ahk
+            FileMove, %inputFileName%, %A_ScriptDir%\Plugins\%pluginName%.ahk
             FileAppend, #include *i `%A_ScriptDir`%\RunZ\Plugins\%pluginName%.ahk`n
-                , %A_ScriptDir%\..\Core\Plugins.ahk
+                , %A_ScriptDir%\Plugins.ahk
             CF_ToolTip(pluginName, "插件安装成功，请手动重启 RunZ 以生效。", 1500)
             ExitApp
         }
@@ -152,6 +152,6 @@ SafeFilename(label)
 {
 }
 
-#include %A_ScriptDir%\..\..\Lib\EasyIni.ahk
+#include %A_ScriptDir%\..\Lib\EasyIni.ahk
 ; 用于判断是否有重复标签
-#include *i %A_ScriptDir%\..\..\Settings\Runz\UserFunctionsAuto.txt
+#include *i %A_ScriptDir%\..\Settings\Runz\UserFunctionsAuto.txt

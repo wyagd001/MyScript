@@ -99,7 +99,7 @@ global g_InputArea := "Edit1"
 global g_DisplayArea := "Edit3"
 global g_CommandArea := "Edit4"
 
-FileRead, currentPlugins, %A_ScriptDir%\Runz\Core\Plugins.ahk
+FileRead, currentPlugins, %A_ScriptDir%\Runz\Plugins.ahk
 needRestart := false
 
 Loop, Files, %A_ScriptDir%\Runz\Plugins\*.ahk
@@ -119,7 +119,7 @@ Loop, Files, %A_ScriptDir%\Runz\Plugins\*.ahk
         else
         {
             FileAppend, #include *i `%A_ScriptDir`%\Runz\Plugins\%pluginName%.ahk`n
-                , %A_ScriptDir%\Runz\Core\Plugins.ahk
+                , %A_ScriptDir%\Runz\Plugins.ahk
             needRestart := true
         }
     }
@@ -219,7 +219,7 @@ if (g_SkinConf.RoundCorner > 0)
 
 if (g_Conf.Config.SwitchToEngIME)
 {
-    SwitchToEngIME()
+    IME_SwitchToEng()
 }
 
 if (g_Conf.Config.WindowAlwaysOnTop)
@@ -371,7 +371,7 @@ ActivateRunZ:
 
     if (g_Conf.Config.SwitchToEngIME)
     {
-        SwitchToEngIME()
+        IME_SwitchToEng()
     }
 
     Loop, 5
@@ -1201,11 +1201,15 @@ RunCommand(originCmd)
 
         if (Arg == "")
         {
-            Run, "%cmd%", "%fileDir%"
+            Run, %cmd%, %fileDir%, UseErrorLevel
+            if UseErrorLevel
+               Run, "%cmd%", "%fileDir%"
         }
         else
         {
-            Run, "%cmd%" "%Arg%", "%fileDir%"
+            Run, %cmd% %Arg%, %fileDir%,UseErrorLevel
+            if UseErrorLevel
+               Run, "%cmd%" "%Arg%", "%fileDir%"
         }
     }
     else if (splitedOriginCmd[1] == "function")
@@ -1498,7 +1502,7 @@ LoadFiles(loadRank := true)
 
     if (g_Conf.Config.LoadControlPanelFunctions)
     {
-        Loop, Read, %A_ScriptDir%\Runz\Core\ControlPanelFunctions.txt
+        Loop, Read, %A_ScriptDir%\Runz\txt\ControlPanelFunctions.txt
         {
             g_Commands.Push(A_LoopReadLine)
         }
@@ -1789,9 +1793,9 @@ UpdateSendTo(create = true, overwrite = false)
         return
     }
 
-    FileCreateShortcut, %A_AhkPath%, % A_ScriptDir "\Runz\Core\SendToRunZ.lnk"
-        , , "%A_ScriptDir%\Runz\Core\RunZCmdTool.ahk", 发送到 RunZ, % A_ScriptDir "\pic\RunZ.ico"
-    FileCopy, % A_ScriptDir "\Runz\Core\SendToRunZ.lnk"
+    FileCreateShortcut, %A_AhkPath%, % A_ScriptDir "\Runz\SendToRunZ.lnk"
+        , , "%A_ScriptDir%\Runz\RunZCmdTool.ahk", 发送到 RunZ, % A_ScriptDir "\pic\RunZ.ico"
+    FileCopy, % A_ScriptDir "\Runz\SendToRunZ.lnk"
         , % StrReplace(A_StartMenu, "\Start Menu", "\SendTo\") "RunZ.lnk", 1
 }
 
@@ -2020,9 +2024,10 @@ return
 #include %A_ScriptDir%\Lib\EasyIni.ahk
 #include %A_ScriptDir%\Lib\TCMatch.ahk
 #include %A_ScriptDir%\Lib\Eval.ahk
+#include %A_ScriptDir%\Lib\IME.ahk
 #include %A_ScriptDir%\Lib\String.ahk
 #include %A_ScriptDir%\Lib\Class_WinHttp.ahk
-#include %A_ScriptDir%\Runz\Core\Common.ahk
-#include *i %A_ScriptDir%\Runz\Core\Plugins.ahk
+#include %A_ScriptDir%\Lib\ProcessMemory.ahk
+#include *i %A_ScriptDir%\Runz\Plugins.ahk
 ; 发送到菜单自动生成的命令
-#include *i %A_ScriptDir%\Runz\Conf\UserFunctionsAuto.txt
+#include *i %A_ScriptDir%\Settings\Runz\UserFunctionsAuto.txt

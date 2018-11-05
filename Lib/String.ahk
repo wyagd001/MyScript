@@ -128,6 +128,26 @@ StrPutVar(Str, ByRef Var, Enc = "")
 Return, StrPut(Str, &Var, Enc),VarSetCapacity(var,-1)
 }
 
+; http://ahkcn.net/thread-1927.html
+UnicodeDecode(text)
+{
+    while pos := RegExMatch(text, "\\u\w{4}")
+    {
+        tmp := UrlEncodeEscape(SubStr(text, pos + 2, 4))
+        text := RegExReplace(text, "\\u\w{4}", tmp, "", 1)
+    }
+    return text
+}
+
+; http://ahkcn.net/thread-1927.html
+UrlEncodeEscape(text)
+{
+    text := "0x" . text
+    VarSetCapacity(LE, 2, "UShort")
+    NumPut(text, LE)
+    return StrGet(&LE, 2)
+}
+
 ; 发送中文，避免输入法影响 （备份，已用 SendStr 代替）
 _SendRaw(Keys)
 {
@@ -222,6 +242,41 @@ jzf(spc)
 	VarSetCapacity(tmp2, 2*cch:=VarSetCapacity(tmp1)//2), LCMAP_TRADITIONAL_CHINESE := 0x4000000
 	DllCall( "LCMapStringW", UInt,0x400, UInt,LCMAP_TRADITIONAL_CHINESE, Str,tmp1, UInt,cch, Str,tmp2, UInt,cch )
 return A_IsUnicode ? tmp2 : Unicode2Ansi(tmp2, trc,936)
+}
+
+; 根据字节取子字符串，如果多删了一个字节，补一个空格
+SubStrByByte(text, length)
+{
+    textForCalc := RegExReplace(text, "[^\x00-\xff]", "`t`t")
+    textLength := 0
+    realRealLength := 0
+
+    Loop, Parse, textForCalc
+    {
+        if (A_LoopField != "`t")
+        {
+            textLength++
+            textRealLength++
+        }
+        else
+        {
+            textLength += 0.5
+            textRealLength++
+        }
+
+        if (textRealLength >= length)
+        {
+            break
+        }
+    }
+
+    result := SubStr(text, 1, round(textLength - 0.5))
+
+    ; 删掉一个汉字，补一个空格
+    if (round(textLength - 0.5) != round(textLength))
+        result .= " "
+
+    return result
 }
 
 ; https://autohotkey.com/board/topic/33510-functionstringcheck/

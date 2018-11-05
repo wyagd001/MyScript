@@ -45,7 +45,7 @@ Kanji(s, r := "")
 
 __Kanji()
 {
-    FileRead, s, % A_ScriptDir "\lib\Kanji.txt"
+    FileRead, s, % A_ScriptDir "\Runz\txt\Kanji.txt"
     f := [], h := [], s := Trim(s)
     Loop, Parse, s, % A_Space
         f[a := SubStr(A_Loopfield, 1, 1)] := b := SubStr(A_Loopfield, 2), h[b] := a

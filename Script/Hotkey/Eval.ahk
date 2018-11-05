@@ -3,7 +3,6 @@
 :?B0*:==::
 If(IME_GetSentenceMode(_mhwnd())= 0)
 ; 检测 IME 状态，中文输入时不执行任何命令，
-; 测试时，WIN7 下切换到 搜狗拼音/智能ABC/QQ拼音 时返回值都为0，英文键盘返回值为8
 {
 ;tooltip,% IME_GetSentenceMode(_mhwnd())
 sleep,400
@@ -78,8 +77,6 @@ IfEqual y1, pi,        Return 3.141592654
 Return %y1%(Eval_(y2))
 }
 
-
-
 /* 算式计算
 http://forum.ahkbbs.cn/thread-1945-1-1.html
 1、增加了去掉多余的小数点和0的功能，看着更直观
@@ -100,22 +97,6 @@ http://forum.ahkbbs.cn/thread-1945-1-1.html
 8.   十六进制可以直接计算，如 0xFF/5=51.000000、注意减法使用“加相反数”的办法，如 0xCC+-12=192、直接转化为10进制用加0的办法，如 0xFFFFFF+0=16777215
 9.   函数的优先级是大于幂运算的，比如：round5.5^2=36
 */
-
-IME_GetSentenceMode(WinTitle="A")   {
-	ControlGet,hwnd,HWND,,,%WinTitle%
-	If	(WinActive(WinTitle))	{
-		ptrSize := !A_PtrSize ? 4 : A_PtrSize
-	    VarSetCapacity(stGTI, cbSize:=4+4+(PtrSize*6)+16, 0)
-	    NumPut(cbSize, stGTI,  0, "UInt")   ;	DWORD   cbSize;
-		hwnd := DllCall("GetGUIThreadInfo", Uint,0, Uint,&stGTI)
-	             ? NumGet(stGTI,8+PtrSize,"UInt") : hwnd
-	}
-    Return DllCall("SendMessage"
-          , UInt, DllCall("imm32\ImmGetDefaultIMEWnd", Uint,hwnd)
-          , UInt, 0x0283  ;Message : WM_IME_CONTROL
-          ,  Int, 0x003   ;wParam  : IMC_GETSENTENCEMODE
-          ,  Int, 0)      ;lParam  : 0
-}
 
 _mhwnd(){	;background test
 	;MouseGetPos,x,,hwnd

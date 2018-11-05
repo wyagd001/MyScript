@@ -230,9 +230,7 @@ Encode(Str, Encoding, Separator := " ")
 	Loop, % StrCap - ((encoding="utf-16"||encoding="cp1200") ? 2 : 1)
 	; StrPut 返回的长度中包含末尾的字符串截止符 00 ,因此必须减 1。
 	{
-		If(encoding="cp950")
-			ObjCodes .= SubStr(NumGet(ObjStr, A_Index - 1, "UChar"), 3)
-		Else If(encoding="utf-16"||encoding="cp1200"||tmpe=1)
+		If(encoding="utf-16"||encoding="cp1200"||tmpe=1)
 		{
 			if((h:=NumGet(ObjStr, A_Index - 1, "UChar"))=0x0)
 				HH:="00"
