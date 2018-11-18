@@ -83,23 +83,3 @@ HookProc(hWinEventHook2, Event, hWnd)
 	else if Event = 17 ; EVENT_SYSTEM_DIALOGEND
 		hShutdownDialog =
 }
-
-SetWinEventHook(eventMin, eventMax, hmodWinEventProc, lpfnWinEventProc, idProcess, idThread, dwFlags)
-{
-	return DllCall("SetWinEventHook"
-	, Uint,eventMin
-	, Uint,eventMax
-	, Uint,hmodWinEventProc
-	, Uint,lpfnWinEventProc
-	, Uint,idProcess
-	, Uint,idThread
-	, Uint,dwFlags)
-}
-
-UnhookWinEvent2()
-{
-	Global
-	DllCall( "UnhookWinEvent", Uint,hWinEventHook2 )
-	DllCall( "GlobalFree", UInt,HookProcAdr2 )  
-	; &HookProcAdr 引发程序异常退出  改为 HookProcAdr不知道是否有同样效用
-}

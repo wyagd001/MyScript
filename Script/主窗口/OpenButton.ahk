@@ -229,7 +229,7 @@ Else If (OpenButton_Cmd_Str2="繁→简")
 	If ErrorLevel
 	{
 		ErrorLevel = 0
-		If dir contains +,~,!,^,=,(,),{,},[,],/,<,>,|,;,:,*,%A_Space%,\,
+		If dir contains +,~,!,^,=,(,),{,},[,],/,<,>,|,;,:,*,%A_Space%,\,.
 		{
 			msgbox,3,搜索引擎选择,百度搜索点"是"，google点"否"
 			Ifmsgbox yes     
@@ -258,12 +258,13 @@ Else If (OpenButton_Cmd_Str2="繁→简")
 		Else 
 		{
 			msgbox,3,搜索引擎选择,百度搜索点"是"，google点"否"
-				Ifmsgbox yes     
-					Run http://www.baidu.com/s?wd=%Dir% 
-				Ifmsgbox no
-					Run https://www.google.com.hk/search?hl=zh-CN&q=%Dir%
-				Else
-					Return
+			Ifmsgbox yes     
+				Run http://www.baidu.com/s?wd=%Dir% 
+			Ifmsgbox no
+				Run https://www.google.com.hk/search?hl=zh-CN&q=%Dir%
+			Else
+				Return
+		Return
 		}
 	}
 Return

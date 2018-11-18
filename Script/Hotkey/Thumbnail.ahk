@@ -1,8 +1,8 @@
-; 动态显示窗口缩略图，窗口最小化后实时效果无
+; 动态显示窗口缩略图，窗口最小化后无实时效果
 ;^#T::
 动态缩略图:
 WinGetActiveStats, ThumbTitle, ThumbWide, ThumbHigh, X, Y
-zoom=%ZoomNao%
+ZoomNao:= ZoomNao="" ? 0.25 : ZoomNao
 NuWide := ThumbWide * ZoomNao
 NuHigh := (ThumbHigh - 25) * ZoomNao
 WinGet,source,Id,A
@@ -30,7 +30,6 @@ ZoomNao -= .05
 Goto 动态缩略图
 Return
 
-
 ;^#w::
 动态缩略图到指定Gui:
 watchWindow:
@@ -42,7 +41,6 @@ watchWindow:
    start_y := 0
    sleep, 500
 
-
    ThumbWidth := 400
    ThumbHeight := 400
    thumbID := mainCode(targetName,ThumbWidth,ThumbHeight,start_x,start_y,Rwidth,Rheight)
@@ -53,18 +51,13 @@ return
 鼠标选定区域到缩略图:
 start_defining_region:
 
-
       Gui,65: Destroy
       Thumbnail_Destroy(thumbID)
 
    CoordMode, Mouse, Relative                ; relative to window not screen
    MouseGetPos, start_x, start_y             ; start position of mouse
    SetTimer end_defining_region, 200                        ; check every 50ms for mouseup
-
-
 Return
-
-
 
 end_defining_region:
   WinGetPos, win_x, win_y, , , A
@@ -114,8 +107,6 @@ end_defining_region:
   CoordMode, Mouse, screen
 return
 
-
-
 mainCode(targetName,windowWidth,windowHeight,RegionX,RegionY,RegionW,RegionH){
 DetectHiddenWindows,off
 Gui, 65:Default
@@ -142,11 +133,8 @@ Thumbnail_GetSourceSize(hThumb, width, height)
 ;     windowWidth := testWidth
 ;  }
 
-
 ; then setting its region:
 Thumbnail_SetRegion(hThumb, 0, 0 , windowWidth, windowHeight, RegionX , RegionY ,RegionW, RegionH)
-
-
 
 ; now some GUI stuff:
 Gui +AlwaysOnTop +ToolWindow +Resize
@@ -158,7 +146,6 @@ OnMessageEx(0x201, "WM_LBUTTONDOWN")
 DetectHiddenWindows,on
 return hThumb
 }
-
 
 65GuiSize:
   ;if ErrorLevel = 1  ; The window has been minimized.  No action needed.
@@ -176,7 +163,6 @@ return
    Thumbnail_Destroy(thumbID) ; free the resources
    gui, Destroy
 return
-
 
 WM_LBUTTONDOWN(wParam, lParam)
 {

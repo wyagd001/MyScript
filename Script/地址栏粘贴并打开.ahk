@@ -83,21 +83,10 @@ HookProcMenu( hWinEventHook, Event, hWnd, idObject, idChild, dwEventThread, dwms
 	}
 }
 
-
-
 WinGetClass( hwnd )
 {
 	WinGetClass, wclass, ahk_id %hwnd%
 	Return wclass
-}
-
-UnhookWinEvent()
-{
-	Global
-	QQ:=DllCall( "UnhookWinEvent", Uint,hWinEventHook )
-	qw:=DllCall( "GlobalFree", UInt,HookProcAdr ) ; free up allocated memory for RegisterCallback
-	; msgbox % "成功为0：" qw
-	; &HookProcAdr 引发程序异常退出  改为 HookProcAdr不知道是否有同样效用
 }
 
 /***************************************************************

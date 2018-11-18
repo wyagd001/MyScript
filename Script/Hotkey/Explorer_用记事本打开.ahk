@@ -5,23 +5,22 @@ Return
 EditSelectedFiles()
 {
 	global ImageExtensions,TextEditor,ImageEditor
+	ImageExtensions = jpg,png,bmp,gif,tga,tif,ico,jpeg
 	files:=GetSelectedFiles()
 	SplitByExtension(files, splitfiles, ImageExtensions)
 	files:=RemoveLineFeedsAndSurroundWithDoubleQuotes(files)
 	splitfiles:=RemoveLineFeedsAndSurroundWithDoubleQuotes(splitfiles)
 	x:=ExpandEnvVars(TextEditor)
 	y:=ExpandEnvVars(ImageEditor)
-	if (files && !FileExist(x) && x && splitfiles && !FileExist(y) && y)
-    TrayTip,ÉèÖÃ´íÎó,±à¼­Æ÷µÄÂ·¾¶´íÎó£¡,3
-	else if(files && !FileExist(x) && x)
+	if(!FileExist(x))
     TrayTip,ÉèÖÃ´íÎó,ÎÄ±¾±à¼­Æ÷µÄÂ·¾¶´íÎó£¡,3
-	else if(splitfiles && !FileExist(y) && y)
+	if(!FileExist(y))
 	 TrayTip,ÉèÖÃ´íÎó,Í¼Æ¬±à¼­Æ÷µÄÂ·¾¶´íÎó£¡,3
-	if ((files && FileExist(x))||(splitfiles && FileExist(y)))
+	if (files || splitfiles)
 	{
-		if (files!="")
+		if files
 			run %x% %files%
-		if (splitfiles!="")
+		if splitfiles
 			run %y% %splitfiles%
 	}
 	else
@@ -36,7 +35,7 @@ SplitByExtension(ByRef files, ByRef SplitFiles,extensions)
 	Loop, Parse, files, `n,`r  ; Rows are delimited by linefeeds ('r`n).
 	{
 		SplitPath, A_LoopField , , , OutExtension
-	  if (InStr(extensions, OutExtension)&&OutExtension!="")
+	  if (InStr(extensions, OutExtension) && OutExtension!="")
 	  {
 	  	Splitfiles .= A_LoopField "`n"
 	  }

@@ -1,7 +1,9 @@
 _TrayEvent:
   XWN_FocusFollowsMouse := !XWN_FocusFollowsMouse
+IniRead,Auto_Raise,%run_iniFile%,功能开关,Auto_Raise
+IniRead,hover_any_window,%run_iniFile%,自动激活,hover_any_window
   If(Auto_Raise=1 && hover_any_window=1)
-    Msgbox,,提示,自动激活窗口已在选项自动激活中启用,5
+    Msgbox,,提示,已在“选项→自动激活→窗口自动激活”中自动启用该功能。,5
   Else
   {
     Gosub, _ApplySettings
@@ -11,9 +13,9 @@ Return
 
 _MenuUpdate:
 	If ( XWN_FocusFollowsMouse )
-		Menu, addf, Check, 自动激活窗口
+		Menu, addf, Check, 自动激活窗口(临时)
 	Else
-		Menu, addf, UnCheck, 自动激活窗口
+		Menu, addf, UnCheck, 自动激活窗口(临时)
 Return
 
 _ApplySettings:

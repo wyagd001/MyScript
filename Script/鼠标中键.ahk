@@ -67,7 +67,7 @@ WatchCursor2:
 }
 
 ;资源管理器新窗口打开文件夹
-if(HKOpenInNewFolder && WinActive("ahk_group ExplorerGroup") && IsMouseOverFileList())
+if(WinActive("ahk_group ExplorerGroup") && IsMouseOverFileList())
 {
 	selected:=GetSelectedFiles(0)
 	SendEvent {LButton}

@@ -50,13 +50,6 @@ OnExit, ExitSub
 FileRead, AppVersion, %A_ScriptDir%\version.txt
 AppTitle = 拖拽移动文件到目标文件夹(自动重命名)
 
-; 附加功能自动激活窗口初始不激活，与自动激活冲突
-XWN_FocusFollowsMouse = 0   
-ImageExtensions = jpg,png,bmp,gif,tga,tif,ico,jpeg
-HKOpenInNewFolder = 1
-
-ZoomNao := .25
-
 FloderMenu_iniFile = %A_ScriptDir%\settings\FloderMenu.ini
 SaveDeskIcons_inifile = %A_ScriptDir%\settings\SaveDeskIcons.ini
 update_txtFile = %A_ScriptDir%\settings\tmp\CurrentVersion.txt
@@ -64,7 +57,6 @@ ScriptManager_Path=%A_ScriptDir%\脚本管理器
 
 global Candy_ProFile_Ini := A_ScriptDir . "\settings\candy\[candy].ini"
 SplitPath,Candy_ProFile_Ini,,Candy_Profile_Dir,,Candy_ProFile_Ini_NameNoext
-
 global Windy_Profile_Ini  := A_ScriptDir . "\settings\Windy\Windy.ini"
 SplitPath,Windy_Profile_Ini,,Windy_Profile_Dir,,Windy_Profile_Ini_NameNoext
 
@@ -349,7 +341,13 @@ Image = %A_ScriptDir%\pic\MusicPlayer\h_%DefaultPlayer%.bmp
 ;窗口  +无最小化按钮（任务栏无按钮）
 Gui,  +HwndHGUI +ToolWindow
 Gui, Add, Text, x1 y10 w90 h20 +Center, 目标/运行:
-Gui, Add, ComBoBox , x90 y10 w330 h300 HwndhComBoBox vDir gAutoComplete,% ComBoBoxShowItems
+Gui, Add, ComBoBox, x90 y10 w330 h300 +HwndhComBoBox vDir,% ComBoBoxShowItems
+global hComBoBox
+global objListIDs:= Object() 
+global del_ico:=0 ; 0= text "X", 1= icon
+global single_ico:=0
+fn := Func("List_Func").Bind(hComBoBox)
+GuiControl, +g, % hComBoBox, % fn
 Gui, Add, Button, x425 y10 gselectfile,&.
 Gui, Add, Button, x445 y10 gselectfolder,选择(&S)
 Gui, Add, Button, x500 y10 default gopenbutton,打开(&O)
@@ -362,10 +360,6 @@ AddGraphicButton(1,"x108","y32","h21","w40","GB1", A_ScriptDir . "\pic\MusicCont
 AddGraphicButton(1,"x147","y32","h21","w40","GB2", A_ScriptDir . "\pic\MusicControl\pause.bmp",A_ScriptDir . "\pic\MusicControl\h_pause.bmp" ,A_ScriptDir . "\pic\MusicControl\d_pause.bmp")
 AddGraphicButton(1,"x186","y32","h21","w40","GB3", A_ScriptDir . "\pic\MusicControl\next.bmp",A_ScriptDir . "\pic\MusicControl\h_next.bmp" ,A_ScriptDir . "\pic\MusicControl\d_next.bmp")
 AddGraphicButton(1,"x225","y32","h21","w40","GB4", A_ScriptDir . "\pic\MusicControl\close.bmp",A_ScriptDir . "\pic\MusicControl\h_close.bmp" ,A_ScriptDir . "\pic\MusicControl\d_close.bmp")
-;AddGraphicButton("SampleButton1", A_ScriptDir . "\pic\pause.bmp", "x108 y33 h27 w48 gpause", 21, 40)
-;AddGraphicButton("SampleButton2", A_ScriptDir . "\pic\pause.bmp", "x156 y33 h27 w48 gpause", 21, 40)
-;AddGraphicButton("SampleButton3", A_ScriptDir . "\pic\next.bmp", "x204 y33 h27 w48 gnext", 21, 40)
-;AddGraphicButton("SampleButton4", A_ScriptDir . "\pic\close.bmp", "x252 y33 h27 w48 gclose", 21, 40)
 Gui, Add, Picture, x285 y35 w16 h16 gmute vvol, %volimage%
 Gui, Add, Slider, x300 y35 w100 h20 vVSlider Range0-100 gVolumeC
 Gui, Add, Text,x10 y30 cblue, 光驱
@@ -398,7 +392,7 @@ If (DefaultPlayer="Foobar2000")
 
 Menu,  addf, Add, 开机启动, runwithsys
 Menu,  addf, Add, 智能浏览器, smartchooserbrowser
-Menu,  addf, Add, 自动激活窗口, _TrayEvent
+Menu,  addf, Add, 自动激活窗口(临时), _TrayEvent
 Menu,  addf, Add, 启动时记忆桌面图标,AutoSaveDeskIcons
 Menu,  addf, Add, 记忆桌面图标, SaveDesktopIconsPositions
 Menu,  addf, Add, 恢复桌面图标, RestoreDesktopIconsPositions
@@ -610,10 +604,8 @@ MFS_GRAYED = 1
 MFS_HILITE = 0x80
 ;监控右键菜单，并添加“粘贴并打开”菜单项目
 ;右键 粘贴并打开
-global HookProcAdr := RegisterCallback( "HookProcMenu", "F" )
-global hWinEventHook := SetWinEventHook( 0x4, 0x4,0, HookProcAdr, 0, 0, 0 )   ;0x4 EVENT_SYSTEM_MENUSTART
-;fileappend ,% "HookProcAdr:" HookProcAdr . " - hWinEventHook:"  hWinEventHook "`n",%a_desktop%\debug.txt
-;fileappend ,% "&HookProcAdr:" &HookProcAdr . " - &hWinEventHook:" &hWinEventHook "`n",%a_desktop%\debug.txt
+HookProcAdr := RegisterCallback( "HookProcMenu", "F" )
+hWinEventHook := SetWinEventHook( 0x4, 0x4,0, HookProcAdr, 0, 0, 0 )   ;0x4 EVENT_SYSTEM_MENUSTART
 }
 ;----------地址栏等ClassNN:edit1添加“粘贴并打开”的右键菜单----------
 
@@ -626,20 +618,22 @@ RegWrite ,REG_SZ,HKEY_CURRENT_USER,Control Panel\Desktop,AutoEndTasks,0
 ;关机时首先响应  To make a script the last process to terminate change "0x4FF" to "0x0FF".
 ;HKEY_CURRENT_USER,Control Panel\Desktop,AutoEndTasks,0
 ;Vista+关机提示结束进程
-error_temp:=DllCall("User32.dll\ShutdownBlockReasonCreate","uint",hAHK,"wstr",A_ScriptFullPath " is still running")
-if !error_temp
-msgbox ShutdownBlockReasonCreate 创建失败！%A_LastError%
-error_temp :=DllCall("kernel32.dll\SetProcessShutdownParameters", UInt, 0x4FF, UInt, 0)
-if !error_temp
-msgbox "SetProcessShutdownParameters" 失败！
+temp:=DllCall("User32.dll\ShutdownBlockReasonCreate","uint",hAHK,"wstr",A_ScriptFullPath " is still running")
+if !temp
+CF_ToolTip("ShutdownBlockReasonCreate 创建失败！错误码： " A_LastError,3000)
+temp :=DllCall("kernel32.dll\SetProcessShutdownParameters", UInt, 0x4FF, UInt, 0)
+if !temp
+CF_ToolTip("SetProcessShutdownParameters 失败！",3000)
 ;监视关机
 HookProcAdr2 := RegisterCallback( "HookProc", "F" )
 hWinEventHook2 := SetWinEventHook( 0x1, 0x17,0, HookProcAdr2, 0, 0, 0 )
 if !hWinEventHook2
-msgbox "SetWinEventHook"
+CF_ToolTip("注册监视关机失败",3000)
 OnMessage(0x11, "WM_QUERYENDSESSION")
 }
 ;----------监视关机对话框的选择----------
+
+Gosub, Combo_WinEvent
 
 ;----------整点报时功能----------
   If baoshionoff
@@ -1054,8 +1048,8 @@ onClipboardChange:
 	return
 	if(clipboard = ClipSaved1) or (clipboard = ClipSaved2) or (clipboard = ClipSaved3)
 	return
-	ClipWait, 0.5, 1
-	if GetClipboardFormat(1)=1
+	ClipWait, 1, 1
+	if (A_EventInfo=1)
 	{
 		clipid+=1
 		if clipid>3
@@ -1124,10 +1118,6 @@ selectfolder:
 	GuiControl, -default,选择(&S)
 	GuiControl, +default,打开(&O)
 Return
-
-AutoComplete:
-CbAutoComplete()
-return
 
 选项:
 IfWinExist,ahk_class AutoHotkeyGUI,选项
@@ -1293,14 +1283,15 @@ Return
 ExitSub:
 FileDelete, %A_Temp%\7plus\hwnd.txt
 
+UnhookWinEvent(hWinEventHook3, HookProcAdr3)
+
 ; 释放监视关机的资源
 if ShutdownMonitor
 {
 DllCall("ShutdownBlockReasonDestroy", UInt, hAHK)
-UnhookWinEvent2()
+UnhookWinEvent(hWinEventHook2, HookProcAdr2)
 ;msgbox,0
 }
-
 
 if CloseWindowList_showmenu
 {
@@ -1313,7 +1304,6 @@ If !smartchooserbrowser
 delahkurl()
 ;msgbox,2
 }
-
 
 ;还原缩为缩略图的窗口
 If miniMizeOn
@@ -1393,7 +1383,7 @@ WinShow,ahk_class Shell_TrayWnd
 WinShow,开始 ahk_class Button
 WinActivate,ahk_class Shell_TrayWnd
 ;msgbox,6   ;退出有时出现异常(概率非常高，直接退出，托盘图标残留)
-UnhookWinEvent()
+UnhookWinEvent(hWinEventHook, HookProcAdr)
 ;msgbox,9
 }
 
@@ -1533,6 +1523,24 @@ fs:=s:=AutoInclude_Path:=f:=""
 ;---------------------------------
 Return
 
+Combo_WinEvent:
+;EVENT_OBJECT_REORDER:= 0x8004, EVENT_OBJECT_FOCUS:= 0x8005, EVENT_OBJECT_SELECTION:= 0x8006
+	CtrlHwnd:=hComBoBox
+	VarSetCapacity(CB_info, 40 + (3 * A_PtrSize), 0)
+	NumPut(40 + (3 * A_PtrSize), CB_info, 0, "UInt")
+	DllCall("User32.dll\GetComboBoxInfo", "Ptr", CtrlHwnd, "Ptr", &CB_info)
+	CB_EditID := NumGet(CB_info, 40 + A_PtrSize, "Ptr") ;48/44
+	CB_ListID := NumGet(CB_info, 40 + (2 * A_PtrSize), "Ptr") ; 56/48
+	
+	CB_EditID:=Format("0x{1:x}",CB_EditID) , CB_ListID:=Format("0x{1:x}",CB_ListID) 
+
+	GuiHwnd_:=CB_ListID
+	ThreadId := DllCall("GetWindowThreadProcessId", "Int", GuiHwnd_, "UInt*", PID)	; LPDWORD
+	HookProcAdr3:=RegisterCallback("WinProcCallback")
+	hWinEventHook3:=SetWinEventHook(0x8006, 0x8006, 0, HookProcAdr3, PID, ThreadId, 0)
+	objListIDs[CB_ListID]:=hComBoBox
+return
+
 Plugins_Run:
 tmphotkey := A_ThisHotkey
 IniRead,  hotkeycontent, %run_iniFile%,Plugins
@@ -1582,6 +1590,7 @@ return
 #include %A_ScriptDir%\Script\主窗口\拖拽移动文件.ahk
 #include %A_ScriptDir%\Script\主窗口\切换编辑下拉列表.ahk
 #include %A_ScriptDir%\Script\主窗口\播放器和音量控制.ahk
+#include %A_ScriptDir%\Script\主窗口\combo删除按钮.ahk
 #include %A_ScriptDir%\Script\网页远程控制.ahk
 #include %A_ScriptDir%\Script\USB.ahk
 #include %A_ScriptDir%\Script\光驱.ahk
@@ -1605,6 +1614,7 @@ return
 #include %A_ScriptDir%\Lib\Explorer.ahk
 #include %A_ScriptDir%\Lib\Menu.ahk
 #include %A_ScriptDir%\Lib\Window.ahk
+#include %A_ScriptDir%\Lib\WinEventHook.ahk
 #include %A_ScriptDir%\Lib\ActiveScript.ahk
 #include %A_ScriptDir%\Lib\_GuiDropFiles.ahk
 #include %A_ScriptDir%\Lib\Class_SQLiteDB.ahk
