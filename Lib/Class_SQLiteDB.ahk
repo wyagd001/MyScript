@@ -143,12 +143,12 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
          This.ErrorMsg := ""
          This.ErrorCode := 0
          If !(This._Handle) {
-            This.ErrorMsg := "Invalid query handle!"
+            This.ErrorMsg := "无效的查询句柄!"
             Return False
          }
          RC := DllCall("SQlite3.dll\sqlite3_step", "Ptr", This._Handle, "Cdecl Int")
          If (ErrorLevel) {
-            This.ErrorMsg := "DLLCall sqlite3_step failed!"
+            This.ErrorMsg := "DLLCall sqlite3_step 失败!"
             This.ErrorCode := ErrorLevel
             Return False
          }
@@ -164,12 +164,12 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
          }
          RC := DllCall("SQlite3.dll\sqlite3_data_count", "Ptr", This._Handle, "Cdecl Int")
          If (ErrorLevel) {
-            This.ErrorMsg := "DLLCall sqlite3_data_count failed!"
+            This.ErrorMsg := "DLLCall sqlite3_data_count 失败!"
             This.ErrorCode := ErrorLevel
             Return False
          }
          If (RC < 1) {
-            This.ErrorMsg := "RecordSet is empty!"
+            This.ErrorMsg := "记录集为空!"
             This.ErrorCode := This._DB._ReturnCode("SQLITE_EMPTY")
             Return False
          }
@@ -178,7 +178,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
             Column := A_Index - 1
             ColumnType := DllCall("SQlite3.dll\sqlite3_column_type", "Ptr", This._Handle, "Int", Column, "Cdecl Int")
             If (ErrorLevel) {
-               This.ErrorMsg := "DLLCall sqlite3_column_type failed!"
+               This.ErrorMsg := "DLLCall sqlite3_column_type 失败!"
                This.ErrorCode := ErrorLevel
                Return False
             }
@@ -200,7 +200,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
             } Else {
                StrPtr := DllCall("SQlite3.dll\sqlite3_column_text", "Ptr", This._Handle, "Int", Column, "Cdecl UPtr")
                If (ErrorLevel) {
-                  This.ErrorMsg := "DLLCall sqlite3_column_text failed!"
+                  This.ErrorMsg := "DLLCall sqlite3_column_text 失败!"
                   This.ErrorCode := ErrorLevel
                   Return False
                }
@@ -221,12 +221,12 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
          This.ErrorMsg := ""
          This.ErrorCode := 0
          If !(This._Handle) {
-            This.ErrorMsg := "Invalid query handle!"
+            This.ErrorMsg := "无效的查询句柄!"
             Return False
          }
          RC := DllCall("SQlite3.dll\sqlite3_reset", "Ptr", This._Handle, "Cdecl Int")
          If (ErrorLevel) {
-            This.ErrorMsg := "DLLCall sqlite3_reset failed!"
+            This.ErrorMsg := "DLLCall sqlite3_reset 失败!"
             This.ErrorCode := ErrorLevel
             Return False
          }
@@ -252,7 +252,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
             Return True
          RC := DllCall("SQlite3.dll\sqlite3_finalize", "Ptr", This._Handle, "Cdecl Int")
          If (ErrorLevel) {
-            This.ErrorMsg := "DLLCall sqlite3_finalize failed!"
+            This.ErrorMsg := "DLLCall sqlite3_finalize 失败!"
             This.ErrorCode := ErrorLevel
             Return False
          }
@@ -281,17 +281,17 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
                This.Base._SQLiteDLL := SQLiteDLL
          }
          If !(DLL := DllCall("LoadLibrary", "Str", This.Base._SQLiteDLL, "UPtr")) {
-            MsgBox, 16, SQLiteDB Error, % "DLL " . SQLiteDLL . " does not exist!"
-            ExitApp
+            MsgBox, 16, SQLiteDB Error, % "DLL 文件 " . SQLiteDLL . " 不存在!"
+            return
          }
          This.Base.Version := StrGet(DllCall("SQlite3.dll\sqlite3_libversion", "Cdecl UPtr"), "UTF-8")
          SQLVersion := StrSplit(This.Base.Version, ".")
          MinVersion := StrSplit(This.Base._MinVersion, ".")
          If (SQLVersion[1] < MinVersion[1]) || ((SQLVersion[1] = MinVersion[1]) && (SQLVersion[2] < MinVersion[2])){
             DllCall("FreeLibrary", "Ptr", DLL)
-            MsgBox, 16, SQLite ERROR, % "Version " . This.Base.Version .  " of SQLite3.dll is not supported!`n`n"
-                                      . "You can download the current version from www.sqlite.org!"
-            ExitApp
+            MsgBox, 16, SQLite ERROR, % "不支持的 SQLite3.dll 版本 " . This.Base.Version .  "!`n`n"
+                                      . "你可以在 www.sqlite.org 下载支持的版本!"
+            return
          }
       }
       This.Base._RefCount += 1
@@ -430,7 +430,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       RC := DllCall("SQlite3.dll\sqlite3_open_v2", "Ptr", &UTF8, "PtrP", HDB, "Int", Flags, "Ptr", 0, "Cdecl Int")
       If (ErrorLevel) {
          This._Path := ""
-         This.ErrorMsg := "DLLCall sqlite3_open_v2 failed!"
+         This.ErrorMsg := "DLLCall sqlite3_open_v2 失败!"
          This.ErrorCode := ErrorLevel
          Return False
       }
@@ -459,7 +459,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
          DllCall("SQlite3.dll\sqlite3_finalize", "Ptr", Query, "Cdecl Int")
       RC := DllCall("SQlite3.dll\sqlite3_close", "Ptr", This._Handle, "Cdecl Int")
       If (ErrorLevel) {
-         This.ErrorMsg := "DLLCall sqlite3_close failed!"
+         This.ErrorMsg := "DLLCall sqlite3_close 失败!"
          This.ErrorCode := ErrorLevel
          Return False
       }
@@ -516,7 +516,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       This.ErrorCode := 0
       This.SQL := SQL
       If !(This._Handle) {
-         This.ErrorMsg := "Invalid dadabase handle!"
+         This.ErrorMsg := "无效的 dadabase 句柄!"
          Return False
       }
       CBPtr := 0
@@ -530,7 +530,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       If (CBPtr)
          DllCall("Kernel32.dll\GlobalFree", "Ptr", CBPtr)
       If (CallError) {
-         This.ErrorMsg := "DLLCall sqlite3_exec failed!"
+         This.ErrorMsg := "DLLCall sqlite3_exec 失败!"
          This.ErrorCode := CallError
          Return False
       }
@@ -561,11 +561,11 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       This.ErrorCode := 0
       This.SQL := SQL
       If !(This._Handle) {
-         This.ErrorMsg := "Invalid dadabase handle!"
+         This.ErrorMsg := "无效的 dadabase 句柄!"
          Return False
       }
       If !RegExMatch(SQL, "i)^\s*(SELECT|PRAGMA)\s") {
-         This.ErrorMsg := "Method " . A_ThisFunc . " requires a query statement!"
+         This.ErrorMsg := "方法 " . A_ThisFunc . " 需要查询语句!"
          Return False
       }
       Names := ""
@@ -580,7 +580,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       RC := DllCall("SQlite3.dll\sqlite3_get_table", "Ptr", This._Handle, "Ptr", &UTF8, "PtrP", Table
                   , "IntP", Rows, "IntP", Cols, "PtrP", Err, "Cdecl Int")
       If (ErrorLevel) {
-         This.ErrorMsg := "DLLCall sqlite3_get_table failed!"
+         This.ErrorMsg := "DLLCall sqlite3_get_table 失败!"
          This.ErrorCode := ErrorLevel
          Return False
       }
@@ -596,7 +596,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       If (MaxResult = -1) {
          DllCall("SQLite3.dll\sqlite3_free_table", "Ptr", Table, "Cdecl")
          If (ErrorLevel) {
-            This.ErrorMsg := "DLLCall sqlite3_free_table failed!"
+            This.ErrorMsg := "DLLCall sqlite3_free_table 失败!"
             This.ErrorCode := ErrorLevel
             Return False
          }
@@ -629,7 +629,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       DllCall("SQLite3.dll\sqlite3_free_table", "Ptr", Table, "Cdecl")
       If (ErrorLevel) {
          TB := ""
-         This.ErrorMsg := "DLLCall sqlite3_free_table failed!"
+         This.ErrorMsg := "DLLCall sqlite3_free_table 失败!"
          This.ErrorCode := ErrorLevel
          Return False
       }
@@ -650,11 +650,11 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       ColumnCount := 0
       HasRows := False
       If !(This._Handle) {
-         This.ErrorMsg := "Invalid dadabase handle!"
+         This.ErrorMsg := "无效的 dadabase 句柄!"
          Return False
       }
       If !RegExMatch(SQL, "i)^\s*(SELECT|PRAGMA)\s|") {
-         This.ErrorMsg := "Method " . A_ThisFunc . " requires a query statement!"
+         This.ErrorMsg := "方法 " . A_ThisFunc . " 需要查询语句!"
          Return False
       }
       Query := 0
@@ -662,7 +662,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       RC := DllCall("SQlite3.dll\sqlite3_prepare_v2", "Ptr", This._Handle, "Ptr", &UTF8, "Int", -1
                   , "PtrP", Query, "Ptr", 0, "Cdecl Int")
       If (ErrorLeveL) {
-         This.ErrorMsg := "DLLCall sqlite3_prepare_v2 failed!"
+         This.ErrorMsg := "DLLCall sqlite3_prepare_v2 失败!"
          This.ErrorCode := ErrorLevel
          Return False
       }
@@ -673,7 +673,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       }
       RC := DllCall("SQlite3.dll\sqlite3_column_count", "Ptr", Query, "Cdecl Int")
       If (ErrorLevel) {
-         This.ErrorMsg := "DLLCall sqlite3_column_count failed!"
+         This.ErrorMsg := "DLLCall sqlite3_column_count 失败!"
          This.ErrorCode := ErrorLevel
          Return False
       }
@@ -687,7 +687,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       Loop, %RC% {
          StrPtr := DllCall("SQlite3.dll\sqlite3_column_name", "Ptr", Query, "Int", A_Index - 1, "Cdecl UPtr")
          If (ErrorLevel) {
-            This.ErrorMsg := "DLLCall sqlite3_column_name failed!"
+            This.ErrorMsg := "DLLCall sqlite3_column_name 失败!"
             This.ErrorCode := ErrorLevel
             Return False
          }
@@ -695,7 +695,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       }
       RC := DllCall("SQlite3.dll\sqlite3_step", "Ptr", Query, "Cdecl Int")
       If (ErrorLevel) {
-         This.ErrorMsg := "DLLCall sqlite3_step failed!"
+         This.ErrorMsg := "DLLCall sqlite3_step 失败!"
          This.ErrorCode := ErrorLevel
          Return False
       }
@@ -703,7 +703,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
          HasRows := True
       RC := DllCall("SQlite3.dll\sqlite3_reset", "Ptr", Query, "Cdecl Int")
       If (ErrorLevel) {
-         This.ErrorMsg := "DLLCall sqlite3_reset failed!"
+         This.ErrorMsg := "DLLCall sqlite3_reset 失败!"
          This.ErrorCode := ErrorLevel
          Return False
       }
@@ -728,13 +728,13 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       This.ErrorCode := 0
       This.SQL := ""
       If !(This._Handle) {
-         This.ErrorMsg := "Invalid dadabase handle!"
+         This.ErrorMsg := "无效的 dadabase 句柄!"
          Return False
       }
       RowID := 0
       RC := DllCall("SQLite3.dll\sqlite3_last_insert_rowid", "Ptr", This._Handle, "Cdecl Int64")
       If (ErrorLevel) {
-         This.ErrorMsg := "DLLCall sqlite3_last_insert_rowid failed!"
+         This.ErrorMsg := "DLLCall sqlite3_last_insert_rowid 失败!"
          This.ErrorCode := ErrorLevel
          Return False
       }
@@ -752,13 +752,13 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       This.ErrorCode := 0
       This.SQL := ""
       If !(This._Handle) {
-         This.ErrorMsg := "Invalid dadabase handle!"
+         This.ErrorMsg := "无效的 dadabase 句柄!"
          Return False
       }
       Rows := 0
       RC := DllCall("SQLite3.dll\sqlite3_total_changes", "Ptr", This._Handle, "Cdecl Int")
       If (ErrorLevel) {
-         This.ErrorMsg := "DLLCall sqlite3_total_changes failed!"
+         This.ErrorMsg := "DLLCall sqlite3_total_changes 失败!"
          This.ErrorCode := ErrorLevel
          Return False
       }
@@ -777,14 +777,14 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       This.ErrorCode := 0
       This.SQL := ""
       If !(This._Handle) {
-         This.ErrorMsg := "Invalid dadabase handle!"
+         This.ErrorMsg := "无效的 dadabase 句柄!"
          Return False
       }
       If Timeout Is Not Integer
          Timeout := 1000
       RC := DllCall("SQLite3.dll\sqlite3_busy_timeout", "Ptr", This._Handle, "Cdecl Int")
       If (ErrorLevel) {
-         This.ErrorMsg := "DLLCall sqlite3_busy_timeout failed!"
+         This.ErrorMsg := "DLLCall sqlite3_busy_timeout 失败!"
          This.ErrorCode := ErrorLevel
          Return False
       }
@@ -807,7 +807,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       This.ErrorCode := 0
       This.SQL := ""
       If !(This._Handle) {
-         This.ErrorMsg := "Invalid dadabase handle!"
+         This.ErrorMsg := "无效的 dadabase 句柄!"
          Return False
       }
       If Str Is Number
@@ -816,7 +816,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       This._StrToUTF8(Str, UTF8)
       Ptr := DllCall("SQLite3.dll\sqlite3_mprintf", "Ptr", &OP, "Ptr", &UTF8, "Cdecl UPtr")
       If (ErrorLevel) {
-         This.ErrorMsg := "DLLCall sqlite3_mprintf failed!"
+         This.ErrorMsg := "DLLCall sqlite3_mprintf 失败!"
          This.ErrorCode := ErrorLevel
          Return False
       }
@@ -843,11 +843,11 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       This.ErrorMsg := ""
       This.ErrorCode := 0
       If !(This._Handle) {
-         This.ErrorMsg := "Invalid dadabase handle!"
+         This.ErrorMsg := "无效的 dadabase 句柄!"
          Return False
       }
       If !RegExMatch(SQL, "i)^\s*(INSERT|UPDATE|REPLACE)\s") {
-         This.ErrorMsg := A_ThisFunc . " requires an INSERT/UPDATE/REPLACE statement!"
+         This.ErrorMsg := A_ThisFunc . " 需要 INSERT/UPDATE/REPLACE 语句!"
          Return False
       }
       Query := 0
@@ -855,7 +855,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       RC := DllCall("SQlite3.dll\sqlite3_prepare_v2", "Ptr", This._Handle, "Ptr", &UTF8, "Int", -1
                   , "PtrP", Query, "Ptr", 0, "Cdecl Int")
       If (ErrorLeveL) {
-         This.ErrorMsg := A_ThisFunc . ": DLLCall sqlite3_prepare_v2 failed!"
+         This.ErrorMsg := A_ThisFunc . ": DLLCall sqlite3_prepare_v2 失败!"
          This.ErrorCode := ErrorLevel
          Return False
       }
@@ -866,14 +866,14 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       }
       For BlobNum, Blob In BlobArray {
          If !(Blob.Addr) || !(Blob.Size) {
-            This.ErrorMsg := A_ThisFunc . ": Invalid parameter BlobArray!"
+            This.ErrorMsg := A_ThisFunc . ": 无效的 BlobArray 参数!"
             This.ErrorCode := ErrorLevel
             Return False
          }
          RC := DllCall("SQlite3.dll\sqlite3_bind_blob", "Ptr", Query, "Int", BlobNum, "Ptr", Blob.Addr
                      , "Int", Blob.Size, "Ptr", SQLITE_STATIC, "Cdecl Int")
          If (ErrorLeveL) {
-            This.ErrorMsg := A_ThisFunc . ": DLLCall sqlite3_prepare_v2 failed!"
+            This.ErrorMsg := A_ThisFunc . ": DLLCall sqlite3_prepare_v2 失败!"
             This.ErrorCode := ErrorLevel
             Return False
          }
@@ -885,7 +885,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       }
       RC := DllCall("SQlite3.dll\sqlite3_step", "Ptr", Query, "Cdecl Int")
       If (ErrorLevel) {
-         This.ErrorMsg := A_ThisFunc . ": DLLCall sqlite3_step failed!"
+         This.ErrorMsg := A_ThisFunc . ": DLLCall sqlite3_step 失败!"
          This.ErrorCode := ErrorLevel
          Return False
       }
@@ -896,7 +896,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       }
       RC := DllCall("SQlite3.dll\sqlite3_finalize", "Ptr", Query, "Cdecl Int")
       If (ErrorLevel) {
-         This.ErrorMsg := A_ThisFunc . ": DLLCall sqlite3_finalize failed!"
+         This.ErrorMsg := A_ThisFunc . ": DLLCall sqlite3_finalize 失败!"
          This.ErrorCode := ErrorLevel
          Return False
       }

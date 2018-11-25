@@ -736,22 +736,28 @@ if Auto_Clip
 
 	if Auto_Cliphistory
 	{
-		global DBPATH:= A_ScriptDir . "\Settings\cliphistory.db"
-		global PREV_FILE := A_ScriptDir . "\Settings\tmp\prev.html" 
 		global DB := new SQLiteDB
-		STORE:={}
-
-		if (!FileExist(DBPATH))
-			isnewdb := 1
+		if !DB
+		{
+			Auto_Cliphistory:=0
+		}
 		else
-			isnewdb := 0
+		{
+			global DBPATH:= A_ScriptDir . "\Settings\cliphistory.db"
+			global PREV_FILE := A_ScriptDir . "\Settings\tmp\prev.html" 
+			STORE:={}
 
-		if (!DB.OpenDB(DBPATH))
-			MsgBox, 16, SQLite错误, % "消息:`t" . DB.ErrorMsg . "`n代码:`t" . DB.ErrorCode
+			if (!FileExist(DBPATH))
+				isnewdb := 1
+			else
+				isnewdb := 0
 
-		sleep,300
-		if (isnewdb == 1){
-			migrateHistory()
+			if (!DB.OpenDB(DBPATH))
+				MsgBox, 16, SQLite错误, % "消息:`t" . DB.ErrorMsg . "`n代码:`t" . DB.ErrorCode
+
+			sleep,300
+			if (isnewdb == 1)
+				migrateHistory()
 		}
 	}
 }
@@ -1059,6 +1065,7 @@ onClipboardChange:
 		if clipid>3
 			clipid=1
 		ClipSaved%clipid% := Clipboard
+		CF_ToolTip("剪贴板" clipid " 复制完毕.",700)
 
 		if Auto_Cliphistory
 		{
@@ -1082,7 +1089,6 @@ onClipboardChange:
 			}
 			else
 				writecliphistory=1
-			CF_ToolTip("剪贴板" clipid " 复制完毕.",700)
 		}
 	}
 	else
