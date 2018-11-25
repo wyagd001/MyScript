@@ -850,7 +850,11 @@ if !Auto_mouseclick
 if !Auto_midmouse
 	hotkey,$MButton,off
 if !Auto_Spacepreview
-	hotkey,$Space,off
+{
+	Hotkey, ifWinActive, ahk_Group ccc
+	hotkey, $Space, off
+	Hotkey, ifWinActive
+}
 ;---------鼠标增强空格预览的热键-----------
 
 if (Auto_JCTF or Auto_Update) and 每隔几小时结果为真(6)
