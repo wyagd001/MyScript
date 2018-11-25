@@ -25,14 +25,8 @@ GetBrowserURL_hK()
 {
 	Send, ^l
 	sleep,300
-	Candy_Saved_ClipBoard := ClipboardAll    ;±¸·Ý¼ôÌù°å
-	Clipboard =                   ; Çå¿Õ¼ôÌù°å
-	Send, ^c
-	ClipWait,1
-	if IsURL(Clipboard)
-		sURL:=Clipboard 
-	Clipboard := Candy_Saved_ClipBoard   
-	Candy_Saved_ClipBoard =
+	sURL:=GetSelText()
+	if IsURL(sURL)
 	Return sURL
 }
 

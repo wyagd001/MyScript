@@ -1,7 +1,6 @@
 ;Explorer .. View mode--------------By a_h_k & ..:: Free Radical ::..
 ;http://www.autohotkey.com/forum/topic57686.html
 
-
 窗口置顶:
 ;^Up::
 WinSet,AlwaysOnTop,,A
@@ -61,7 +60,6 @@ DisableMinimizeButton(hWnd="") {
  DllCall("DrawMenuBar","Int",hWnd)
 Return ""
 }
-
 
 RedrawSysMenu(hWnd="") {
  If hWnd=
@@ -211,11 +209,8 @@ return
 
 ;#V::
 代码保存并运行:
-	clipboard =
-	Send, ^c
-	ClipWait,3
+SelCode:=GetSelText(1,, bin)
 CF_HTML := DllCall("RegisterClipboardFormat", "str", "HTML Format")
-bin := ClipboardAll
 n := 0
 while format := NumGet(bin, n, "uint")
 {
@@ -228,27 +223,22 @@ while format := NumGet(bin, n, "uint")
     }
     n += 8 + size
 }
-Clipboard := sourceURL ? (";来源网址: " sourceURL "`r`n" Clipboard) : Clipboard
+SelCode := sourceURL ? (";来源网址: " sourceURL "`r`n" SelCode) : SelCode
 
-if clipboard 
+if SelCode 
 {
-	clipboard = %clipboard%
-	File:=  A_Desktop "\" . A_Now  ".ahk"
-	FileAppend,%clipboard%`r`n,%File%
-	run,%File%,%A_Desktop%
+	Code_File:=  A_Desktop "\" . A_Now  ".ahk"
+	FileAppend, %SelCode%`r`n, %Code_File%
+	run, %Code_File%, %A_Desktop%
 }
+SelCode:=bin:=""
 return
 
 ;!F1::
 有道网络翻译:
-原值:=Clipboard
-	clipboard =
-	Send, ^c
-	ClipWait,2
-	If ErrorLevel                          ;如果粘贴板里面没有内容，则判断是否有窗口定义
-		Return
-
-	Youdao_keyword=%Clipboard%
+	Youdao_keyword:=GetSelText()
+	If !Youdao_keyword                          ;如果粘贴板里面没有内容，则判断是否有窗口定义
+	Return
 	Youdao_译文:=YouDaoApi(Youdao_keyword)
 	Youdao_基本释义:= json(Youdao_译文, "basic.explains")
 	Youdao_网络释义:= json(Youdao_译文, "web.value")
@@ -260,15 +250,12 @@ return
 	}
 else
 MsgBox,,有道网络翻译,网络错误或查询不到该单词的翻译。
-Clipboard:=原值
 return
-
 
 /*
 #F::
 ClipboardCode(1)
 return
-
 
 ClipboardCode( RunInScite=0 ) {
    Send, ^c

@@ -8,19 +8,13 @@
 ;#IfWinActive,ahk_group ccc
 ;F4::    ;;用F4修改文件属性
 修改文件属性:
-clipold = %Clipboard%
-clipboard=
-Send,^c
-ClipWait, 0.5
-if ErrorLevel
+files:=GetSelText()
+if !files
 {
-    clipboard=%clipold%
     IniRead,  failsendkey, %run_iniFile%,快捷键, 修改文件属性
     Send,{%failsendkey%}
     Return
 }
-files=%clipboard%
-Clipboard=%clipold%
 StringSplit,ary, files ,`n,`r
 curpath = %ary1%
 If ary0=1
@@ -306,17 +300,9 @@ Return
 修改文件名扩展名:
 MouseGetPos,,, win
 filerename:
-clipold = %Clipboard%
-clipboard=
-Send,^c
-ClipWait, 0.5
+files:=GetSelText()
 if ErrorLevel
-{
-    clipboard=%clipold%
-    Return
-}
-files=%clipboard%
-Clipboard=%clipold%
+Return
 StringSplit,ary, files ,`n,`r
 curpath = %ary1%
 If ary0=1

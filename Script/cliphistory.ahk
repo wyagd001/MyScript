@@ -66,25 +66,6 @@ monitor=1
 }
 return
 
-GetClipboardFormat(type=1){		;Thanks nnnik
-	Critical, On
-	DllCall("OpenClipboard", "int", "")
-	while c := DllCall("EnumClipboardFormats","Int",c?c:0)
-		x .= "," c
-	DllCall("CloseClipboard")
-
-
-	if type=1
-		if Instr(x, ",1") and Instr(x, ",13")
-			return 1
-		else If Instr(x, ",15")
-			return 2
-		else
-			return ""
-	else
-		return x
-}
-
 shijianCheck:
 lt:=A_TickCount
 if (lt-st>8000)
@@ -703,15 +684,10 @@ historyCleanup(){
  * @param  {String} option no idea
  * @return {number} size in kb
  */
-history_GetSize(option := ""){
-	If (option == ""){
-    	data := getFromTable("history", "sum(size)", "id>-1")
-    	R := data[1]
-	} else {
-
-	}
-
-    return R/1024
+history_GetSize(){
+	data := getFromTable("history", "sum(size)", "id>-1")
+	R := data[1]
+return R/1024
 }
 
 /**

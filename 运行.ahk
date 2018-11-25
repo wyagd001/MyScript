@@ -618,11 +618,11 @@ RegWrite ,REG_SZ,HKEY_CURRENT_USER,Control Panel\Desktop,AutoEndTasks,0
 ;关机时首先响应  To make a script the last process to terminate change "0x4FF" to "0x0FF".
 ;HKEY_CURRENT_USER,Control Panel\Desktop,AutoEndTasks,0
 ;Vista+关机提示结束进程
-temp:=DllCall("User32.dll\ShutdownBlockReasonCreate","uint",hAHK,"wstr",A_ScriptFullPath " is still running")
-if !temp
+Temp_Value:=DllCall("User32.dll\ShutdownBlockReasonCreate","uint",hAHK,"wstr",A_ScriptFullPath " is still running")
+if !Temp_Value
 CF_ToolTip("ShutdownBlockReasonCreate 创建失败！错误码： " A_LastError,3000)
-temp :=DllCall("kernel32.dll\SetProcessShutdownParameters", UInt, 0x4FF, UInt, 0)
-if !temp
+Temp_Value :=DllCall("kernel32.dll\SetProcessShutdownParameters", UInt, 0x4FF, UInt, 0)
+if !Temp_Value
 CF_ToolTip("SetProcessShutdownParameters 失败！",3000)
 ;监视关机
 HookProcAdr2 := RegisterCallback( "HookProc", "F" )
@@ -1187,7 +1187,7 @@ ListVars
 Return
 
 Help:
-Run, %Pathd%\AutoHotkeyLCN.chm
+Run, %Pathd%\AutoHotkeyLCN_new.chm
 Return
 
 spy:
@@ -1611,6 +1611,7 @@ return
 #include %A_ScriptDir%\Script\地址栏粘贴并打开.ahk
 #include %A_ScriptDir%\Script\关机对话框.ahk
 #include %A_ScriptDir%\Script\cliphistory.ahk
+#include %A_ScriptDir%\Lib\Clip.ahk
 #include %A_ScriptDir%\Lib\Explorer.ahk
 #include %A_ScriptDir%\Lib\Menu.ahk
 #include %A_ScriptDir%\Lib\Window.ahk

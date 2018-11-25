@@ -665,7 +665,7 @@ f_OpenPath(ThisPath)
 
 	if w_Edit1Pos =
 	{
-		Run, explore %ThisPath%, , UseErrorLevel	; Might work on more systems without double quotes.
+		Run, explorer /n %ThisPath%, , UseErrorLevel	; Might work on more systems without double quotes.
 		if ErrorLevel
         f_RunPath(ThisPath)
 	}
@@ -991,8 +991,6 @@ f_GetName(ThisPath)
 	return ThisName
 }
 
-
-
 ;==================== Get Win Class Hotkey ====================;
 
 f_AddApp:
@@ -1049,17 +1047,10 @@ GuiControl, Choose, gui_AppsListBox, 1
 GuiControl, Focus, gui_AppsListBox
 return
 
-
-
 ;==================== Open Selected Path Hotkey ====================;
 
 f_OpenSel:
-f_ClipSaved := ClipboardAll
-Send, ^c
-Clipwait
-f_OpenSelected(Clipboard)
-Clipboard := f_ClipSaved
-f_ClipSaved = ; Free the memory in case the clipboard was very large.
+f_OpenSelected(GetSelText())
 return
 
 f_OpenSelected(SelectedPath)
@@ -1071,7 +1062,7 @@ f_OpenSelected(SelectedPath)
 		StringTrimRight, SelectedPath, SelectedPath, 1
 	if SelectedPath !=
 	{
-		Run, explore %SelectedPath%, , UseErrorLevel
+		Run, explorer /n %SelectedPath%, , UseErrorLevel
 		if ErrorLevel
             if f_RunPath(SelectedPath)
 			{

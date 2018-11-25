@@ -23,7 +23,7 @@ q:=% ZTrim( Eval(Clipboard) )
 ;Send, {end}=
 SendInput,%q%
 Clipboard := V
-q:=
+q:=V:=""
 }
 Return
 ;#IfWinActive
@@ -98,8 +98,13 @@ http://forum.ahkbbs.cn/thread-1945-1-1.html
 9.   函数的优先级是大于幂运算的，比如：round5.5^2=36
 */
 
-_mhwnd(){	;background test
+_mhwnd()
+{
+	;background test
 	;MouseGetPos,x,,hwnd
 	Hwnd := WinActive("A")
-	Return "ahk_id " . hwnd
+Return "ahk_id " . hwnd
 }
+
+::kql::
+return

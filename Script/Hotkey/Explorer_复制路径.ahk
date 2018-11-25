@@ -8,11 +8,10 @@ IfWinActive,ahk_Group ccc
 	; ^+c 会触发切换输入法,  热键类型为  k-hook   c键释放  卡住就像按下了Ctrl+Shift  然后松开
 	; ^+c改为全局热键，热键类型为 reg，加入下面一行脚本，则不一定会触发
 	keywait LShift
-	Clipboard =
-	Send, ^c    ; 这里的 c 不能写成大写 C  大写C 为发送^+c
-	ClipWait, 1
 
-	Loop, Parse, Clipboard, `n, `r
+	;Send, ^c    ; 这里的 c 不能写成大写 C  大写C 为发送^+c
+	Temp_Value:=GetSelText()
+	Loop, Parse, Temp_Value, `n, `r
 		FileFullPath=%A_LoopField%
 	Splitpath,FileFullPath,Filename,Filepath
 
@@ -81,19 +80,3 @@ exit3:
 3GuiEscape:
 	Gui,3:Destroy
 return
-
-;Read real text (=not filenames, when CF_HDROP is in clipboard) from clipboard
-ReadClipboardText()
-{
-	; CF_TEXT = 1 ;CF_UNICODETEXT = 13
-	If((!A_IsUnicode && DllCall("IsClipboardFormatAvailable", "Uint", 1)) || (A_IsUnicode && DllCall("IsClipboardFormatAvailable", "Uint", 13)))
-	{
-		DllCall("OpenClipboard", "Ptr", 0)	
-		htext:=DllCall("GetClipboardData", "Uint", A_IsUnicode ? 13 : 1, "Ptr")
-		ptext := DllCall("GlobalLock", "Ptr", htext)
-		text := StrGet(pText, A_IsUnicode ? "UTF-16" : "cp0")
-		DllCall("GlobalUnlock", "Ptr", htext)
-		DllCall("CloseClipboard")
-	}
-	Return text
-}

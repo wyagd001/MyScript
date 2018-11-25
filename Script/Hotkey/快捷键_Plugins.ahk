@@ -33,11 +33,8 @@ IfInString, Clipboard,://
 }
 Else
 {
-	Old_ClipBoard := ClipboardAll
-	Send, ^c
-	Clipwait
-	Run,%A_AhkPath% "%A_ScriptDir%\Plugins\新版迅雷开放引擎下载.ahk" %Clipboard%
-	Clipboard := Old_ClipBoard
-	Old_ClipBoard = 
+	DURL:=GetSelText()
+	Run,%A_AhkPath% "%A_ScriptDir%\Plugins\新版迅雷开放引擎下载.ahk" %DURL%
+	DURL = 
 }
 Return

@@ -6,23 +6,9 @@ SkSub_Clear_CandyVar()
 	MouseGetPos,,,Candy_CurWin_id         ;当前鼠标下的进程ID
 	WinGet, Candy_CurWin_Fullpath,ProcessPath,Ahk_ID %Candy_CurWin_id%    ;当前进程的路径
 	WinGetTitle, Candy_Title,Ahk_ID %Candy_CurWin_id%    ;当前进程的标题
-
-	Candy_Saved_ClipBoard := ClipboardAll    ;备份剪贴板
-	Clipboard =                   ; 清空剪贴板
-	Send, ^c
-	ClipWait,1
-	If ErrorLevel                              ;如果粘贴板里面没有内容，则有窗口定义
-	{
-		Clipboard := Candy_Saved_ClipBoard    
-		Candy_Saved_ClipBoard =
-		Return
-	}
-	Candy_isFile := DllCall("IsClipboardFormatAvailable", "UInt", 15)   ;是否是文件类型
-	Candy_isHtml := DllCall("RegisterClipboardFormat", "str", "HTML Format")  ;是否Html类型
-	CandySel :=Clipboard
-	CandySel_Rich:=ClipboardAll
-	Clipboard := Candy_Saved_ClipBoard  ;还原粘贴板
-	Candy_Saved_ClipBoard =
+	CandySel := GetSelText(Candy_isFile, CandySel_Rich)
+	if !CandySel
+	Return
 	Transform,Candy_ProFile_Ini,Deref,%Candy_ProFile_Ini%
 
 	IfNotExist %Candy_ProFile_Ini%         ;如果配置文件不存在，则发出警告，且终止

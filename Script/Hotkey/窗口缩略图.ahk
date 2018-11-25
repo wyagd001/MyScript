@@ -83,7 +83,7 @@ WinActivate, ahk_id %Title2MiniMize%
 return
 
 /*
-;以移动到主窗口_图片按钮MouseLDown中貌似gui窗口上也没位置点击移动
+;已移动到主窗口_图片按钮MouseLDown中。貌似缩略窗口gui也没位置点击移动
 WM_LBUTTONDOWN() {   ; this is the function that moves the gui
   If A_Gui
   PostMessage, 0xA1, 2
