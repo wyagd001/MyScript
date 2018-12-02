@@ -1092,7 +1092,7 @@ selectfolder:
 	If tmpDir
 	{
 	TargetFolder := tmpDir
-	IniWrite,%TargetFolder%, %run_iniFile%,TargetFolder, TargetFolder
+	IniWrite,%TargetFolder%, %run_iniFile%,路径设置, TargetFolder
 	TrayTip,移动文件,目标文件夹设置为 %TargetFolder% 。
 	}
 	GuiControl, -default,选择(&S)
