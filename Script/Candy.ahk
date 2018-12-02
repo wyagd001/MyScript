@@ -6,7 +6,7 @@ SkSub_Clear_CandyVar()
 	MouseGetPos,,,Candy_CurWin_id         ;当前鼠标下的进程ID
 	WinGet, Candy_CurWin_Fullpath,ProcessPath,Ahk_ID %Candy_CurWin_id%    ;当前进程的路径
 	WinGetTitle, Candy_Title,Ahk_ID %Candy_CurWin_id%    ;当前进程的标题
-	CandySel := GetSelText(Candy_isFile, CandySel_Rich)
+	CandySel := GetSelText(2,Candy_isFile, CandySel_Rich)
 	if !CandySel
 	Return
 	Transform,Candy_ProFile_Ini,Deref,%Candy_ProFile_Ini%

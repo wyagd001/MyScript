@@ -447,24 +447,6 @@ migrateHistory()
 	}
 	return
 
-exit:
-	routines_Exit()
-	ExitApp
-	return
-
-reload:
-	OnExit,
-	routines_Exit()
-	Reload
-	return
-
-routines_Exit() {
-	if IsObject(DB){
-		DB.CloseDb()
-		DB := ""
-	}
-}
-
 /**
  * label triggered when search box contents are changed and then updates the list
  */

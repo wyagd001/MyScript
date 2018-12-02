@@ -105,6 +105,3 @@ _mhwnd()
 	Hwnd := WinActive("A")
 Return "ahk_id " . hwnd
 }
-
-::kql::
-return

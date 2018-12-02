@@ -209,7 +209,7 @@ return
 
 ;#V::
 代码保存并运行:
-SelCode:=GetSelText(1,, bin)
+SelCode:=GetSelText(2,, bin)
 CF_HTML := DllCall("RegisterClipboardFormat", "str", "HTML Format")
 n := 0
 while format := NumGet(bin, n, "uint")

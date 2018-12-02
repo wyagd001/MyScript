@@ -47,7 +47,7 @@ movedropfile:
 	If InStr(FileExist(GuiDropFiles_FileFullPath),"D")
 	{
 		TargetFolder := GuiDropFiles_FileFullPath
-		IniWrite,%TargetFolder%,%run_iniFile%,常规,TargetFolder
+		IniWrite,%TargetFolder%,%run_iniFile%,路径设置,TargetFolder
 		MsgBox,,,目标文件夹设置为 %TargetFolder% 。,3
 		Return
 	}

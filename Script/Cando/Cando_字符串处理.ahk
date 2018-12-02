@@ -39,6 +39,18 @@ Cando_首字大写:
 	out :=Candy_Saved_ClipBoard:=Position:=""
 Return
 
+Cando_括起来:
+	StringSplit, kql_Arr, A_ThisMenuItem, %A_Space%
+	Candy_Saved_ClipBoard := ClipboardAll
+	Clipboard :=CandySel
+	send {del}{%kql_Arr1%}
+	Send,^v
+	send {%kql_Arr2%}
+	Sleep, 500
+	Clipboard := Candy_Saved_ClipBoard    
+	Candy_Saved_ClipBoard =
+Return
+
 Cando_等号对齐:
 	LimitMax:=30     ;左侧超过该长度时，该行不参与对齐，该数字可自行修改
 	MaxLen:=0

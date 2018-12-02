@@ -1,50 +1,22 @@
 option:
 IniRead,询问,%run_iniFile%,截图,询问
 IniRead,filetp,%run_iniFile%,截图,filetp
-
-IniRead,Auto_Update,%run_iniFile%,功能开关,Auto_Update
-IniRead,run_with_sys,%run_iniFile%,功能开关,run_with_sys
-IniRead,mousetip,%run_iniFile%,功能开关,mousetip
-IniRead,x_x,%run_iniFile%,常规,x_x
-IniRead,y_y,%run_iniFile%,常规,y_y
-IniRead,txt,%run_iniFile%,常规,txt
-IniRead,TextEditor,%run_iniFile%,常规,TextEditor
-IniRead,ImageEditor,%run_iniFile%,常规,ImageEditor
-
-IniRead,Auto_Raise,%run_iniFile%,功能开关,Auto_Raise
-IniRead,hover_task_buttons,%run_iniFile%,自动激活,hover_task_buttons
-IniRead,hover_task_group,%run_iniFile%,自动激活,hover_task_group
-IniRead,hover_task_min_info,%run_iniFile%,自动激活,hover_task_min_info
-IniRead,hover_start_button,%run_iniFile%,自动激活,hover_start_button
-IniRead,hover_min_max,%run_iniFile%,自动激活,hover_min_max
-IniRead,hover_any_window,%run_iniFile%,自动激活,hover_any_window
-IniRead,scrollundermouse,%run_iniFile%,自动激活,scrollundermouse
-IniRead,hover_keep_zorder,%run_iniFile%,自动激活,hover_keep_zorder
-IniRead,hover_delay,%run_iniFile%,自动激活,hover_delay
-
 IniRead,num,%run_iniFile%,ContextMenu,num
-
-Loop 8
-{
-	z:=A_Index-1
-	IniRead,FF%z%,%run_iniFile%,FastFolders,Folder%z%
-	IniRead,FFTitle%z%,%run_iniFile%,FastFolders,FolderTitle%z%
-}
-
-IniRead,baoshionoff,%run_iniFile%,时间,baoshionoff
-IniRead,baoshilx,%run_iniFile%,时间,baoshilx
-IniRead,renwu,%run_iniFile%,时间,renwu
-IniRead,renwu2,%run_iniFile%,时间,renwu2
-IniRead,rh,%run_iniFile%,时间,rh
-IniRead,rm,%run_iniFile%,时间,rm
-IniRead,renwucx,%run_iniFile%,时间,renwucx
-
 IniRead,LoginPass,%run_iniFile%,serverConfig,LoginPass
-IniRead,foobar2000,%run_iniFile%,AudioPlayer,foobar2000
-IniRead,iTunes,%run_iniFile%,AudioPlayer,iTunes
-IniRead,wmplayer,%run_iniFile%,AudioPlayer,wmplayer
-IniRead,TTPlayer,%run_iniFile%,AudioPlayer,TTPlayer
-IniRead,winamp,%run_iniFile%,AudioPlayer,winamp
+
+IniRead, content, %run_iniFile%,常规
+Gosub, GetAllKeys
+IniRead, content, %run_iniFile%,功能开关
+Gosub, GetAllKeys
+IniRead, content, %run_iniFile%,自动激活
+Gosub, GetAllKeys
+IniRead, content, %run_iniFile%,时间
+Gosub, GetAllKeys
+IniRead content,%run_iniFile%,AudioPlayer
+Gosub, GetAllKeys
+content:=""
+
+IniRead, otherProgram,%run_iniFile%,otherProgram
 
 Gui,99:Default
 Gui,+LastFound
@@ -304,13 +276,17 @@ Gui,Add,Button,x450 y107 w30 h20 gsl,...
 Gui,Add,Text,x26 y131,Winamp:
 Gui,Add,Edit,x96 y129 w350 h20 vap5,%winamp%
 Gui,Add,Button,x450 y129 w30 h20 gsl,...
-Gui,Add,Text,x26 y165,默认播放器
-Gui,Add,Radio,x26 y185 w80 h20 vdap1 gdaps,Foobar2000
-Gui,Add,Radio,x116 y185 w70 h20 vdap2 gdaps,iTunes
-Gui,Add,Radio,x190 y185 w80 h20 vdap3 gdaps,Wmplayer
-Gui,Add,Radio,x270 y185 w80 h20 vdap4 gdaps,千千静听
-Gui,Add,Radio,x350 y185 w80 h20 vdap5 gdaps,Winamp
-Gui,Add,Radio,x430 y185 w80 h20 vdap6 gdaps,AhkPlayer
+Gui,Add,Text,x26 y153,AhkPlayer:
+Gui,Add,Edit,x96 y151 w350 h20 vap6,%ahkplayer%
+Gui,Add,Button,x450 y151 w30 h20 gsl,...
+
+Gui,Add,Text,x26 y185,默认播放器
+Gui,Add,Radio,x26 y205 w80 h20 vdap1 gdaps,Foobar2000
+Gui,Add,Radio,x116 y205 w70 h20 vdap2 gdaps,iTunes
+Gui,Add,Radio,x190 y205 w80 h20 vdap3 gdaps,Wmplayer
+Gui,Add,Radio,x270 y205 w80 h20 vdap4 gdaps,千千静听
+Gui,Add,Radio,x350 y205 w80 h20 vdap5 gdaps,Winamp
+Gui,Add,Radio,x430 y205 w80 h20 vdap6 gdaps,AhkPlayer
 If(DefaultPlayer="foobar2000"){
 	GuiControl,,dap1,1
 }
@@ -1035,7 +1011,8 @@ IniWrite,%ap2%,%run_iniFile%,AudioPlayer,iTunes
 IniWrite,%ap3%,%run_iniFile%,AudioPlayer,Wmplayer
 IniWrite,%ap4%,%run_iniFile%,AudioPlayer,TTPlayer
 IniWrite,%ap5%,%run_iniFile%,AudioPlayer,Winamp
-IniWrite,%DefaultPlayer%,%run_iniFile%,固定的程序,DefaultPlayer
+IniWrite,%ap6%,%run_iniFile%,AudioPlayer,AhkPlayer
+IniWrite,%DefaultPlayer%,%run_iniFile%,常规,DefaultPlayer
 IniWrite,%sp%,%run_iniFile%,固定的程序,stableProgram
 
 IniDelete,%run_iniFile%,otherProgram
@@ -1060,6 +1037,7 @@ Loop,Parse,op,`n`r
 Sleep,10
 Gui,Destroy
 Reload
+Return
 
 98GuiEscape:
 98GuiClose:

@@ -23,7 +23,7 @@ ShellWM(wp,lp)
 			if folder[lp].cmd
 			{
 				CloseWindowList.Push(folder[lp].cmd)
-				IniWrite,% folder[lp].cmd, %run_iniFile%,常规, LastClosewindow
+				IniWrite,% folder[lp].cmd, %run_iniFile%,路径设置, LastClosewindow
 				Array_removeDuplicates(CloseWindowList)
 				if CloseWindowList.Length() >= 11
 				CloseWindowList.RemoveAt(1)

@@ -17,7 +17,7 @@ GetClipboardFormat(type=1)  ;Thanks nnnik
 		return x
 }
 
-GetSelText(pram:=0, ByRef _isFile:="", ByRef _ClipAll:="")
+GetSelText(returnnum:=1, ByRef _isFile:="", ByRef _ClipAll:="")
 {
 	Saved_ClipBoard := ClipboardAll    ; 备份剪贴板
 	Clipboard=    ; 清空剪贴板
@@ -28,13 +28,15 @@ GetSelText(pram:=0, ByRef _isFile:="", ByRef _ClipAll:="")
 		Clipboard:=Saved_ClipBoard
 	Return
 	}
-	if pram
- {
-	_isFile:=DllCall("IsClipboardFormatAvailable","UInt",15) ; 是否是文件类型
-	_ClipAll := ClipboardAll
- }
-	else
+	If(returnnum=0)
+	Return
+	else If(returnnum=1)
 		_isFile := _ClipAll := ""
+	else
+	{
+		_isFile:=DllCall("IsClipboardFormatAvailable","UInt",15) ; 是否是文件类型
+		_ClipAll := ClipboardAll
+	}
 	ClipSel := Clipboard
 	Clipboard := Saved_ClipBoard  ;还原粘贴板
 	return ClipSel

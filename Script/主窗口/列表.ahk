@@ -3,7 +3,7 @@ liebiao:
 if !TargetFolder or !FileExist(TargetFolder)
 {
 TargetFolder=
-IniWrite,%TargetFolder%, %run_iniFile%,常规, TargetFolder
+IniWrite,%TargetFolder%, %run_iniFile%,路径设置, TargetFolder
 msgbox,没有设置目标文件夹，请拖拽文件夹到窗口或选择一个文件夹。
 return
 }

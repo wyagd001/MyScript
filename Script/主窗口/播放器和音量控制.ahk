@@ -109,7 +109,6 @@ If (activeplayer="itunes")
 ControlSend, ahk_parent, ^{left}, iTunes ahk_class iTunes
 Return
 
-
 GB2_down_up:
 ;pause:
 activeplayer:=activeplayer(DefaultPlayer)
@@ -180,5 +179,5 @@ menu,audioplayer,unCheck,%DefaultPlayer%
 DefaultPlayer := A_ThisMenuItem
 Gosub,OpenAudioPlayer
 Gosub,检测
-IniWrite,%A_ThisMenuItem%, %run_iniFile%,固定的程序, DefaultPlayer
+IniWrite,%A_ThisMenuItem%, %run_iniFile%,常规, DefaultPlayer
 Return

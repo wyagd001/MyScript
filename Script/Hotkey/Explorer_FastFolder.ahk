@@ -3,13 +3,12 @@
 八个收藏的文件夹菜单:
       Menu, FastFolders, add,1,FastFolderMenuHandler
 	    Menu, FastFolders, DeleteAll
-		win:=WinExist("A")
 		loop 8
 		{
 			i:=A_INDEX
-			if(FF%i%)
+			if(Fast_Folder%i%)
 			{
-				x:=FFTitle%i%
+				x:=Fast_FolderTitle%i%
 				if(x)
 				{
 					x := "&" i ": " x
@@ -29,7 +28,7 @@ return
 FastFolderMenuClicked(index)
 {
 	global
-	local y:=FF%index%
+	local y:=Fast_Folder%index%
 	local ctrldown := GetKeyState("CTRL")
 	local shiftdown := GetKeyState("shift")
 	x:=GetSelectedFiles()
@@ -54,56 +53,54 @@ FastFolderMenuClicked(index)
 	Menu, FastFolders, DeleteAll
 }
 
-
 #ifWinActive,ahk_group ccc
-^Numpad1::UpdateStoredFolder(FF1,FFTitle1)
-^Numpad2::UpdateStoredFolder(FF2,FFTitle2)
-^Numpad3::UpdateStoredFolder(FF3,FFTitle3)
-^Numpad4::UpdateStoredFolder(FF4,FFTitle4)
-^Numpad5::UpdateStoredFolder(FF5,FFTitle5)
-^Numpad6::UpdateStoredFolder(FF6,FFTitle6)
-^Numpad7::UpdateStoredFolder(FF7,FFTitle7)
-^Numpad8::UpdateStoredFolder(FF8,FFTitle8)
-^!Numpad1::ClearStoredFolder(FF1,FFTitle1)
-^!Numpad2::ClearStoredFolder(FF2,FFTitle2)
-^!Numpad3::ClearStoredFolder(FF3,FFTitle3)
-^!Numpad4::ClearStoredFolder(FF4,FFTitle4)
-^!Numpad5::ClearStoredFolder(FF5,FFTitle5)
-^!Numpad6::ClearStoredFolder(FF6,FFTitle6)
-^!Numpad7::ClearStoredFolder(FF7,FFTitle7)
-^!Numpad8::ClearStoredFolder(FF8,FFTitle8)
+^Numpad1::UpdateStoredFolder(Fast_Folder1,Fast_FolderTitle1)
+^Numpad2::UpdateStoredFolder(Fast_Folder2,Fast_FolderTitle2)
+^Numpad3::UpdateStoredFolder(Fast_Folder3,Fast_FolderTitle3)
+^Numpad4::UpdateStoredFolder(Fast_Folder4,Fast_FolderTitle4)
+^Numpad5::UpdateStoredFolder(Fast_Folder5,Fast_FolderTitle5)
+^Numpad6::UpdateStoredFolder(Fast_Folder6,Fast_FolderTitle6)
+^Numpad7::UpdateStoredFolder(Fast_Folder7,Fast_FolderTitle7)
+^Numpad8::UpdateStoredFolder(Fast_Folder8,Fast_FolderTitle8)
+^!Numpad1::ClearStoredFolder(Fast_Folder1,Fast_FolderTitle1)
+^!Numpad2::ClearStoredFolder(Fast_Folder2,Fast_FolderTitle2)
+^!Numpad3::ClearStoredFolder(Fast_Folder3,Fast_FolderTitle3)
+^!Numpad4::ClearStoredFolder(Fast_Folder4,Fast_FolderTitle4)
+^!Numpad5::ClearStoredFolder(Fast_Folder5,Fast_FolderTitle5)
+^!Numpad6::ClearStoredFolder(Fast_Folder6,Fast_FolderTitle6)
+^!Numpad7::ClearStoredFolder(Fast_Folder7,Fast_FolderTitle7)
+^!Numpad8::ClearStoredFolder(Fast_Folder8,Fast_FolderTitle8)
 #ifWinActive
 
 UpdateStoredFolder(ByRef FF, ByRef FFTitle)
 {
-	FF:=GetCurrentFolder()
-	title:=FF
+	title:=FF:=GetCurrentFolder()
 	if(strStartsWith(title,"::") && WinActive("ahk_group ExplorerGroup"))
 		WinGetTitle,title,A
 
 	SplitPath, title , FFTitle
 	if(!FFTitle)
 		FFtitle:=title
-    IniWrite()
+	IniWrite()
 }
 
 ClearStoredFolder(ByRef FF, ByRef FFTitle)
 {
 	global
 	Critical
-	FF:=""
-	FFTitle:=""
-    IniWrite()
+	FF:=FFTitle:=""
+	IniWrite()
 }
 
 IniWrite(){
 	Loop 8
 	{
-	    x:=A_Index
-	    y:=FF%x%
-	    z:=FFTitle%x%
-	    IniWrite, %y%, %run_iniFile%, FastFolders, Folder%x%
-	    IniWrite, %z%, %run_iniFile%, FastFolders, FolderTitle%x%
+	    i:=A_Index
+	    x:=Fast_Folder%i%
+	    y:=Fast_FolderTitle%i%
+	    IniWrite, %x%, %run_iniFile%, FastFolders, Fast_Folder%i%
+	    IniWrite, %y%, %run_iniFile%, FastFolders, Fast_FolderTitle%i%
 }
-Reload
+IniRead, content, %run_iniFile%,FastFolders
+Gosub, GetAllKeys
 }

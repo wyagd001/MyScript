@@ -5,6 +5,7 @@
 ; https://github.com/7plus/7plus
 
 ;²âÊÔ¿ì½İ¼ü
+/*
 #F1::
 If(WinActive("ahk_group ccc"))
 {
@@ -13,6 +14,7 @@ If(WinActive("ahk_group ccc"))
 	MsgBox %qqq%
 }
 Return
+*/
 ;²âÊÔ¿ì½İ¼ü
 
 GetCurrentFolder()

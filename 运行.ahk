@@ -62,7 +62,6 @@ SplitPath,Windy_Profile_Ini,,Windy_Profile_Dir,,Windy_Profile_Ini_NameNoext
 
 ;---------Alt+滚轮调节音量随机颜色---------
 Random,ColorNum,0,6
-; BarColor:=SubStr("0BFF3F FFFFFF 1187FFFFCD00D962FFCE55AA0FDCFF",ColorNum*6+1,6)
 ; BarColor:=SubStr("6BD536FFFFFFC7882DFFCD00D962FFFF55554FDCFF",ColorNum*6+1,6)
 BarColor := SubStr("FFFF000CFF0C0C750CD962FFFF55554FDCFF1187FF",ColorNum*6+1,6)
 StringLeft,ColorLeft,BarColor,2
@@ -93,8 +92,8 @@ vol_BarOptionsMaster = 1:B1 ZH%vol_Thick% ZX8 ZY4 W%vol_Width% X%vol_PosX% Y%vol
 ;---------Alt+滚轮调节音量随机颜色---------
 
 ; 托盘菜单中打开帮助文件和spy时需指定路径，判断托盘图标指定进程名
-; 将Autohotkey.exe的完整路径分割，贮存Autohotkey.exe所在目录的路径为"pathd"
-Splitpath,A_AhkPath,Ahk_Process,pathd
+; 将Autohotkey.exe的完整路径分割，贮存Autohotkey.exe所在目录的路径为"Ahk_Dir"
+Splitpath,A_AhkPath,Ahk_FileName,Ahk_Dir
 
 ; 检测系统版本
 ; 版本号>6  Vista7为真(1)
@@ -115,19 +114,19 @@ work_area_w := NumGet(work_area,8)-NumGet(work_area,0)
 work_area_h := NumGet(work_area,12)-NumGet(work_area,4)
 ;----------------------------------水平垂直最大化----------------------------
 
-x_x2:=work_area_w- 634
-y_y2:=work_area_h- 108
+x_x2:=work_area_w - 634
+y_y2:=work_area_h - 108
 
 ; 最近关闭的资源管理器窗口
 global CloseWindowList := []
 global ClosetextfileList := []
 global folder := []
 global textfile := [] 
-IniRead, CloseWindowFolders, %run_iniFile% , CloseWindowList
-CloseWindowList := StrSplit(CloseWindowFolders,"`n")
+IniRead, content, %run_iniFile% , CloseWindowList
+CloseWindowList := StrSplit(content,"`n")
 Array_Sort(CloseWindowList)
-IniRead, Closetextfiles, %run_iniFile% , ClosetextfileList
-ClosetextfileList := StrSplit(Closetextfiles,"`n")
+IniRead, content, %run_iniFile% , ClosetextfileList
+ClosetextfileList := StrSplit(content,"`n")
 Array_Sort(ClosetextfileList)
 
 ; Candy，Windy
@@ -138,17 +137,17 @@ Array_Sort(ClosetextfileList)
 
 ;=========读取配置文件开始=========
 IniRead,stableProgram,%run_iniFile%,固定的程序,stableProgram
-IniRead,DefaultPlayer, %run_iniFile%,固定的程序, DefaultPlayer
 IniRead,historyData, %run_iniFile%,固定的程序, historyData
 IniRead,询问, %run_iniFile%,截图, 询问
 IniRead,filetp, %run_iniFile%,截图, filetp
 IniRead,screenshot_path, %run_iniFile%,截图,截图保存目录
+IniRead,TargetFolder, %run_iniFile%,路径设置,TargetFolder
 
-IniRead,ws_MinHeight, %run_iniFile%,缩为标题栏, ws_MinHeight
-IniRead,ws_Animate, %run_iniFile%,缩为标题栏, ws_Animate
-IniRead,ws_RollUpSmoothness, %run_iniFile%,缩为标题栏, ws_RollUpSmoothness
-IniRead,Edge_Dock_Activation_Delay, %run_iniFile%,自动显示隐藏窗口, Edge_Dock_Activation_Delay
-IniRead,Edge_Dock_Border_Visible, %run_iniFile%,自动显示隐藏窗口, Edge_Dock_Border_Visible
+IniRead, content, %run_iniFile%,缩为标题栏
+Gosub, GetAllKeys
+
+IniRead, content, %run_iniFile%,自动显示隐藏窗口
+Gosub, GetAllKeys
 
 IniRead, content, %run_iniFile%,常规
 Gosub, GetAllKeys
@@ -156,29 +155,33 @@ Gosub, GetAllKeys
 IniRead, content, %run_iniFile%,功能模式选择
 Gosub, GetAllKeys
 
-If TargetFolder
-{
-	IfnotExist,%TargetFolder%
-	{
-	TargetFolder=
-	IniWrite,%TargetFolder%,%run_iniFile%,常规,TargetFolder
-	}
-}
-IniRead,LastClosewindow,%run_iniFile%,常规,LastClosewindow
-If LastClosewindow
-{
-	IfnotExist,%LastClosewindow%
-	{
-	LastClosewindow=
-	IniWrite,%LastClosewindow%,%run_iniFile%,常规,LastClosewindow
-	}
-}
-
 IniRead, content, %run_iniFile%,自动激活
 Gosub, GetAllKeys
 
 IniRead, content, %run_iniFile%,时间
 Gosub, GetAllKeys
+
+; 读取自定义的程序
+IniRead, content,%run_iniFile%,otherProgram
+Gosub, GetAllKeys
+
+If TargetFolder
+{
+	IfnotExist,%TargetFolder%
+	{
+	TargetFolder=
+	IniWrite,%TargetFolder%,%run_iniFile%,路径设置,TargetFolder
+	}
+}
+IniRead,LastClosewindow,%run_iniFile%,路径设置,LastClosewindow
+If LastClosewindow
+{
+	IfnotExist,%LastClosewindow%
+	{
+	LastClosewindow=
+	IniWrite,%LastClosewindow%,%run_iniFile%,路径设置,LastClosewindow
+	}
+}
 
 ;----------窗口缩略图----------
 If MiniMizeOn
@@ -200,33 +203,18 @@ icony:=fh - 48
 }
 ;----------窗口缩略图----------
 
-Loop 8
+IniRead, content, %run_iniFile%,FastFolders
+Gosub, GetAllKeys
+
+IniRead content,%run_iniFile%,AudioPlayer
+	loop,parse,content,`n
 {
-    z:=A_Index
-    IniRead, FF%z%, %run_iniFile%, FastFolders, Folder%z%
-    IniRead, FFTitle%z%, %run_iniFile%, FastFolders, FolderTitle%z%
+Temp_key:=RegExReplace(A_LoopField,"=.*?$")
+Temp_Val:=RegExReplace(A_LoopField,"^.*?=")
+%Temp_key%=%Temp_Val%
+menu,audioplayer,add,%Temp_key%,DPlayer
 }
-
-IniRead AudioPlayer,%run_iniFile%,AudioPlayer
-	loop,parse,AudioPlayer,`n
-{
-AudioPlayer_key:=RegExReplace(A_LoopField,"=.*?$")
-AudioPlayer_Val:=RegExReplace(A_LoopField,"^.*?=")
-%AudioPlayer_key%=%AudioPlayer_Val%
-menu,audioplayer,add,%AudioPlayer_key%,DPlayer
-}
-
-; 读取我的变量，进行环境变量设置
-IniRead otherProgram,%run_iniFile%,otherProgram
-
-	loop,parse,otherProgram,`n
-	{
-		MyVar_Key:=RegExReplace(A_LoopField,"=.*?$") 		; 用户自定义变量的key
-		MyVar_Val:=RegExReplace(A_LoopField,"^.*?=") 		; 用户自定义变量的value
-		If (MyVar_Key && MyVar_Val && not instr(MyVar_Key," ")) 		; 抛弃空变量以及含空格的变量
-			%MyVar_Key%=%MyVar_Val% 		; 这样的写法不会传递环境变量。EnvSet,%MyVar_Key%,"%MyVar_Val%"
-; 另一种写法，可以传递环境变量到被他启动的应用程序
-	}
+Temp_key:=Temp_Val:=content:=""
 ;=========读取配置文件结束=========
 
 ;=========托盘菜单绘制=========
@@ -474,7 +462,7 @@ if Auto_Trayicon
    sleep,100
  Script_pid:=DllCall("GetCurrentProcessId")
  Tray_Icons := {}
- Tray_Icons := TrayIcon_GetInfo(Ahk_Process)
+ Tray_Icons := TrayIcon_GetInfo(Ahk_FileName)
  for index, Icon in Tray_Icons {
   trayicons_pid .= Icon.Pid ","
  }
@@ -486,7 +474,7 @@ if Auto_Trayicon
   Menu, Tray, Icon
   Tray_Icons := {}
   trayicons_pid := ""
-  Tray_Icons := TrayIcon_GetInfo(Ahk_Process)
+  Tray_Icons := TrayIcon_GetInfo(Ahk_FileName)
   for index, Icon in Tray_Icons {
    trayicons_pid .= Icon.Pid ","
   }
@@ -558,7 +546,7 @@ f_Icons = %A_ScriptDir%\pic\foldermenu.ico
 
 IfNotExist, %FloderMenu_iniFile%	;If config file doesn't exist
 {
-	f_ErrorMsg = %f_ErrorMsg%Config file not exist.`nDefault config is installed.`n
+	f_ErrorMsg = %f_ErrorMsg% 配置文件不要存在.`n使用默认配置文件.`n
 	FileCopy,%A_ScriptDir%\Backups\FloderMenu.Ini,%FloderMenu_iniFile%
 }
 
@@ -738,9 +726,7 @@ if Auto_Clip
 	{
 		global DB := new SQLiteDB
 		if !DB
-		{
 			Auto_Cliphistory:=0
-		}
 		else
 		{
 			global DBPATH:= A_ScriptDir . "\Settings\cliphistory.db"
@@ -762,7 +748,7 @@ if Auto_Clip
 	}
 }
 else
-hotkey,$^V,off
+	hotkey,$^V,off
 ;;;;;;;;;; 剪贴板  ;;;;;;;;;;;;
 
 ;快捷键打开C,D,E,F盘...设置其快捷键，loop 15循环15次，到达字母Q
@@ -1059,7 +1045,7 @@ onClipboardChange:
 	if(clipboard = ClipSaved1) or (clipboard = ClipSaved2) or (clipboard = ClipSaved3)
 	return
 	ClipWait, 1, 1
-	if (A_EventInfo=1)
+	if GetClipboardFormat(1)=1
 	{
 		clipid+=1
 		if clipid>3
@@ -1070,23 +1056,7 @@ onClipboardChange:
 		if Auto_Cliphistory
 		{
 			if (writecliphistory=1) 
-			{
-				if clipid = 1
-				{
-					if (ClipSaved1 != ClipSaved3) &&  (ClipSaved1 != ClipSaved2)
-						addHistoryText(Clipboard, A_Now)
-				}
-				else if clipid = 2
-				{
-					if (ClipSaved2 != ClipSaved1) &&  (ClipSaved2 != ClipSaved3)
-						addHistoryText(Clipboard, A_Now)
-				}
-				else if clipid = 3
-				{
-					if (ClipSaved3 != ClipSaved2) &&  (ClipSaved3 != ClipSaved1)
-						addHistoryText(Clipboard, A_Now)
-				}
-			}
+				addHistoryText(ClipSaved%clipid%, A_Now)
 			else
 				writecliphistory=1
 		}
@@ -1122,7 +1092,7 @@ selectfolder:
 	If tmpDir
 	{
 	TargetFolder := tmpDir
-	IniWrite,%TargetFolder%, %run_iniFile%,常规, TargetFolder
+	IniWrite,%TargetFolder%, %run_iniFile%,TargetFolder, TargetFolder
 	TrayTip,移动文件,目标文件夹设置为 %TargetFolder% 。
 	}
 	GuiControl, -default,选择(&S)
@@ -1197,11 +1167,11 @@ ListVars
 Return
 
 Help:
-Run, %Pathd%\AutoHotkeyLCN_new.chm
+Run, %Ahk_Dir%\AutoHotkeyLCN_new.chm
 Return
 
 spy:
-Run, %Pathd%\AU3_Spy.exe
+Run, %Ahk_Dir%\AU3_Spy.exe
 Return
 
 重启脚本:
@@ -1403,6 +1373,15 @@ Gdip_ShutDown(prewpToken)
 ;msgbox,10
 }
 
+if Auto_Cliphistory
+{
+	if IsObject(DB)
+	{
+		DB.CloseDb()
+		DB := ""
+	}
+}
+
 SoundPlay ,%A_ScriptDir%\Sound\Windows Error.wav
 sleep,300
  ExitApp
@@ -1523,13 +1502,9 @@ if RegExReplace(fs,"\s+") != RegExReplace(s,"\s+")
   FileAppend, %s%, %f%
   msgbox,,脚本重启,自动 Include 的文件发生了变化，点击"确定"后重启脚本，应用更新。
 IfMsgBox OK
-{
-fs:=s:=AutoInclude_Path:=f:=""
-Reload
-Return
+	Reload
 }
 fs:=s:=AutoInclude_Path:=f:=""
-}
 ;---------------------------------
 Return
 
