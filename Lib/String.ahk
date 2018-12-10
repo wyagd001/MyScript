@@ -188,7 +188,7 @@ _SendRaw(Keys)
 	Send % KeysInUnicode
 }
 
-; http://ahk8.com/thread-5385.html
+; http://www.ahkcn.net/thread-5385.html
 ; 发送中文，避免输入法影响
 SendStr(String)
 {
@@ -344,4 +344,154 @@ ZTrim( N := "" )
 	Local    V  := StrSplit( N, ".", A_Space ) 
 	Local    V0 := SubStr( V.1,1,1 ),   V1 := Abs( V.1 ),      V2 :=  RTrim( V.2, "0" )
 Return ( V0 = "-" ? "-" : ""   )  ( V1 = "" ? 0 : V1 )   ( V2 <> "" ? "." V2 : "" )
+}
+
+strStartsWith(string,start)
+{
+	x:=(strlen(start)<=strlen(string)&&Substr(string,1,strlen(start))=start)
+	Return x
+}
+
+strEndsWith(string,end)
+{
+	Return strlen(end)<=strlen(string) && Substr(string,-strlen(end)+1)=end
+}
+
+strTrim(string, trim)
+{
+	Return strTrimLeft(strTrimRight(string,trim),trim)
+}
+
+strTrimLeft(string,trim)
+{
+	len:=strLen(trim)
+	while(strStartsWith(string,trim))
+	{
+		StringTrimLeft, string, string, %len%
+	}
+	Return string
+}
+
+strTrimRight(string,trim)
+{
+	len:=strLen(trim)
+	If(strEndsWith(string,trim))
+	{
+		StringTrimRight, string, string, %len%
+	}
+	Return string
+}
+
+f_TrimVarName(ThisMenu){
+	Local Temp := ThisMenu
+	StringReplace, ThisMenu, ThisMenu, @, _, All
+	StringReplace, ThisMenu, ThisMenu, !, _, All
+	StringReplace, ThisMenu, ThisMenu, &, _, All
+	StringReplace, ThisMenu, ThisMenu, ', _, All
+	StringReplace, ThisMenu, ThisMenu, (, _, All
+	StringReplace, ThisMenu, ThisMenu, ), _, All
+	StringReplace, ThisMenu, ThisMenu, *, _, All
+	StringReplace, ThisMenu, ThisMenu, +, _, All
+	StringReplace, ThisMenu, ThisMenu, -, _, All
+	StringReplace, ThisMenu, ThisMenu, ., _, All
+	StringReplace, ThisMenu, ThisMenu, /, _, All
+	StringReplace, ThisMenu, ThisMenu, :, _, All
+	StringReplace, ThisMenu, ThisMenu, <, _, All
+	StringReplace, ThisMenu, ThisMenu, =, _, All
+	StringReplace, ThisMenu, ThisMenu, >, _, All
+	StringReplace, ThisMenu, ThisMenu, \, _, All
+	StringReplace, ThisMenu, ThisMenu, ^, _, All
+	StringReplace, ThisMenu, ThisMenu, {, _, All
+	StringReplace, ThisMenu, ThisMenu, |, _, All
+	StringReplace, ThisMenu, ThisMenu, }, _, All
+	StringReplace, ThisMenu, ThisMenu, ~, _, All
+	StringReplace, ThisMenu, ThisMenu, ``, _, All
+	StringReplace, ThisMenu, ThisMenu, `,, _, All
+	StringReplace, ThisMenu, ThisMenu, `", _, All
+	StringReplace, ThisMenu, ThisMenu, `%, _, All
+	StringReplace, ThisMenu, ThisMenu, `;, _, All
+	StringReplace, ThisMenu, ThisMenu, % "	", _, All
+	StringReplace, ThisMenu, ThisMenu, %A_Space%, _, All
+	f_Menu_%ThisMenu% := Temp
+	return ThisMenu
+}
+
+f_LastIsBackslash(ThisPath)
+{
+	if SubStr(ThisPath, 0) = "\" ; if last is \
+	{
+		StringTrimRight, ThisPath, ThisPath, 1 ; trim last \
+		Loop ; prevent 砛籠 problem
+		{
+			if ThisPath =
+				return Mod(A_Index, 2)
+			if Asc(SubStr(ThisPath, 0)) < 128 ; if last char is not lead byte
+				return Mod(A_Index, 2) ; if 1, last char is \
+			else
+				StringTrimRight, ThisPath, ThisPath, 1 ; trim last, go to next char
+		}
+	}
+	else
+		return 0
+}
+
+f_SplitPath(ThisPath, ByRef FileName, ByRef Dir)
+{
+	Temp = %ThisPath%
+	Loop
+	{
+		if f_LastIsBackslash(Temp)
+		{
+			FileNameLength := A_Index-1
+			break
+		}
+		else
+			StringTrimRight, Temp, Temp, 1 ; trim last, go to next char
+	}
+	StringRight, FileName, ThisPath, FileNameLength
+	StringTrimRight, Dir, ThisPath, FileNameLength+1
+	return
+}
+
+f_SendBig5(xx) ; Thanks to Lumania @ Ptt
+{
+	i := StrLen(xx)
+	if i=0
+		return
+	Loop
+	{
+		tmp1 := NumGet(xx, 0, "UChar")
+		if tmp1<128
+		{
+			i--
+			StringTrimLeft, xx, xx, 1
+		}
+		else
+		{
+			tmp1 := (tmp1<<8) | NumGet(xx, 1, "UChar")
+			i -= 2
+			StringTrimLeft, xx, xx, 2
+		}
+		Send, {ASC %tmp1%}
+		if i = 0
+			break
+	}
+}
+
+f_Split2(String, Seperator, ByRef LeftStr, ByRef RightStr)
+{
+	SplitPos := InStr(String, Seperator)
+	if SplitPos = 0 ; Seperator not found, L = Str, R = ""
+	{
+		LeftStr := String
+		RightStr:= ""
+	}
+	else
+	{
+		SplitPos--
+		StringLeft, LeftStr, String, %SplitPos%
+		SplitPos++
+		StringTrimLeft, RightStr, String, %SplitPos%
+	}
+	return
 }

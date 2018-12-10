@@ -665,7 +665,7 @@ f_OpenPath(ThisPath)
 
 	if w_Edit1Pos =
 	{
-		Run, explorer /n %ThisPath%, , UseErrorLevel	; Might work on more systems without double quotes.
+		Run, "explorer.exe /n " "%ThisPath%", , UseErrorLevel	; Might work on more systems without double quotes.
 		if ErrorLevel
         f_RunPath(ThisPath)
 	}
@@ -828,7 +828,12 @@ f_RunPath(ThisPath)
 	Run, %ThisPath%, , UseErrorLevel ; run a file or url
 	if ErrorLevel
 	{
-		if f_OpenReg(ThisPath) ; open reg
+		if (RegExMatch(ThisPath,"i)^(\[|HKCU|HKCR|HKCC|HKU|HKLM|HKEY_)"))
+		{
+			f_OpenReg(ThisPath) ; open reg
+		return 0
+		}
+		else
 		{
 			TrayTip, 错误, 不能打开`n`"%ThisPath%`", , 3
 			return 1
@@ -868,8 +873,6 @@ f_GetPathEdit(ThisID) ; get the classnn of the addressbar, thanks to F1reW1re
 	}
 	return
 }
-
-
 
 ;==================== Add Favorite ====================;
 
@@ -990,7 +993,6 @@ f_GetName(ThisPath)
 		ThisName = %ThisPath%
 	return ThisName
 }
-
 ;==================== Get Win Class Hotkey ====================;
 
 f_AddApp:
@@ -1062,7 +1064,7 @@ f_OpenSelected(SelectedPath)
 		StringTrimRight, SelectedPath, SelectedPath, 1
 	if SelectedPath !=
 	{
-		Run, explorer /n %SelectedPath%, , UseErrorLevel
+		Run, "explorer.exe /n " "%SelectedPath%", , UseErrorLevel
 		if ErrorLevel
             if f_RunPath(SelectedPath)
 			{
@@ -1078,77 +1080,58 @@ f_OpenSelected(SelectedPath)
 	return
 }
 
-
-
 ;==================== Functions ====================;
-
-f_Split2(String, Seperator, ByRef LeftStr, ByRef RightStr)
-{
-	SplitPos := InStr(String, Seperator)
-	if SplitPos = 0 ; Seperator not found, L = Str, R = ""
-	{
-		LeftStr := String
-		RightStr:= ""
-	}
-	else
-	{
-		SplitPos--
-		StringLeft, LeftStr, String, %SplitPos%
-		SplitPos++
-		StringTrimLeft, RightStr, String, %SplitPos%
-	}
-	return
-}
-
 f_OpenReg(RegPath)
 {
+	RegPath:=LTrim(RegPath, "[")
+	RegPath:=RTrim(RegPath, "]")
 	StringLeft, RegPathFirst4, RegPath, 4
 	if RegPathFirst4 = HKCR
 		StringReplace, RegPath, RegPath, HKCR, HKEY_CLASSES_ROOT
-	if RegPathFirst4 = HKCU
+	else if RegPathFirst4 = HKCU
 		StringReplace, RegPath, RegPath, HKCU, HKEY_CURRENT_USER
-	if RegPathFirst4 = HKLM
+	else if RegPathFirst4 = HKLM
 		StringReplace, RegPath, RegPath, HKLM, HKEY_LOCAL_MACHINE
+	else if RegPathFirst4 = HKCC
+		StringReplace, RegPath, RegPath, HKCC, HKEY_CURRENT_CONFIG
+	else if RegPathFirst4 = HKU
+		StringReplace, RegPath, RegPath, HKU, HKEY_USERS
+	; 替换字串中第一个“, ”为"\"
+	StringReplace,RegPath,RegPath,`,%A_Space%,\
+	; 替换字串中第一个“,”为"\"
+	StringReplace,RegPath,RegPath,`, ,\
+	; 将字串中的所有"＼"(全角) 替换为“\"(半角)
+	StringReplace,RegPath,RegPath,＼,\,All
+	StringReplace,RegPath,RegPath,%A_Space%\,\,All
+	StringReplace,RegPath,RegPath,\%A_Space%,\,All
+	; 将字串中的所有“\\”替换为“\”
+	StringReplace,RegPath,RegPath,\\,\,All
 
-	StringLeft, RegPathFirst4, RegPath, 4
-	if RegPathFirst4 = HKEY
+	RegRead, MyComputer, HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Applets\Regedit, LastKey
+	f_Split2(MyComputer, "\", MyComputer, aaa)
+
+	IfWinExist, ahk_class RegEdit_RegEdit
 	{
-		RegRead, MyComputer, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Applets\Regedit, LastKey
-		f_Split2(MyComputer, "\", MyComputer, aaa)
 		Global s_DontKillReg
 		if !s_DontKillReg
+		{
 			RunWait, % "cmd.exe /c taskkill /IM regedit.exe", , Hide
-		RegWrite, REG_SZ, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Applets\Regedit, LastKey, %MyComputer%\%RegPath%
-		Run regedit
-		return 0
+			RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Applets\Regedit, LastKey, %RegPath%
+			Run, regedit.exe
+		Return
+		}
+		IfNotInString, RegPath, %MyComputer%\
+			RegPath := MyComputer "\" RegPath
+		WinActivate, ahk_class RegEdit_RegEdit
+		ControlGet, hwnd, hwnd, , SysTreeView321, ahk_class RegEdit_RegEdit
+		TVPath_Set(hwnd, RegPath, matchPath)
 	}
-	else
-		return 1
-}
-
-f_SendBig5(xx) ; Thanks to Lumania @ Ptt
-{
-	i := StrLen(xx)
-	if i=0
-		return
-	Loop
+	Else
 	{
-		tmp1 := NumGet(xx, 0, "UChar")
-		if tmp1<128
-		{
-			i--
-			StringTrimLeft, xx, xx, 1
-		}
-		else
-		{
-			tmp1 := (tmp1<<8) | NumGet(xx, 1, "UChar")
-			i -= 2
-			StringTrimLeft, xx, xx, 2
-		}
-		Send, {ASC %tmp1%}
-		if i = 0
-			break
+		RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Applets\Regedit, LastKey, %RegPath%
+		Run, regedit.exe ;-m
 	}
+return
 }
 
 f_SetMenuIcon(Menu, Item, IconPath, Size="") ; Index start from 0, index included in IconPath
@@ -1174,15 +1157,6 @@ f_SetMenuIcon(Menu, Item, IconPath, Size="") ; Index start from 0, index include
 		Menu, Tray, UseErrorLevel, OFF
 	}
 	return
-}
-
-f_DerefPath(ThisPath)
-{
-	StringReplace, ThisPath, ThisPath, ``, ````, All
-;	StringReplace, ThisPath, ThisPath, `%, ```%, All
-	StringReplace, ThisPath, ThisPath, `%F_CurrentDir`%, ```%F_CurrentDir```%, All
-	Transform, ThisPath, deref, %ThisPath%
-	return ThisPath
 }
 
 f_GetIcon(ThisPath)
@@ -1395,77 +1369,6 @@ f_ItemPathExist(ThisPath)
 		if ItemPath = %ThisPath%
 			return s_Favorites%A_Index%
 	}
-	return
-}
-
-f_TrimVarName(ThisMenu){
-	Local Temp := ThisMenu
-	StringReplace, ThisMenu, ThisMenu, @, _, All
-	StringReplace, ThisMenu, ThisMenu, !, _, All
-	StringReplace, ThisMenu, ThisMenu, &, _, All
-	StringReplace, ThisMenu, ThisMenu, ', _, All
-	StringReplace, ThisMenu, ThisMenu, (, _, All
-	StringReplace, ThisMenu, ThisMenu, ), _, All
-	StringReplace, ThisMenu, ThisMenu, *, _, All
-	StringReplace, ThisMenu, ThisMenu, +, _, All
-	StringReplace, ThisMenu, ThisMenu, -, _, All
-	StringReplace, ThisMenu, ThisMenu, ., _, All
-	StringReplace, ThisMenu, ThisMenu, /, _, All
-	StringReplace, ThisMenu, ThisMenu, :, _, All
-	StringReplace, ThisMenu, ThisMenu, <, _, All
-	StringReplace, ThisMenu, ThisMenu, =, _, All
-	StringReplace, ThisMenu, ThisMenu, >, _, All
-	StringReplace, ThisMenu, ThisMenu, \, _, All
-	StringReplace, ThisMenu, ThisMenu, ^, _, All
-	StringReplace, ThisMenu, ThisMenu, {, _, All
-	StringReplace, ThisMenu, ThisMenu, |, _, All
-	StringReplace, ThisMenu, ThisMenu, }, _, All
-	StringReplace, ThisMenu, ThisMenu, ~, _, All
-	StringReplace, ThisMenu, ThisMenu, ``, _, All
-	StringReplace, ThisMenu, ThisMenu, `,, _, All
-	StringReplace, ThisMenu, ThisMenu, `", _, All
-	StringReplace, ThisMenu, ThisMenu, `%, _, All
-	StringReplace, ThisMenu, ThisMenu, `;, _, All
-	StringReplace, ThisMenu, ThisMenu, % "	", _, All
-	StringReplace, ThisMenu, ThisMenu, %A_Space%, _, All
-	f_Menu_%ThisMenu% := Temp
-	return ThisMenu
-}
-
-f_LastIsBackslash(ThisPath)
-{
-	if SubStr(ThisPath, 0) = "\" ; if last is \
-	{
-		StringTrimRight, ThisPath, ThisPath, 1 ; trim last \
-		Loop ; prevent 砛籠 problem
-		{
-			if ThisPath =
-				return Mod(A_Index, 2)
-			if Asc(SubStr(ThisPath, 0)) < 128 ; if last char is not lead byte
-				return Mod(A_Index, 2) ; if 1, last char is \
-			else
-				StringTrimRight, ThisPath, ThisPath, 1 ; trim last, go to next char
-		}
-	}
-	else
-		return 0
-}
-
-f_SplitPath(ThisPath, ByRef FileName, ByRef Dir)
-{
-	Temp = %ThisPath%
-	Loop
-	{
-		if f_LastIsBackslash(Temp)
-		{
-			FileNameLength := A_Index-1
-			break
-		}
-		else
-			StringTrimRight, Temp, Temp, 1 ; trim last, go to next char
-	}
-	StringRight, FileName, ThisPath, FileNameLength
-	StringTrimRight, Dir, ThisPath, FileNameLength+1
 	return
 }
 
@@ -2179,74 +2082,6 @@ f_GetExplorerList() ; Thanks to F1reW1re
 	return PathList
 }
 
-f_ToggleFileExt()
-{
-	RootKey = HKEY_CURRENT_USER
-	SubKey  = Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
-	RegRead, HideFileExt    , % RootKey, % SubKey, HideFileExt
-	if HideFileExt = 1
-		RegWrite, REG_DWORD, % RootKey, % SubKey, HideFileExt, 0
-	else
-		RegWrite, REG_DWORD, % RootKey, % SubKey, HideFileExt, 1
-	f_RefreshExplorer()
-	return
-}
-
-f_ToggleHidden() ; thanks to Mr. Milk
-{
-	RootKey = HKEY_CURRENT_USER
-	SubKey  = Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
-	RegRead, HiddenFiles_Status, % RootKey, % SubKey, Hidden
-	if HiddenFiles_Status = 2
-	{
-		RegWrite, REG_DWORD, % RootKey, % SubKey, Hidden, 1
-		RegWrite, REG_DWORD, % RootKey, % SubKey, ShowSuperHidden, 1
-	}
-	else
-	{
-		RegWrite, REG_DWORD, % RootKey, % SubKey, Hidden, 2
-		RegWrite, REG_DWORD, % RootKey, % SubKey, ShowSuperHidden, 0
-	}
-	f_RefreshExplorer()
-	return
-}
-
-f_RefreshExplorer()
-{
-	WinGet, w_WinID, ID, ahk_class Progman
-	if Vista7
-		SendMessage, 0x111, 0x1A220,,, ahk_id %w_WinID%
-	else
-		SendMessage, 0x111, 0x7103,,, ahk_id %w_WinID%
-	WinGet, w_WinIDs, List, ahk_class CabinetWClass
-	Loop, %w_WinIDs%
-	{
-		w_WinID := w_WinIDs%A_Index%
-		if Vista7
-			SendMessage, 0x111, 0x1A220,,, ahk_id %w_WinID%
-		else
-			SendMessage, 0x111, 0x7103,,, ahk_id %w_WinID%
-	}
-	WinGet, w_WinIDs, List, ahk_class ExploreWClass
-	Loop, %w_WinIDs%
-	{
-		w_WinID := w_WinIDs%A_Index%
-		if Vista7
-			SendMessage, 0x111, 0x1A220,,, ahk_id %w_WinID%
-		else
-			SendMessage, 0x111, 0x7103,,, ahk_id %w_WinID%
-	}
-	WinGet, w_WinIDs, List, ahk_class #32770
-	Loop, %w_WinIDs%
-	{
-		w_WinID := w_WinIDs%A_Index%
-		ControlGet, w_CtrID, Hwnd,, SHELLDLL_DefView1, ahk_id %w_WinID%
-		if w_CtrID !=
-			SendMessage, 0x111, 0x7103,,, ahk_id %w_CtrID%
-	}
-	return
-}
-
 f_CreateSVSMenu() ; thanks to Mr. Milk
 {
 	Global
@@ -2300,8 +2135,6 @@ f_CreateSVSMenu() ; thanks to Mr. Milk
 	f_SetMenuIcon("SVSMenu", "Run SVS Admin", f_Icons . ",-311")
 	return
 }
-
-
 
 ;==================== Labels ====================;
 ;f_RButton:

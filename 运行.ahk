@@ -1585,7 +1585,6 @@ return
 #include %A_ScriptDir%\Script\winpad.ahk
 #include %A_ScriptDir%\Script\Explorer_DeskIcons.ahk
 #include %A_ScriptDir%\Script\Explorer_7plus右键菜单.ahk
-#include %A_ScriptDir%\Script\Explorer_显示隐藏文件.ahk
 #include %A_ScriptDir%\Script\Explorer_重新打开关闭的窗口.ahk
 #include %A_ScriptDir%\Script\鼠标自动激活窗口.ahk
 #include %A_ScriptDir%\Script\时间_报时和定时任务.ahk
@@ -1597,6 +1596,8 @@ return
 #include %A_ScriptDir%\Script\关机对话框.ahk
 #include %A_ScriptDir%\Script\cliphistory.ahk
 #include %A_ScriptDir%\Lib\Clip.ahk
+#include %A_ScriptDir%\Lib\Variables.ahk
+#include %A_ScriptDir%\Lib\Functions.ahk
 #include %A_ScriptDir%\Lib\Explorer.ahk
 #include %A_ScriptDir%\Lib\Menu.ahk
 #include %A_ScriptDir%\Lib\Window.ahk

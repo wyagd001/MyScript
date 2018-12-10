@@ -12,9 +12,9 @@ GuiControl,text,Dir,%dir%
 changeComboBox=0
 }
 
-	If(RegExMatch(dir,"i)^(HKCU|HKCR|HKCC|HKU|HKLM|HKEY_)"))
+	If(RegExMatch(dir,"i)^(\[|HKCU|HKCR|HKCC|HKU|HKLM|HKEY_)"))
 	{
- jumptoregedit(dir)
+ f_OpenReg(dir)
 	Return
 	}
 
@@ -115,7 +115,7 @@ Else If (OpenButton_Cmd_Str1="Proxy")
 	}
 Else If (OpenButton_Cmd_Str1="regedit")  
 {
-jumptoregedit(OpenButton_Cmd_Str2)
+f_OpenReg(OpenButton_Cmd_Str2)
 return
 }
 Else If (OpenButton_Cmd_Str1="转换")  
@@ -274,64 +274,6 @@ CreateNamedPipe(Name, OpenMode=3, PipeMode=0, MaxInstances=255)
 	global ptr
 Return DllCall("CreateNamedPipe","str","\\.\pipe\" Name,"uint",OpenMode
         ,"uint",PipeMode,"uint",MaxInstances,"uint",0,"uint",0,ptr,0,ptr,0)
-}
-
-jumptoregedit(dir)
-{
-; 替换字串中第一个“, ”为"\"
-	StringReplace,dir,dir,`,%A_Space%,\
-; 替换字串中第一个“,”为"\"
-	StringReplace,dir,dir,`, ,\
-	IfInString, dir,HKLM
-	{
-		StringTrimLeft, cutdir, dir, 4
-		dir := "HKEY_LOCAL_MACHINE" . cutdir
-	}
-	IfInString, dir,HKCR
-	{
-		StringTrimLeft, cutdir, dir, 4
-		dir := "HKEY_CLASSES_ROOT" . cutdir
-	}
-	IfInString, dir,HKCC
-	{
-		StringTrimLeft, cutdir, dir, 4
-		dir := "HKEY_CURRENT_CONFIG" . cutdir
-	}
-	IfInString, dir,HKCU
-	{
-		StringTrimLeft, cutdir, dir, 4
-		dir := "HKEY_CURRENT_USER" . cutdir
-	}
-	IfInString, dir,HKU
-	{
-		StringTrimLeft, cutdir, dir, 3
-		dir := "HKEY_USERS" . cutdir
-	}
-; 将字串中的所有"＼"(全角) 替换为“\"(半角)
-	StringReplace,dir,dir,＼,\,All
-	StringReplace,dir,dir,%A_Space%\,\,All
-	StringReplace,dir,dir,\%A_Space%,\,All
-
-; 将字串中的所有“\\”替换为“\”
-	StringReplace,dir,dir,\\,\,All
-
-	dir:=LTrim(dir, "[")
-	dir:=RTrim(dir, "]")
-
-	IfWinExist, 注册表编辑器 ahk_class RegEdit_RegEdit
-	{
-		IfNotInString, dir, 计算机\
-		dir := "计算机\" . dir
-		WinActivate, 注册表编辑器
-		ControlGet, hwnd, hwnd, , SysTreeView321, 注册表编辑器
-		TVPath_Set(hwnd, dir, matchPath)
-	}
-	Else
-	{
-		RegWrite, REG_SZ, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Applets\Regedit, LastKey, %dir%
-		Run, regedit.exe -m
-	}
-return
 }
 
 sendq:

@@ -350,7 +350,7 @@ GetUnderMouseInfo:
 	WinGetClass, _aClass, A
 Return
 
-; http://ahk8.com/thread-2503.html
+; http://www.ahkcn.net/thread-2503.html
 PerformWheel(bUp, wheelcount)
 {
 	MouseGetPos, _x, _y, _id, _control,2

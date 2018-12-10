@@ -4,11 +4,11 @@ TriggerFromContextMenu(wParam, lParam){
 Return
 
 1001:
-	Gosub,显示隐藏文件
+	f_ToggleHidden(1)
 Return
 
 1002:
-	Gosub,文件扩展名切换
+	f_ToggleFileExt(1)
 Return
 
 1007:

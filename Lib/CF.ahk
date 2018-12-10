@@ -29,6 +29,11 @@ CF_RegWrite(ValueType, RootKey, SubKey, ValueName="", Value="") {
 Return
 }
 
+StringReplace(InputVar, SearchText, ReplaceText = "", All = "") {
+	StringReplace, v, InputVar, %SearchText%, %ReplaceText%, %All%
+	Return, v
+}
+
 CF_ToolTip(tipText, delay := 1000)
 {
 	ToolTip, % tipText
@@ -40,43 +45,19 @@ RemoveToolTip:
 return
 }
 
-IsStingFunc(str:="")
+CF_Traytip(tipTitle, tipText, delay := 1000,Options:=0)
 {
-	strfunc:=StrSplit(str,"(")
-	If IsFunc(strfunc[1])
-	return 1
-	else
-	return 0
-}
+	Traytip, % tipTitle, % tipText, ,% Options
+	SetTimer, RemoveTraytip, % "-" delay
+return
 
-RunStingFunc(str:="")
-{
-	strfunc:=StrSplit(str, "(", ")")
-	tempfunc:=strfunc[1]
-	params:=StrSplit(strfunc[2], ",")
-	if (params.MaxIndex() = "")
+RemoveTraytip:
+	TrayTip
+	if SubStr(A_OSVersion,1,3) = "10."
 	{
-		%tempfunc%()
-	return
+		Menu Tray, NoIcon
+		Sleep 200  ; 可能有必要调整 sleep 的时间.
+		Menu Tray, Icon
 	}
-	else if (params.MaxIndex() = 1)
-	{
-		%tempfunc%(params[1])
-	return
-	}
-	else if (params.MaxIndex() = 2)
-	{
-		%tempfunc%(params[1],params[2])
-	return
-	}
-	else if (params.MaxIndex() = 3)
-	{
-		%tempfunc%(params[1],params[2],params[3])
-	return
-	}
-	else (params.MaxIndex() = 4)
-	{
-		%tempfunc%(params[1],params[2],params[3],params[4])
-	return
-	}
+return
 }

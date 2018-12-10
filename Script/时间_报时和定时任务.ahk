@@ -2,7 +2,7 @@
 JowAlert.ahk  V1.1     作者：wz520
 http://ahk.5d6d.com/viewthread.php?tid=830
 http://ahk.5d6d.com/thread-898-1-1.html
-http://ahk8.com/thread-629.html
+http://www.ahkcn.net/thread-629.html
 */
 实时报时:
   SoundPlay, %A_ScriptDir%\Sound\domisodo.wav, Wait

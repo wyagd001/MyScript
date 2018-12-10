@@ -1,4 +1,5 @@
-lrcPause(x){
+lrcPause(x)
+{
 	global
 	Stime:=starttime
 	If x=0
@@ -8,16 +9,16 @@ lrcPause(x){
 Return
 
 lrcpause:
-		passedtime:=A_TickCount-Pausetime
-		starttime:=Stime+passedtime
+	passedtime:=A_TickCount-Pausetime
+	starttime:=Stime+passedtime
 Return
 }
 
 lrcECHO(lrcfile,GuiTitle){
 	global
 	Gui, 2:+LastFound
-	WinSet, TransColor, FF0F0F
-	WinSet, ExStyle, +0x20
+	;WinSet, TransColor, FF0F0F
+	;WinSet, ExStyle, +0x20
 	if hidelrc=0
 		Gui, 2:Show, NoActivate, %GuiTitle% - AhkPlayer  ; 不激活窗体避免改变当前激活的窗口
 

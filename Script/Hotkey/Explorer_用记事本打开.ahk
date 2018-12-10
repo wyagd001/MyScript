@@ -4,24 +4,46 @@ Return
 
 EditSelectedFiles()
 {
-	global ImageExtensions,TextEditor,ImageEditor
+	global TextEditor,ImageEditor,DefaultPlayer
 	ImageExtensions = jpg,png,bmp,gif,tga,tif,ico,jpeg
+	audioExtensions = wma,mp3,wav,mdi
 	files:=GetSelectedFiles()
-	SplitByExtension(files, splitfiles, ImageExtensions)
+	SplitByExtension(files, Imagesplitfiles, ImageExtensions)
+	SplitByExtension(files, audiosplitfiles, audioExtensions)
 	files:=RemoveLineFeedsAndSurroundWithDoubleQuotes(files)
-	splitfiles:=RemoveLineFeedsAndSurroundWithDoubleQuotes(splitfiles)
+	Imagesplitfiles:=RemoveLineFeedsAndSurroundWithDoubleQuotes(Imagesplitfiles)
+	audiosplitfiles:=RemoveLineFeedsAndSurroundWithDoubleQuotes(audiosplitfiles)
 	x:=ExpandEnvVars(TextEditor)
 	y:=ExpandEnvVars(ImageEditor)
+	z:=% %DefaultPlayer%
 	if(!FileExist(x))
-    TrayTip,ÉèÖÃ´íÎó,ÎÄ±¾±à¼­Æ÷µÄÂ·¾¶´íÎó£¡,3
+{
+		TrayTip,ÉèÖÃ´íÎó,Ä¬ÈÏÎÄ±¾±à¼­Æ÷µÄÂ·¾¶´íÎó£¡,3
+return
+}
 	if(!FileExist(y))
-	 TrayTip,ÉèÖÃ´íÎó,Í¼Æ¬±à¼­Æ÷µÄÂ·¾¶´íÎó£¡,3
-	if (files || splitfiles)
+{
+		TrayTip,ÉèÖÃ´íÎó,Ä¬ÈÏÍ¼Æ¬±à¼­Æ÷µÄÂ·¾¶´íÎó£¡,3
+return
+}
+	if(!FileExist(z))
+{
+		TrayTip,ÉèÖÃ´íÎó,Ä¬ÈÏÒôÆµ²¥·ÅÆ÷µÄÂ·¾¶´íÎó£¡,3
+return
+}
+	if (files || Imagesplitfiles ||audiosplitfiles)
 	{
 		if files
 			run %x% %files%
-		if splitfiles
-			run %y% %splitfiles%
+		if Imagesplitfiles
+			run %y% %Imagesplitfiles%
+		if audiosplitfiles
+		{
+			if (DefaultPlayer != "AhkPlayer")
+				Run "%z%" %audiosplitfiles%
+			else
+				run %A_AhkPath% "%z%" %audiosplitfiles%
+		}
 	}
 	else
 		SendInput {F6}

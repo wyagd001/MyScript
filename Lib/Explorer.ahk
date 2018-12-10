@@ -256,18 +256,9 @@ GetSelectedFiles(FullName=1, hwnd=0)
 			ControlFocus DirectUIHWND2, A
 		}
 		MuteClipboardList := true
-		clipboardbackup := clipboardall
-		outputdebug clearing clipboard
-		clipboard := ""
-		ClipWait, 0.05, 1
-		outputdebug copying files to clipboard
-		Send ^c
-		ClipWait, 0.05, 1
-		result := clipboard
-		clipboard := clipboardbackup
+		result := GetSelText()
 		If(x=1)
 			ControlFocus %focussed%, A
-		OutputDebug, Selected Files: %result%
 		MuteClipboardList:=false
 		Return result
 	}
@@ -309,7 +300,6 @@ GetSelectedFiles(FullName=1, hwnd=0)
 	}
 	; }
 }
-
 
 IsDialog(window=0)
 {
@@ -461,12 +451,6 @@ XPGetFocussed()
   }
 }
 
-strStartsWith(string,start)
-{
-	x:=(strlen(start)<=strlen(string)&&Substr(string,1,strlen(start))=start)
-	Return x
-}
-
 IsInArea(px,py,x,y,w,h)
 {
 	Return (px>x&&py>y&&px<x+w&&py<y+h)
@@ -517,6 +501,90 @@ RefreshExplorer()
 		Send {F5}
 	Else
 		Send {F5}
+}
+
+f_ToggleHidden(TipType:=0) ; thanks to Mr. Milk
+{
+	RootKey = HKEY_CURRENT_USER
+	SubKey  = Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+	RegRead, HiddenFiles_Status, % RootKey, % SubKey, Hidden
+	if HiddenFiles_Status = 2
+	{
+		RegWrite, REG_DWORD, % RootKey, % SubKey, Hidden, 1
+		RegWrite, REG_DWORD, % RootKey, % SubKey, ShowSuperHidden, 1
+		if TipType=1
+			CF_Traytip("资源管理器","显示隐藏文件",3000,1)
+		if TipType=2
+			CF_ToolTip("显示隐藏文件",3000)
+	}
+	else
+	{
+		RegWrite, REG_DWORD, % RootKey, % SubKey, Hidden, 2
+		RegWrite, REG_DWORD, % RootKey, % SubKey, ShowSuperHidden, 0
+		if TipType=1
+			CF_Traytip("资源管理器","隐藏文件",3000,1)
+		if TipType=2
+			CF_ToolTip("隐藏文件",3000)
+	}
+	f_RefreshExplorer()
+return
+}
+
+f_ToggleFileExt(TipType:=0)
+{
+	RootKey = HKEY_CURRENT_USER
+	SubKey  = Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced
+	RegRead, HideFileExt    , % RootKey, % SubKey, HideFileExt
+	if HideFileExt = 1
+	{
+		RegWrite, REG_DWORD, % RootKey, % SubKey, HideFileExt, 0
+		if TipType=1
+			CF_Traytip("资源管理器","显示文件扩展名",3000,1)
+		if TipType=2
+			CF_ToolTip("显示文件扩展名",3000)
+	}
+	else
+	{
+		RegWrite, REG_DWORD, % RootKey, % SubKey, HideFileExt, 1
+		if TipType=1
+			CF_Traytip("资源管理器","隐藏文件扩展名",3000,1)
+		if TipType=2
+			CF_ToolTip("隐藏文件扩展名",3000)
+	}
+	f_RefreshExplorer()
+return
+}
+
+f_RefreshExplorer()
+{
+	wParam := Vista7 ? 0x1A220 : 0x7103
+	WinGet, w_WinID, ID, ahk_class Progman
+	SendMessage, 0x111, % wParam,,, ahk_id %w_WinID%
+	WinGet, w_WinID, ID, ahk_class WorkerW
+	SendMessage, 0x111, % wParam,,, ahk_id %w_WinID%
+	WinGet, w_WinIDs, List, ahk_class CabinetWClass
+	Loop, %w_WinIDs%
+	{
+		w_WinID := w_WinIDs%A_Index%
+		SendMessage, 0x111, % wParam,,, ahk_id %w_WinID%
+	}
+	WinGet, w_WinIDs, List, ahk_class ExploreWClass
+	Loop, %w_WinIDs%
+	{
+		w_WinID := w_WinIDs%A_Index%
+		SendMessage, 0x111, % wParam,,, ahk_id %w_WinID%
+	}
+	WinGet, w_WinIDs, List, ahk_class #32770
+	Loop, %w_WinIDs%
+	{
+		w_WinID := w_WinIDs%A_Index%
+		ControlGet, w_CtrID, Hwnd,, SHELLDLL_DefView1, ahk_id %w_WinID%
+		if w_CtrID !=
+			SendMessage, 0x111, 0x7103,,, ahk_id %w_CtrID%
+	}
+	; 刷新桌面
+	DllCall("Shell32\SHChangeNotify", "uint", 0x8000000, "uint", 0x1000, "uint", 0, "uint", 0)
+return
 }
 
 CreateNewFolder()
@@ -590,7 +658,6 @@ CreateNewTextFile()
     Send     {F2}
 	Return
 }
-
 
 IsMouseOverFileList()
 {
@@ -670,59 +737,6 @@ ToArray(SourceFiles, ByRef Separator = "`n", ByRef wasQuoted = 0)
 	Return files
 }
 
-StringReplace(InputVar, SearchText, ReplaceText = "", All = "") {
-	StringReplace, v, InputVar, %SearchText%, %ReplaceText%, %All%
-	Return, v
-}
-
-ExpandEnvVars(ppath)
-{
-	VarSetCapacity(dest, 2000)
-	DllCall("ExpandEnvironmentStrings", "str", ppath, "str", dest, int, 1999, "Cdecl int")
-	Return dest
-}
-
-strEndsWith(string,end)
-{
-	Return strlen(end)<=strlen(string) && Substr(string,-strlen(end)+1)=end
-}
-
-strTrim(string, trim)
-{
-	Return strTrimLeft(strTrimRight(string,trim),trim)
-}
-
-strTrimLeft(string,trim)
-{
-	len:=strLen(trim)
-	while(strStartsWith(string,trim))
-	{
-		StringTrimLeft, string, string, %len%
-	}
-	Return string
-}
-
-strTrimRight(string,trim)
-{
-	len:=strLen(trim)
-	If(strEndsWith(string,trim))
-	{
-		StringTrimRight, string, string, %len%
-	}
-	Return string
-}
-
-
-richObject(){
-   static richObject
-   If !richObject
-      richObject := Object("base", Object("print", "objPrint", "copy", "objCopy"
-                             , "deepCopy", "objDeepCopy", "equal", "objEqual"
-             , "flatten", "objFlatten"  ))
-
-   Return  Object("base", richObject)
-}
-
 Explorer_GetPath(hwnd="")
 {
    If !(window := Explorer_GetWindow(hwnd))
@@ -779,7 +793,6 @@ InFileList()
 	}
 	Return false
 }
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;ShellContextMenu.ahk;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 /*
@@ -1026,4 +1039,3 @@ SetDialogDirectory(Path)
 	ControlSetText, Edit1, %w_Edit1Text%, A
 	ControlFocus %focussed%,A
 }
-

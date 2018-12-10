@@ -26,8 +26,8 @@ IniRead, TTPlayer, %run_iniFile%, AudioPlayer, TTPlayer
 IniRead, AutoUpdateMediaLib, %run_iniFile%, AhkPlayer, AutoUpdateMediaLib
 IniRead, Lrcfontcolor, %run_iniFile%, AhkPlayer, Lrcfontcolor
 IniRead, LrcPath, %run_iniFile%, AhkPlayer, LrcPath
-IfnotExist,%LrcPath%
-  IniRead, LrcPath, %run_iniFile%, 路径设置, LrcPath
+IniRead, LrcPath_Win10, %run_iniFile%, AhkPlayer, LrcPath_Win10
+IniRead, LrcPath_2, %run_iniFile%, 路径设置, LrcPath
 IniRead, followmouse, %run_iniFile%, AhkPlayer, followmouse
 IniRead, PlayListdefalut, %run_iniFile%, AhkPlayer, PlayListdefalut
 IniRead, PlayRandom, %run_iniFile%, AhkPlayer, PlayRandom
@@ -35,19 +35,35 @@ IniRead, huifushangci, %run_iniFile%, AhkPlayer, huifushangci
 
 hidelrc=0
 PlaylistIndex:=0
+LrcPath:=(SubStr(A_OSVersion, 1, 2)=10)?LrcPath_Win10:LrcPath
+LrcPath:=FileExist(LrcPath)?LrcPath:(FileExist(LrcPath_2)?LrcPath_2:"")
 AhkMediaLibFile = %A_ScriptDir%\settings\AhkPlayer\mp3s.txt
 AhkMediaListFile =  %A_ScriptDir%\settings\AhkPlayer\playlist.txt
-If (PlayListdefalut="t")
-NowPlayFile := AhkMediaListFile
+If (PlayListdefalut="t") || A_Args.Length()>0
+{
+	NowPlayFile := AhkMediaListFile
+	if A_Args.Length()>0
+	{
+		IniWrite, % A_Args[A_Args.Length()], %run_iniFile%, AhkPlayer, Mp3Playing
+		for n, param in A_Args
+		{
+			SplitPath, param,,,ext
+			If ext in mp3,wma,wmv,wav,mpg,mid			;这是我目前已知的能用soundplay播放的格式
+				Fileappend,%param%`n, %AhkMediaListFile%
+		}
+	}
+}
 else
-NowPlayFile := AhkMediaLibFile
+	NowPlayFile := AhkMediaLibFile
 
-Gui, 2: +alwaysontop -Caption +Owner -SysMenu
+Gui, 2: +LastFound +alwaysontop -Caption +Owner -SysMenu
 Gui, 2:Margin, 0
 Gui, 2:Color, FF0F0F
 Gui, 2:Font, s24,msyh    ;Gui, 2:Font, s24 bold
 Gui, 2:add, Text, w1000 r1.9 c%Lrcfontcolor% vlrc,
 posy:=A_ScreenHeight-130
+WinSet, TransColor, FF0F0F
+WinSet, ExStyle, +0x20
 Gui, 2:Show, Hide x150 y%posy%
 
 Menu, FileMenu, Add, 添加文件(&F), MenuFileAdd
@@ -86,26 +102,26 @@ Menu, Lib, Add, 启动自动更新媒体库(&A),AutoUpdateMediaLib
 Menu, Help, Add, 关于(&A), About
 Menu,PlayBack,Disable,--下一首跟随鼠标(&F)
 If (PlayRandom="t")
-Menu,PlayBack,Check,随机播放(&R)
+	Menu,PlayBack,Check,随机播放(&R)
 
 If (PlayListdefalut="t")
 {
-Menu,PlayBack,Enable,--下一首跟随鼠标(&F)
-Menu,PlayBack,Check,播放列表(&L)
-If (followmouse="t")
-Menu,PlayBack,Check,--下一首跟随鼠标(&F)
-Menu,PlayBack,Disable,播放列表(&L)
+	Menu,PlayBack,Enable,--下一首跟随鼠标(&F)
+	Menu,PlayBack,Check,播放列表(&L)
+	If (followmouse="t")
+		Menu,PlayBack,Check,--下一首跟随鼠标(&F)
+	Menu,PlayBack,Disable,播放列表(&L)
 }
 Else
 {
-Menu, PlayBack, Check,播放媒体库(&M)
-Menu,PlayBack,Disable,播放媒体库(&M)
+	Menu, PlayBack, Check,播放媒体库(&M)
+	Menu,PlayBack,Disable,播放媒体库(&M)
 }
 
 if (AutoUpdateMediaLib="t")
-Menu, Lib, Check,启动自动更新媒体库(&A)
+	Menu, Lib, Check,启动自动更新媒体库(&A)
 if (huifushangci = "t")
-Menu, Lib, Check,启动恢复上次播放(&H)
+	Menu, Lib, Check,启动恢复上次播放(&H)
 
 Menu, MyMenuBar, Add, 文件(&F), :FileMenu
 Menu, MyMenuBar, Add, 编辑(&E), :EditMenu
@@ -120,87 +136,75 @@ SetTimer,CheckStatus,250
 SetTimer,Updatevolume,2000
 
 if (AutoUpdateMediaLib="t")
-Gosub, UpdateMediaLib
-Else{
-sleep,1000
-IfNotExist,%AhkMediaLibFile%
-Gosub, UpdateMediaLib
+	Gosub, UpdateMediaLib
+Else
+{
+	sleep,1000
+	IfNotExist,%AhkMediaLibFile%
+		Gosub, UpdateMediaLib
 }
 
-if (huifushangci = "t")
-Gosub,HuifuPlay
+if (huifushangci = "t") || A_Args.Length()>0
+	Gosub,HuifuPlay
 else
-Gosub, StarPlay
+	Gosub, StarPlay
 Return
 
 HuiFuShangCiPlay:
-IniRead, huifushangci, %run_iniFile%, AhkPlayer,huifushangci
-If (huifushangci ="t")
-{
-Menu,Lib,unCheck,启动恢复上次播放(&H)
-IniWrite,f, %run_iniFile%, AhkPlayer, huifushangci
-}
-Else
-{
-Menu,Lib,Check,启动恢复上次播放(&H)
-IniWrite,t, %run_iniFile%, AhkPlayer, huifushangci
-}
+	IniRead, huifushangci, %run_iniFile%, AhkPlayer,huifushangci
+	If (huifushangci ="t")
+	{
+		Menu,Lib,unCheck,启动恢复上次播放(&H)
+		IniWrite,f, %run_iniFile%, AhkPlayer, huifushangci
+	}
+	Else
+	{
+		Menu,Lib,Check,启动恢复上次播放(&H)
+		IniWrite,t, %run_iniFile%, AhkPlayer, huifushangci
+	}
 Return
 
 AutoUpdateMediaLib:
-IniRead, AutoUpdateMediaLib, %run_iniFile%, AhkPlayer,AutoUpdateMediaLib
-If (AutoUpdateMediaLib ="t")
-{
-Menu,Lib,unCheck,启动自动更新媒体库(&A)
-IniWrite,f, %run_iniFile%, AhkPlayer, AutoUpdateMediaLib
-}
-Else
-{
-Menu,Lib,Check,启动自动更新媒体库(&A)
-IniWrite,t, %run_iniFile%, AhkPlayer, AutoUpdateMediaLib
-}
+	IniRead, AutoUpdateMediaLib, %run_iniFile%, AhkPlayer,AutoUpdateMediaLib
+	If (AutoUpdateMediaLib ="t")
+	{
+		Menu,Lib,unCheck,启动自动更新媒体库(&A)
+		IniWrite,f, %run_iniFile%, AhkPlayer, AutoUpdateMediaLib
+	}
+	Else
+	{
+		Menu,Lib,Check,启动自动更新媒体库(&A)
+		IniWrite,t, %run_iniFile%, AhkPlayer, AutoUpdateMediaLib
+	}
 Return
 
 UpdateMediaLib:
-			Count = 0
-			FileDelete, %AhkMediaLibFile%
-			Fileappend, , %AhkMediaLibFile%
+	Count = 0
+	FileDelete, %AhkMediaLibFile%
+	Fileappend, , %AhkMediaLibFile%
 	Loop, %AhkMediaLib%\*.*, 0,1
-		{
-			mp3_loop := A_loopfilename
+	{
+		mp3_loop := A_loopfilename
 
-			 Splitpath, mp3_loop,,,Extension
-			 if (Extension != "mp3" && Extension != "wma")
-						 Continue
-			 			 else
-			{
-							FileAppend, %a_loopfilefullpath%`n, %AhkMediaLibFile%
-							Count++
-			}
+		Splitpath, mp3_loop,,,Extension
+		if (Extension != "mp3" && Extension != "wma")
+			Continue
+		else
+		{
+			FileAppend, %a_loopfilefullpath%`n, %AhkMediaLibFile%
+			Count++
 		}
+	}
 
 	Count -= 1
 	IniWrite, %Count%, %run_iniFile%, AhkPlayer, Count
-			CF_ToolTip("更新媒体库完毕!		",2500)
+	CF_ToolTip("更新媒体库完毕!		",2500)
 Return
 
 HuifuPlay:
-IniRead, Mp3Playing, %run_iniFile%, AhkPlayer, Mp3Playing
-mp3 := Mp3Playing
-;打开文件
-	hSound := MCI_Open(Mp3, "myfile")
-
-    SetTimer UpdateSlider,off
-    GUIControl,,Slider,0
-    GUIControl,Disable,Slider
-;播放文件
-	Gosub, MyPause
-	len := MCI_Length(hSound)
-	GUIControl,Enable,Slider
-    SetTimer,UpdateSlider,100
-	SetTimer,CheckStatus,250
-	Gosub, ToolTipMP3
-	Gosub, StarPlay
+	IniRead, Mp3, %run_iniFile%, AhkPlayer, Mp3Playing
+	; 打开文件
+	goto, Gplay
 Return
 
 StarPlay:
@@ -211,7 +215,7 @@ StarPlay:
 	}
 
 	if SingleCycle
-		goto SingleCycleplay
+		goto Gplay
 
 	Count :=TF_CountLines(NowPlayFile)
 	;IniRead, PlayRandom, %run_iniFile%, AhkPlayer, PlayRandom
@@ -287,10 +291,10 @@ StarPlay:
 			FileReadLine, Mp3, %NowPlayFile%, %PlayIndex%
 		}
 	}
-SingleCycleplay:
-	hSound := MCI_Open(Mp3, "myfile")
+
 	IniWrite, %mp3%, %run_iniFile%, AhkPlayer, Mp3Playing
-	lastptime = 1
+Gplay:
+	hSound := MCI_Open(Mp3, "myfile")
 	SetTimer UpdateSlider,off
 	GUIControl,,Slider,0
 	GUIControl,Disable,Slider
@@ -304,6 +308,27 @@ SingleCycleplay:
 	; 才继续执行该行下面的语句即继续执行Gosub, StarPlay   Goto命令则不会返回
 	; 播放下一首歌曲
 	Gosub, StarPlay
+Return
+
+Gplay2:
+	IniWrite, %mp3%, %run_iniFile%, AhkPlayer, Mp3Playing
+	SetTimer UpdateSlider,off
+	GUIControl,,Slider,0
+	GUIControl Disable,Slider
+	If hSound
+	{
+		MCI_Stop(hSound)
+		MCI_Close(hSound)
+	}
+	hSound := MCI_Open(Mp3, "myfile")
+	Gosub, MyPause
+	GUIControl Enable,Slider
+	Gosub, sNameTrim
+	len := MCI_Length(hSound)
+	MCI_ToHHMMSS2(pos, hh, mm, ss)
+	MCI_ToHHMMSS2(len, hh, lm, ls)
+	SetTimer UpdateSlider,100
+	SetTimer,CheckStatus,250
 Return
 
 GuiShow:
@@ -336,6 +361,8 @@ Gui, font,cred bold s24,Verdana
 Gui, Add, text, x+5 yp-15  vLrcS  gLrcShow ,Lrc
 Gui, font
 Gui, Add, StatusBar, xm yp w600 h30, 未播放文件
+if !LrcPath
+	GuiControl, Disable, LrcS
 vol_Master := VA_GetVolume()
 Guicontrol,,VSlider,%vol_Master%
 SB_SetParts(300,100,220)
@@ -412,22 +439,20 @@ ToolTipMP3:
 Return
 
 PlayfromList: 
-FileReadLine, Mp3, %AhkMediaLibFile%, %PlayIndex%
-	If hSound {
-			  MCI_Close(hSound)
-		      }
+	FileReadLine, Mp3, %AhkMediaLibFile%, %PlayIndex%
+	If hSound
+		MCI_Close(hSound)
 	hSound := MCI_Open(Mp3, "myfile")
-    MCI_Play(hSound)
-   if(hidelrc=0)
-	 Gosub, Lrc
-    Gosub, sNameTrim
+	MCI_Play(hSound)
+	if(hidelrc=0)
+		Gosub, Lrc
+	Gosub, sNameTrim
 	len := MCI_Length(hSound)
 	MCI_ToHHMMSS2(pos, hh, mm, ss)
 	MCI_ToHHMMSS2(len, hh, lm, ls)
 Return 
 
 ListReadWrite:
-
 	IniRead, Count, %run_iniFile%, AhkPlayer, Count
 	IniRead, PlayIndex, %run_iniFile%, AhkPlayer, PlayIndex
 
@@ -445,88 +470,59 @@ if (PlayIndex > Count)
 Return
 
 sNameTrim:
-StringLen, sLength, mp3
+	StringLen, sLength, mp3
 	StringGetPos, cTrim, mp3, \, R1
 	cTrim += 2
 	fName := (sLength+1) - cTrim
 	StringMid, sName, mp3, %cTrim%, %fName%
-	Return
+Return
 
 Lrc:
-lrcclear()
-SetTimer, clock, Off
-SplitPath, Mp3,,,ext, name
-IfExist,%LrcPath%\%name%.lrc
-{
-Menu,Lib,Enable,编辑歌词(&E)
-lrcECHO(LrcPath . "\" . name . ".lrc",name)
-}
-Else{
-Gui, 2:Show, Hide NoActivate, %name% - AhkPlayer
-Menu,Lib,Disable,编辑歌词(&E)
-}
+	lrcclear()
+	SetTimer, clock, Off
+	SplitPath, Mp3,,,ext, name
+	If FileExist(LrcPath "\" name ".lrc")
+	{
+		Menu,Lib,Enable,编辑歌词(&E)
+		lrcECHO(LrcPath . "\" . name . ".lrc", name)
+	}
+	else If FileExist(LrcPath_2 "\" name ".lrc")
+	{
+		Menu,Lib,Disable,编辑歌词(&E)
+		lrcECHO(LrcPath_2 . "\" . name . ".lrc", name)
+	}
+	Else
+	{
+		Gui, 2:+LastFound
+		GuiControl, 2:, lrc,%name%(歌词欠奉)
+		Gui, 2:Show, Hide NoActivate, %name% - AhkPlayer
+		Menu,Lib,Disable,编辑歌词(&E)
+	}
 Return
 
 ;上一首
 ^+F3::
 prev:
-if (PlayListdefalut="t")
-{
-if (PlaylistIndex>1)
-{
-PlaylistIndex:=PlaylistIndex-1
-		LV_GetText(Mp3,PlaylistIndex,4)
-		LV_Modify(0,"-Select")
-        LV_Modify(PlaylistIndex,"+Select +Focus +Vis")
-If hSound {
-	MCI_Close(hSound)
-}
-	SetTimer UpdateSlider,off
-    GUIControl,,Slider,0
-    GUIControl Disable,Slider
-hSound := MCI_Open(Mp3, "myfile")
-Gosub, MyPause
-GUIControl Enable,Slider
-SetTimer UpdateSlider,100
-SetTimer,CheckStatus,250
-    Gosub, sNameTrim
-	len := MCI_Length(hSound)
-	MCI_ToHHMMSS2(pos, hh, mm, ss)
-	MCI_ToHHMMSS2(len, hh, lm, ls)
-}
-}
-Else
-{
-	if(lastptime =1)
+	if (PlayListdefalut="t") && !SingleCycle
 	{
-IniRead, mp3, %run_iniFile%, AhkPlayer, LastPlay
-If hSound {
-	MCI_Close(hSound)
-}
-	SetTimer UpdateSlider,off
-    GUIControl,,Slider,0
-    GUIControl Disable,Slider
-hSound := MCI_Open(Mp3, "myfile")
-Gosub, MyPause
-GUIControl Enable,Slider
-SetTimer UpdateSlider,100
-SetTimer,CheckStatus,250
-    Gosub, sNameTrim
-	len := MCI_Length(hSound)
-	MCI_ToHHMMSS2(pos, hh, mm, ss)
-	MCI_ToHHMMSS2(len, hh, lm, ls)
-	lastptime = 0
-}
-else
-MCI_Seek(hSound, MCI_Length(hSound))
-}
+		if (PlaylistIndex>1)
+		{
+			PlaylistIndex:=PlaylistIndex-1
+			LV_GetText(Mp3,PlaylistIndex,4)
+			LV_Modify(0,"-Select")
+			LV_Modify(PlaylistIndex,"+Select +Focus +Vis")
+			gosub, Gplay2
+		}
+	}
+	Else
+		MCI_Seek(hSound, MCI_Length(hSound))
 Return
 
 ; 暂停
 ^+P::
 MyPause:
 	Status := MCI_Status(hSound)
-
+	; 状态 playing、stopped、stopped
 	If(Status = "stopped" OR Status = "Paused")
 	{
 		If Status = stopped
@@ -536,8 +532,7 @@ MyPause:
 			Menu, PlayBack, UnCheck,暂停/播放(&P)
 			if(hidelrc=0)
 				Gosub, Lrc
-			SetTimer,CheckStatus,250
-			SetTimer UpdateSlider,on
+			SetTimer,CheckStatus,on
 		}
 		Else if Status = Paused
 		{
@@ -572,15 +567,16 @@ Return
 ^+F5::
 Next:
 	MCI_Seek(hSound, MCI_Length(hSound))
-if (hidelrc=0)
-Gosub, Lrc
+	if (hidelrc=0)
+		Gosub, Lrc
 Return
 
 ; 退出程序
 ^+E::
 Exit:
 ExitSub:
-	If hSound {
+	If hSound
+	{
 		MCI_Stop(hSound)
 		MCI_Close(hSound)
 	}
@@ -589,43 +585,25 @@ Return
 
 ; 播放包含关键字的歌曲
 !F9::
-PlayMusic:
 ;Exit = true
-
+PlayMusic:
 	InputBox,userInput,查找,输入要查找的歌曲
 	IfEqual,userInput,, Return
-
+	Found = No
 	Loop, read, %AhkMediaLibFile%
+	{
+		mp3 = %A_LoopReadline%
+		Loop, Parse, UserInput, %a_Space%
 		{
-			mp3 = %A_LoopReadline%
-			Found = Yes
-			Loop, Parse, UserInput, %a_Space%
-			IfNotInString, mp3, %A_LoopField%, SetEnv, Found, No
-
-			IfEqual, Found, Yes
-				{
-			    If hSound {
-				MCI_Stop(hSound)
-			    MCI_Close(hSound)
-						  }
-	SetTimer UpdateSlider,off
-    GUIControl,,Slider,0
-    GUIControl, Disable,Slider
-				hSound := MCI_Open(mp3, "myfile")
-				IniWrite, %mp3%, %run_iniFile%, AhkPlayer, Mp3Playing
-				Found = No
-				Break
-				}
+			IfInString, mp3, %A_LoopField%
+				SetEnv, Found, Yes
 		}
-
-    Gosub, MyPause
-	;Goto, ToolTipMP3
-	GUIControl Enable,Slider
-	SetTimer UpdateSlider,100
-	    Gosub, sNameTrim
-	len := MCI_Length(hSound)
-	MCI_ToHHMMSS2(pos, hh, mm, ss)
-	MCI_ToHHMMSS2(len, hh, lm, ls)
+		IfEqual, Found, Yes
+		{
+			Gosub, Gplay2
+			Break
+		}
+	}
 Return
 
 !F3::
@@ -634,81 +612,81 @@ Jump:
 	IfEqual,Seek,, Return
 	StringLen, Length, Seek
 	If Length = 4
-		{
-			StringLeft, MinS, Seek, 2
-			StringRight, SecS, Seek, 2
-		}
+	{
+		StringLeft, MinS, Seek, 2
+		StringRight, SecS, Seek, 2
+	}
 	Else If Length = 3
-		{
-			StringLeft, MinS, Seek, 1
-			StringRight, SecS, Seek, 2
-		}
+	{
+		StringLeft, MinS, Seek, 1
+		StringRight, SecS, Seek, 2
+	}
 	Else If Length = 2
-			StringRight, SecS, Seek, 2
+		StringRight, SecS, Seek, 2
 	Else If Length = 1
-			StringRight, SecS, Seek, 1
+		StringRight, SecS, Seek, 1
 
 	lrcpos := SecS * 1000
-    lrcpos += (MinS * 60) * 1000
+	lrcpos += (MinS * 60) * 1000
 	MCI_Seek(hSound, lrcpos)
 
 	IfWinExist, %name% - AhkPlayer
 	{
-	SetTimer, clock, off
-    gosub,LRC
-   }
-
+		SetTimer, clock, off
+		gosub,LRC
+	}
 Return
 
 !F5::
-IfExist,D:\Program Files\foobar2000\lyrics\%name%.lrc
-{
-run,notepad.exe %LrcPath%\%name%.lrc
-run,notepad.exe D:\Program Files\foobar2000\lyrics\%name%.lrc
-}
-Else{
-CF_ToolTip("歌词文件不存在!",3000)
-}
+	IfExist,%LrcPath%\%name%.lrc
+		run,notepad.exe %LrcPath%\%name%.lrc
+	IfExist,%LrcPath_2%\%name%.lrc
+		run,notepad.exe %LrcPath_2%\%name%.lrc
+	Else
+	{
+		CF_ToolTip("歌词文件不存在!",3000)
+	}
 Return
 
 !F6::
-if caption{
-Gui, 2:-Caption
-WinSet, ExStyle, +0x20
-caption=0
-}
-Else{
-caption=1
-Gui, 2:+Caption	;经测试，的确需要这样写才能够在第一次使用的时候生效
-Gui, 2:-Caption
-Gui, 2:+LastFound
-WinSet, ExStyle, -0x20
-Gui, 2:+Caption
-}
+	if caption
+	{
+		Gui, 2:-Caption
+		WinSet, ExStyle, +0x20
+		caption=0
+	}
+	Else
+	{
+		caption=1
+		Gui, 2:+Caption	;经测试，的确需要这样写才能够在第一次使用的时候生效
+		Gui, 2:+LastFound -Caption
+		WinSet, ExStyle, -0x20
+		Gui, 2:+Caption
+	}
 Return
 
 !F8::
 LrcShow:
-if (hidelrc=1)
-{
-Gui, Font,cred bold s24,Verdana
-GuiControl,font,LrcS
-hidelrc=0
-;IniWrite, 1, %A_ScriptDir%\tmp\setting.ini, AhkPlayer, ToolMode
-Gui,2:show
-}
-Else if (hidelrc=0)
-{
-Gui, Font, cgreen bold s24,Verdana
-GuiControl,font,LrcS
-hidelrc=1
-Gui,2:Hide
-}
-Else if (hidelrc=2)
-{
-hidelrc=0
-Gui,2:Hide
-}
+	if (hidelrc=1)
+	{
+		Gui, Font,cred bold s24,Verdana
+		GuiControl,font,LrcS
+		hidelrc=0
+		;IniWrite, 1, %A_ScriptDir%\tmp\setting.ini, AhkPlayer, ToolMode
+		Gui,2:show
+	}
+	Else if (hidelrc=0)
+	{
+		Gui, Font, cgreen bold s24,Verdana
+		GuiControl,font,LrcS
+		hidelrc=1
+		Gui,2:Hide
+	}
+	Else if (hidelrc=2)
+	{
+		hidelrc=0
+		Gui,2:Hide
+	}
 Return
 
 !F7::
@@ -832,29 +810,10 @@ Return
 
 ; 菜单播放所选(单选)
 MenuOpen:
-LV_GetText(Mp3, LV_GetNext(Row), 4)
-PlaylistIndex:=LV_GetNext(Row)
-if FileExist(Mp3)
-{
-	IniWrite, %mp3%, %run_iniFile%, AhkPlayer, Mp3Playing
-	SetTimer UpdateSlider,off
-    GUIControl,,Slider,0
-    GUIControl Disable,Slider
-	If hSound {
-	MCI_Close(hSound)
-	}
-    hSound := MCI_Open(Mp3, "myfile")
-    Gosub, MyPause
-    Gosub, sNameTrim
-
-	len := MCI_Length(hSound)
-	MCI_ToHHMMSS2(pos, hh, mm, ss)
-	MCI_ToHHMMSS2(len, hh, lm, ls)
-
-	GUIControl Enable,Slider
-    SetTimer UpdateSlider,100
-	SetTimer,CheckStatus,on
-	}
+	LV_GetText(Mp3, LV_GetNext(Row), 4)
+	PlaylistIndex:=LV_GetNext(Row)
+	if FileExist(Mp3)
+		Gosub, Gplay2
 Return
 
 ; 菜单/右键 打开所选文件位置(单选)
@@ -967,7 +926,6 @@ LV_Delete()
 Gui,Show,,%AhkPlayer_Title%
 Return
 
-
 PTLF:
 IniRead, followmouse, %run_iniFile%, AhkPlayer, followmouse
 If (followmouse="t")
@@ -1050,7 +1008,7 @@ Run,http://www.autohotkey.com/forum/topic53076.html
 Return
 
 Link_5:
-Run,http://ahk8.com/thread-2570.html
+Run,http://www.ahkcn.net/thread-2570.html
 Return
 
 ; 查找歌曲
@@ -1204,30 +1162,15 @@ return
 
 ; 右键播放所选歌曲
 PlayLV:
-LV_GetText(mp3, LV_GetNext(), 4)
-PlaylistIndex:= LV_GetNext()
-If hSound {
-	MCI_Close(hSound)
-}
-	SetTimer UpdateSlider,off
-    GUIControl,,Slider,0
-    GUIControl Disable,Slider
-hSound := MCI_Open(Mp3, "myfile")
-Gosub, MyPause
-GUIControl Enable,Slider
-SetTimer UpdateSlider,100
-SetTimer,CheckStatus,on
-    Gosub, sNameTrim
-	len := MCI_Length(hSound)
-	MCI_ToHHMMSS2(pos, hh, mm, ss)
-	MCI_ToHHMMSS2(len, hh, lm, ls)
+	LV_GetText(mp3, LV_GetNext(), 4)
+	PlaylistIndex:= LV_GetNext()
+	Gosub, Gplay2
 return
 
 TTPlayerOpen:
 LV_GetText(mp3, LV_GetNext(), 4)
 run,%TTPlayer% " %mp3%"
 return
-
 
 Slider:
 	Gui,Submit,NoHide
