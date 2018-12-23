@@ -12,7 +12,7 @@ if(A_Cursor="IBeam") or IsRenaming() or (IME_GetSentenceMode(_mhwnd())= 0)
  return
 }
 Files := ShellFolder(0,2)
-if !Files or IsFolder(Files) or instr(CandySel,"`n")
+if !Files or f_IsFolder(Files) or instr(CandySel,"`n")
 	return
 SplitPath,Files,,,Files_Ext
 if(Files_Ext="")
@@ -46,10 +46,6 @@ PreWWinGuiSize:
 GuiControl, Move, displayArea, x0 y0 w%A_GuiWidth% h%A_GuiHeight%
 GuiControl, Move, WMP,x0 y0 w%A_GuiWidth% h%A_GuiHeight%
 return
-
-IsFolder(Path) {
-	return InStr(FileExist(Path), "D") ? True : False
-}
 
 Cando_pdf_prew:
 gosub,IE_Open
@@ -164,23 +160,41 @@ return
 */
 
 Cando_rar_prew:
-textvalue:= cmdSilenceReturn("for /f ""skip=14 tokens=6,* eol=-"" `%a in ('D:\Progra~1\Direct~1\VFSPlugins\7z.exe l " """" files """') do @echo `%a `%b")
-if (InStr(textvalue, "name", false) =1)
-StringTrimLeft , textvalue, textvalue, 8
-StringTrimRight, textvalue, textvalue, 11
+	if !7z
+	{
+		msgbox 7z 变量未设置，请在选项→运行→自定义短语中添加。`n例如: 7z=G:\Program Files\7z\7z.exe
+	return
+	}
+	textvalue:= cmdSilenceReturn("for /f ""skip=12 tokens=5,* eol=-"" `%a in ('^;""" 7z """ ""l"" " """" files """') do @echo `%a `%b")
+
+	Loop, parse, textvalue, `n, `r
+	{
+		Tmp_val:=trim(A_LoopField)
+		if (tmp_pos:=instr(Tmp_val, " "))
+		{
+			StringTrimLeft, Tmp_val, Tmp_val, % tmp_pos
+			if (Tmp_val = "Name") or (Tmp_val = "folders")
+				continue
+			else
+				Tmp_value .= Tmp_val "`n"
+		}
+		else
+			if Tmp_val
+				Tmp_value .= A_LoopField "`n"
+	}
+Sort, Tmp_value
 Gui, +ReSize
 Gui, Add, Edit, w800 h600 ReadOnly vdisplayArea,
 Gui,PreWWin: Show, AutoSize Center, % Files " - 文件预览"
-GuiControl,, displayArea,%textvalue%
-textvalue=
+GuiControl,, displayArea, %Tmp_value%
+textvalue:=Tmp_value:=Tmp_val:=""
 return
 
 cmdSilenceReturn(command){
 	CMDReturn:=""
 	cmdFN:="RunAnyCtrlCMD.log"
 	try{
-    fullCommand = %ComSpec% /C "%command% >> %cmdFN%"
-;msgbox % fullCommand
+    fullCommand = %ComSpec% /c "%command% >> %cmdFN%"
 		RunWait, %fullCommand%, %A_Temp%, Hide
 
 		FileRead, CMDReturn, %A_Temp%\%cmdFN%

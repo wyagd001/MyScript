@@ -320,8 +320,6 @@ f_WriteIcons()
 	return
 }
 
-
-
 ;==================== Display The Menu ====================;
 
 f_DisplayMenu1:
@@ -409,6 +407,7 @@ if w_Class not in %f_SupportApps%
 			w_Class =
 			w_Edit1Pos =
 			f_ShowMenu("MainMenu")
+		return
 		}
 		else
 			return
@@ -842,38 +841,6 @@ f_RunPath(ThisPath)
 	return 0
 }
 
-f_IsFolder(ThisPath)
-{
-	if InStr(FileExist(ThisPath), "D")
-	|| (ThisPath = """::{20D04FE0-3AEA-1069-A2D8-08002B30309D}""")
-	|| SubStr(ThisPath, 1, 2) = "\\"
-		return 1
-	else
-		return 0
-}
-
-f_GetPathEdit(ThisID) ; get the classnn of the addressbar, thanks to F1reW1re
-{
-	WinGetClass, ThisClass, ahk_id %ThisID%
-	if ThisClass not in ExploreWClass,CabinetWClass
-		return
-	ControlGetText, ComboBoxEx321_Content, ComboBoxEx321, ahk_id %ThisID%
-	WinGet, ActiveControlList, ControlList, ahk_id %ThisID%
-	Loop, Parse, ActiveControlList, `n
-	{
-		StringLeft, WhichControl, A_LoopField, 4
-		if WhichControl = Edit
-		{
-			ControlGetText, Edit_Content, %A_LoopField%, ahk_id %ThisID%
-			if ComboBoxEx321_Content = %Edit_Content%
-			{
-				return % A_LoopField
-			}
-		}
-	}
-	return
-}
-
 ;==================== Add Favorite ====================;
 
 f_AddFavoriteK:
@@ -965,10 +932,10 @@ f_GetPath(WindowID, Class)
 	else if Class = ConsoleWindowClass
 	{
 		SetKeyDelay, 0	; This will be in effect only for the duration of this thread.
-		Send, cd > %Temp%\f_cdtmp{Enter}
+		Send, cd > %Temp%\f_cd.tmp{Enter}
 		Sleep, 100
-		FileReadLine, ThisPath, %Temp%\f_cdtmp, 1
-		FileDelete, %Temp%\f_cdtmp
+		FileReadLine, ThisPath, %Temp%\f_cd.tmp, 1
+		FileDelete, %Temp%\f_cd.tmp
    }
 	else if Class in %s_Apps_OthersList%
 	{
@@ -2057,30 +2024,17 @@ f_ShowMenu("ExplorerMenu")
 return
 
 f_ActivateWindow:
+if GetKeyState("Shift") || GetKeyState("Ctrl") || GetKeyState("RButton")
+{
+  f_OpenFavPath := A_ThisMenuItem
+  f_OpenPath(f_OpenFavPath)
+}
+else
+{
 f_OpenFavPath := i_%A_ThisMenu%ID%A_ThisMenuItemPos%
 WinActivate, ahk_id %f_OpenFavPath%
-return
-
-f_GetExplorerList() ; Thanks to F1reW1re
-{
-	WinGet, IDList, list, , , Program Manager
-	Loop, %IDList%
-	{
-		ThisID := IDList%A_Index%
-		WinGetClass, ThisClass, ahk_id %ThisID%
-		if ThisClass in ExploreWClass,CabinetWClass
-		{
-			if Vista7
-				ControlGetText, ThisPath, ToolbarWindow322, ahk_id %ThisID%
-			else
-				ControlGetText, ThisPath, ComboBoxEx321, ahk_id %ThisID%
-			if ThisPath = ; if cannot get path, use title instead
-				WinGetTitle, ThisPath, ahk_id %ThisID%
-			PathList = %PathList%%ThisID%=%ThisPath%`n
-		}
-	}
-	return PathList
 }
+return
 
 f_CreateSVSMenu() ; thanks to Mr. Milk
 {
@@ -2251,12 +2205,6 @@ f_CreateSVSMenu()
 Run, "svsadmin.exe"
 return
 
-;GUI.ahk包含了Folder Menu 的GUI设置部分的代码
 #Include %A_ScriptDir%\Script\FolderMenu_GUI.ahk
-;Lib.ahk为共用函数库,已拆分为以下几个文件
-;#Include %A_ScriptDir%\Script\Lib.ahk
 #Include %A_ScriptDir%\Lib\TVX.ahk
 #Include %A_ScriptDir%\Lib\Tooltip.ahk
-;#Include %A_ScriptDir%\Lib\ShellContextMenu.ahk
-;合并到Lib\Explorer.ahk中
-;#Include %A_ScriptDir%\Lib\string.ahk

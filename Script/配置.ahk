@@ -83,9 +83,9 @@ Gui,Font,Cred
 Gui,Add,Text,x136 y66 ,对脚本的启动速度有影响
 Gui,Font
 
-Gui,Add,CheckBox,Checked%run_with_sys% x26 y81 w100 h20 vautorun,开机启动
+Gui,Add,CheckBox,Checked%Auto_runwithsys% x26 y81 w100 h20 vautorun,开机启动
 
-Gui,Add,CheckBox,Checked%mousetip% x26 y100 w100 h20 vmtp,鼠标提示
+Gui,Add,CheckBox,Checked%Auto_mousetip% x26 y100 w100 h20 vmtp,鼠标提示
 
 Gui,Add,Text,x26 y130 w100 h20,显示位置
 Gui,Add,Radio,x85 y127 w80 h20 vdef1 gxy1,左上角
@@ -318,8 +318,8 @@ Gui,Tab,其他
 Gui,Add,CheckBox,x26 y41 w210 h20 vvAuto_DisplayMainWindow Checked%Auto_DisplayMainWindow%,启动时显示主窗口
 Gui,Add,CheckBox,x26 y61 w210 h20 vvAuto_Trayicon Checked%Auto_Trayicon%,启动时检测托盘图标
 Gui,Add,CheckBox,x44 y81 w200 h20 vvAuto_Trayicon_showmsgbox Checked%Auto_Trayicon_showmsgbox%,没有托盘图标显示重启脚本对话框
-Gui,Add,CheckBox,x26 y101 w210 h20 vvShutdownMonitor Checked%ShutdownMonitor%,监视关机出现关机对话框
-Gui,Add,CheckBox,x26 y121 w210 h20 vvPasteAndOpen Checked%PasteAndOpen%,粘贴并打开
+Gui,Add,CheckBox,x26 y101 w210 h20 vvAuto_ShutdownMonitor Checked%Auto_ShutdownMonitor%,监视关机出现关机对话框
+Gui,Add,CheckBox,x26 y121 w210 h20 vvAuto_PasteAndOpen Checked%Auto_PasteAndOpen%,粘贴并打开
 Gui,Add,CheckBox,x26 y141 w210 h20 vvAuto_Clip Checked%Auto_Clip%,三重剪贴板(复制文字时生效)
 Gui,Add,CheckBox,x44 y161 w130 h20 vvAuto_Cliphistory Checked%Auto_Cliphistory%,剪贴板历史(文字)
 Gui,Font,cgreen
@@ -953,13 +953,13 @@ for k,v in IniObj(hotkeycontent,OrderedArray()).Plugins
 IniWrite,%ask%,%run_iniFile%,截图,询问
 IniWrite,%filetp%,%run_iniFile%,截图,filetp
 IniWrite,%update%,%run_iniFile%,功能开关,Auto_Update
-IniWrite,%autorun%,%run_iniFile%,功能开关,run_with_sys
+IniWrite,%autorun%,%run_iniFile%,功能开关,Auto_runwithsys
 IniWrite,%mtp%,%run_iniFile%,功能开关,mousetip
 IniWrite,% vAuto_DisplayMainWindow,%run_iniFile%,功能模式选择,Auto_DisplayMainWindow
 IniWrite,% vAuto_Trayicon,%run_iniFile%,功能开关,Auto_Trayicon
 IniWrite,% vAuto_Trayicon_showmsgbox,%run_iniFile%,功能模式选择,Auto_Trayicon_showmsgbox
-IniWrite,% vShutdownMonitor,%run_iniFile%,功能开关,ShutdownMonitor
-IniWrite,% vPasteAndOpen,%run_iniFile%,功能开关,PasteAndOpen
+IniWrite,% vAuto_ShutdownMonitor,%run_iniFile%,功能开关,Auto_ShutdownMonitor
+IniWrite,% vAuto_PasteAndOpen,%run_iniFile%,功能开关,Auto_PasteAndOpen
 IniWrite,% vAuto_Clip,%run_iniFile%,功能开关,Auto_Clip
 IniWrite,% vAuto_Cliphistory,%run_iniFile%,功能开关,Auto_Cliphistory
 IniWrite,% vAuto_Capslock,%run_iniFile%,功能开关,Auto_Capslock

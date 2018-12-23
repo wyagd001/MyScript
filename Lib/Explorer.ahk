@@ -195,7 +195,7 @@ SelectFiles(Select,Clear=1,Deselect=0,MakeVisible=1,focus=1, hWnd=0)
 					{
 						If(InStr(filter, "*"))
 						{
-							filter := "\Q" StringReplace(filter, "*", "\E.*\Q", 1) "\E"
+							filter := "\Q" CF_StringReplace(filter, "*", "\E.*\Q", 1) "\E"
 							filter := strTrim(filter,"\Q\E")
 							Loop % items.Length()
 							{
@@ -1038,4 +1038,57 @@ SetDialogDirectory(Path)
 		Sleep, 100
 	ControlSetText, Edit1, %w_Edit1Text%, A
 	ControlFocus %focussed%,A
+}
+
+f_GetExplorerList() ; Thanks to F1reW1re
+{
+	WinGet, IDList, list, , , Program Manager
+	Loop, %IDList%
+	{
+		ThisID := IDList%A_Index%
+		WinGetClass, ThisClass, ahk_id %ThisID%
+		if ThisClass in ExploreWClass,CabinetWClass
+		{
+			if Vista7
+				ControlGetText, ThisPath, ToolbarWindow322, ahk_id %ThisID%
+			else
+				ControlGetText, ThisPath, ComboBoxEx321, ahk_id %ThisID%
+			if ThisPath = ; if cannot get path, use title instead
+				WinGetTitle, ThisPath, ahk_id %ThisID%
+			PathList = %PathList%%ThisID%=%ThisPath%`n
+		}
+	}
+	return PathList
+}
+
+f_IsFolder(ThisPath)
+{
+	if InStr(FileExist(ThisPath), "D")
+	|| (ThisPath = """::{20D04FE0-3AEA-1069-A2D8-08002B30309D}""")
+	|| SubStr(ThisPath, 1, 2) = "\\"
+		return 1
+	else
+		return 0
+}
+
+f_GetPathEdit(ThisID) ; get the classnn of the addressbar, thanks to F1reW1re
+{
+	WinGetClass, ThisClass, ahk_id %ThisID%
+	if ThisClass not in ExploreWClass,CabinetWClass
+		return
+	ControlGetText, ComboBoxEx321_Content, ComboBoxEx321, ahk_id %ThisID%
+	WinGet, ActiveControlList, ControlList, ahk_id %ThisID%
+	Loop, Parse, ActiveControlList, `n
+	{
+		StringLeft, WhichControl, A_LoopField, 4
+		if WhichControl = Edit
+		{
+			ControlGetText, Edit_Content, %A_LoopField%, ahk_id %ThisID%
+			if ComboBoxEx321_Content = %Edit_Content%
+			{
+				return % A_LoopField
+			}
+		}
+	}
+	return
 }

@@ -54,24 +54,38 @@ if lt1-st1>400
 cliptip(clipnum)
 if !GetKeyState("Ctrl")
 {
-SetTimer, ctrlCheck, Off
-Clipboard := ClipSaved%clipnum%
-ClipWait,2
-tooltip
-Send, ^{vk56}
-sleep,400
-Clipboard := ClipSaved%clipid%
 first=0
+SetTimer, ctrlCheck, Off
+tooltip
+Old_Clipboard := ClipboardAll
+Clipboard := ClipSaved%clipnum%
+sleep,200
+Send, ^{vk56}
+sleep,200
+Clipboard := Old_Clipboard
+sleep,200
 monitor=1
+Old_Clipboard := ""
 }
 return
 
+; 脚本启动后8秒后 monitor=1
 shijianCheck:
 lt:=A_TickCount
 if (lt-st>8000)
 {
 SetTimer, shijianCheck,off
 monitor=1
+if Auto_mousetip
+	CF_ToolTip("三重剪贴板已开始工作。", 3000)
+}
+return
+
+ClipSaved0Check:
+if ClipSaved1
+{
+ClipSaved0:=""
+SetTimer, ClipSaved0Check,off
 }
 return
 

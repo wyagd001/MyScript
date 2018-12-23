@@ -34,7 +34,7 @@ IniRead, PlayRandom, %run_iniFile%, AhkPlayer, PlayRandom
 IniRead, huifushangci, %run_iniFile%, AhkPlayer, huifushangci
 
 hidelrc=0
-PlaylistIndex:=0
+PlaylistIndex=1
 LrcPath:=(SubStr(A_OSVersion, 1, 2)=10)?LrcPath_Win10:LrcPath
 LrcPath:=FileExist(LrcPath)?LrcPath:(FileExist(LrcPath_2)?LrcPath_2:"")
 AhkMediaLibFile = %A_ScriptDir%\settings\AhkPlayer\mp3s.txt
@@ -203,6 +203,11 @@ Return
 
 HuifuPlay:
 	IniRead, Mp3, %run_iniFile%, AhkPlayer, Mp3Playing
+	IniRead, PlaylistIndex, %run_iniFile%, AhkPlayer, PlaylistIndex, 0
+	if A_Args.Length()>0
+		LV_Modify(LV_GetCount(),"+Select +Focus +Vis")
+	else
+		LV_Modify(PlaylistIndex,"+Select +Focus +Vis")
 	; ´ò¿ªÎÄ¼þ
 	goto, Gplay
 Return
@@ -262,37 +267,37 @@ StarPlay:
 		if (PlayListdefalut="t")   ; ²¥·ÅÁÐ±í
 		{
 			if (PlaylistIndex>=LV_GetCount())
-				PlaylistIndex:=0
-			if (followmouse="t")
+				PlaylistIndex:=1
+			else if (followmouse="t")
 			{
 				if (PlaylistIndex=LV_GetNext(Row))
+				{
 					PlayListIndex++
+					if (PlaylistIndex>LV_GetCount())
+						PlaylistIndex:=1
+				}
 				Else
 					PlaylistIndex:=LV_GetNext(Row)
 			}
 			Else
 				PlayListIndex++
-
 			LV_GetText(Mp3,PlaylistIndex,4)
 			LV_Modify(0,"-Select")
 			LV_Modify(PlaylistIndex,"+Select +Focus +Vis")
 		}
 		else  ; ²¥·ÅÃ½Ìå¿â
 		{
-			IniRead, PlayIndex, %run_iniFile%, AhkPlayer, PlayIndex
+			;IniRead, PlayIndex, %run_iniFile%, AhkPlayer, PlayIndex
 			PlayIndex++
-			IniWrite, %PlayIndex%, %run_iniFile%, AhkPlayer, PlayIndex
-			;IniRead, PlayListSize, %A_ScriptDir%\tmp\setting.ini, AhkPlayer, PlayListSize
 			if (PlayIndex>Count)
-			{
 				PlayIndex = 1
-				Iniwrite, %PlayIndex%, %run_iniFile%,AhkPlayer, PlayIndex
-			}
+			;Iniwrite, %PlayIndex%, %run_iniFile%,AhkPlayer, PlayIndex
 			FileReadLine, Mp3, %NowPlayFile%, %PlayIndex%
 		}
 	}
 
 	IniWrite, %mp3%, %run_iniFile%, AhkPlayer, Mp3Playing
+	Iniwrite, %PlaylistIndex%, %run_iniFile%,AhkPlayer, PlaylistIndex
 Gplay:
 	hSound := MCI_Open(Mp3, "myfile")
 	SetTimer UpdateSlider,off
@@ -312,6 +317,8 @@ Return
 
 Gplay2:
 	IniWrite, %mp3%, %run_iniFile%, AhkPlayer, Mp3Playing
+	if (PlayListdefalut="t") && (PlayRandom = "f")
+		Iniwrite, %PlaylistIndex%, %run_iniFile%,AhkPlayer, PlaylistIndex
 	SetTimer UpdateSlider,off
 	GUIControl,,Slider,0
 	GUIControl Disable,Slider
@@ -485,19 +492,27 @@ Lrc:
 	{
 		Menu,Lib,Enable,±à¼­¸è´Ê(&E)
 		lrcECHO(LrcPath . "\" . name . ".lrc", name)
+	Return
 	}
 	else If FileExist(LrcPath_2 "\" name ".lrc")
 	{
-		Menu,Lib,Disable,±à¼­¸è´Ê(&E)
+		Menu,Lib,Enable,±à¼­¸è´Ê(&E)
 		lrcECHO(LrcPath_2 . "\" . name . ".lrc", name)
+	Return
 	}
 	Else
 	{
 		Gui, 2:+LastFound
 		GuiControl, 2:, lrc,%name%(¸è´ÊÇ··î)
-		Gui, 2:Show, Hide NoActivate, %name% - AhkPlayer
+		SetTimer, hidenolrc, -6500
+		Gui, 2:Show, NoActivate, %name% - AhkPlayer
 		Menu,Lib,Disable,±à¼­¸è´Ê(&E)
+	Return
 	}
+Return
+
+hidenolrc:
+	Gui, 2:hide
 Return
 
 ;ÉÏÒ»Ê×
@@ -643,9 +658,7 @@ Return
 	IfExist,%LrcPath_2%\%name%.lrc
 		run,notepad.exe %LrcPath_2%\%name%.lrc
 	Else
-	{
 		CF_ToolTip("¸è´ÊÎÄ¼þ²»´æÔÚ!",3000)
-	}
 Return
 
 !F6::
@@ -971,7 +984,10 @@ Run,%A_ScriptDir%\settings\
 Return
 
 EditLrc:
-Run,%LrcPath%\%name%.lrc
+	IfExist,%LrcPath%\%name%.lrc
+		run,notepad.exe %LrcPath%\%name%.lrc
+	IfExist,%LrcPath_2%\%name%.lrc
+		run,notepad.exe %LrcPath_2%\%name%.lrc
 Return
 
 EditOption:

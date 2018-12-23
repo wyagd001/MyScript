@@ -1,54 +1,42 @@
 Cando_变大写:
-	Candy_Saved_ClipBoard := ClipboardAll 
 	Clipboard =
 	StringUpper Clipboard, CandySel
 	Send ^v
-	Sleep, 500
-	Clipboard := Candy_Saved_ClipBoard    
-	Candy_Saved_ClipBoard =
+	Clipboard := CandySel_Rich
 Return
 
 Cando_变小写:
-	Candy_Saved_ClipBoard := ClipboardAll 
 	Clipboard =
 	StringLower Clipboard, CandySel
 	Send ^v
-	Sleep, 500
-	Clipboard := Candy_Saved_ClipBoard    
-	Candy_Saved_ClipBoard =
+	Clipboard := CandySel_Rich
 Return
 
 Cando_首字大写:
 	;StringUpper Clipboard, CandySel, T
-	Candy_Saved_ClipBoard := ClipboardAll 
 	Clipboard =
-
 	Loop, Parse, CandySel, %A_Space%_`,|;-！`.  
 	{  
 		; 计算分隔符的位置.  
 		Position += StrLen(A_LoopField) + 1
 		; 获取解析循环中找到的分隔符.  
 		Delimiter := SubStr(CandySel, Position, 1)
-		str1:= Format("{:T}", A_LoopField)
-		out:=out . str1 . Delimiter 
+		str1 := Format("{:T}", A_LoopField)
+		out := out . str1 . Delimiter 
 	}  
-	Clipboard :=out  
-	Send,^v
-	Sleep,500
-	Clipboard := Candy_Saved_ClipBoard
-	out :=Candy_Saved_ClipBoard:=Position:=""
+	Clipboard := out  
+	Send, ^v
+	Clipboard := CandySel_Rich
+	out := Position := ""
 Return
 
 Cando_括起来:
 	StringSplit, kql_Arr, A_ThisMenuItem, %A_Space%
-	Candy_Saved_ClipBoard := ClipboardAll
-	Clipboard :=CandySel
+	Clipboard := CandySel
 	send {del}{%kql_Arr1%}
 	Send,^v
 	send {%kql_Arr2%}
-	Sleep, 500
-	Clipboard := Candy_Saved_ClipBoard    
-	Candy_Saved_ClipBoard =
+	Clipboard := CandySel_Rich    
 Return
 
 Cando_等号对齐:
@@ -89,4 +77,5 @@ Cando_等号对齐:
     Aligned:=RegExReplace(Aligned,"\s*$","")   ;顺便删除最后的空白行，可根据需求注释掉
     clipboard := Aligned
     Send ^v
+		Aligned:=""
     Return

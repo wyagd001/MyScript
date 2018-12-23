@@ -1,11 +1,11 @@
 GetClipboardFormat(type=1)  ;Thanks nnnik
 {
-	Critical, On
+	Critical, On  
 	DllCall("OpenClipboard", "int", "")
 	while c := DllCall("EnumClipboardFormats","Int",c?c:0)
 		x .= "," c
 	DllCall("CloseClipboard")
-
+	Critical, OFF    ; 在开始执行段使用该函数，使所有后续线程变为不可中断，脚本会卡死，所以需要关闭
 	if type=1
 		if Instr(x, ",1") and Instr(x, ",13")
 		return 1
@@ -17,19 +17,27 @@ GetClipboardFormat(type=1)  ;Thanks nnnik
 		return x
 }
 
+; returnnum = 0 不还原剪贴板，返回新剪贴板
+; returnnum = 1 还原剪贴板，清空 _isFile _ClipAll，返回新剪贴板
+; returnnum = 2/3/4.. 还原剪贴板，赋值 _isFile _ClipAll，返回新剪贴板
 GetSelText(returnnum:=1, ByRef _isFile:="", ByRef _ClipAll:="")
 {
+	global monitor
+	monitor := returnnum = 0 ? 1 : 0
 	Saved_ClipBoard := ClipboardAll    ; 备份剪贴板
 	Clipboard=    ; 清空剪贴板
 	SendInput, ^c
+	sleep 100
 	ClipWait, 0.5
 	If(ErrorLevel) ; 如果粘贴板里面没有内容，则还原剪贴板
 	{
 		Clipboard:=Saved_ClipBoard
+		sleep 100
+		monitor := 1
 	Return
 	}
 	If(returnnum=0)
-	Return
+	Return Clipboard
 	else If(returnnum=1)
 		_isFile := _ClipAll := ""
 	else
@@ -39,6 +47,8 @@ GetSelText(returnnum:=1, ByRef _isFile:="", ByRef _ClipAll:="")
 	}
 	ClipSel := Clipboard
 	Clipboard := Saved_ClipBoard  ;还原粘贴板
+	sleep 200
+	monitor := 1
 	return ClipSel
 }
 

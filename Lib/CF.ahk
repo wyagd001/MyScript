@@ -29,7 +29,7 @@ CF_RegWrite(ValueType, RootKey, SubKey, ValueName="", Value="") {
 Return
 }
 
-StringReplace(InputVar, SearchText, ReplaceText = "", All = "") {
+CF_StringReplace(InputVar, SearchText, ReplaceText = "", All = "") {
 	StringReplace, v, InputVar, %SearchText%, %ReplaceText%, %All%
 	Return, v
 }

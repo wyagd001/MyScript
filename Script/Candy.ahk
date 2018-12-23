@@ -269,13 +269,13 @@ Label_Candy_RunCommand:
         FileGetShortcut,%CandySel%,CandySel_LinkTarget
         StringReplace,Candy_Cmd,Candy_Cmd,{File:linktarget} ,%CandySel_LinkTarget%,All                      ;lnk的目标
     }
-    CandyCmd_RepStr :=Object( "{File:ext}"                ,CandySel_Ext
-                                                ,"{File:name}"            ,CandySel_FileNameNoExt
-                                                ,"{File:parentpath}"   ,CandySel_ParentPath
-                                                ,"{File:parentname}"  ,CandySel_ParentName
-                                                ,"{File:Drive}"             ,CandySel_Drive
-                                                ,"{File:Fullpath}"         ,CandySel
-                                                ,"{Text}"                     ,CandySel)
+    CandyCmd_RepStr :=Object( "{File:ext}"         ,CandySel_Ext
+                             ,"{File:name}"        ,CandySel_FileNameNoExt
+                             ,"{File:parentpath}"  ,CandySel_ParentPath
+                             ,"{File:parentname}"  ,CandySel_ParentName
+                             ,"{File:Drive}"       ,CandySel_Drive
+                             ,"{File:Fullpath}"    ,CandySel
+                             ,"{Text}"             ,CandySel)
     For k, v in CandyCmd_RepStr
         StringReplace  ,Candy_Cmd,Candy_Cmd,%k%,%v%,All
     If RegExMatch(Candy_Cmd,"i)\{.*FirstFile.*LastFile.*\}")  ;如果是文件列表，需要先整理成需要的模式
@@ -316,7 +316,7 @@ Label_Candy_RunCommand:
 <<<<终极运行>>>>                                                  ║
 ╚══════════════════════════════════════╝
 */
-        Candy_All_Cmd:="web|keys|cando|cango|run|openwith|SetClipBoard|msgbox|config|openwith|ow|rund|runp|ExeAhk"
+    Candy_All_Cmd:="web|keys|msgbox|config|SetClipBoard|cando|Canfunc|cango|openwith|ow|run|rund|runp|ExeAhk"
     If Not RegExMatch(Candy_Cmd,"i)^\s*(" Candy_All_Cmd ")\s*\|")
         Candy_Cmd=OpenWith|%Candy_Cmd% ;如果没有,则人为补一个OpenWith
     Candy_Cmd:=RegExReplace(Candy_Cmd,"~\|",Chr(3))

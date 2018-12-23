@@ -58,10 +58,10 @@ XWN_FocusHandler:
 Return
 
 runwithsys:
-run_with_sys := !run_with_sys
-IniWrite,%run_with_sys%,%run_iniFile%,功能开关,run_with_sys
+Auto_runwithsys := !Auto_runwithsys
+IniWrite,%Auto_runwithsys%,%run_iniFile%,功能开关,Auto_runwithsys
 
-	If ( run_with_sys=1 )
+	If Auto_runwithsys
 	{
 		Menu, addf, Check, 开机启动
 		RegWrite, REG_SZ, HKEY_LOCAL_MACHINE, SOFTWARE\Microsoft\Windows\CurrentVersion\Run, Run - Ahk, "%A_AhkPath%" "%A_ScriptFullPath%"
@@ -83,9 +83,9 @@ If  Auto_SaveDeskIcons=1
 Return
 
 smartchooserbrowser:
-  smartchooserbrowser := !smartchooserbrowser
-  IniWrite,%smartchooserbrowser%,%run_iniFile%,功能开关,smartchooserbrowser
-  If  smartchooserbrowser=1
+  Auto_smartchooserbrowser := !Auto_smartchooserbrowser
+  IniWrite,%Auto_smartchooserbrowser%,%run_iniFile%,功能开关,Auto_smartchooserbrowser
+  If Auto_smartchooserbrowser
   {
 	  Menu, addf, Check, 智能浏览器
 	  writeahkurl()

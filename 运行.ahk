@@ -184,7 +184,7 @@ If LastClosewindow
 }
 
 ;----------窗口缩略图----------
-If MiniMizeOn
+If Auto_MiniMizeOn
 {
 IniRead, content, %run_iniFile%,窗口缩略图
 Gosub, GetAllKeys
@@ -399,7 +399,7 @@ visable= 0
 ;=========图形界面的"绘制"=========
 
 ;=========图形界面的"绘制"2=========
-If ( run_with_sys=1)
+If Auto_runwithsys
 	{
 		Menu, addf, Check, 开机启动
 	}
@@ -408,7 +408,7 @@ Else
 		Menu, addf, UnCheck, 开机启动
 }
 
-If ( smartchooserbrowser )
+If Auto_smartchooserbrowser
 	{
 		Menu, addf, Check,智能浏览器
         writeahkurl()
@@ -579,7 +579,7 @@ OnMessage(DllCall("RegisterWindowMessageW","str","SHELLHOOK"),"ShellWM")
 ;----------7plus右键菜单----------
 
 ;----------地址栏等ClassNN:edit1添加“粘贴并打开”的右键菜单----------
-If PasteAndOpen
+If Auto_PasteAndOpen
 {
 hMenu:=
 hwndNow:=
@@ -599,7 +599,7 @@ hWinEventHook := SetWinEventHook( 0x4, 0x4,0, HookProcAdr, 0, 0, 0 )   ;0x4 EVEN
 
 ;----------监视关机对话框的选择----------
 ;拦截关机
-If ShutdownMonitor
+If Auto_ShutdownMonitor
 {
 ShutdownBlock := true
 RegWrite ,REG_SZ,HKEY_CURRENT_USER,Control Panel\Desktop,AutoEndTasks,0
@@ -640,7 +640,7 @@ SetTimer, renwu2, 30000
 ;----------整点报时功能----------
 
 ;----------鼠标提示----------
-If(mousetip=1)
+If Auto_mousetip
 SetTimer,aaa,2000
 ;----------鼠标提示----------
 
@@ -692,7 +692,7 @@ Hotkey, IfWinNotActive
 If ErrorLevel
 TrayTip, 发现错误,执行快捷键时发生错误，请检查配置快捷键相关部分, , 3
 
-If MiniMizeOn=0
+If !Auto_MiniMizeOn
 {
 Hotkey, IfWinNotActive, ahk_group DesktopTaskbarGroup
 Hotkey,% myhotkey.窗口缩略图, Off
@@ -719,9 +719,13 @@ if Auto_Clip
 	first=0
 	clipid=0
 	monitor=0
+	if (GetClipboardFormat(1)=1)
+	{
+		ClipSaved0 := Clipboard
+		SetTimer, ClipSaved0Check, 500
+	}
 	SetTimer, shijianCheck, 50
 	st:=A_TickCount
-
 	if Auto_Cliphistory
 	{
 		global DB := new SQLiteDB
@@ -1036,35 +1040,48 @@ EmptyMem()
 Return
 
 onClipboardChange:
+	timeDiff := A_TickCount - lastClipboardTime
+	lastClipboardTime := A_TickCount
+	if (timeDiff < 200)
+	return
 	if !Auto_Clip
 	return
 	if !monitor
 	return
 	if !clipboard
 	return
-	if(clipboard = ClipSaved1) or (clipboard = ClipSaved2) or (clipboard = ClipSaved3)
-	return
-	ClipWait, 1, 1
+	ClipWait, 0.5, 1
 	if GetClipboardFormat(1)=1
 	{
+		lastclipid := clipid
 		clipid+=1
+		if(ClipSaved%lastclipid%=Clipboard)
+		{
+			clipid:=lastclipid
+		return
+		}
 		if clipid>3
 			clipid=1
 		ClipSaved%clipid% := Clipboard
 		CF_ToolTip("剪贴板" clipid " 复制完毕.",700)
-
 		if Auto_Cliphistory
 		{
 			if (writecliphistory=1) 
+			{
+				if(ClipSaved1 = ClipSaved2) or (ClipSaved2 = ClipSaved3) or (ClipSaved1 = ClipSaved3)
+				return
 				addHistoryText(ClipSaved%clipid%, A_Now)
+			return
+			}
 			else
+			{
 				writecliphistory=1
+			return
+			}
 		}
 	}
 	else
-	{
 		tempid=1
-	}
 return
 
 EmptyMem(PID="AHK Rocks"){
@@ -1266,7 +1283,7 @@ FileDelete, %A_Temp%\7plus\hwnd.txt
 UnhookWinEvent(hWinEventHook3, HookProcAdr3)
 
 ; 释放监视关机的资源
-if ShutdownMonitor
+if Auto_ShutdownMonitor
 {
 DllCall("ShutdownBlockReasonDestroy", UInt, hAHK)
 UnhookWinEvent(hWinEventHook2, HookProcAdr2)
@@ -1279,14 +1296,14 @@ DllCall("DeregisterShellHookWindow","uint",hAHK)
 ;msgbox,1
 }
 
-If !smartchooserbrowser
+If !Auto_smartchooserbrowser
 {
 delahkurl()
 ;msgbox,2
 }
 
 ;还原缩为缩略图的窗口
-If miniMizeOn
+If Auto_MiniMizeOn
 {
 	WinGet, id, list,ahk_class AutoHotkeyGUI
 
@@ -1357,7 +1374,7 @@ If md5type=1
 }
 
 ; 释放粘贴并打开的资源
-If PasteAndOpen
+If Auto_PasteAndOpen
 {
 WinShow,ahk_class Shell_TrayWnd
 WinShow,开始 ahk_class Button
@@ -1540,23 +1557,6 @@ break
 }
 }
 return
-
-; 来源帮助文件中的示例
-RunScript(script, WaitResult:="false")
-{
-	static test_ahk := A_AhkPath,
-	shell := ComObjCreate("WScript.Shell")
-	tempworkdir:= A_WorkingDir
-	SetWorkingDir %A_ScriptDir%
-	exec := shell.Exec(chr(34) test_ahk chr(34) " /ErrorStdOut *")
-	exec.StdIn.Write(script)
-	exec.StdIn.Close()
-	SetWorkingDir %tempworkdir%
-	if WaitResult
-		return exec.StdOut.ReadAll()
-	else 
-return
-}
 
 #include %A_ScriptDir%\Script\脚本管理器.ahk
 #include %A_ScriptDir%\Script\配置.ahk

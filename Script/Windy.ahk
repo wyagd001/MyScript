@@ -201,12 +201,14 @@ Label_Windy_RunCommand:
 ; ⑦终极运行
 ;
 ;[············································································································]
+	;Windy_All_Cmd:="config|Windo|Winfunc|Wingo|Keys|SetClipBoard|AlwaysOnTop|bottom|Send|MsgBox|mute|open|Close|unclose|CloseAll|Kill|exit|RunOrClose|RunOrActivate|RunOntop|run|"
+	;If Not RegExMatch(Windy_Cmd,"i)^\s*(" Windy_All_Cmd ")\s*\|")   ; 没有指定时指定一个默认命令
+		;Windy_Cmd=OpenWith|%Windy_Cmd% 
 	Windy_Cmd:=RegExReplace(Windy_Cmd,"~\|",Chr(3)) ;注意指令里面的原义|。用~|进行转义
 	StringSplit,Splitted_Windy_Cmd,Windy_Cmd,|  ,%A_Space%%A_Tab%  ;对指令进行|分割，分割出的第一个是指令
 	Splitted_Windy_Cmd1:=RegExReplace(Splitted_Windy_Cmd1,Chr(3),"|")
 	Splitted_Windy_Cmd2:=RegExReplace(Splitted_Windy_Cmd2,Chr(3),"|")
 	Splitted_Windy_Cmd3:=RegExReplace(Splitted_Windy_Cmd3,Chr(3),"|")
-
 
 	If(RegExMatch(Windy_Cmd,"i)^(Config\|)")) ;如果是以Config|开头，则是编辑配置文件
 	{
@@ -407,8 +409,8 @@ Return
 
 _CreateMenu(Item,ParentMenuName,label)    ;条目，它所处的父菜单名，菜单处理的目标标签
 {  ;送进来的Item已经经过了“去空格处理”，放心使用
-;提取不到图标会报错，添加下面一行防止报错
-    Menu, tray,UseErrorLevel
+; 提取不到图标会报错，添加下面一行防止报错
+    Menu, tray, UseErrorLevel
     arrS:=StrSplit(Item,"/"," `t")
     _s:=arrS[1]
     if arrS.Maxindex()= 1      ;如果里面没有 /，就是最终的”菜单项“。添加到”它的父菜单”上。
