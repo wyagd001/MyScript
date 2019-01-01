@@ -208,14 +208,6 @@ codeClear(code)
 Return code	
 }
 
-MCode(ByRef code, hex) 
-{ ; allocate memory and write Machine Code there
-	VarSetCapacity(code, 0) 
-	VarSetCapacity(code,StrLen(hex)//2+2)
-	Loop % StrLen(hex)//2 + 2
-		NumPut("0x" . SubStr(hex,2*A_Index-1,2), code, A_Index-1, "Char")
-}
-
 Encode(Str, Encoding, Separator := " ")
 {
 	If (Encoding="cp1201")

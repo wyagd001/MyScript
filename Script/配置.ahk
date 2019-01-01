@@ -838,7 +838,7 @@ IniRead,Pluginhotkey%A_index%,%run_iniFile%,Plugins,% Plugins%A_index%, %A_Space
 If IsLabel(Plugins%A_index%) 
 LV_Add("",Plugins%A_index%,Pluginhotkey%A_index%, "; 快捷键设置中可带参数运行", A_index+0.0)
 Else If IsLabel(Plugins%A_index% . "_click") 
-LV_Add("",Plugins%A_index%,Pluginhotkey%A_index%, ";窗口界面点击", A_index+0.0)
+LV_Add("",Plugins%A_index%,Pluginhotkey%A_index%, "; 窗口界面点击", A_index+0.0)
 else
 LV_Add("",Plugins%A_index%,Pluginhotkey%A_index%, ";", A_index+0.0)
 }

@@ -332,6 +332,14 @@ StringToHex(String)
 Return HexString
 }
 
+MCode(ByRef code, hex) 
+{ ; allocate memory and write Machine Code there
+	VarSetCapacity(code, 0) 
+	VarSetCapacity(code,StrLen(hex)//2+2)
+	Loop % StrLen(hex)//2 + 2
+		NumPut("0x" . SubStr(hex,2*A_Index-1,2), code, A_Index-1, "Char")
+}
+
 toHex( ByRef V, ByRef H, dataSz:=0 )
 { ; http://goo.gl/b2Az0W (by SKAN)
 	P := ( &V-1 ), VarSetCapacity( H,(dataSz*2) ), Hex := "123456789ABCDEF0"

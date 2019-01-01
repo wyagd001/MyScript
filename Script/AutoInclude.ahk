@@ -42,8 +42,6 @@
 #Include *i %A_ScriptDir%\Script\Hotkey\注册表.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Window Dragging KDE style.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Thumbnail.ahk
-#Include *i %A_ScriptDir%\Script\Hotkey\Pin2Desk.ahk
-#Include *i %A_ScriptDir%\Script\Hotkey\Cmd.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Eval.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_剪贴板到文件.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\窗口程序和打开的文件.ahk

@@ -166,15 +166,17 @@ Cando_rar_prew:
 	return
 	}
 	textvalue:= cmdSilenceReturn("for /f ""skip=12 tokens=5,* eol=-"" `%a in ('^;""" 7z """ ""l"" " """" files """') do @echo `%a `%b")
-
+	;msgbox % textvalue
 	Loop, parse, textvalue, `n, `r
 	{
 		Tmp_val:=trim(A_LoopField)
 		if (tmp_pos:=instr(Tmp_val, " "))
 		{
-			StringTrimLeft, Tmp_val, Tmp_val, % tmp_pos
-			if (Tmp_val = "Name") or (Tmp_val = "folders")
+			StringTrimLeft, Tmp_val2, Tmp_val, % tmp_pos
+			if (Tmp_val2 = "Name") or (Tmp_val2 = "folders")
 				continue
+			if RegExMatch(Tmp_val,"^[0-9]+\s")  ; 不能正确得到7z压缩包中以数字空格开头的文件名
+				Tmp_value .= Tmp_val2 "`n"
 			else
 				Tmp_value .= Tmp_val "`n"
 		}

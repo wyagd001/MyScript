@@ -26,7 +26,7 @@ If InternetCheckConnection(URL)
 		FileDelete, %update_txtFile%
 	return
 	}
-	FileRead, CurVer, %update_txtFile%
+	FileReadLine, CurVer, %update_txtFile%, 1
 	If not ErrorLevel
 	{
 		FileDelete, %update_txtFile%

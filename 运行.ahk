@@ -678,14 +678,17 @@ hotkeycontent:="[快捷键]" . "`n" . hotkeycontent
 myhotkey := IniObj(hotkeycontent,OrderedArray()).快捷键
 for k,v in myhotkey
 {
-IfInString,k,前缀_
-continue
-Else IfInString,k,特定窗口_
-Hotkey, IfWinActive, %v%
-Else IfInString,k,排除窗口_
-Hotkey, IfWinNotActive, %v%
-Else If (v && !InStr(v,"@"))
- hotkey, %v%,%k% ;,UseErrorLevel
+	IfInString,k,前缀_
+		continue
+	Else IfInString,k,特定窗口_
+		Hotkey, IfWinActive, %v%
+	Else IfInString,k,排除窗口_
+		Hotkey, IfWinNotActive, %v%
+	Else If (v && !InStr(v,"@"))
+	{
+		if islabel(k)
+			hotkey, %v%,%k% ;,UseErrorLevel
+	}
 }
 Hotkey, IfWinActive
 Hotkey, IfWinNotActive
@@ -756,8 +759,11 @@ else
 ;;;;;;;;;; 剪贴板  ;;;;;;;;;;;;
 
 ;快捷键打开C,D,E,F盘...设置其快捷键，loop 15循环15次，到达字母Q
+if islabel("ExploreDrive")
+{
 Loop 15
    HotKey % myhotkey.前缀_快速打开磁盘 Chr(A_Index+66), ExploreDrive
+}
 
 ;----------Winpad----------
 WindowPadInit:
@@ -870,7 +876,7 @@ If Auto_Update
 		FileGetSize, sizeq,%update_txtFile%
 		If(sizeq<20)
 		{
-			FileRead, CurVer, %update_txtFile%
+			FileReadLine, CurVer, %update_txtFile%, 1
 			If(CurVer!=AppVersion)
 			{
 				msgbox,4,升级通知,当前版本为:%AppVersion%`n最新版本为:%CurVer%`n是否前往主页下载?
@@ -1577,6 +1583,7 @@ return
 #include %A_ScriptDir%\Script\主窗口\播放器和音量控制.ahk
 #include %A_ScriptDir%\Script\主窗口\combo删除按钮.ahk
 #include %A_ScriptDir%\Script\网页远程控制.ahk
+#Include %A_ScriptDir%\Script\Cmd.ahk
 #include %A_ScriptDir%\Script\USB.ahk
 #include %A_ScriptDir%\Script\光驱.ahk
 #include %A_ScriptDir%\Script\鼠标中键.ahk
@@ -1592,6 +1599,7 @@ return
 #include %A_ScriptDir%\Script\Candy.ahk
 #include %A_ScriptDir%\Script\Windy.ahk
 #include %A_ScriptDir%\Script\Dock To Edge.ahk
+#include %A_ScriptDir%\Script\Pin2Desk.ahk
 #include %A_ScriptDir%\Script\地址栏粘贴并打开.ahk
 #include %A_ScriptDir%\Script\关机对话框.ahk
 #include %A_ScriptDir%\Script\cliphistory.ahk
@@ -1601,6 +1609,7 @@ return
 #include %A_ScriptDir%\Lib\Explorer.ahk
 #include %A_ScriptDir%\Lib\Menu.ahk
 #include %A_ScriptDir%\Lib\Window.ahk
+#include %A_ScriptDir%\Lib\ProcessMemory.ahk
 #include %A_ScriptDir%\Lib\WinEventHook.ahk
 #include %A_ScriptDir%\Lib\ActiveScript.ahk
 #include %A_ScriptDir%\Lib\_GuiDropFiles.ahk
