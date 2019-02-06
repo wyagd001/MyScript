@@ -173,7 +173,10 @@ Return
 
 DPlayer:
 If(A_ThisMenuItem=DefaultPlayer)
+{
+Gosub,OpenAudioPlayer
 Return
+}
 menu,audioplayer,Check,%A_ThisMenuItem%
 menu,audioplayer,unCheck,%DefaultPlayer%
 DefaultPlayer := A_ThisMenuItem

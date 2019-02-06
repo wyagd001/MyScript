@@ -31,9 +31,7 @@ Gui,Add,text,x10 y30 w550,×¢Òâ:#±íÊ¾Win,!±íÊ¾Alt,+±íÊ¾Shift,^±íÊ¾Ctrl,Space±íÊ¾¿
 Gui,Add,ListView,x6 y60 w570 h245 vhotkeysListview ghotkeysListview checked Grid -Multi +NoSortHdr -LV0x10 +LV0x4000 +AltSubmit,¿ì½Ý¼ü±êÇ©|¿ì½Ý¼ü|ÊÊÓÃ´°¿Ú|ÐòºÅ
 Gui,listview,hotkeysListview 
 LV_Delete()
-IniRead,hotkeycontent,%run_iniFile%,¿ì½Ý¼ü
-hotkeycontent:="[¿ì½Ý¼ü]" . "`n" . hotkeycontent
-for k,v in IniObj(hotkeycontent,OrderedArray()).¿ì½Ý¼ü
+for k,v in myhotkey
 {
 	col3_tmp=
 	if A_index=1
@@ -262,48 +260,48 @@ gosub updaterh
 
 Gui,Tab,²¥·ÅÆ÷
 Gui,Add,Text,x26 y43,Foobar2000:
-Gui,Add,Edit,x96 y41 w350 h20 vap1,%foobar2000%
+Gui,Add,Edit,x96 y41 w350 h20 vvfoobar2000,%foobar2000%
 Gui,Add,Button,x450 y41 w30 h20 gsl,...
 Gui,Add,Text,x26 y65,iTunes:
-Gui,Add,Edit,x96 y63 w350 h20 vap2,%iTunes%
+Gui,Add,Edit,x96 y63 w350 h20 vviTunes,%iTunes%
 Gui,Add,Button,x450 y63 w30 h20 gsl,...
 Gui,Add,Text,x26 y87,Wmplayer:
-Gui,Add,Edit,x96 y85 w350 h20 vap3,%wmplayer%
+Gui,Add,Edit,x96 y85 w350 h20 vvwmplayer,%wmplayer%
 Gui,Add,Button,x450 y85 w30 h20 gsl,...
 Gui,Add,Text,x26 y109,Ç§Ç§¾²Ìý:
-Gui,Add,Edit,x96 y107 w350 h20 vap4,%TTPlayer%
+Gui,Add,Edit,x96 y107 w350 h20 vvTTPlayer,%TTPlayer%
 Gui,Add,Button,x450 y107 w30 h20 gsl,...
 Gui,Add,Text,x26 y131,Winamp:
-Gui,Add,Edit,x96 y129 w350 h20 vap5,%winamp%
+Gui,Add,Edit,x96 y129 w350 h20 vvwinamp,%winamp%
 Gui,Add,Button,x450 y129 w30 h20 gsl,...
 Gui,Add,Text,x26 y153,AhkPlayer:
-Gui,Add,Edit,x96 y151 w350 h20 vap6,%ahkplayer%
+Gui,Add,Edit,x96 y151 w350 h20 vvahkplayer,%ahkplayer%
 Gui,Add,Button,x450 y151 w30 h20 gsl,...
 
 Gui,Add,Text,x26 y185,Ä¬ÈÏ²¥·ÅÆ÷
-Gui,Add,Radio,x26 y205 w80 h20 vdap1 gdaps,Foobar2000
-Gui,Add,Radio,x116 y205 w70 h20 vdap2 gdaps,iTunes
-Gui,Add,Radio,x190 y205 w80 h20 vdap3 gdaps,Wmplayer
-Gui,Add,Radio,x270 y205 w80 h20 vdap4 gdaps,Ç§Ç§¾²Ìý
-Gui,Add,Radio,x350 y205 w80 h20 vdap5 gdaps,Winamp
-Gui,Add,Radio,x430 y205 w80 h20 vdap6 gdaps,AhkPlayer
+Gui,Add,Radio,x26 y205 w80 h20 vdfoobar2000 gdaps,Foobar2000
+Gui,Add,Radio,x116 y205 w70 h20 vdiTunes gdaps,iTunes
+Gui,Add,Radio,x190 y205 w80 h20 vdWmplayer gdaps,Wmplayer
+Gui,Add,Radio,x270 y205 w80 h20 vdTTPlayer gdaps,Ç§Ç§¾²Ìý
+Gui,Add,Radio,x350 y205 w80 h20 vdWinamp gdaps,Winamp
+Gui,Add,Radio,x430 y205 w80 h20 vdAhkPlayer gdaps,AhkPlayer
 If(DefaultPlayer="foobar2000"){
-	GuiControl,,dap1,1
+	GuiControl,,dfoobar2000,1
 }
 Else If(DefaultPlayer="iTunes"){
-	GuiControl,,dap2,1
+	GuiControl,,diTunes,1
 }
 Else If(DefaultPlayer="Wmplayer"){
-	GuiControl,,dap3,1
+	GuiControl,,dWmplayer,1
 }
 Else If(DefaultPlayer="TTPlayer"){
-	GuiControl,,dap4,1
+	GuiControl,,dTTPlayer,1
 }
 Else If(DefaultPlayer="Winamp"){
-	GuiControl,,dap5,1
+	GuiControl,,dWinamp,1
 }
 Else If(DefaultPlayer="AhkPlayer"){
-	GuiControl,,dap6,1
+	GuiControl,,dAhkPlayer,1
 }
 
 Gui,Tab,ÔËÐÐ
@@ -340,7 +338,7 @@ Gui,Font,CBlue
 ;Gui,Font,CBlue Underline
 Gui,Add,Text,x+ gg vURL,https://github.com/wyagd001/MyScript
 Gui,Font
-Gui,Add,Text,x26 y100,% "°æ±¾£º"AppVersion
+Gui,Add,Text,x26 y100,% "°æ±¾£º" AppVersion
 Gui,Add,Text,x26 y120,ÊÊÅä Autohotkey£º1.1.28.00(Unicode) ÏµÍ³£ºWin7 SP1 32bit ÖÐÎÄ°æ
 Gui,Add,Text,x26 y140,% "µ±Ç° Autohotkey£º" A_AhkVersion "(" (A_IsUnicode?"Unicode":"ansi") ") ÏµÍ³£º" A_OSVersion " " (A_Is64bitOS?64:32) "bit"
 Gui,Add,Button,x26 y165 gUpdate,¼ì²é¸üÐÂ
@@ -488,15 +486,15 @@ FileSelectFile,tt,,,Ñ¡ÔñÒôÆµ²¥·Å³ÌÐò,³ÌÐòÎÄ¼þ(*.exe)
 If ErrorLevel=0
 {
 	If tt contains foobar2000
-		GuiControl,,ap1,%tt%
+		GuiControl,,vfoobar2000,%tt%
 	If tt contains iTunes
-		GuiControl,,ap2,%tt%
+		GuiControl,,viTunes,%tt%
 	If tt contains wmplayer
-		GuiControl,,ap3,%tt%
+		GuiControl,,vwmplayer,%tt%
 	If tt contains TTPlayer
-		GuiControl,,ap4,%tt%
+		GuiControl,,vTTPlayer,%tt%
 	If tt contains winamp
-		GuiControl,,ap5,%tt%
+		GuiControl,,vwinamp,%tt%
 }
 Return
 
@@ -918,17 +916,17 @@ Return
 
 daps:
 Gui,Submit,NoHide
-If dap1=1
+If dfoobar2000=1
 	DefaultPlayer=foobar2000
-Else If dap2=1
+Else If diTunes=1
 	DefaultPlayer=iTunes
-Else If dap3=1
+Else If dWmplayer=1
 	DefaultPlayer=Wmplayer
-Else If dap4=1
+Else If dTTPlayer=1
 	DefaultPlayer=TTPlayer
-Else If dap5=1
+Else If dWinamp=1
 	DefaultPlayer=Winamp
-Else If dap6=1
+Else If dAhkPlayer=1
 	DefaultPlayer=AhkPlayer
 Return
 
@@ -954,7 +952,7 @@ IniWrite,%ask%,%run_iniFile%,½ØÍ¼,Ñ¯ÎÊ
 IniWrite,%filetp%,%run_iniFile%,½ØÍ¼,filetp
 IniWrite,%update%,%run_iniFile%,¹¦ÄÜ¿ª¹Ø,Auto_Update
 IniWrite,%autorun%,%run_iniFile%,¹¦ÄÜ¿ª¹Ø,Auto_runwithsys
-IniWrite,%mtp%,%run_iniFile%,¹¦ÄÜ¿ª¹Ø,mousetip
+IniWrite,%mtp%,%run_iniFile%,¹¦ÄÜ¿ª¹Ø,Auto_mousetip
 IniWrite,% vAuto_DisplayMainWindow,%run_iniFile%,¹¦ÄÜÄ£Ê½Ñ¡Ôñ,Auto_DisplayMainWindow
 IniWrite,% vAuto_Trayicon,%run_iniFile%,¹¦ÄÜ¿ª¹Ø,Auto_Trayicon
 IniWrite,% vAuto_Trayicon_showmsgbox,%run_iniFile%,¹¦ÄÜÄ£Ê½Ñ¡Ôñ,Auto_Trayicon_showmsgbox
@@ -1006,12 +1004,12 @@ IniWrite,%rh5%,%run_iniFile%,Ê±¼ä,rh5
 IniWrite,%renwu2%,%run_iniFile%,Ê±¼ä,renwu2
 IniWrite,%Auto_JCTF%,%run_iniFile%,¹¦ÄÜ¿ª¹Ø,Auto_JCTF
 
-IniWrite,%ap1%,%run_iniFile%,AudioPlayer,Foobar2000
-IniWrite,%ap2%,%run_iniFile%,AudioPlayer,iTunes
-IniWrite,%ap3%,%run_iniFile%,AudioPlayer,Wmplayer
-IniWrite,%ap4%,%run_iniFile%,AudioPlayer,TTPlayer
-IniWrite,%ap5%,%run_iniFile%,AudioPlayer,Winamp
-IniWrite,%ap6%,%run_iniFile%,AudioPlayer,AhkPlayer
+IniWrite,%vFoobar2000%,%run_iniFile%,AudioPlayer,Foobar2000
+IniWrite,%viTunes%,%run_iniFile%,AudioPlayer,iTunes
+IniWrite,%vWmplayer%,%run_iniFile%,AudioPlayer,Wmplayer
+IniWrite,%vTTPlayer%,%run_iniFile%,AudioPlayer,TTPlayer
+IniWrite,%vWinamp%,%run_iniFile%,AudioPlayer,Winamp
+IniWrite,%vAhkPlayer%,%run_iniFile%,AudioPlayer,AhkPlayer
 IniWrite,%DefaultPlayer%,%run_iniFile%,³£¹æ,DefaultPlayer
 IniWrite,%sp%,%run_iniFile%,¹Ì¶¨µÄ³ÌÐò,stableProgram
 

@@ -47,7 +47,7 @@ If(!A_IsAdmin)
 OnExit, ExitSub
 
 ;========变量设置开始========
-FileRead, AppVersion, %A_ScriptDir%\version.txt
+FileReadLine, AppVersion, %A_ScriptDir%\version.txt, 1
 AppTitle = 拖拽移动文件到目标文件夹(自动重命名)
 
 FloderMenu_iniFile = %A_ScriptDir%\settings\FloderMenu.ini
@@ -486,12 +486,12 @@ if Auto_Trayicon
   {
    msgbox,4,错误,未检测到脚本的托盘图标，点"是"重启脚本，点"否"继续运行脚本。`n默认(超时)自动重启脚本。,6
    IfMsgBox Yes
-    autoreload=1
+    Auto_reload=1
    else IfMsgBox timeout
-    autoreload=1
+    Auto_reload=1
   }
   else
-   autoreload=1
+   Auto_reload=1
 
   连续重启次数:=CF_IniRead(run_iniFile,"时间","连续重启次数",0)
   if 连续重启次数 > 5
@@ -506,10 +506,11 @@ if Auto_Trayicon
    IniWrite,% 连续重启次数,% run_iniFile,时间,连续重启次数
   }
 
-  if(autoreload=1)
+  if(Auto_reload=1)
   {
-   Reload
-  Return
+		sleep,2000
+		Reload
+	Return
   }
  }
 }
@@ -1506,18 +1507,18 @@ _AutoInclude:
 	FileRead, fs, %f%
 
 ; 批量#Include，要包含所有脚本的目录
-AutoInclude_Path = %A_ScriptDir%\Script\Cando
+Auto_IncludePath = %A_ScriptDir%\Script\Cando
 s=
-Loop, %AutoInclude_Path%\*.ahk
+Loop, %Auto_IncludePath%\*.ahk
     s.="#Include *i %A_ScriptDir%\Script\Cando\" A_LoopFileName "`n"
-AutoInclude_Path = %A_ScriptDir%\Script\Windo
-Loop, %AutoInclude_Path%\*.ahk
+Auto_IncludePath = %A_ScriptDir%\Script\Windo
+Loop, %Auto_IncludePath%\*.ahk
     s.="#Include *i %A_ScriptDir%\Script\Windo\" A_LoopFileName "`n"
-AutoInclude_Path = %A_ScriptDir%\Script\Hotkey
-Loop, %AutoInclude_Path%\*.ahk
+Auto_IncludePath = %A_ScriptDir%\Script\Hotkey
+Loop, %Auto_IncludePath%\*.ahk
     s.="#Include *i %A_ScriptDir%\Script\Hotkey\" A_LoopFileName "`n"
-AutoInclude_Path = %A_ScriptDir%\Script\7plus右键菜单
-Loop, %AutoInclude_Path%\*.ahk
+Auto_IncludePath = %A_ScriptDir%\Script\7plus右键菜单
+Loop, %Auto_IncludePath%\*.ahk
     s.="#Include *i %A_ScriptDir%\Script\7plus右键菜单\" A_LoopFileName "`n"
 if RegExReplace(fs,"\s+") != RegExReplace(s,"\s+")
 {
@@ -1527,7 +1528,7 @@ if RegExReplace(fs,"\s+") != RegExReplace(s,"\s+")
 IfMsgBox OK
 	Reload
 }
-fs:=s:=AutoInclude_Path:=f:=""
+fs:=s:=Auto_IncludePath:=f:=""
 ;---------------------------------
 Return
 
@@ -1550,17 +1551,13 @@ Combo_WinEvent:
 return
 
 Plugins_Run:
-tmphotkey := A_ThisHotkey
-IniRead,  hotkeycontent, %run_iniFile%,Plugins
-hotkeycontent:="[Plugins]" . "`n" . hotkeycontent
-Pluginshotkey := IniObj(hotkeycontent,OrderedArray()).Plugins
 for k,v in Pluginshotkey
 {
-If(v=tmphotkey)
-{
-Run,"%A_AhkPath%" "%A_ScriptDir%\Plugins\%k%.ahk"
-break
-}
+	If(v=A_ThisHotkey)
+	{
+	Run,"%A_AhkPath%" "%A_ScriptDir%\Plugins\%k%.ahk"
+	break
+	}
 }
 return
 

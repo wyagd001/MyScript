@@ -20,6 +20,7 @@ Cando_百度网络翻译:
 		Gui,add,Edit,x10 y100 w300 h80 vBaidu_基本释义,%Baidu_基本释义%
 		Gui,add,Edit,x10 y190 w300 h80 vBaidu_网络释义,%Baidu_网络释义%
 		Gui,show,,百度网络翻译
+		Baidu_译文 := Baidu_基本释义 := Baidu_网络释义 := ""
 	}
 	else
 		MsgBox,,百度网络翻译,网络错误或查询不到该单词的翻译。
@@ -54,7 +55,7 @@ soundpaly2:
 	else
 	{
 		CandySel:=Baidu_keyword
-		res:=Baidu_基本释义:=Baidu_译文=""
+		res:=Baidu_译文:=Baidu_基本释义:= Baidu_网络释义:=""
 		GuiControl, Disable, transandplay
 		Baidu_译文:=BaiduApi(Baidu_keyword)
 		obj := Jxon_Load(Baidu_译文)
@@ -65,6 +66,7 @@ soundpaly2:
 			GuiControl, , Baidu_网络释义, % Baidu_网络释义
 			;spovice:=ComObjCreate("sapi.spvoice")
 			;spovice.Speak(Baidu_keyword)
+			res:=Baidu_译文:=Baidu_基本释义:= Baidu_网络释义:=""
 			IfExist,%A_SCRIPTDIR%\Settings\tmp\tts.mp3
 				FileDelete,%A_SCRIPTDIR%\Settings\tmp\tts.mp3
 

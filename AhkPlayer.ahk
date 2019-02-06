@@ -39,6 +39,8 @@ LrcPath:=(SubStr(A_OSVersion, 1, 2)=10)?LrcPath_Win10:LrcPath
 LrcPath:=FileExist(LrcPath)?LrcPath:(FileExist(LrcPath_2)?LrcPath_2:"")
 AhkMediaLibFile = %A_ScriptDir%\settings\AhkPlayer\mp3s.txt
 AhkMediaListFile =  %A_ScriptDir%\settings\AhkPlayer\playlist.txt
+historyFile = %A_ScriptDir%\Settings\AhkPlayer\history.txt
+
 If (PlayListdefalut="t") || A_Args.Length()>0
 {
 	NowPlayFile := AhkMediaListFile
@@ -68,7 +70,7 @@ Gui, 2:Show, Hide x150 y%posy%
 
 Menu, FileMenu, Add, 添加文件(&F), MenuFileAdd
 Menu, FileMenu, Add, 添加文件夹(&D), MenuFolderAdd
-Menu, FileMenu, Add, 保存列表, saveplaylist
+Menu, FileMenu, Add, 保存列表(&S), saveplaylist
 Menu, FileMenu, Add, 退出(&X), Exit
 Menu, EditMenu, Add, 播放所选(单选)(&O), MenuOpen
 Menu, EditMenu, Add, 从列表中删除(&R), MenuRemove
@@ -81,8 +83,9 @@ Menu, PlayBack, Add, 跳转到(&J), Jump
 Menu, PlayBack, Add, 上一首(&V), Prev
 Menu, PlayBack, Add, 下一首(&N), Next
 Menu, PlayBack, Add
-Menu, PlayBack, Add, 随机播放(&R), GoRandom
-Menu, PlayBack, Add, 单曲循环(&D), PSingleCycle
+Menu, PlayBack, Add, 顺序播放(&D), CheckPlayorder
+Menu, PlayBack, Add, 随机播放(&R), CheckPlayorder
+Menu, PlayBack, Add, 单曲循环(&E), CheckPlayorder
 Menu, PlayBack, Add
 Menu, PlayBack, Add, 播放列表(&L), PTList
 Menu, PlayBack, Add, --下一首跟随鼠标(&F), PTLF
@@ -103,6 +106,8 @@ Menu, Help, Add, 关于(&A), About
 Menu,PlayBack,Disable,--下一首跟随鼠标(&F)
 If (PlayRandom="t")
 	Menu,PlayBack,Check,随机播放(&R)
+else
+	Menu,PlayBack,Check,顺序播放(&D)
 
 If (PlayListdefalut="t")
 {
@@ -295,9 +300,19 @@ StarPlay:
 			FileReadLine, Mp3, %NowPlayFile%, %PlayIndex%
 		}
 	}
-
 	IniWrite, %mp3%, %run_iniFile%, AhkPlayer, Mp3Playing
 	Iniwrite, %PlaylistIndex%, %run_iniFile%,AhkPlayer, PlaylistIndex
+if (mp3!="位置")
+{
+oldEncode:=A_FileEncoding
+FileEncoding, UTF-8
+FileRead, tempV, %historyFile%
+file := FileOpen(historyFile, "w", "UTF-8")
+file.Write(mp3 "`r`n" tempV)
+file.close()
+FileEncoding, % oldEncode
+tempV:=""
+}
 Gplay:
 	hSound := MCI_Open(Mp3, "myfile")
 	SetTimer UpdateSlider,off
@@ -317,6 +332,17 @@ Return
 
 Gplay2:
 	IniWrite, %mp3%, %run_iniFile%, AhkPlayer, Mp3Playing
+if (mp3!="位置")
+{
+oldEncode:=A_FileEncoding
+FileEncoding, UTF-8
+FileRead, tempV, %historyFile%
+file := FileOpen(historyFile, "w", "UTF-8")
+file.Write(mp3 "`r`n" tempV)
+file.close()
+FileEncoding, % oldEncode
+tempV:=""
+}
 	if (PlayListdefalut="t") && (PlayRandom = "f")
 		Iniwrite, %PlaylistIndex%, %run_iniFile%,AhkPlayer, PlaylistIndex
 	SetTimer UpdateSlider,off
@@ -338,9 +364,7 @@ Gplay2:
 	SetTimer,CheckStatus,250
 Return
 
-GuiShow:
-Gui, Menu, MyMenuBar
-
+CreatContext:
 Menu, Context, Add, 播放(单选), PlayLV
 Menu, Context, Add, 千千静听打开(单选), TTplayerOpen
 Menu, Context, Add, 打开文件位置(单选), OpenfilePath
@@ -348,10 +372,16 @@ Menu, Context, Add, 添加到列表, AddList
 Menu, Context, Add, 从列表中删除(可多选), Remove
 Menu, Context, Add, 清空列表, Remove
 Menu, Context, Add, 清除列表中的重复与无效项, RemoveDuplicateInvalid
+return
 
-Gui, Add,Button,  y5 gPTList,播放列表
-Gui, Add,Button, x+5 yp gPTLib,播放媒体库
-Gui, Add,Edit, x+5 yp  w250 vfind
+GuiShow:
+Gui, Menu, MyMenuBar
+
+pld:=(PlayListdefalut="t")?1:2
+Gui, Add,DropDownList, vSelectedplaylist y5 w80 gSelectPlayList Choose%pld%,默认列表|媒体库|历史列表
+spo:=(PlayRandom="t")?2:1
+Gui, Add,DropDownList, x+5 yp w80 vSelectedPlayorder gSelectPlayorder Choose%spo%,默认|随机|单曲循环
+Gui, Add,Edit, x+5 yp+1  w250 vfind
 Gui, Add,Button, x+5 yp h20 gfind Default,查找
 Gui, Add,Button, x+5 yp h20 grefreshList,返回列表
 Gui, Add,Button, x+5 yp h20 gFindToList,追加到列表
@@ -375,6 +405,7 @@ Guicontrol,,VSlider,%vol_Master%
 SB_SetParts(300,100,220)
 SB_SetProgress(0 ,3,"-smooth")
 AhkPlayer_Title:="播放媒体库 - AhkPlayer"
+gosub CreatContext
 If (PlayListdefalut="t"){
 AhkPlayer_Title:="播放列表 - AhkPlayer"
 Loop, read, %AhkMediaListFile%
@@ -387,6 +418,8 @@ Loop, read, %AhkMediaListFile%
     LV_ModifyCol()
 }
 }
+else
+menu, Context, DeleteAll
 Gui,Show,,%AhkPlayer_Title%
 Return
 
@@ -877,14 +910,76 @@ MsgBox,,清空列表失败,列表已经为空或文件不可读写
 }
 Return
 
-; 单曲循环
-PSingleCycle:
-SingleCycle := !SingleCycle
-if(SingleCycle=true)
-Menu,PlayBack,Check,单曲循环(&D)
-else
-Menu,PlayBack,UnCheck,单曲循环(&D)
-Return
+SelectPlayorder:
+Gui, Submit, NoHide
+GuiControl, Focus, find
+if(SelectedPlayorder="默认")
+{
+Menu,PlayBack,Check,顺序播放(&D)
+Menu,PlayBack,unCheck,随机播放(&R)
+Menu,PlayBack,unCheck,单曲循环(&E)
+PlayRandom := "f"
+SingleCycle := flash
+IniWrite,f, %run_iniFile%, AhkPlayer, PlayRandom
+return
+}
+else if(SelectedPlayorder="随机")
+{
+Menu,PlayBack,Check,随机播放(&R)
+Menu,PlayBack,unCheck,顺序播放(&D)
+Menu,PlayBack,unCheck,单曲循环(&E)
+PlayRandom := "t"
+SingleCycle := flash
+IniWrite,t, %run_iniFile%, AhkPlayer, PlayRandom
+return
+}
+else if(SelectedPlayorder="单曲循环")
+{
+SingleCycle:=true
+Menu,PlayBack,Check,单曲循环(&E)
+}
+return
+
+SelectPlayList:
+Gui, Submit, NoHide
+GuiControl, Focus, find
+if(Selectedplaylist="默认列表")
+{
+gosub PTList
+return
+}
+else if(Selectedplaylist="媒体库")
+{
+gosub PTLib
+return
+}
+else  ; 历史列表
+{
+LV_Delete()
+xuhao = 0
+SetFormat,float ,3.0
+Loop, read, %historyFile%
+	{
+	xuhao++
+	mp3_loop = %A_LoopReadline%
+	SplitPath, mp3_loop,,,ext, name
+	SetFormat, float ,03
+    LV_Add("",xuhao+0.0, name, ext,mp3_loop)
+    LV_ModifyCol()
+}
+menu, Context, DeleteAll
+Menu, Context, Add, 添加到列表, AddList
+file := FileOpen(historyFile, "r", "UTF-8")
+history:=""
+loop,100
+history.=file.ReadLine()
+file.Close()
+file :=FileOpen(historyFile, "w", "UTF-8")
+file.Write(history)
+file.Close()
+history:=""
+}
+return
 
 ; 播放列表
 PTList:
@@ -901,7 +996,7 @@ Menu, PlayBack,Check,播放列表(&L)
 Menu, PlayBack,UnCheck,播放媒体库(&M)
 Menu, PlayBack,Disable,播放列表(&L)
 Menu, PlayBack, Enable,播放媒体库(&M)
-
+GuiControl, choose, Selectedplaylist, 1
 ;IniRead, PlayListdefalut, %run_iniFile%, AhkPlayer, PlayListdefalut
 ;If (PlayListdefalut="t")
 ;{
@@ -911,7 +1006,9 @@ If (followmouse="t")
 Menu,PlayBack,Check,--下一首跟随鼠标(&F)
 ;}
 }
+menu, Context, DeleteAll
 gosub,refreshList
+gosub CreatContext
 Gui,Show,,%AhkPlayer_Title%
 Return
 
@@ -932,10 +1029,12 @@ Menu, PlayBack, Disable,播放媒体库(&M)
 Menu, PlayBack, Enable,播放列表(&L)
 Menu, PlayBack, UnCheck,播放列表(&L)
 Menu, PlayBack, Disable,--下一首跟随鼠标(&F)
+GuiControl, choose, Selectedplaylist, 2
 PlayListdefalut := "f"
 AhkPlayer_Title:="播放媒体库 - AhkPlayer"
 IniWrite,f, %run_iniFile%, AhkPlayer, PlayListdefalut
 LV_Delete()
+menu, Context, DeleteAll
 Gui,Show,,%AhkPlayer_Title%
 Return
 
@@ -955,19 +1054,43 @@ followmouse:="t"
 }
 Return
 
-GoRandom:
+; 随机播放
+CheckPlayorder:
 IniRead, PlayRandom, %run_iniFile%, AhkPlayer, PlayRandom
-If (PlayRandom="t")
+If (A_ThisMenuItem="顺序播放(&D)")
 {
+Menu,PlayBack,Check,顺序播放(&D)
 Menu,PlayBack,unCheck,随机播放(&R)
+Menu,PlayBack,unCheck,单曲循环(&E)
+SingleCycle := flash
 IniWrite,f, %run_iniFile%, AhkPlayer, PlayRandom
 PlayRandom :="f"
+GuiControl, choose, SelectedPlayorder,1
 }
-Else
+Else If (A_ThisMenuItem="随机播放(&R)")
 {
 Menu,PlayBack,Check,随机播放(&R)
+Menu,PlayBack,unCheck,顺序播放(&D)
+Menu,PlayBack,unCheck,单曲循环(&E)
+SingleCycle := flash
 IniWrite,t, %run_iniFile%, AhkPlayer, PlayRandom
 PlayRandom :="t"
+GuiControl, choose, SelectedPlayorder,2
+}
+else
+{
+SingleCycle := !SingleCycle
+if(SingleCycle=true)
+{
+Menu,PlayBack,Check,单曲循环(&E)
+GuiControl, choose, SelectedPlayorder,3
+}
+else
+{
+spo:=(PlayRandom="t")?2:1
+GuiControl, choose, SelectedPlayorder,%spo%
+Menu,PlayBack,UnCheck,单曲循环(&E)
+}
 }
 Return
 

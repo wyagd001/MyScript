@@ -12,6 +12,7 @@ Cando_有道网络翻译:
 		Gui,add,Edit,x10 y100 w300 h80,%Youdao_基本释义%
 		Gui,add,Edit,x10 y190 w300 h80,%Youdao_网络释义%
 		Gui,show,,有道网络翻译
+		Youdao_译文 := Youdao_基本释义 := Youdao_网络释义:= Youdao_keyword := ""
 	}
 	else
 		MsgBox,,有道网络翻译,网络错误或查询不到该单词的翻译。

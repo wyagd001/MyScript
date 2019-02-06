@@ -95,10 +95,3 @@ IEnumFormatEtc(this)
     DllCall(NumGet(NumGet(1*penum)+8), "Uint", penum)
     Return FileNameW
 }
-
-GetClipboardFormatName(nFormat)
-{
-    VarSetCapacity(sFormat, 255)
-    DllCall("GetClipboardFormatName", "Uint", nFormat, "str", sFormat, "Uint", 256)
-    Return  sFormat
-}

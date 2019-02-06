@@ -26,9 +26,9 @@ GetSelText(returnnum:=1, ByRef _isFile:="", ByRef _ClipAll:="")
 	monitor := returnnum = 0 ? 1 : 0
 	Saved_ClipBoard := ClipboardAll    ; 备份剪贴板
 	Clipboard=    ; 清空剪贴板
-	SendInput, ^c
-	sleep 100
-	ClipWait, 0.5
+	Send, ^c
+	sleep 200
+	ClipWait, 2
 	If(ErrorLevel) ; 如果粘贴板里面没有内容，则还原剪贴板
 	{
 		Clipboard:=Saved_ClipBoard
@@ -46,6 +46,7 @@ GetSelText(returnnum:=1, ByRef _isFile:="", ByRef _ClipAll:="")
 		_ClipAll := ClipboardAll
 	}
 	ClipSel := Clipboard
+
 	Clipboard := Saved_ClipBoard  ;还原粘贴板
 	sleep 200
 	monitor := 1
@@ -66,4 +67,11 @@ ReadClipboardText()
 		DllCall("CloseClipboard")
 	}
 	Return text
+}
+
+GetClipboardFormatName(nFormat)
+{
+    VarSetCapacity(sFormat, 255)
+    DllCall("GetClipboardFormatName", "Uint", nFormat, "str", sFormat, "Uint", 256)
+    Return  sFormat
 }

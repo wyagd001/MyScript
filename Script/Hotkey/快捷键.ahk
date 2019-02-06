@@ -224,7 +224,6 @@ while format := NumGet(bin, n, "uint")
     n += 8 + size
 }
 SelCode := sourceURL ? (";来源网址: " sourceURL "`r`n" SelCode) : SelCode
-
 if SelCode 
 {
 	Code_File:=  A_Desktop "\" . A_Now  ".ahk"
@@ -247,6 +246,7 @@ return
 		ToolTip,%Youdao_keyword%:`n基本释义:%Youdao_基本释义%`n网络释义:%Youdao_网络释义%
 		gosub,soundpaly
 		ToolTip
+		Youdao_译文 := Youdao_基本释义 := Youdao_网络释义:= Youdao_keyword := ""
 	}
 else
 MsgBox,,有道网络翻译,网络错误或查询不到该单词的翻译。
