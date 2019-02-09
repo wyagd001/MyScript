@@ -3,6 +3,25 @@ FileReadLine,x,%CandySel%,1
 FileMove,%CandySel%,%CandySel_ParentPath%\%x%.txt
 Return
 
+Cando_文件名首字母大写:
+	Loop, Parse, CandySel_FileNameNoExt, %A_Space%_`,|;-！`.  
+	{  
+		; 计算分隔符的位置.  
+		Position += StrLen(A_LoopField) + 1
+		; 获取解析循环中找到的分隔符.  
+		Delimiter := SubStr(CandySel_FileNameNoExt, Position, 1)
+		str1 := Format("{:T}", A_LoopField)
+		out := out . str1 . Delimiter 
+	}  
+FileMove,%CandySel%,%CandySel_ParentPath%\%out%.%CandySel_Ext%
+	out := Position := ""
+Return
+
+Cando_文件名乱码转码:
+CandySel_FileNameNoExt:=UrlDecode(CandySel_FileNameNoExt)
+FileMove,%CandySel%,%CandySel_ParentPath%\%CandySel_FileNameNoExt%.%CandySel_Ext%
+return
+
 Cando_合并文本文件:
 	loop, parse, CandySel, `n,`r
 	{

@@ -56,7 +56,9 @@ lrcECHO(lrcfile,GuiTitle){
 					time%n%:=SubStr(A_LoopReadLine, temp, 8)
 					sec%n%:=60*SubStr(time%n%, 1, 2)+SubStr(time%n%, 4, 5)
 					If sec%n% is not Number
-						Break
+						sec%n%:=60*SubStr(time%n%, 1, 2)+SubStr(time%n%, 4, 2)
+					If sec%n% is not Number
+							Break
 					lrc%n%:=SubStr(A_LoopReadLine, InStr(A_LoopReadLine,"]","",1)+1)
 					lrc%n%:= RegExReplace(lrc%n%, "\[[0-9]+\:[0-9]+\.[0-9]+\]")
 					; 原代码从右到左查找“]”，找到后从“]”位置+1，开始复制（复制全部）

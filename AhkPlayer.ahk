@@ -16,6 +16,8 @@
 #NoTrayIcon
 #SingleInstance force
 SetBatchLines, 10ms
+DetectHiddenWindows On
+SetTitleMatchMode 2
 #MaxThreads,255
 FileEncoding,CP1200
 CoordMode, ToolTip
@@ -32,6 +34,8 @@ IniRead, followmouse, %run_iniFile%, AhkPlayer, followmouse
 IniRead, PlayListdefalut, %run_iniFile%, AhkPlayer, PlayListdefalut
 IniRead, PlayRandom, %run_iniFile%, AhkPlayer, PlayRandom
 IniRead, huifushangci, %run_iniFile%, AhkPlayer, huifushangci
+IniRead, notepad2, %run_iniFile%, otherProgram, notepad2
+lrceditor:=notepad2?notepad2:notepad.exe
 
 hidelrc=0
 PlaylistIndex=1
@@ -520,6 +524,7 @@ Return
 Lrc:
 	lrcclear()
 	SetTimer, clock, Off
+	newname:=""
 	SplitPath, Mp3,,,ext, name
 	If FileExist(LrcPath "\" name ".lrc")
 	{
@@ -535,12 +540,29 @@ Lrc:
 	}
 	Else
 	{
-		Gui, 2:+LastFound
-		GuiControl, 2:, lrc,%name%(¸è´ÊÇ··î)
-		SetTimer, hidenolrc, -6500
-		Gui, 2:Show, NoActivate, %name% - AhkPlayer
-		Menu,Lib,Disable,±à¼­¸è´Ê(&E)
-	Return
+		newname:=StrReplace(name, " - ", "-",,1)
+		If FileExist(LrcPath "\" newname ".lrc")
+		{
+			Menu,Lib,Enable,±à¼­¸è´Ê(&E)
+			lrcECHO(LrcPath . "\" . newname . ".lrc", name)
+		Return
+		}
+		else If FileExist(LrcPath_2 "\" newname ".lrc")
+		{
+			Menu,Lib,Enable,±à¼­¸è´Ê(&E)
+			lrcECHO(LrcPath_2 . "\" . newname . ".lrc", name)
+		Return
+		}
+		Else
+		{
+			newname:=""
+			Gui, 2:+LastFound
+			GuiControl, 2:, lrc,%name%(¸è´ÊÇ··î)
+			SetTimer, hidenolrc, -6500
+			Gui, 2:Show, NoActivate, %name% - AhkPlayer
+			Menu,Lib,Disable,±à¼­¸è´Ê(&E)
+		Return
+		}
 	}
 Return
 
@@ -686,12 +708,23 @@ Jump:
 Return
 
 !F5::
-	IfExist,%LrcPath%\%name%.lrc
-		run,notepad.exe %LrcPath%\%name%.lrc
-	IfExist,%LrcPath_2%\%name%.lrc
-		run,notepad.exe %LrcPath_2%\%name%.lrc
-	Else
-		CF_ToolTip("¸è´ÊÎÄ¼þ²»´æÔÚ!",3000)
+	if (newname="")
+	{
+		IfExist,%LrcPath%\%name%.lrc
+			run,%lrceditor% %LrcPath%\%name%.lrc
+		IfExist,%LrcPath_2%\%name%.lrc
+			run,%lrceditor% %LrcPath_2%\%name%.lrc
+	return
+	}
+	else
+	{
+		IfExist,%LrcPath%\%newname%.lrc
+			run,%lrceditor% %LrcPath%\%newname%.lrc
+		IfExist,%LrcPath_2%\%newname%.lrc
+			run,%lrceditor% %LrcPath_2%\%newname%.lrc
+	return
+	}
+	CF_ToolTip("¸è´ÊÎÄ¼þ²»´æÔÚ!",3000)
 Return
 
 !F6::
@@ -956,6 +989,16 @@ return
 else  ; ÀúÊ·ÁÐ±í
 {
 LV_Delete()
+file := FileOpen(historyFile, "r", "UTF-8")
+history:=""
+loop,100
+history.=file.ReadLine()
+file.Close()
+file :=FileOpen(historyFile, "w", "UTF-8")
+file.Write(history)
+file.Close()
+history:=""
+
 xuhao = 0
 SetFormat,float ,3.0
 Loop, read, %historyFile%
@@ -969,15 +1012,6 @@ Loop, read, %historyFile%
 }
 menu, Context, DeleteAll
 Menu, Context, Add, Ìí¼Óµ½ÁÐ±í, AddList
-file := FileOpen(historyFile, "r", "UTF-8")
-history:=""
-loop,100
-history.=file.ReadLine()
-file.Close()
-file :=FileOpen(historyFile, "w", "UTF-8")
-file.Write(history)
-file.Close()
-history:=""
 }
 return
 
@@ -1108,9 +1142,9 @@ Return
 
 EditLrc:
 	IfExist,%LrcPath%\%name%.lrc
-		run,notepad.exe %LrcPath%\%name%.lrc
+		run,%lrceditor% %LrcPath%\%name%.lrc
 	IfExist,%LrcPath_2%\%name%.lrc
-		run,notepad.exe %LrcPath_2%\%name%.lrc
+		run,%lrceditor% %LrcPath_2%\%name%.lrc
 Return
 
 EditOption:
@@ -1471,6 +1505,13 @@ Return
 3GuiClose:
 gui,3:Destroy
 Return
+
+#IfWinExist  - AhkPlayer ahk_class AutoHotkeyGUI
+NumpadMult::gosub MyPause
+NumpadAdd::gosub next
+NumpadDiv::gosub exit
+NumpadSub::gosub !F7
+#IfWinExist
 
 #include %A_ScriptDir%\Lib\VA.ahk
 #include %A_ScriptDir%\Lib\MCI.ahk

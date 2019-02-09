@@ -6,8 +6,8 @@ Index_Html =
 <!doctype html>
 <html>
 <head>
+<link rel="shortcut icon" href="/favicon" type="image/x-icon" />
 <title> 网页控制 </title>
-<link href="https://autohotkey.com/favicon.ico" type="image/x-icon" rel="shortcut icon">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <style>
 p {
@@ -35,6 +35,17 @@ body {
 }
 
 </style>
+<script>
+window.onload=function(){
+var url=window.location.href;
+var regString = /[a-zA-Z]+/;
+var loc = url.substring(url.lastIndexOf('/')+1, url.length); 
+if (regString.test(loc))
+{
+window.location.href="http://192.168.1.100:2525";
+}
+}
+</script>
 </head>
 <body>
 <p>正在播放</p>
@@ -49,6 +60,7 @@ body {
 <a href="/pause_play"> <button> 播放/暂停 </button> </a>
 <a href="/next"> <button> 下一首 </button> </a>
 <a href="/exitapp"> <button> 退出 </button> </a>
+<a href="/"> <button> 主页 </button> </a>
 </p>
 
 <p>
@@ -164,6 +176,7 @@ indexInit_activated++
 paths := {}
 paths["/"] := Func("Index")
 paths["/logo"] := Func("Logo")
+paths["/favicon"] := Func("favicon")
 paths["/page"] := Func("MainPage")
 
 paths["/startaudioplayer"] := Func("startaudioplayer")
@@ -202,6 +215,11 @@ return
 
 Logo(ByRef req, ByRef res, ByRef server) {
     server.ServeFile(res, A_ScriptDir . "/pic/logo.png")
+    res.status := 200
+}
+
+favicon(ByRef req, ByRef res, ByRef server) {
+    server.ServeFile(res, A_ScriptDir . "/pic/favicon.ico")
     res.status := 200
 }
 
@@ -394,7 +412,13 @@ Global run_iniFile
 pp:=req.queries["mytext"]
 qq:=StringToHex(pp)
 MCode(varchinese, qq)
-iniwrite, % StrGet(&varchinese, "cp65001"), %run_iniFile%, serverConfig, mytext
+mytext := StrGet(&varchinese, "cp65001")
+mytext := StrReplace(mytext, "+", " ") ;不支持文字中有符号“+”
+iniwrite, % mytext, %run_iniFile%, serverConfig, mytext
+;req.headers["Referer"]:="http://192.168.1.100:2525"
+;req.path:="/"
+;for k,v in req
+;msgbox % k "`n" v
 	Index(req, res)
 return
 }
