@@ -38,11 +38,10 @@ body {
 <script>
 window.onload=function(){
 var url=window.location.href;
-var regString = /[a-zA-Z]+/;
 var loc = url.substring(url.lastIndexOf('/')+1, url.length); 
-if (regString.test(loc))
+if (loc !== "")
 {
-window.location.href="http://192.168.1.100:2525";
+window.location.href="/";
 }
 }
 </script>

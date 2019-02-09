@@ -892,14 +892,15 @@ If Auto_Update
 }
 
 ;----------网页控制电脑----------
-; 127.0.0.1:8000  http://localhost:2525/  手机访问 电脑IP：2525
+; 电脑访问地址       127.0.0.1:8000  http://localhost:2525/
+; 手机、电脑访问地址 电脑IP：2525
 if Auto_AhkServer
 {
 StoredLogin:=CF_IniRead(run_iniFile, "serverConfig","StoredLogin", "admin")
 StoredPass:=CF_IniRead(run_iniFile, "serverConfig","StoredPass", 1234)
 LoginPass:=CF_IniRead(run_iniFile, "serverConfig","LoginPass", 0)
 buttonSize:=CF_IniRead(run_iniFile, "serverConfig","buttonSize", "40px")
-serverPort:=CF_IniRead(run_iniFile, "serverConfig","serverPort", "8000")
+serverPort:=CF_IniRead(run_iniFile, "serverConfig","serverPort", "8000")  ; 端口号 设置为 2525 默认 8000
 textFontSize:=CF_IniRead(run_iniFile, "serverConfig","textFontSize", "16px")
 pagePadding:=CF_IniRead(run_iniFile, "serverConfig","pagePadding", "50px")
 mp3file:=CF_IniRead(run_iniFile, "serverConfig","mp3file")
