@@ -20,7 +20,7 @@ GetClipboardFormat(type=1)  ;Thanks nnnik
 ; returnnum = 0 不还原剪贴板，返回新剪贴板
 ; returnnum = 1 还原剪贴板，清空 _isFile _ClipAll，返回新剪贴板
 ; returnnum = 2/3/4.. 还原剪贴板，赋值 _isFile _ClipAll，返回新剪贴板
-GetSelText(returnnum:=1, ByRef _isFile:="", ByRef _ClipAll:="")
+GetSelText(returnnum:=1, ByRef _isFile:="", ByRef _ClipAll:="",waittime:=2)
 {
 	global monitor
 	monitor := returnnum = 0 ? 1 : 0
@@ -28,7 +28,7 @@ GetSelText(returnnum:=1, ByRef _isFile:="", ByRef _ClipAll:="")
 	Clipboard=    ; 清空剪贴板
 	Send, ^c
 	sleep 200
-	ClipWait, 2
+	ClipWait, % waittime
 	If(ErrorLevel) ; 如果粘贴板里面没有内容，则还原剪贴板
 	{
 		Clipboard:=Saved_ClipBoard

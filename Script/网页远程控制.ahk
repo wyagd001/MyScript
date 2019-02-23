@@ -35,8 +35,8 @@ body {
 }
 
 </style>
-<script>
-window.onload=function(){
+<script type="text/javascript">
+window.onload=function wyreload(){
 var url=window.location.href;
 var loc = url.substring(url.lastIndexOf('/')+1, url.length); 
 if (loc !== "")

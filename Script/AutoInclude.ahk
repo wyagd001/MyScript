@@ -21,6 +21,8 @@
 #Include *i %A_ScriptDir%\Script\Cando\Cando_十进制十六进制转换.ahk
 #Include *i %A_ScriptDir%\Script\Cando\Cando_文件转换编码.ahk
 #Include *i %A_ScriptDir%\Script\Cando\Cando_生成二维码.ahk
+#Include *i %A_ScriptDir%\Script\Cando\Cando_添加单词到翻译文件.ahk
+#Include *i %A_ScriptDir%\Script\Cando\Cando_文本比较.ahk
 #Include *i %A_ScriptDir%\Script\Windo\Windo.ahk
 #Include *i %A_ScriptDir%\Script\Windo\Windo_其他浏览器打开.ahk
 #Include *i %A_ScriptDir%\Script\Windo\Windo_其他编辑器打开.ahk

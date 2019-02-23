@@ -1,6 +1,31 @@
 ;Explorer .. View mode--------------By a_h_k & ..:: Free Radical ::..
 ;http://www.autohotkey.com/forum/topic57686.html
 
+$`::
+FileGetTime,newtransT,%A_ScriptDir%\settings\translist.ini
+if (newtransT != transT)
+{
+transT:= newtransT
+translist:=IniObj(A_ScriptDir "\settings\translist.ini").翻译
+}
+tempV:=GetSelText()
+tempV=%tempV%
+if !tempV
+{
+SendRaw, ``
+return
+}
+for key, value in translist
+{
+if (tempV = key)
+{
+send % translist[key]
+return
+}
+}
+return
+
+
 窗口置顶:
 ;^Up::
 WinSet,AlwaysOnTop,,A
@@ -209,7 +234,7 @@ return
 
 ;#V::
 代码保存并运行:
-SelCode:=GetSelText(2,, bin)
+SelCode:=GetSelText(2,, bin,5)
 CF_HTML := DllCall("RegisterClipboardFormat", "str", "HTML Format")
 n := 0
 while format := NumGet(bin, n, "uint")

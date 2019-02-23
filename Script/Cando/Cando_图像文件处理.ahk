@@ -13,6 +13,23 @@ IfNotExist %Output%
 	TrayTip,Í¼Ïñ×ª»»Ê§°Ü,%Output%,3000
 Return
 
+Cando_Í¼ÏñÖÊÁ¿ËõÐ¡:
+Output:=CandySel_ParentPath . "\" . CandySel_FileNamenoExt . "-0.5.jpg"
+ConvertImageQuality(CandySel,Output,85)
+IfNotExist %Output%
+	TrayTip,Í¼Ïñ×ª»»Ê§°Ü,%Output%,3000
+Return
+
+ConvertImageQuality(sInput,sOutput,Quality)
+{
+	pToken:=Gdip_Startup()
+	pBitmap := Gdip_CreateBitmapFromFile(sInput)
+	Gdip_SaveBitmapToFile(pBitmap, sOutput,Quality)
+	Gdip_DisposeImage(pBitmap)
+	Gdip_Shutdown(pToken)
+	return
+}
+
 ConvertImage(sInput, sOutput, sWidth="", sHeight="", Method="Percent")
 {
 	pToken:=Gdip_Startup()
@@ -39,7 +56,7 @@ ConvertImage(sInput, sOutput, sWidth="", sHeight="", Method="Percent")
 	Gdip_SetInterpolationMode(G1, 7)
 	Gdip_DrawImage(G1, pBitmap, 0, 0, dWidth, dHeight, 0, 0, Width, Height)
 
-	Gdip_SaveBitmapToFile(pBitmap1, sOutput)
+	Gdip_SaveBitmapToFile(pBitmap1, sOutput,100)
 	Gdip_DeleteGraphics(G1)
 	Gdip_DisposeImage(pBitmap), Gdip_DisposeImage(pBitmap1)
 	Gdip_Shutdown(pToken)

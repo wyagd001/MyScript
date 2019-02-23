@@ -710,6 +710,9 @@ for k,v in Pluginshotkey
 If v
  hotkey, %v%,Plugins_Run ;,UseErrorLevel
 
+FileGetTime,transT,%A_ScriptDir%\settings\translist.ini
+translist:=IniObj(A_ScriptDir "\settings\translist.ini").翻译
+
 ;;;;;;;;;; 剪贴板  ;;;;;;;;;;;;
 
 ;复制时  
@@ -860,6 +863,35 @@ if !Auto_Spacepreview
 }
 ;---------鼠标增强空格预览的热键-----------
 
+;----------网页控制电脑----------
+; 电脑访问地址       127.0.0.1:8000  http://localhost:2525/
+; 手机、电脑访问地址 电脑IP：2525
+if Auto_AhkServer
+{
+StoredLogin:=CF_IniRead(run_iniFile, "serverConfig","StoredLogin", "admin")
+StoredPass:=CF_IniRead(run_iniFile, "serverConfig","StoredPass", 1234)
+LoginPass:=CF_IniRead(run_iniFile, "serverConfig","LoginPass", 0)
+buttonSize:=CF_IniRead(run_iniFile, "serverConfig","buttonSize", "40px")
+serverPort:=CF_IniRead(run_iniFile, "serverConfig","serverPort", "8000")  ; 端口号 设置为 2525 默认 8000
+textFontSize:=CF_IniRead(run_iniFile, "serverConfig","textFontSize", "16px")
+pagePadding:=CF_IniRead(run_iniFile, "serverConfig","pagePadding", "50px")
+mp3file:=CF_IniRead(run_iniFile, "serverConfig","mp3file")
+excelfile:=CF_IniRead(run_iniFile, "serverConfig","excelfile")
+txtfile:=CF_IniRead(run_iniFile, "serverConfig","txtfile")
+loop,5
+{
+stableitem%a_index%:=CF_IniRead(run_iniFile, "serverConfig","stableitem" . a_index)
+}
+mOn:=1
+scheduleDelay:=0	;time before a standby/hibernate command is executed
+SHT:=scheduleDelay//60000	;standby/hibernate timer abstracted in minutes
+
+gosub indexInit
+}
+;----------网页控制电脑----------
+
+; 具有 msgbox 的代码放在脚边最后不影响其它部分 
+
 if (Auto_JCTF or Auto_Update) and 每隔几小时结果为真(6)
 {
 ;----------农历节日----------
@@ -890,33 +922,6 @@ If Auto_Update
 }
 ;---------启动检查更新-----------
 }
-
-;----------网页控制电脑----------
-; 电脑访问地址       127.0.0.1:8000  http://localhost:2525/
-; 手机、电脑访问地址 电脑IP：2525
-if Auto_AhkServer
-{
-StoredLogin:=CF_IniRead(run_iniFile, "serverConfig","StoredLogin", "admin")
-StoredPass:=CF_IniRead(run_iniFile, "serverConfig","StoredPass", 1234)
-LoginPass:=CF_IniRead(run_iniFile, "serverConfig","LoginPass", 0)
-buttonSize:=CF_IniRead(run_iniFile, "serverConfig","buttonSize", "40px")
-serverPort:=CF_IniRead(run_iniFile, "serverConfig","serverPort", "8000")  ; 端口号 设置为 2525 默认 8000
-textFontSize:=CF_IniRead(run_iniFile, "serverConfig","textFontSize", "16px")
-pagePadding:=CF_IniRead(run_iniFile, "serverConfig","pagePadding", "50px")
-mp3file:=CF_IniRead(run_iniFile, "serverConfig","mp3file")
-excelfile:=CF_IniRead(run_iniFile, "serverConfig","excelfile")
-txtfile:=CF_IniRead(run_iniFile, "serverConfig","txtfile")
-loop,5
-{
-stableitem%a_index%:=CF_IniRead(run_iniFile, "serverConfig","stableitem" . a_index)
-}
-mOn:=1
-scheduleDelay:=0	;time before a standby/hibernate command is executed
-SHT:=scheduleDelay//60000	;standby/hibernate timer abstracted in minutes
-
-gosub indexInit
-}
-;----------网页控制电脑----------
 
 ;----------WinMouse----------
 ;----------按住 Capslock 使用鼠标改变窗口的大小和位置 ----------
@@ -1056,11 +1061,17 @@ onClipboardChange:
 	return
 	if !monitor
 	return
+	ClipWait, 1, 1
 	if !clipboard
 	return
-	ClipWait, 0.5, 1
+	if ErrorLevel
+	{
+		CF_ToolTip("剪贴板复制出错.",700)
+	return
+	}
 	if GetClipboardFormat(1)=1
 	{
+		tempid=0
 		lastclipid := clipid
 		clipid+=1
 		if(ClipSaved%lastclipid%=Clipboard)
@@ -1607,6 +1618,7 @@ return
 #include %A_ScriptDir%\Lib\Explorer.ahk
 #include %A_ScriptDir%\Lib\Menu.ahk
 #include %A_ScriptDir%\Lib\Window.ahk
+#include %A_ScriptDir%\Lib\Class_RichEdit.ahk
 #include %A_ScriptDir%\Lib\ProcessMemory.ahk
 #include %A_ScriptDir%\Lib\WinEventHook.ahk
 #include %A_ScriptDir%\Lib\ActiveScript.ahk

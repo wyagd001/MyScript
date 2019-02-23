@@ -3,15 +3,22 @@ gui_History()
 return
 
 $^V::
-monitor=0
-if tempid
+if tempid   ; 图片，文件等非文字剪贴板 直接粘贴
 {
-tempid=0
-SetTimer, ctrlCheck, 50
+Send, ^{vk56}
 return
 }
-if !ClipSaved1
+if !ClipSaved1   ; 脚本启动时的剪贴板 直接粘贴
+{
+Send, ^{vk56}
 return
+}
+if (Clipboard!=ClipSaved%clipid%)   ; 未记录的剪贴板 直接粘贴
+{
+Send, ^{vk56}
+return
+}
+monitor=0
 first+=1
 if first=4
 first=1
