@@ -5,6 +5,7 @@ Gui,66:Default
 fileread,default2,%CandySel%
 GuiControl,, textfile2,%CandySel%
 t2.SetText(default2)
+SetTimer, WatchScrollBar, 100
 }
 else
 {
@@ -18,9 +19,17 @@ Gui, Add,text,x600 yp w600 vtextfile2,
 t1 := new RichEdit(66, opts " w" twidth)
 t2 := new RichEdit(66, opts " w" twidth " xp" twidth)
 Gui, Add, Button, Default w%bwidth% x520 gcompare, 比较/更新
+Gui, Add,text, x700 yp+10 h25,模式：
+Gui, Add, Radio,  x740 yp-8 h25 gsub Group vcompmode,字
+Gui, Add, Radio,  x790 yp h25 gsub, 连字
+Gui, Add, Radio,  x860 yp h25 gsub Checked,行
 gui show,,文字比较
 t1.SetText(default1)
 }
+return
+
+sub:
+Gui Submit, NoHide
 return
 
 ; https://www.autohotkey.com/boards/viewtopic.php?f=6&t=59029
@@ -28,12 +37,17 @@ return
 ; 修改为 v1 版本  不区分大小写
 compare()
 {
-	global t1, t2, c, t1Arr := [], t2Arr := []
-
-t1text:=t1.GetText(), t2text:=t2.GetText()
+	global t1, t2, compmode, c:= [], t1Arr := [], t2Arr := []
+t1text:=t1.GetText(), t1.SetText(t1text)
+t2text:=t2.GetText(), t2.SetText(t2text)
 
 t1.WordWrap("on"), t2.WordWrap("on")
-		de := [" ", "`n", "`r"]
+			if (compmode=1)
+		de := ""
+	else if (compmode=2)
+		de := ["，" , "。", " ", "`n", "`r"]
+	else
+		de := ["`n", "`r"]
 	
 	a := strsplit(t1text, de), b := strsplit(t2text, de), c := lcs(a, b)
 
@@ -60,20 +74,35 @@ t1.WordWrap("on"), t2.WordWrap("on")
 	}
 	consolidate(t1m, a)
 	for _, v in t1m {
+		if (compmode=1)
+			start := v[1] - 1, end := v[2]
+		else if (compmode=2)
 			start := wordStart(a, v[1]), end := wordStart(a, v[2]) + StrLen(a[v[2]])
+		else
+			start := lineStart(a, v[1]), end := lineStart(a, v[2]) + StrLen(a[v[2]])
 		 t1.SetSel(start, end), t1.SetFont({BkColor:"RED", Color:"WHITE"})
 		,t1Arr.Push(SubStr(t1text, start + 1, end - start))
 	}
 	
 	consolidate(t2m, b)
 	for _, v in t2m {
+		if (compmode=1)
+			start := v[1] - 1, end := v[2]
+		else if (compmode=2)
 			start := wordStart(b, v[1]), end := wordStart(b, v[2]) + StrLen(b[v[2]])
+		else
+			start := lineStart(b, v[1]), end := lineStart(b, v[2]) + StrLen(b[v[2]])
 		 t2.SetSel(start, end), t2.SetFont({BkColor:"GREEN", Color:"WHITE"})
 		,t2Arr.Push(SubStr(t2text, start + 1, end - start))
 	}
 	
 	;Leftovers
+		if (compmode=1)
+		start1 := t1s - 1, start2 := t2s - 1
+	else if (compmode=2)
 		start1 := wordStart(a, t1s), start2 := wordStart(b, t2s)
+	else
+		start1 := lineStart(a, t1s), start2 := lineStart(b, t2s)
 	 t1.SetSel(start1, -1), t1.SetFont({BkColor:"RED", Color:"WHITE"})
 	,t1.SetSel(0, 0), t1.ScrollCaret(), t1Arr.Push(SubStr(t1text, start1 + 1))
 	,t2.SetSel(start2, -1), t2.SetFont({BkColor:"GREEN", Color:"WHITE"})
@@ -167,3 +196,21 @@ consolidate(tm, t)
 		}
 		Return t
 	}
+
+WatchScrollBar:
+ActiveWindow := WinExist("A")
+if not ActiveWindow  ; 没有活动窗口.
+    return
+ControlGetFocus, FocusedControl, ahk_id %ActiveWindow%
+if not FocusedControl  ; 没有焦点控件.
+    return
+IfWinActive,文字比较 ahk_class AutoHotkeyGUI
+{
+t1ScrollPos:=t1.GetScrollPos()
+t2ScrollPos:=t2.GetScrollPos()
+if (FocusedControl="RICHEDIT50W2")
+t1.SetScrollPos(0,t2ScrollPos.Y)
+}
+IfWinNotExist,文字比较 ahk_class AutoHotkeyGUI
+SetTimer, WatchScrollBar, off
+return

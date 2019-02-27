@@ -91,9 +91,10 @@ CoordMode, Mouse, Screen
                 || (win="Shell_TrayWnd"             ; taskbar
                  && ctl_parent="MSTaskSwWClass"))   ; task buttons
                 {
-Click
-MouseGetPos, lastx, lasty
-}
+									sleep, 500
+									Click
+									MouseGetPos, lastx, lasty
+								}
             ; (The win="BaseBar" check excludes the system notification area.)
             return
         }
