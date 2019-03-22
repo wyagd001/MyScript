@@ -1,35 +1,68 @@
 Cando_文本比较:
-  IfWinExist,文字比较 ahk_class AutoHotkeyGUI
-{
-Gui,66:Default 
-fileread,default2,%CandySel%
-GuiControl,, textfile2,%CandySel%
-t2.SetText(default2)
-SetTimer, WatchScrollBar, 100
-}
-else
-{
-Gui,66:Destroy
-Gui,66:Default 
-gui +ReSize +hwndGuiID
-fileread,default1,%CandySel%
-twidth := 600, bwidth := 150, bwidth2 := 100, opts := "x5 y30 r40  0x100000"
-Gui, Add,text ,,%CandySel%
-Gui, Add,text,x600 yp w600 vtextfile2, 
-t1 := new RichEdit(66, opts " w" twidth)
-t2 := new RichEdit(66, opts " w" twidth " xp" twidth)
-Gui, Add, Button, Default w%bwidth% x520 gcompare, 比较/更新
-Gui, Add,text, x700 yp+10 h25,模式：
-Gui, Add, Radio,  x740 yp-8 h25 gsub Group vcompmode,字
-Gui, Add, Radio,  x790 yp h25 gsub, 连字
-Gui, Add, Radio,  x860 yp h25 gsub Checked,行
-gui show,,文字比较
-t1.SetText(default1)
-}
+	IfWinExist,文字比较 ahk_class AutoHotkeyGUI
+	{
+		Gui,66:Default 
+		if Candy_isFile
+		{
+			fileread,default2,%CandySel%
+			GuiControl,, textfile2,%CandySel%
+			if (strlen(default2) > 10000)
+				GuiControl,Disable,compmode
+			t2.SetText(default2)
+		}
+		else
+		{
+			if (strlen(CandySel) > 10000)
+			GuiControl,Disable,compmode
+			t2.SetText(CandySel)
+		}
+		WinActivate,文字比较 ahk_class AutoHotkeyGUI
+		SetTimer, WatchScrollBar, 100
+	}
+	else
+	{
+		Gui,66:Destroy
+		Gui,66:Default 
+		gui +ReSize +hwndGuiID
+		if Candy_isFile
+		{
+			fileread,default1,%CandySel%
+			textfile1:=CandySel
+		}
+		else
+			textfile1:=""
+		twidth := 600, bwidth := 150, bwidth2 := 100, opts := "x5 y30 r40  0x100000"
+		Gui, Add,text ,,%textfile1%
+		Gui, Add,text,x600 yp w600 vtextfile2, 
+		t1 := new RichEdit(66, opts " w" twidth)
+		t2 := new RichEdit(66, opts " w" twidth " xp" twidth)
+		Gui, Add, Button, Default w%bwidth% x520 gcompare, 比较/更新
+		Gui, Add,text, x700 yp+10 h25,模式：
+		Gui, Add, Radio,  x740 yp-8 h25 gsub Group vcompmode,字
+		Gui, Add, Radio,  x790 yp h25 gsub, 连字
+		Gui, Add, Radio,  x860 yp h25 gsub Checked,行
+		gui show,,文字比较
+		if Candy_isFile
+		{
+			if (strlen(default1) > 10000)
+				GuiControl,Disable,compmode
+			t1.SetText(default1)
+		}
+		else
+		{
+			if (strlen(CandySel) > 10000)
+				GuiControl,Disable,compmode
+			t1.SetText(CandySel)
+		}
+	}
 return
 
 sub:
-Gui Submit, NoHide
+	Gui Submit, NoHide
+	if (strlen(t1.GetText()) < 10000) && (strlen(t2.GetText()) < 10000)
+		GuiControl,enable,compmode
+	else
+		GuiControl,Disable,compmode
 return
 
 ; https://www.autohotkey.com/boards/viewtopic.php?f=6&t=59029
@@ -38,31 +71,38 @@ return
 compare()
 {
 	global t1, t2, compmode, c:= [], t1Arr := [], t2Arr := []
-t1text:=t1.GetText(), t1.SetText(t1text)
-t2text:=t2.GetText(), t2.SetText(t2text)
+	t1text:=t1.GetText(), t1.SetText(t1text)
+	t2text:=t2.GetText(), t2.SetText(t2text)
+	t1.WordWrap("on"), t2.WordWrap("on")
+	ToolTip,正在比较文本，请等待...
+	StartTime:=A_TickCount
 
-t1.WordWrap("on"), t2.WordWrap("on")
-			if (compmode=1)
+	if (compmode=1) 
 		de := ""
 	else if (compmode=2)
 		de := ["，" , "。", " ", "`n", "`r"]
 	else
 		de := ["`n", "`r"]
-	
-	a := strsplit(t1text, de), b := strsplit(t2text, de), c := lcs(a, b)
 
+	if (compmode=1) && ((strlen(t1text) > 10000) or (strlen(t2text) > 10000))
+	{
+		compmode=2
+		de := ["，" , "。", " ", "`n", "`r"]
+	}
+
+	a := strsplit(t1text, de), b := strsplit(t2text, de), c := lcs(a, b)
 	t1s := 1, t1e := 1, t2s := 1, t2e := 1, t1m := [], t2m := []
-	for _, v in c {
-		
+	for _, v in c 
+	{
 		;Deleted
 		while (a[t1e] != v)
-{
+		{
 			t1e++
-}
+		}
 		if (t1e > t1s)
-{
+		{
 			t1m.push([t1s, t1e-1])
-}
+		}
 		t1s := ++t1e
 
 		;Inserted
@@ -73,41 +113,46 @@ t1.WordWrap("on"), t2.WordWrap("on")
 		t2s := ++t2e
 	}
 	consolidate(t1m, a)
-	for _, v in t1m {
+	for _, v in t1m 
+	{
 		if (compmode=1)
 			start := v[1] - 1, end := v[2]
 		else if (compmode=2)
 			start := wordStart(a, v[1]), end := wordStart(a, v[2]) + StrLen(a[v[2]])
 		else
 			start := lineStart(a, v[1]), end := lineStart(a, v[2]) + StrLen(a[v[2]])
-		 t1.SetSel(start, end), t1.SetFont({BkColor:"RED", Color:"WHITE"})
+		t1.SetSel(start, end), t1.SetFont({BkColor:"RED", Color:"WHITE"})
 		,t1Arr.Push(SubStr(t1text, start + 1, end - start))
 	}
 	
 	consolidate(t2m, b)
-	for _, v in t2m {
+	for _, v in t2m
+	{
 		if (compmode=1)
 			start := v[1] - 1, end := v[2]
 		else if (compmode=2)
 			start := wordStart(b, v[1]), end := wordStart(b, v[2]) + StrLen(b[v[2]])
 		else
 			start := lineStart(b, v[1]), end := lineStart(b, v[2]) + StrLen(b[v[2]])
-		 t2.SetSel(start, end), t2.SetFont({BkColor:"GREEN", Color:"WHITE"})
+		t2.SetSel(start, end), t2.SetFont({BkColor:"GREEN", Color:"WHITE"})
 		,t2Arr.Push(SubStr(t2text, start + 1, end - start))
 	}
 	
 	;Leftovers
-		if (compmode=1)
+	if (compmode=1)
 		start1 := t1s - 1, start2 := t2s - 1
 	else if (compmode=2)
 		start1 := wordStart(a, t1s), start2 := wordStart(b, t2s)
 	else
 		start1 := lineStart(a, t1s), start2 := lineStart(b, t2s)
-	 t1.SetSel(start1, -1), t1.SetFont({BkColor:"RED", Color:"WHITE"})
+	t1.SetSel(start1, -1), t1.SetFont({BkColor:"RED", Color:"WHITE"})
 	,t1.SetSel(0, 0), t1.ScrollCaret(), t1Arr.Push(SubStr(t1text, start1 + 1))
 	,t2.SetSel(start2, -1), t2.SetFont({BkColor:"GREEN", Color:"WHITE"})
 	,t2.SetSel(0, 0), t2.ScrollCaret(), t2Arr.Push(SubStr(t2text, start2 + 1))
-
+	WinActivate,文字比较 ahk_class AutoHotkeyGUI
+	ElapsedTime := (A_TickCount - StartTime) / 1000
+	ElapsedTime := ZTrim(ElapsedTime)
+	CF_ToolTip("比较完成。用时: " ElapsedTime "秒。",3000)
 return
 }
 

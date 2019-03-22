@@ -1,29 +1,28 @@
 ;!M::
 文件MD5:
 cando_MD5:
-  Gui,2:Default
-;IfWinActive,ahk_Group ccc
-  IfWinExist,MD5验证
-  {
-    Md5FilePath2:=GetSelectedFiles()
-    if (Md5FilePath2 = Md5FilePath)
-      Return
-    GuiControl,enable,CRC32_2
-    GuiControl,enable,del2
-    GuiControl,, CRC32_2,CRC32
-    GuiControl,, Md5FilePath2,%Md5FilePath2%
-    if md5type=1
-    {
-      If A_IsUnicode
-      {
-        StrPutVar(Md5FilePath2,Md5FilePath2_2,"cp0")
-        VarSetCapacity(md5sum2, 32)
-        DllCall(A_ScriptDir "\MD5Lib.dll\hexMD5", "str", md5sum2, "str", Md5FilePath2_2)
-        Ansi2Unicode(md5sum2_2,md5sum2,936)
-VarSetCapacity(md5sum2_2, -1)
-        GuiControl,, hash2, % md5sum2_2
-      }
-      Else
+	Gui,2:Default
+	;IfWinActive,ahk_Group ccc
+	IfWinExist,MD5验证
+	{
+		Md5FilePath2:=GetSelectedFiles()
+		if (Md5FilePath2 = Md5FilePath)
+		Return
+		GuiControl,enable,CRC32_2
+		GuiControl,enable,del2
+		GuiControl,, Md5FilePath2,%Md5FilePath2%
+		if md5type=1
+		{
+			If A_IsUnicode
+			{
+				StrPutVar(Md5FilePath2,Md5FilePath2_2,"cp0")
+				VarSetCapacity(md5sum2, 32)
+				DllCall(A_ScriptDir "\MD5Lib.dll\hexMD5", "str", md5sum2, "str", Md5FilePath2_2)
+				Ansi2Unicode(md5sum2_2,md5sum2,936)
+				VarSetCapacity(md5sum2_2, -1)
+				GuiControl,, hash2, % md5sum2_2
+			}
+			Else
       {
         VarSetCapacity(md5sum, 32)
         DllCall(A_ScriptDir "\MD5Lib.dll\hexMD5", "str", md5sum, "str", Md5FilePath2)
@@ -32,8 +31,7 @@ VarSetCapacity(md5sum2_2, -1)
     }
     Else
       GuiControl,, hash2, % MD5_File(Md5FilePath2)
-
-    WinActivate,MD5验证
+		WinActivate,MD5验证
   }
   Else
   {
@@ -110,65 +108,66 @@ Return
 
 
 2GuiDropFiles:
-Loop, parse, A_GuiEvent, `n
-{
+	Loop, parse, A_GuiEvent, `n
+	{
+		FileGetAttrib, Attributes,%A_LoopField%
+		IfEqual A_guicontrol ,Md5FilePath
+		{
+			IfInString, Attributes, D
+			return  ; exit if it is folder
+			GuiControl,, %A_guicontrol%, %A_LoopField%  ; to asign filename to a control
+			if md5type=1
+			{
+				If A_IsUnicode
+				{
+					StrPutVar(Md5FilePath,Md5FilePath_1,"cp0")
+					VarSetCapacity(md5sum, 32)
+					DllCall(A_ScriptDir "\MD5Lib.dll\hexMD5", "str", md5sum, "str", Md5FilePath_1)
+					Ansi2Unicode(md5sum_1,md5sum,936)
+					VarSetCapacity(md5sum_1, -1)
+					GuiControl,, hash, % md5sum_1
+				}
+				Else
+				{
+					VarSetCapacity(md5sum, 32)
+					DllCall(A_ScriptDir "\MD5Lib.dll\hexMD5", "str", md5sum, "str", Md5FilePath)
+					GuiControl,, hash, % md5sum
+				}
+			}
+			Else
+				GuiControl,, hash, % MD5_File(A_LoopField)
+		}
+		IfEqual A_guicontrol ,Md5FilePath2
+		{
+			IfInString, Attributes, D
+			return  ; exit if it is folder
+			GuiControl,, %A_guicontrol%, %A_LoopField%  ; to asign filename to a control
+			GuiControl,enable,CRC32_2
+			GuiControl,enable,del2
+			if md5type=1
+			{
+				If A_IsUnicode
+				{
+					StrPutVar(Md5FilePath2,Md5FilePath2_2,"cp0")
+					VarSetCapacity(md5sum2, 32)
+					DllCall(A_ScriptDir "\MD5Lib.dll\hexMD5", "str", md5sum2, "str", Md5FilePath2_2)
+					Ansi2Unicode(md5sum2_2,md5sum2,936)
+					VarSetCapacity(md5sum2_2, -1)
+					GuiControl,, hash2, % md5sum2_2
+				}
+				Else
+				{
+					VarSetCapacity(md5sum, 32)
+					DllCall(A_ScriptDir "\MD5Lib.dll\hexMD5", "str", md5sum, "str", Md5FilePath2)
+					GuiControl,, hash2, % md5sum
+				}
+			}
+			Else
+				GuiControl,, hash2, % MD5_File(A_LoopField)
+		}
+	}
 
-FileGetAttrib, Attributes,%A_LoopField%
-IfEqual A_guicontrol ,Md5FilePath
-   {
-   IfInString, Attributes, D
-     return  ; exit if it is folder
-   GuiControl,, %A_guicontrol%, %A_LoopField%  ; to asign filename to a control
-   if md5type=1
-{
-If A_IsUnicode
-      {
-        StrPutVar(Md5FilePath,Md5FilePath_1,"cp0")
-        VarSetCapacity(md5sum, 32)
-        DllCall(A_ScriptDir "\MD5Lib.dll\hexMD5", "str", md5sum, "str", Md5FilePath_1)
-        Ansi2Unicode(md5sum_1,md5sum,936)
-VarSetCapacity(md5sum_1, -1)
-        GuiControl,, hash, % md5sum_1
-      }
-      Else
-      {
-        VarSetCapacity(md5sum, 32)
-        DllCall(A_ScriptDir "\MD5Lib.dll\hexMD5", "str", md5sum, "str", Md5FilePath)
-        GuiControl,, hash, % md5sum
-      }
-}
-Else
-   GuiControl,, hash, % MD5_File(A_LoopField)
-  }
-IfEqual A_guicontrol ,Md5FilePath2
-   {
-   IfInString, Attributes, D
-     return  ; exit if it is folder
-   GuiControl,, %A_guicontrol%, %A_LoopField%  ; to asign filename to a control
-      if md5type=1
-{
-      If A_IsUnicode
-      {
-        StrPutVar(Md5FilePath2,Md5FilePath2_2,"cp0")
-        VarSetCapacity(md5sum2, 32)
-        DllCall(A_ScriptDir "\MD5Lib.dll\hexMD5", "str", md5sum2, "str", Md5FilePath2_2)
-        Ansi2Unicode(md5sum2_2,md5sum2,936)
-VarSetCapacity(md5sum2_2, -1)
-        GuiControl,, hash2, % md5sum2_2
-      }
-      Else
-      {
-        VarSetCapacity(md5sum, 32)
-        DllCall(A_ScriptDir "\MD5Lib.dll\hexMD5", "str", md5sum, "str", Md5FilePath2)
-        GuiControl,, hash2, % md5sum
-      }
-}
-Else
-   GuiControl,, hash2, % MD5_File(A_LoopField)
-   }
-}
-
-Gosub TrueorFalse
+	Gosub TrueorFalse
 return
 
 delfile:
@@ -182,23 +181,6 @@ MsgBox,4,删除提示,确定要把下面的文件放入回收站吗？`n`n%Md5FilePath%
 IfMsgBox Yes
 FileRecycle,%Md5FilePath%
 return
-
-/*
-;删除文件按钮函数统一为一个
-delfile1:
-GuiControlGet,Md5FilePath
-MsgBox,4,删除提示,确实要把此文件放入回收站吗？`n`n%Md5FilePath%
-IfMsgBox Yes
-FileRecycle,%Md5FilePath%
-return
-
-delfile2:
-GuiControlGet,Md5FilePath2
-MsgBox,4,删除提示,确实要把此文件放入回收站吗？`n`n%Md5FilePath2%
-IfMsgBox Yes
-FileRecycle,%Md5FilePath2%
-return
-*/
 
 CRC32:
 if A_GuiControl =CRC32
@@ -218,28 +200,6 @@ GuiControl,, %A_GuiControl% , % FileCRC32(Md5FilePath)
 ControlGetText,CRC32,%whichstatic% 
 Clipboard:=CRC32
 Return
-
-/*
-;两个 CRC32 函数统一为一个
-CRC32:
-Gui, Font,  cblue bold
-GuiControl,Font, CRC32
-GuiControlGet,Md5FilePath
-GuiControl,, CRC32, % FileCRC32(Md5FilePath)
-ControlGetText,CRC32,static2
-Clipboard:=CRC32
-Return
-
-
-CRC32_2:
-Gui, Font,  cblue bold
-GuiControl,Font, CRC32_2
-GuiControlGet,Md5FilePath2
-GuiControl,, CRC32_2, % FileCRC32(Md5FilePath2)
-ControlGetText,CRC32_2,static4
-Clipboard:=CRC32_2
-Return
-*/
 
 ; ************  MD5 hashing functions by Laszlo  *******************
 

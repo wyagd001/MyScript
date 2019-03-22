@@ -13,10 +13,16 @@ if(A_Cursor="IBeam") or IsRenaming() or (IME_GetSentenceMode(_mhwnd())= 0)
 }
 Files := ShellFolder(0,2)
 if !Files or f_IsFolder(Files) or instr(CandySel,"`n")
-	return
+{
+ send {space}
+ return
+}
 SplitPath,Files,,,Files_Ext
 if(Files_Ext="")
-	return
+{
+ send {space}
+ return
+}
 Candy_Cmd:=SkSub_Regex_IniRead(Candy_ProFile_Ini, "FilePrew", "i)(^|\|)" Files_Ext "($|\|)")
 if Candy_Cmd
 {

@@ -71,9 +71,8 @@ CopyPath:
 	StringLeft, copypath2, copypath, A_IsUnicode?5:9
 	StringTrimLeft, copypath, copypath, A_IsUnicode?5:9
 	Clipboard = %copypath%
-	TrayTip, 剪贴板,%copypath2%" %copypath% "已经复制到剪贴板。
+	CF_Traytip("剪贴板",copypath2 copypath "已经复制到剪贴板。",3000)
 	Gui,3:Destroy
-	SetTimer, RemoveTrayTip, 2500
 return
 
 exit3:
