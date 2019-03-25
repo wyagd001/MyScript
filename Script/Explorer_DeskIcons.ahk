@@ -100,21 +100,22 @@ DeskIcons(coords="")
       WinGet, iProcessID, PID
    hProcess := DllCall("OpenProcess"   , "UInt",   0x438         ; PROCESS-OPERATION|READ|WRITE|QUERY_INFORMATION
                               , "Int",   FALSE         ; inherit = false
-                              , "UInt",   iProcessID)
+                              , "Ptr",   iProcessID)
    if hwWindow and hProcess
    {
       ControlGet, list, list,Col1
       if !coords
       {
          VarSetCapacity(iCoord, 8)
-         pItemCoord := DllCall("VirtualAllocEx", "UInt", hProcess, "UInt", 0, "UInt", 8, "UInt", MEM_COMMIT, "UInt", PAGE_READWRITE)
+         pItemCoord := DllCall("VirtualAllocEx", "Ptr", hProcess, "Ptr", 0, "UInt", 8, "UInt", MEM_COMMIT, "UInt", PAGE_READWRITE)
+         ;pItemCoord := DllCall("VirtualAllocEx", "Ptr", hProcess, "Ptr", 0, "UInt", 8, "UInt", MEM_COMMIT, "UInt", PAGE_READWRITE)
          Loop, Parse, list, `n
          {
             SendMessage, %LVM_GETITEMPOSITION%, % A_Index-1, %pItemCoord%
-            DllCall("ReadProcessMemory", "UInt", hProcess, "UInt", pItemCoord, "UInt", &iCoord, "UInt", 8, "UIntP", cbReadWritten)
-            ret .= A_LoopField ":" (NumGet(iCoord) & 0xFFFF) | ((Numget(iCoord, 4) & 0xFFFF) << 16) "`n"
+            DllCall("ReadProcessMemory", "Ptr", hProcess, "Ptr", pItemCoord, "UInt", &iCoord, "UInt", 8, "UIntP", cbReadWritten)
+            ret .= A_LoopField ":" (NumGet(iCoord,"Int") & 0xFFFF) | ((Numget(iCoord, 4,"Int") & 0xFFFF) << 16) "`n"
          }
-         DllCall("VirtualFreeEx", "UInt", hProcess, "UInt", pItemCoord, "UInt", 0, "UInt", MEM_RELEASE)
+         DllCall("VirtualFreeEx", "Ptr", hProcess, "Ptr", pItemCoord, "Ptr", 0, "UInt", MEM_RELEASE)
       }
       else
       {
@@ -126,6 +127,6 @@ DeskIcons(coords="")
          ret := true
       }
    }
-   DllCall("CloseHandle", "UInt", hProcess)
+   DllCall("CloseHandle", "Ptr", hProcess)
    return ret
 }

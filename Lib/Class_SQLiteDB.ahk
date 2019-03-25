@@ -275,25 +275,24 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
       This._Queries := {}               ; Valid queries                                 (Object)
       If (This.Base._RefCount = 0) {
          SQLiteDLL := This.Base._SQLiteDLL
+         FileGetSize, OutputVar1,% A_ScriptDir . "\sqlite3.dll"
+         if A_Is64bitOS
+         {
+            FileGetSize, OutputVar2,% A_ScriptDir . "\sqlite3_x64.dll"
+            if OutputVar1 != OutputVar2
+               FileCopy, % A_ScriptDir . "\sqlite3_x64.dll", % A_ScriptDir . "\sqlite3.dll", 1
+         }
+         else
+         {
+           FileGetSize, OutputVar2,% A_ScriptDir . "\sqlite3_x32.dll"
+           if OutputVar1 != OutputVar2
+             FileCopy, % A_ScriptDir . "\sqlite3_x32.dll", % A_ScriptDir . "\sqlite3.dll", 1
+         }
          If !FileExist(SQLiteDLL)
             If FileExist(A_ScriptDir . "\SQLiteDB.ini") {
                IniRead, SQLiteDLL, %A_ScriptDir%\SQLiteDB.ini, Main, DllPath, %SQLiteDLL%
                This.Base._SQLiteDLL := SQLiteDLL
          }
-         if  A_Is64bitOS
-       {
-         FileGetSize, OutputVar1,A_ScriptDir . "\sqlite3_x64.dll"
-         FileGetSize, OutputVar2,A_ScriptDir . "\sqlite3.dll"
-         if OutputVar1 != OutputVar2
-						FileCopy, % A_ScriptDir . "\sqlite3_x64.dll", % A_ScriptDir . "\sqlite3.dll", 1
-        }
-				else
-				{
-         FileGetSize, OutputVar1,A_ScriptDir . "\sqlite3_x86.dll"
-         FileGetSize, OutputVar2,A_ScriptDir . "\sqlite3.dll"
-         if OutputVar1 != OutputVar2
-						FileCopy, % A_ScriptDir . "\sqlite3_x86.dll", % A_ScriptDir . "\sqlite3.dll", 1
-				}
          If !(DLL := DllCall("LoadLibrary", "Str", This.Base._SQLiteDLL, "UPtr")) {
             MsgBox, 16, SQLiteDB Error, % "DLL 文件 " . SQLiteDLL . " 不存在!"
             return

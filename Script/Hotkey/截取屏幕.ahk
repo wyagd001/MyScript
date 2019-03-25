@@ -1,10 +1,16 @@
 #include %A_ScriptDir%\Lib\CaptureScreen.ahk
-
+/*
+CaptureScreen(0, False, 0)   截屏不带鼠标
+CaptureScreen(0, True, 0)    截屏带鼠标
+CaptureScreen(1, False, 0)   截窗口不带鼠标
+CaptureScreen(1, True, 0)    截窗口带鼠标
+*/
 ;截取全屏（PrintScreen）或窗口（Alt+PrintScreen）
 ;PrintScreen::
 全屏截图:
 CaptureScreen(0, True, 0)
 ssFileName := "Screen_" A_Now
+sleep,300
 
 AfterCaptureScreen:
 IfExist, %A_ScriptDir%\Sound\shutter.wav
@@ -69,10 +75,3 @@ Convert(0, File)
 }
 }
 }
-
-/*
-CaptureScreen(0, False, 0)   截屏不带鼠标
-CaptureScreen(0, True, 0)    截屏带鼠标
-CaptureScreen(1, False, 0)   截窗口不带鼠标
-CaptureScreen(1, True, 0)    截窗口带鼠标
-*/
