@@ -564,20 +564,6 @@ hModule_Md5 := DllCall("LoadLibrary", "str", A_ScriptDir "\MD5Lib.dll")
 ;----------计算文件MD5模式选择----------
 
 ;----------7plus右键菜单----------
-FileGetSize, OutputVar1,% A_ScriptDir . "\ShellExtension.dll"
-if A_Is64bitOS
-{
-	FileGetSize, OutputVar2,% A_ScriptDir . "\ShellExtension_x64.dll"
-	if OutputVar1 != OutputVar2
-		FileCopy, % A_ScriptDir . "\ShellExtension_x64.dll", % A_ScriptDir . "\ShellExtension.dll", 1
-}
-else
-{
-	FileGetSize, OutputVar2,% A_ScriptDir . "\ShellExtension_x32.dll"
-	if OutputVar1 != OutputVar2
-		FileCopy, % A_ScriptDir . "\ShellExtension_x32.dll", % A_ScriptDir . "\ShellExtension.dll", 1
-}
-
 FileCreateDir %A_Temp%\7plus
 Gui +LastFound
 hAHK := WinExist()

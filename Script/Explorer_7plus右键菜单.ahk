@@ -85,7 +85,7 @@ RegisterShellExtension(Silent=1)
 {
 	If(Vista7)
 	{
-		uacrep := DllCall("shell32\ShellExecute", uint, 0, str, "RunAs", str, "regsvr32", str, "/s """ A_ScriptDir "\ShellExtension.dll""", str, A_ScriptDir, int, 1)
+		uacrep := DllCall("shell32\ShellExecute", uint, 0, str, "RunAs", str, "regsvr32", str, "/s """ A_ScriptDir "\" (A_PtrSize=8 ? "ShellExtension_x64.dll" : "ShellExtension_x32.dll") "", str, A_ScriptDir, int, 1)
 		If(uacrep = 42) ; UAC Prompt confirmed, application may run as admin
 		{
 			If(!Silent)
@@ -95,14 +95,14 @@ RegisterShellExtension(Silent=1)
 			MsgBox ,Unable to install the context menu shell extension. Please grant Admin permissions!
 	}
 	Else ; XP
-		run regsvr32 "%A_ScriptDir%\ShellExtension.dll"
+		run regsvr32 "%A_ScriptDir%\ShellExtension_x32.dll"
 }
 
 UnregisterShellExtension(Silent=1)
 {
 	If(Vista7)
 {
-		uacrep := DllCall("shell32\ShellExecute", uint, 0, str, "RunAs", str, "regsvr32", str, "/s /u """ A_ScriptDir "\ShellExtension.dll""", str, A_ScriptDir, int, 1)
+		uacrep := DllCall("shell32\ShellExecute", uint, 0, str, "RunAs", str, "regsvr32", str, "/s /u """ A_ScriptDir "\" (A_PtrSize=8 ? "ShellExtension_x64.dll" : "ShellExtension_x32.dll") "", str, A_ScriptDir, int, 1)
 		If(uacrep = 42) ;UAC Prompt confirmed, application may run as admin
 		{
 			If(!Silent)
@@ -112,5 +112,5 @@ UnregisterShellExtension(Silent=1)
 			MsgBox Unable to deinstall the context menu shell extension. Please grant Admin permissions!
 }
 	Else
-		run regsvr32 /u "%A_ScriptDir%\ShellExtension.dll"
+		run regsvr32 /u "%A_ScriptDir%\ShellExtension_x32.dll"
 }

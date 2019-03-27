@@ -1,6 +1,7 @@
 ;https://autohotkey.com/boards/viewtopic.php?f=10&t=1946
 #SingleInstance
 ; #include GDIP.ahk ;remove comment, if GDIP is not in the standard library
+#include %A_ScriptDir%\..\Lib\Gdip.ahk
 OnExit, Exit
 CoordMode, Mouse, Screen
 pToken := Gdip_Startup()

@@ -225,7 +225,7 @@ SelectFiles(Select,Clear=1,Deselect=0,MakeVisible=1,focus=1, hWnd=0)
 			}
 		}
 	}
-	Else If(hWnd:=WinActive("ahk_group DesktopGroup") && A_PtrSize = 4)
+	Else If(hWnd:=WinActive("ahk_group DesktopGroup") && A_PtrSize)
 	{
 		SplitPath, Select,,,, Select
 		SendStr(Select)  ;A∞Ê£¨U∞ÊºÊ»›
@@ -389,8 +389,9 @@ SetFocusToFileView()
 TranslateMUI(resDll, resID)
 {
 VarSetCapacity(buf, 256)
-hDll := DllCall("LoadLibrary", "str", resDll)
-Result := DllCall("LoadString", "uint", hDll, "uint", resID, "str", buf, "int", 128)
+hDll := DllCall("LoadLibrary", "str", resDll, "Ptr")
+Result := DllCall("LoadString", "uint", hDll, "uint", resID, "uint", &buf, "int", 128)
+VarSetCapacity(buf, -1)
 Return buf
 }
 
@@ -629,7 +630,7 @@ CreateNewTextFile()
 	;This is done manually, by creating a text file with the translated name, which is then focussed
 	SetFocusToFileView()
 	If(Vista7)
-    TextTranslated:=TranslateMUI("G:\Windows\notepad.exe",470) ;"New Textfile"
+    TextTranslated:=TranslateMUI("notepad.exe",470) ;"New Textfile"
   Else
   {
     newstring:=TranslateMUI("shell32.dll",8587) ;"New"

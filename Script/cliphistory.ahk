@@ -122,7 +122,6 @@ createHisTable(){
 	)
 	if !DB.Exec(q)
     MsgBox, 16, SQLite错误, % "消息:`t" . DB.ErrorMsg . "`n代码:`t" . DB.ErrorCode
-;msgbox % q
 }
 
 addHistoryText(data, timestamp){
@@ -136,7 +135,6 @@ addHistoryText(data, timestamp){
 		. fileSizeFromStr(data) ")"
 	if (!DB.Exec(q))
     MsgBox, 16, SQLite错误, % "消息:`t" . DB.ErrorMsg . "`n代码:`t" . DB.ErrorCode
- ;   MsgBox % q
 }
 
 ; Converts YYYYMMDDHHMMSS to YYYY-MM-DD HH:MM:SS
@@ -249,10 +247,8 @@ historyUpdate(crit="", create=true, partial=false){
 			likestr .= "data like ""%" A_loopfield "%"" and "
 		likestr := Substr(likestr, 1, -4)
 		q := "select * from history where " likestr
-;msgbox % q "-" partial
 	} else {
 		q := "select * from history where data like ""%" crit "%"""
-;msgbox % "二" q "-" partial
 	}
 
 	result := ""
@@ -267,7 +263,6 @@ historyUpdate(crit="", create=true, partial=false){
 		LV_Add("", clipdata, clipdate, clipsize, Row[1])
 		HISTORYOBJ[Row[1]] := Row[3]
 	}
-;msgbox % Row[1] "`n二" Row[2] "`n三" Row[3] "`n四" Row[4] "`n五" Row[5] "`n六" Row[6]
 
 	history_UpdateSTB("" totalSize/1024)
 
@@ -308,10 +303,8 @@ if !v
 return
 }
 	LV_GetText(clip_id, v, 4)
-;msgbox % "号" "-" clip_id "-" v
 		data := getFromTable("history", "data", "id=" clip_id)
 		clip_data := data[1]
-;msgbox % "坏" clip_data
 		genHTMLforPreview(clip_data)
 		gui_Clip_Preview(PREV_FILE, history_searchbox)
 	return
@@ -433,7 +426,6 @@ history_ButtonDelete(){
 	loop, parse, rows_selected,`,
 		LV_Delete(A_LoopField+1-A_index)
 	;Delete items
-;msgbox % list_clipfilepath
 	loop, parse, list_clipfilepath, `n
 	{
 		deleteHistoryById(A_loopfield)
@@ -619,7 +611,6 @@ history_EditClip: 		; label inside to call history_searchbox which uses local fu
 		data := getFromTable("history", "data", "id=" clip_id)
 		STORE.ErrorLevel := 0
 		out := multInputBox("Edit Clip", "Make your changes and then click OK", 10, data[1], "History")
-msgbox % STORE.ErrorLevel
 		if (STORE.ErrorLevel == 1){
 			execSql("update history set data=""" escapeQuotesSql(out) """ where id=" clip_id, 1)
 		}
