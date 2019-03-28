@@ -5,12 +5,12 @@ Class GuiDropFiles
     config(GuiHwnd, BeginLable = "", EndLable = "") {
         global IDropSource, IDropTarget
 
-        VarSetCapacity(IDropSource,24,0), NumPut(&IDropSource+4,IDropSource), nParams=31132
+        VarSetCapacity(IDropSource,A_PtrSize*6,0), NumPut(&IDropSource+A_PtrSize,IDropSource), nParams=31132
         Loop,   Parse,  nParams
-            NumPut(RegisterCallback("IDropSource","",A_LoopField,A_Index-1),IDropSource,4*A_Index)
-        VarSetCapacity(IDropTarget,32,0), NumPut(&IDropTarget+4,IDropTarget), nParams=3116516
+            NumPut(RegisterCallback("IDropSource","",A_LoopField,A_Index-1),IDropSource,A_PtrSize*A_Index)
+        VarSetCapacity(IDropTarget,8*A_PtrSize,0), NumPut(&IDropTarget+A_PtrSize,IDropTarget), nParams:=A_PtrSize=8?3115415:3116516
         Loop,   Parse,  nParams
-            NumPut(RegisterCallback("IDropTarget","",A_LoopField,A_Index-1),IDropTarget,4*A_Index)
+            NumPut(RegisterCallback("IDropTarget","",A_LoopField,A_Index-1),IDropTarget,A_PtrSize*A_Index)
         DllCall("ole32\OleInitialize","Uint",0)
         DllCall("ole32\RegisterDragDrop","Uint",GuiHwnd,"Uint",&IDropTarget)
 
@@ -65,19 +65,19 @@ IDropTarget(this, pdata=0, key=0, x=0, y=0, peffect=0)
 
 IEnumFormatEtc(this)
 {
-    DllCall(NumGet(NumGet(1*this)+32),"Uint",this,"Uint",1,"UintP",penum) ; DATADIR_GET=1, DATADIR_SET=2
+    DllCall(NumGet(NumGet(1*this)+8*A_PtrSize),"Uint",this,"Uint",1,"UintP",penum) ; DATADIR_GET=1, DATADIR_SET=2
     Loop
     {
-        VarSetCapacity(FormatEtc,20,0)
-        If  DllCall(NumGet(NumGet(1*penum)+12), "Uint", penum, "Uint",1, "Uint", &FormatEtc, "Uint",0)
+        VarSetCapacity(FormatEtc,A_PtrSize * 5,0)
+        If  DllCall(NumGet(NumGet(1*penum)+A_PtrSize * 3), "Ptr", penum, "Uint",1, "Ptr", &FormatEtc, "Uint",0)
             Break
         0+(nFormat:=NumGet(FormatEtc,0,"Ushort"))<18 ? RegExMatch(__cfList, "(?:\w+\s+){" . nFormat-1 . "}(?<FORMAT>\w+\b)", CF_) : nFormat>=0x80&&nFormat<=0x83 ? RegExMatch("CF_OWNERDISPLAY CF_DSPTEXT CF_DSPBITMAP CF_DSPMETAFILEPICT", "(?:\w+\s+){" . nFormat-0x80 . "}(?<FORMAT>\w+\b)", CF_) : nFormat=0x8E ? CF_FORMAT:="CF_DSPENHMETAFILE" : CF_FORMAT:=GetClipboardFormatName(nFormat)
-        VarSetCapacity(StgMedium,12,0)
-        If  DllCall(NumGet(NumGet(1*this)+12), "Uint", this, "Uint", &FormatEtc, "Uint", &StgMedium)
+        VarSetCapacity(StgMedium,A_PtrSize * 3,0)
+        If  DllCall(NumGet(NumGet(1*this)+A_PtrSize * 3), "Ptr", this, "Ptr", &FormatEtc, "Ptr", &StgMedium)
             Continue
         If  NumGet(StgMedium,0)=1   ; TYMED_HGLOBAL=1
         {
-            hData:=NumGet(StgMedium,4)
+            hData:=NumGet(StgMedium,A_PtrSize)
             pData:=DllCall("GlobalLock", "Uint", hData)
             nSize:=DllCall("GlobalSize", "Uint", hData)
             VarSetCapacity(sData,1023), DllCall("wsprintf", "str", sData, "str", (DllCall("advapi32\IsTextUnicode", "Uint", pData, "Uint", nSize, "Uint", 0) & A_IsUnicode) ? "%s" : "%S", "Uint", pData, "Cdecl")
@@ -92,6 +92,6 @@ IEnumFormatEtc(this)
     
         DllCall("ole32\ReleaseStgMedium","Uint",&StgMedium)
     }
-    DllCall(NumGet(NumGet(1*penum)+8), "Uint", penum)
+    DllCall(NumGet(NumGet(1*penum)+2*A_PtrSize), "Uint", penum)
     Return FileNameW
 }

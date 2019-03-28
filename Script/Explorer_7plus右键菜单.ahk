@@ -38,7 +38,7 @@ regsvr32dll:
 Return
 
 unregsvr32dll:
-	Msgbox, 4, Unregister Shell Extension?, WARNING: If you unregister the shell extension, 7plus will not be able`n to show context menu entries. Do this only If you have problems with the shell extension.`nDo you really want to do this?
+	Msgbox, 4, 注销外壳扩展吗?, 警告: 如果您注销外壳扩展, 7plus 将无法显示`n 上下文菜单项. 只有在外壳扩展有问题时才这样做.`n是否确定卸载外壳扩展?
 	IfMsgbox Yes
 	{
 		UnregisterShellExtension(0)
@@ -89,10 +89,10 @@ RegisterShellExtension(Silent=1)
 		If(uacrep = 42) ; UAC Prompt confirmed, application may run as admin
 		{
 			If(!Silent)
-				MsgBox Shell extension successfully installed. Context menu entries defined in 7plus should now be visible.
+				MsgBox 外壳扩展已成功安装. 现在应该在资源管理器中可以看到 7plus 中定义的右键菜单了.
 		}
 		Else ; Always show error  
-			MsgBox ,Unable to install the context menu shell extension. Please grant Admin permissions!
+			MsgBox , % "无法安装右键菜单外壳扩展," (A_PtrSize=8 ? "ShellExtension_x64.dll" : "ShellExtension_x32.dll") "文件无法注册. 请授予管理员权限!"
 	}
 	Else ; XP
 		run regsvr32 "%A_ScriptDir%\ShellExtension_x32.dll"
@@ -106,10 +106,10 @@ UnregisterShellExtension(Silent=1)
 		If(uacrep = 42) ;UAC Prompt confirmed, application may run as admin
 		{
 			If(!Silent)
-				MsgBox Shell extension successfully deinstalled. All 7plus context menu entries should now be gone.
+				MsgBox 外壳扩展已成功卸载. 现在资源管理器中 7plus 中定义的右键菜单应该消失了.
 		}
 		Else ;Always show error
-			MsgBox Unable to deinstall the context menu shell extension. Please grant Admin permissions!
+			MsgBox % "无法卸载右键菜单外壳扩展," (A_PtrSize=8 ? "ShellExtension_x64.dll" : "ShellExtension_x32.dll") "文件无法卸载. 请授予管理员权限!"
 }
 	Else
 		run regsvr32 /u "%A_ScriptDir%\ShellExtension_x32.dll"

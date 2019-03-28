@@ -134,7 +134,7 @@ addHistoryText(data, timestamp){
 		. timestamp """, "
 		. fileSizeFromStr(data) ")"
 	if (!DB.Exec(q))
-    MsgBox, 16, SQLite错误, % "消息:`t" . DB.ErrorMsg . "`n代码:`t" . DB.ErrorCode
+    MsgBox, 16, SQLite 错误, % "消息:`t" . DB.ErrorMsg . "`n代码:`t" . DB.ErrorCode
 }
 
 ; Converts YYYYMMDDHHMMSS to YYYY-MM-DD HH:MM:SS
@@ -187,7 +187,7 @@ h=500
 	Gui, Add, Edit, ys  	ghistory_SearchBox	vhistory_SearchBox
 	Gui, Font, s9, Courier New
 	Gui, Font, s9, Consolas
-	Gui, Add, ListView, % "xs+1 HWNDhistoryLV vhistoryLV LV0x4000 h430 w" (history_w ? history_w-20 : hst_genWt-25), 剪贴板内容|时间|大小(B)|其他
+	Gui, Add, ListView, % "xs+1 HWNDhistoryLV vhistoryLV ghistoryprew LV0x4000 h430 w" (history_w ? history_w-20 : hst_genWt-25), 剪贴板内容|时间|大小(B)|其他
 
 	Gui, Add, StatusBar
 	Gui, Font
@@ -291,6 +291,11 @@ historyGuiSize:
 	}
 	return
 
+historyprew:
+If A_GuiEvent = DoubleClick 
+gosub,history_ButtonPreview
+return
+
 history_ButtonPreview:
 	Gui, History:Default
 	Gui, submit, nohide
@@ -340,7 +345,7 @@ gui_Clip_Preview(path, searchBox="", owner="History")
 	Gui, Add, Text, % "x" wt-200 " yp+2 h23 vprev_findtxt ", 查找(&D) 		; +2 to level text
 	Gui, Font, norm
 	Gui, Add, Edit, % "x+10 yp-2 w155 h23 vpreview_search gpreviewSearch",  	; -5 margin on right side
-	Gui, Add, Text, x5 y+0 w5 			; white-space just below the button
+	;Gui, Add, Text, x5 y+0 w5 			; white-space just below the button
 
 	Gui, Preview:+Owner%owner%
 	Gui, % preview.owner ":+Disabled"
@@ -468,7 +473,7 @@ history_SearchBox:
 	Gui, History:Default
 	Gui, History:Submit, NoHide
 	historyUpdate(history_SearchBox, 0, history_partial)
-	LV_ModifyCol(what_sort, how_sort ? "Sort" : "SortDesc") 		;sort column correctly
+	LV_ModifyCol(what_sort?what_sort:2, how_sort ? "Sort" : "SortDesc") 		;sort column correctly
 	return
 
 /*
@@ -610,7 +615,7 @@ history_EditClip: 		; label inside to call history_searchbox which uses local fu
 
 		data := getFromTable("history", "data", "id=" clip_id)
 		STORE.ErrorLevel := 0
-		out := multInputBox("Edit Clip", "Make your changes and then click OK", 10, data[1], "History")
+		out := multInputBox("Edit Clip", "进行更改, 然后点击确定按钮", 10, data[1], "History")
 		if (STORE.ErrorLevel == 1){
 			execSql("update history set data=""" escapeQuotesSql(out) """ where id=" clip_id, 1)
 		}
@@ -629,7 +634,7 @@ multInputBox(Title, caption="", row=5, default="", owner=""){
 	Gui, Add, Text, x5 y5, % caption
 	Gui, Font, norm, Consolas
 	Gui, Add, Edit, xp y+30 w%kw% r%row% vtheEdit, % default
-	Gui, Add, Button, x5 y+30 Default, OK
+	Gui, Add, Button, x5 y+30 Default gmIboxbuttonOK, 确定(&O)
 	Gui, Add, Button, x+30 yp gmIboxbuttonCancel, 取消(&C)
 	if owner {
 		Gui, miBox:+owner%owner%

@@ -108,7 +108,6 @@ DeskIcons(coords="")
       {
          VarSetCapacity(iCoord, 8)
          pItemCoord := DllCall("VirtualAllocEx", "Ptr", hProcess, "Ptr", 0, "UInt", 8, "UInt", MEM_COMMIT, "UInt", PAGE_READWRITE)
-         ;pItemCoord := DllCall("VirtualAllocEx", "Ptr", hProcess, "Ptr", 0, "UInt", 8, "UInt", MEM_COMMIT, "UInt", PAGE_READWRITE)
          Loop, Parse, list, `n
          {
             SendMessage, %LVM_GETITEMPOSITION%, % A_Index-1, %pItemCoord%

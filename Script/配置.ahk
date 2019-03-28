@@ -1087,20 +1087,20 @@ WM_NOTIFY( p_w,p_l,p_m )
 
 	Static HDN_BEGINTRACKA = -306,HDN_BEGINTRACKW = -326,HDN_DIVIDERDBLCLICK = -320
 	;Code := -(~NumGet(p_l+0,8))-1
-	Code :=NumGet(p_l + 8,0,"Int")
+	Code :=NumGet(p_l + (A_PtrSize * 2),0,"Int")
 	If (Code = HDN_BEGINTRACKA) || (Code = HDN_BEGINTRACKW)|| (Code = HDN_BEGINTRACKW)
 		Return True
 	If ( NumGet( p_l+0,0,"Uint") = hw_LV_ColorChange ){ 
-		If ( NumGet(p_l+0,8,"int" ) = -12 ) {                            ; NM_CUSTOMDRAW 
-			draw_stage := NumGet(p_l+0,12,"Uint") 
+		If ( Code = -12 ) {                            ; NM_CUSTOMDRAW 
+			draw_stage := NumGet(p_l+0,A_PtrSize * 3,"Uint") 
 			If ( draw_stage = 1 )                                                 ; CDDS_PREPAINT 
 				Return,0x20                                                      ; CDRF_NOTIFYITEMDRAW 
 			Else If ( draw_stage = 0x10000|1 ){                                   ; CDDS_ITEM 
-				Current_Line := NumGet( p_l+0,36,"Uint")+1 
+				Current_Line := NumGet( p_l+0,A_PtrSize * 5+16,"Uint")+1 
 				LV_GetText(Index,Current_Line,4) 
 				If (Line_Color_%Index%_Text != ""){
-					NumPut( BGR(Line_Color_%Index%_Text),p_l+0,48,"Uint")   ; foreground 
-					NumPut( BGR(Line_Color_%Index%_Back),p_l+0,52,"Uint")   ; background 
+					NumPut( BGR(Line_Color_%Index%_Text),p_l+0,A_PtrSize * 8+16,"Uint")   ; foreground 
+					NumPut( BGR(Line_Color_%Index%_Back),p_l+0,A_PtrSize * 8+16+4,"Uint")   ; background 
 				}
 			}
 		}

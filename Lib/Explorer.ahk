@@ -459,21 +459,18 @@ IsInArea(px,py,x,y,w,h)
 
 GetFocusedControl()
 {
-   guiThreadInfoSize = 48
+   guiThreadInfoSize := 4+4+A_PtrSize*6+16
    VarSetCapacity(guiThreadInfo, guiThreadInfoSize, 0)
-   addr := &guiThreadInfo
-   DllCall("RtlFillMemory"
-         , "UInt", addr
-         , "UInt", 1
-         , "UChar", guiThreadInfoSize)   ; Below 0xFF, one call only is needed
+   ;addr := &guiThreadInfo
+   ;DllCall("RtlFillMemory", "ptr", addr, "UInt", 1, "UChar", guiThreadInfoSize)   ; Below 0xFF, one call only is needed
    If not DllCall("GetGUIThreadInfo"
          , "UInt", 0   ; Foreground thread
-         , "UInt", &guiThreadInfo)
+         , "ptr", &guiThreadInfo)
    {
       ErrorLevel := A_LastError   ; Failure
       Return 0
    }
-   focusedHwnd := *(addr + 12) + (*(addr + 13) << 8) +  (*(addr + 14) << 16) + (*(addr + 15) << 24)
+   focusedHwnd := NumGet(guiThreadInfo,8+A_PtrSize, "Ptr") ;focusedHwnd := *(addr + 12) + (*(addr + 13) << 8) +  (*(addr + 14) << 16) + (*(addr + 15) << 24)
    Return focusedHwnd
 }
 
