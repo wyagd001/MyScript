@@ -29,12 +29,12 @@ Return
 新版迅雷开放引擎下载:
 IfInString, Clipboard,://
 {
-	Run,"%A_AhkPath%" "%A_ScriptDir%\Plugins\新版迅雷开放引擎下载.ahk" %Clipboard%
+	Run,"%ahklu%" "%A_ScriptDir%\Plugins\新版迅雷开放引擎下载.ahk" %Clipboard%
 }
 Else
 {
 	DURL:=GetSelText()
-	Run,%A_AhkPath% "%A_ScriptDir%\Plugins\新版迅雷开放引擎下载.ahk" %DURL%
+	Run,%ahklu% "%A_ScriptDir%\Plugins\新版迅雷开放引擎下载.ahk" %DURL%
 	DURL = 
 }
 Return

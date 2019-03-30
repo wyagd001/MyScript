@@ -17,6 +17,8 @@ SystemLanguage := SubStr(A_Language,3,2)=04?"CN":"EN"
 Menu, tray, NoStandard
 Menu, tray, add, % SystemLanguage="CN"?"ÔÝÍ£":"Disable"
 Menu, tray, add, % SystemLanguage="CN"?"ÍË³ö":"Exit"
+gosub LControl & RControl
+return
 
 LControl & RControl::
 RControl & LControl::

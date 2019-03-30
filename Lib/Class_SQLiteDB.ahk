@@ -125,7 +125,6 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
           This.ErrorCode := 0            ; Last SQLite error code / ErrorLevel           (Variant)
           This._Handle := 0              ; Query handle                                  (Pointer)
           This._DB := {}                 ; SQLiteDB object                               (Object) 
-          This._SQLiteDLL := A_ScriptDir . (A_PtrSize=8 ? "\sqlite3_x64.dll" : "\sqlite3_x32.dll")
       }
       ; ----------------------------------------------------------------------------------------------------------------
       ; METHOD Next        Get next row of query result
@@ -145,7 +144,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
             This.ErrorMsg := "无效的查询句柄!"
             Return False
          }
-         RC := DllCall(This._SQLiteDLL "\sqlite3_step", "Ptr", This._Handle, "Cdecl Int")
+         RC := DllCall(SQLiteDB.base._SQLiteDLL "\sqlite3_step", "Ptr", This._Handle, "Cdecl Int")
          If (ErrorLevel) {
             This.ErrorMsg := "DLLCall sqlite3_step 失败!"
             This.ErrorCode := ErrorLevel
@@ -161,7 +160,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
             This.ErrorCode := RC
             Return False
          }
-         RC := DllCall(This._SQLiteDLL "\sqlite3_data_count", "Ptr", This._Handle, "Cdecl Int")
+         RC := DllCall(SQLiteDB.base._SQLiteDLL "\sqlite3_data_count", "Ptr", This._Handle, "Cdecl Int")
          If (ErrorLevel) {
             This.ErrorMsg := "DLLCall sqlite3_data_count 失败!"
             This.ErrorCode := ErrorLevel
@@ -175,7 +174,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
          Row := []
          Loop, %RC% {
             Column := A_Index - 1
-            ColumnType := DllCall(This._SQLiteDLL "\sqlite3_column_type", "Ptr", This._Handle, "Int", Column, "Cdecl Int")
+            ColumnType := DllCall(SQLiteDB.base._SQLiteDLL "\sqlite3_column_type", "Ptr", This._Handle, "Int", Column, "Cdecl Int")
             If (ErrorLevel) {
                This.ErrorMsg := "DLLCall sqlite3_column_type 失败!"
                This.ErrorCode := ErrorLevel
@@ -184,8 +183,8 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
             If (ColumnType = SQLITE_NULL) {
                Row[A_Index] := ""
             } Else If (ColumnType = SQLITE_BLOB) {
-               BlobPtr := DllCall(This._SQLiteDLL "\sqlite3_column_blob", "Ptr", This._Handle, "Int", Column, "Cdecl UPtr")
-               BlobSize := DllCall(This._SQLiteDLL "\sqlite3_column_bytes", "Ptr", This._Handle, "Int", Column, "Cdecl Int")
+               BlobPtr := DllCall(SQLiteDB.base._SQLiteDLL "\sqlite3_column_blob", "Ptr", This._Handle, "Int", Column, "Cdecl UPtr")
+               BlobSize := DllCall(SQLiteDB.base._SQLiteDLL "\sqlite3_column_bytes", "Ptr", This._Handle, "Int", Column, "Cdecl Int")
                If (BlobPtr = 0) || (BlobSize = 0) {
                   Row[A_Index] := ""
                } Else {
@@ -197,7 +196,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
                   DllCall("Kernel32.dll\RtlMoveMemory", "Ptr", Addr, "Ptr", BlobPtr, "Ptr", BlobSize)
                }
             } Else {
-               StrPtr := DllCall(This._SQLiteDLL "\sqlite3_column_text", "Ptr", This._Handle, "Int", Column, "Cdecl UPtr")
+               StrPtr := DllCall(SQLiteDB.base._SQLiteDLL "\sqlite3_column_text", "Ptr", This._Handle, "Int", Column, "Cdecl UPtr")
                If (ErrorLevel) {
                   This.ErrorMsg := "DLLCall sqlite3_column_text 失败!"
                   This.ErrorCode := ErrorLevel
@@ -223,7 +222,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
             This.ErrorMsg := "无效的查询句柄!"
             Return False
          }
-         RC := DllCall(This._SQLiteDLL "\sqlite3_reset", "Ptr", This._Handle, "Cdecl Int")
+         RC := DllCall(SQLiteDB.base._SQLiteDLL "\sqlite3_reset", "Ptr", This._Handle, "Cdecl Int")
          If (ErrorLevel) {
             This.ErrorMsg := "DLLCall sqlite3_reset 失败!"
             This.ErrorCode := ErrorLevel
@@ -249,7 +248,7 @@ Class SQLiteDB Extends SQLiteDB.BaseClass {
          This.ErrorCode := 0
          If !(This._Handle)
             Return True
-         RC := DllCall(This._SQLiteDLL "\sqlite3_finalize", "Ptr", This._Handle, "Cdecl Int")
+         RC := DllCall(SQLiteDB.base._SQLiteDLL "\sqlite3_finalize", "Ptr", This._Handle, "Cdecl Int")
          If (ErrorLevel) {
             This.ErrorMsg := "DLLCall sqlite3_finalize 失败!"
             This.ErrorCode := ErrorLevel

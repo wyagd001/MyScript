@@ -8,7 +8,6 @@ Return
 */
 
 ;~!PrintScreen::
-;Gdip_Startup()
 ´°¿Ú½ØÍ¼¶þ:
 SsFileName:=SaveScreen(1.00,"Window",screenshot_path,"",filetp)
 IfExist, %A_ScriptDir%\Sound\shutter.wav

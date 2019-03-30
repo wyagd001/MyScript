@@ -26,8 +26,8 @@ if(Files_Ext="")
 Candy_Cmd:=SkSub_Regex_IniRead(Candy_ProFile_Ini, "FilePrew", "i)(^|\|)" Files_Ext "($|\|)")
 if Candy_Cmd
 {
-GUI, PreWWin:Default
 GUI, PreWWin:Destroy
+GUI, PreWWin:Default
 GUI, PreWWin:+hwndmyguihwnd
 GroupAdd, MyPreWWinGroup, ahk_id %myguihwnd%
 If IsLabel("Cando_" . Candy_Cmd . "_prew")
@@ -38,14 +38,21 @@ return
 
 PreWWinGuiEscape:
 PreWWinGuiClose:
+if gif_prew
+{
+hgif1.Pause()
+sleep,500
+hgif1 := ""
+gif_prew:=0
+return
+}
 Gui,PreWWin:Destroy
-;if pipa
-;ObjRelease(pipa)
 ;if prewpToken
 ;{
 ;Gdip_ShutDown(prewpToken)
-;sleep,1000
+;sleep,200
 ;}
+
 return
 
 PreWWinGuiSize:
@@ -212,15 +219,18 @@ return  CMDReturn
 }
 
 Cando_gif_prew:
+if !prewpToken
 prewpToken := Gdip_Startup()
 GUI, -Caption +AlwaysOnTop +Owner
 Gui, Margin, 0, 0
 pBitmap:=Gdip_CreateBitmapFromFile(files)
 Gdip_GetImageDimensions(pBitmap, width, height)
 Gui, Add, Picture,w%width% h%height% 0xE hwndhwndGif1
-gif1 := new Gif(Files, hwndGif1)
+Gdip_DisposeImage(pBitmap)
+hgif1 := new Gif(Files, hwndGif1)
 Gui,PreWWin: Show, AutoSize Center, % Files " - 文件预览"
-gif1.Play()
+hgif1.Play()
+gif_prew:=true
 return
 
 Cando_text_prew:
@@ -243,6 +253,7 @@ GuiControl,, displayArea,%textvalue%
 textvalue=
 return
 
+; https://www.autohotkey.com/boards/viewtopic.php?p=112572
 class Gif
 {	
 	__New(file, hwnd)
@@ -296,6 +307,8 @@ class Gif
 		this.isPlaying := false
 		fn := this._fn
 		SetTimer, % fn, Delete
+		sleep,200
+		fn:=this._fn:=""
 	}
 	
 	_Play()
@@ -307,6 +320,7 @@ class Gif
 		DeleteObject(hBitmap)
 
 		fn := this._fn
+		if fn
 		SetTimer, % fn, % -1 * this.frameDelay[this.frameCurrent]
 	}
 	
@@ -314,5 +328,6 @@ class Gif
 	{
 		Gdip_DisposeImage(this.pBitmap)
 		Object.Delete("dimensionIDs")
+		CF_ToolTip("成功释放对象!",3000)
 	}
 }

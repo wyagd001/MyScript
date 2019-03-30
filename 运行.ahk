@@ -15,8 +15,8 @@ SetTitleMatchMode 2
 CoordMode, Mouse, Screen
 
 ; 开机时启动脚本，等待时间设置长些，使托盘图标可以显示出来
-if(A_TickCount<120000)
-	sleep,40000
+if(A_TickCount<80000)
+	sleep,% 80000 - A_TickCount
 
 global run_iniFile := A_ScriptDir "\settings\setting.ini"
 IfNotExist, %run_iniFile%

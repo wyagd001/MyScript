@@ -1,47 +1,101 @@
 #SingleInstance, Force
+OnExit, ExitSub
 #include %A_ScriptDir%\..\Lib\Gdip.ahk
 
 run_iniFile = %A_ScriptDir%\..\settings\setting.ini
 IniRead,询问, %run_iniFile%,截图, 询问
 IniRead,filetp, %run_iniFile%,截图, filetp
-IniRead,热键延迟截图, %run_iniFile%,截图, 热键延迟截图
+IniRead,区域截图2保留边框, %run_iniFile%,截图, 区域截图2保留边框
 IniRead,截图保存目录, %run_iniFile%,截图, 截图保存目录
 IfnotExist,%截图保存目录%
   IniRead, 截图保存目录, %run_iniFile%, 路径设置, 截图保存目录
 
+pToken := Gdip_Startup()
+   if !pToken
+   {
+      MsgBox, 64, GDI+ error, GDI+ 启动失败. 请确保系统拥有 GDI+ dll文件.
+      return
+   }
+
   TrayTip,截图进行中...,
   (
-"Win+左键"拖拽鼠标选取截图范围，
-"Ctrl+S"，直接保存
-按"Esc/右键"键退出截图操作
+按住"Win"键, "左键"拖拽鼠标，选取截图范围，
+按下"Esc/右键"键退出截图操作
   ),5,17
 
 #Lbutton::
 traytip
-if(热键延迟截图=0)
-{
-SCW_ScreenClip2Win(0)
-gosub xuanzhe
-}
-else
-{
-SCW_ScreenClip2Win(1)
-Hotkey, IfWinActive, ScreenClippingWindow ahk_class AutoHotkeyGUI
-hotkey, enter,CaptureSave
-}
-return
-
-#IfWinActive, ScreenClippingWindow ahk_class AutoHotkeyGUI
-^s:: SCW_Win2File(0,filetp)
-#IfWinActive
-
-CaptureSave:
-hotkey, enter,off
+pBitmap:=SCW_ScreenClip2Win()
 gosub xuanzhe
 return
 
-Esc:: ExitApp ;contribued by tervon
-Rbutton:: ExitApp  ;contributed by tervon
+Esc:: ExitApp
+;Rbutton:: ExitApp
+
+ExitSub:
+Gdip_DisposeImage(pBitmap)
+Gdip_Shutdown("pToken")
+ExitApp
+return
+
+xuanzhe:
+if(询问=1){
+	if 区域截图2保留边框
+	{
+		Gdip_DisposeImage(pBitmap)
+		pBitmap:=SCW_Clipboard2pBitmap()
+	}
+  Gui +OwnDialogs
+  SetTimer, ChangeButtonNames, 50
+  OnMessage(0x53, "WM_HELP")
+  msgbox,20483,截图,选定的区域已经截取,点击“是”自动保存。`n点击“否”打开画图，编辑图片。
+  IfMsgBox Yes
+   {
+		if 区域截图2保留边框
+		{
+			if GetKeyState("Shift")
+			{
+				Gdip_GetDimensions(pBitmap, w, h)
+				pBitmap2 := SCW_CropImage(pBitmap, 3, 3, w-6, h-6)
+				SCW_Win2File(pBitmap2,filetp)
+				Gdip_DisposeImage(pBitmap2)
+			}
+			else
+				SCW_Win2File(pBitmap,filetp)
+		}
+		else
+			SCW_Win2File(pBitmap,filetp)
+   }
+  IfMsgBox No
+  {
+   Run, mspaint.exe
+   WinWaitActive,无标题 - 画图,,3
+   if ErrorLevel
+    ExitApp
+   Send,^v
+  }
+}
+else{
+SCW_Win2File(pBitmap,filetp)
+}
+ExitApp
+
+WM_HELP(){
+global filetp, pBitmap
+WinClose 截图
+InputBox,FileName,截图,`n输入截图文件名并保存文件,,440,160
+if ErrorLevel=0
+SCW_Win2File(pBitmap,filetp,FileName)
+ExitApp
+}
+
+ChangeButtonNames:
+IfWinNotExist, 截图
+    return  ; Keep waiting.
+SetTimer, ChangeButtonNames, off
+WinActivate
+ControlSetText, Button4, 重命名
+return
 
 ;===Description========================================================================
 /*
@@ -52,7 +106,6 @@ Thanks:      Tic, HotKeyIt
 Creates always on top layered windows from screen clippings. Click in upper right corner to close win. Click and drag to move it.
 Uses Gdip.ahk by Tic.
 
-#Include ScreenClip2Win.ahk      ; by Learning one
 ;=== Short documentation ===
 SCW_ScreenClip2Win()          ; creates always on top window from screen clipping. Click and drag to select area.
 SCW_DestroyAllClipWins()       ; destroys all screen clipping windows.
@@ -68,8 +121,6 @@ SCW_SetUp(Options="")         ; you can change some default options in Auto-exec
    SelTrans - selection transparency. Default: 80
 
    Example:   SCW_SetUp("MaxGuis.30 StartAfter.50 BorderAColor.ff000000 BorderBColor.ffffff00")
-
-
 
 ;=== Avoid OnMessage(0x201, "WM_LBUTTONDOWN") collision example===
 Gui, Show, w200 h200
@@ -106,7 +157,6 @@ SCW_DestroyAllClipWins() {
    }
 }
 
-
 SCW_SetUp(Options="") {
    if !(Options = "")
    {
@@ -136,7 +186,7 @@ SCW_SetUp(Options="") {
    OnMessage(0x201, "SCW_LBUTTONDOWN")
 }
 
-SCW_ScreenClip2Win(KeepBorders=0) {
+SCW_ScreenClip2Win() {
    static c
    if !(SCW_Reg("WasSetUp"))
    SCW_SetUp()
@@ -152,26 +202,14 @@ SCW_ScreenClip2Win(KeepBorders=0) {
    if (v3 < 10 and v4 < 10)   ; too small area
    return
 
-   pToken := Gdip_Startup()
-   if pToken =
-   {
-      MsgBox, 64, GDI+ error, GDI+ failed to start. Please ensure you have GDI+ on your system.
-      return
-   }
-
    Sleep, 100
    pBitmap := Gdip_BitmapFromScreen(Area)
+   SCW_Win2Clipboard(pBitmap)  ; 将图像放入剪贴板
    IfExist, %A_ScriptDir%\Sound\shutter.wav
    SoundPlay, %A_ScriptDir%\Sound\shutter.wav, wait
 ;*******************************************************
    SCW_CreateLayeredWinMod(GuiNum,pBitmap,v1,v2, SCW_Reg("DrawCloseButton"))
-   Gdip_Shutdown("pToken")
-
-if KeepBorders
-SCW_Win2Clipboard(1)
-else
-SCW_Win2Clipboard(0)
-Return pBitmap
+   Return pBitmap
 }
 
 SCW_SelectAreaMod(Options="") {
@@ -224,7 +262,6 @@ SCW_CreateLayeredWinMod(GuiNum,pBitmap,x,y,DrawCloseButton=0) {
    G := Gdip_GraphicsFromHDC(hdc), Gdip_SetSmoothingMode(G, 4), Gdip_SetInterpolationMode(G, 7)
 
    Gdip_DrawImage(G, pBitmap, 3, 3, Width, Height)
-   Gdip_DisposeImage(pBitmap)
 
    pPen1 := Gdip_CreatePen("0x" BorderAColor, 3), pPen2 := Gdip_CreatePen("0x" BorderBColor, 1)
    if DrawCloseButton
@@ -242,6 +279,40 @@ SCW_CreateLayeredWinMod(GuiNum,pBitmap,x,y,DrawCloseButton=0) {
    SCW_Reg("G" GuiNum "#XClose", Width+6-CloseButton)
    SCW_Reg("G" GuiNum "#YClose", CloseButton)
    Return hwnd
+}
+
+SCW_CropImage(pBitmap, x, y, w, h) {
+   pBitmap2 := Gdip_CreateBitmap(w, h), G2 := Gdip_GraphicsFromImage(pBitmap2)
+   Gdip_DrawImage(G2, pBitmap, 0, 0, w, h, x, y, w, h)
+   Gdip_DeleteGraphics(G2)
+   return pBitmap2
+}
+
+SCW_Win2Clipboard(pBitmap) {
+      Gdip_SetBitmapToClipboard(pBitmap)
+      TrayTip,截图,截图已保存到剪贴板
+   }
+
+SCW_Clipboard2pBitmap() {
+sleep,200
+WinActivate ScreenClippingWindow
+Send, !{PrintScreen}   ; 窗口截图带边框
+sleep,800   ;  等待剪贴板
+pBitmap := Gdip_CreateBitmapFromClipboard()
+return pBitmap
+}
+
+SCW_Win2File(pBitmap, filetype="jpg",filename=""){
+   global 截图保存目录
+      if !filename
+      File2 := 截图保存目录 . "\Regional_" . A_Now . "." . filetype ;path to file to save
+      else
+      {
+      File2 := 截图保存目录 . "\" . filename . "." . filetype ;path to file to save
+      if(Fileexist(File2))
+      File2:= 截图保存目录 . "\" . filename . "_" . A_Now . "." . filetype
+      }
+      Gdip_SaveBitmapToFile(pBitmap, File2) ;Exports automatcially to file
 }
 
 SCW_LBUTTONDOWN() {
@@ -274,101 +345,3 @@ SCW_Default(ByRef Variable,DefaultValue) {
    if (Variable="")
    Variable := DefaultValue
 }
-
-SCW_Win2Clipboard(KeepBorders=0) {
-WinActivate ScreenClippingWindow
-sleep,500
-Send, !{PrintScreen} 
-   if !KeepBorders
-   {
-      pToken := Gdip_Startup()
-      pBitmap := Gdip_CreateBitmapFromClipboard()
-      Gdip_GetDimensions(pBitmap, w, h)
-      pBitmap2 := SCW_CropImage(pBitmap, 3, 3, w-6, h-6)
-      Gdip_SetBitmapToClipboard(pBitmap2)
-      Gdip_DisposeImage(pBitmap),Gdip_DisposeImage(pBitmap2)
-      Gdip_Shutdown("pToken")
-      TrayTip,截图,截图已保存到剪贴板
-   }
-}
-
-
-SCW_CropImage(pBitmap, x, y, w, h) {
-   pBitmap2 := Gdip_CreateBitmap(w, h), G2 := Gdip_GraphicsFromImage(pBitmap2)
-   Gdip_DrawImage(G2, pBitmap, 0, 0, w, h, x, y, w, h)
-   Gdip_DeleteGraphics(G2)
-   return pBitmap2
-}
-
-
-;***********Function by Tervon*******************
-SCW_Win2File(KeepBorders=0,filetype="jpg",filename="") {
-   global 截图保存目录
-   WinActivate ScreenClippingWindow
-   sleep,500
-   Send, !{PrintScreen} ; Active Win's client area to Clipboard
-   sleep 50
-
-      pToken := Gdip_Startup()
-      pBitmap := Gdip_CreateBitmapFromClipboard()
-      Gdip_GetDimensions(pBitmap, w, h)
-     if KeepBorders
-      pBitmap2 := SCW_CropImage(pBitmap, 3, 3, w, h)
-     else
-      pBitmap2 := SCW_CropImage(pBitmap, 3, 3, w-6, h-6)
-      if !filename
-      File2 := 截图保存目录 . "\Regional_" . A_Now . "." . filetype ;path to file to save
-      else
-      {
-      File2 := 截图保存目录 . "\" . filename . "." . filetype ;path to file to save
-      if(Fileexist(File2))
-      File2:= 截图保存目录 . "\" . filename . "_" . A_Now . "." . filetype
-      }
-      Gdip_SaveBitmapToFile(pBitmap2, File2) ;Exports automatcially to file
-      Gdip_DisposeImage(pBitmap), Gdip_DisposeImage(pBitmap2)
-      Gdip_Shutdown("pToken")
-
-}
-
-xuanzhe:
-if(询问=1){
-  Gui +OwnDialogs
-  SetTimer, ChangeButtonNames, 50
-  OnMessage(0x53, "WM_HELP")
-  msgbox,20483,截图,选定的区域已经截取,点击“是”自动保存。`n点击“否”打开画图，编辑图片。
-  IfMsgBox Yes
-   {
-   SCW_Win2File(0,filetp)
-   }
-  IfMsgBox No
-  {
-   Run, mspaint.exe
-   WinWaitActive,无标题 - 画图,,3
-   if ErrorLevel
-    ExitApp
-   Send,^v
-  }
-Else
-ExitApp
-}
-else{
-SCW_Win2File(0,filetp)
-}
-ExitApp
-
-WM_HELP(){
-global filetp
-WinClose 截图
-InputBox,FileName,截图,`n输入截图文件名并保存文件,,440,160
-if ErrorLevel=0
-SCW_Win2File(0,filetp,FileName)
-ExitApp
-}
-
-ChangeButtonNames:
-IfWinNotExist, 截图
-    return  ; Keep waiting.
-SetTimer, ChangeButtonNames, off
-WinActivate
-ControlSetText, Button4, 重命名
-return
