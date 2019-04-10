@@ -515,7 +515,7 @@ f_OpenFavorite:
 f_OpenFavPath := i_%A_ThisMenu%Path%A_ThisMenuItemPos%
 if f_OpenFavPath =
 {
-	TrayTip, 错误, 不能打开`n`"%A_ThisMenuItem%`"`n路径为空., , 3
+	CF_Traytip("错误", "不能打开`n" """" A_ThisMenuItem """`n路径为空。", 5000, 3)
 	return
 }
 
@@ -827,14 +827,14 @@ f_RunPath(ThisPath)
 	Run, %ThisPath%, , UseErrorLevel ; run a file or url
 	if ErrorLevel
 	{
-		if (RegExMatch(ThisPath,"i)^(\[|HKCU|HKCR|HKCC|HKU|HKLM|HKEY_)"))
+		if (RegExMatch(ThisPath,"i)^(\[|HKCU|HKCR|HKCC|HKU|HKLM|HKEY)"))
 		{
 			f_OpenReg(ThisPath) ; open reg
 		return 0
 		}
 		else
 		{
-			TrayTip, 错误, 不能打开`n`"%ThisPath%`", , 3
+			CF_Traytip("错误", "不能打开`n" """" ThisPath """。", 5000, 3)
 			return 1
 		}
 	}
@@ -1035,7 +1035,7 @@ f_OpenSelected(SelectedPath)
 		if ErrorLevel
             if f_RunPath(SelectedPath)
 			{
-				TrayTip, 错误, 不能打开 "%Clipboard%" ., , 3
+				CF_Traytip("错误", "不能打开`n" """" SelectedPath """。", 5000, 3)
 				return ; don't keep error item
 			}
 		if f_IsFolder(SelectedPath) ; it's a folder
@@ -1063,19 +1063,28 @@ f_OpenReg(RegPath)
 		StringReplace, RegPath, RegPath, HKCC, HKEY_CURRENT_CONFIG
 	else if RegPathFirst4 = HKU
 		StringReplace, RegPath, RegPath, HKU, HKEY_USERS
+
+	; 将字串中的前两个"＿"(全角) 替换为“_"(半角)
+	StringReplace, RegPath, RegPath, ＿, _
+	StringReplace, RegPath, RegPath, ＿, _
 	; 替换字串中第一个“, ”为"\"
-	StringReplace,RegPath,RegPath,`,%A_Space%,\
+	StringReplace, RegPath, RegPath, `,%A_Space%, \
 	; 替换字串中第一个“,”为"\"
-	StringReplace,RegPath,RegPath,`, ,\
+	StringReplace, RegPath, RegPath, `,, \
+	; 将字串中的所有"/" 替换为“\"
+	StringReplace, RegPath, RegPath, /, \, All
+	; 将字串中的所有"／"(全角) 替换为“\"(半角)
+	StringReplace, RegPath, RegPath, ／, \, All
 	; 将字串中的所有"＼"(全角) 替换为“\"(半角)
-	StringReplace,RegPath,RegPath,＼,\,All
-	StringReplace,RegPath,RegPath,%A_Space%\,\,All
-	StringReplace,RegPath,RegPath,\%A_Space%,\,All
+	StringReplace, RegPath, RegPath, ＼, \, All
+	StringReplace, RegPath, RegPath, %A_Space%\, \, All
+	StringReplace, RegPath, RegPath, \%A_Space%, \, All
 	; 将字串中的所有“\\”替换为“\”
-	StringReplace,RegPath,RegPath,\\,\,All
+	StringReplace, RegPath, RegPath, \\, \, All
 
 	RegRead, MyComputer, HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Applets\Regedit, LastKey
 	f_Split2(MyComputer, "\", MyComputer, aaa)
+	MyComputer:=MyComputer?MyComputer:(A_OSVersion="WIN_XP")?"我的电脑":"计算机"
 
 	IfWinExist, ahk_class RegEdit_RegEdit
 	{
@@ -1083,19 +1092,20 @@ f_OpenReg(RegPath)
 		if !s_DontKillReg
 		{
 			RunWait, % "cmd.exe /c taskkill /IM regedit.exe", , Hide
-			RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Applets\Regedit, LastKey, %RegPath%
+			RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Applets\Regedit, LastKey, %MyComputer%\%RegPath%
 			Run, regedit.exe
 		Return
 		}
 		IfNotInString, RegPath, %MyComputer%\
 			RegPath := MyComputer "\" RegPath
+
 		WinActivate, ahk_class RegEdit_RegEdit
 		ControlGet, hwnd, hwnd, , SysTreeView321, ahk_class RegEdit_RegEdit
 		TVPath_Set(hwnd, RegPath, matchPath)
 	}
 	Else
 	{
-		RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Applets\Regedit, LastKey, %RegPath%
+		RegWrite, REG_SZ, HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Applets\Regedit, LastKey, %MyComputer%\%RegPath%
 		Run, regedit.exe ;-m
 	}
 return

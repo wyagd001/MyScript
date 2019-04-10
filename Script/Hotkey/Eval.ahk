@@ -1,10 +1,9 @@
 ;#IfWinActive,拖拽移动文件到目标文件夹（自动重命名）
 ;* 任意==号时自动触发，不需要终止符触发，B0 触发不删除==
 :?B0*:==::
-If(IME_GetSentenceMode(_mhwnd())= 0)
+If !IME_IsENG()
 ; 检测 IME 状态，中文输入时不执行任何命令，
 {
-;tooltip,% IME_GetSentenceMode(_mhwnd())
 sleep,400
 Return
 }
@@ -97,11 +96,3 @@ http://forum.ahkbbs.cn/thread-1945-1-1.html
 8.   十六进制可以直接计算，如 0xFF/5=51.000000、注意减法使用“加相反数”的办法，如 0xCC+-12=192、直接转化为10进制用加0的办法，如 0xFFFFFF+0=16777215
 9.   函数的优先级是大于幂运算的，比如：round5.5^2=36
 */
-
-_mhwnd()
-{
-	;background test
-	;MouseGetPos,x,,hwnd
-	Hwnd := WinActive("A")
-Return "ahk_id " . hwnd
-}

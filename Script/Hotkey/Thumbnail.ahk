@@ -2,14 +2,14 @@
 ;^#T::
 ¶¯Ì¬ËõÂÔÍ¼:
 WinGetActiveStats, ThumbTitle, ThumbWide, ThumbHigh, X, Y
-ZoomNao:= ZoomNao="" ? 0.25 : ZoomNao
+ZoomNao := ZoomNao="" ? 0.25 : ZoomNao
 NuWide := ThumbWide * ZoomNao
 NuHigh := (ThumbHigh - 25) * ZoomNao
-WinGet,source,Id,A
+WinGet, source, Id, A
 Gui, 68:Default
 Gui, +AlwaysOnTop
-Gui,Show,w%NuWide% h%NuHigh%, %ThumbTitle%
-Gui,+LastFound
+Gui, Show, w%NuWide% h%NuHigh%, %ThumbTitle%
+Gui, +LastFound
 WinGet,target,Id,A
 Goto ThumbMake
 Return
@@ -28,6 +28,48 @@ Gui,68: destroy
 sleep,1000
 ZoomNao -= .05
 Goto ¶¯Ì¬ËõÂÔÍ¼
+Return
+
+ThumbMake:
+VarSetCapacity(thumbnail,4,0)
+hr1:=DllCall("dwmapi.dll\DwmRegisterThumbnail","UInt",target,"UInt",source,"UInt",&thumbnail)
+thumbnail:=NumGet(thumbnail)
+
+/*
+DWM_TNP_RECTDESTINATION (0x00000001)
+Indicates a value for rcDestination has been specified.
+DWM_TNP_RECTSOURCE (0x00000002)
+Indicates a value for rcSource has been specified.
+DWM_TNP_OPACITY (0x00000004)
+Indicates a value for opacity has been specified.
+DWM_TNP_VISIBLE (0x00000008)
+Indicates a value for fVisible has been specified.
+DWM_TNP_SOURCECLIENTAREAONLY (0x00000010)
+Indicates a value for fSourceClientAreaOnly has been specified ÊÇ·ñ°üÀ¨±êÌâÀ¸ºÍ±ß¿ò.
+*/
+
+dwFlags:=0X1 | 0x2 | 0x10
+opacity:=150
+fVisible:=1
+fSourceClientAreaOnly:=1
+
+WinGetPos,wwx,wwy,www,wwh,ahk_id %target%
+
+VarSetCapacity(dskThumbProps,45,0)
+;struct _DWM_THUMBNAIL_PROPERTIES
+NumPut(dwFlags,dskThumbProps,0,"UInt")
+NumPut(0,dskThumbProps,4,"Int")
+NumPut(0,dskThumbProps,8,"Int")
+NumPut(www,dskThumbProps,12,"Int")
+NumPut(wwh,dskThumbProps,16,"Int")
+NumPut(0,dskThumbProps,20,"Int")
+NumPut(0,dskThumbProps,24,"Int")
+NumPut(www/zoomnao,dskThumbProps,28,"Int")
+NumPut(wwh/zoomnao,dskThumbProps,32,"Int")
+NumPut(opacity,dskThumbProps,36,"UChar")
+NumPut(fVisible,dskThumbProps,37,"Int")
+NumPut(fSourceClientAreaOnly,dskThumbProps,41,"Int")
+hr2:=DllCall("dwmapi.dll\DwmUpdateThumbnailProperties","UInt",thumbnail,"UInt",&dskThumbProps)
 Return
 
 ;^#w::
@@ -89,20 +131,20 @@ end_defining_region:
    SetTimer end_defining_region, OFF
 
    Progress, off
-
+   
    MouseGetPos, end_x, end_y
    if (end_x < start_x)
        start_x := end_x
 
    if (end_y < start_y)
        start_y := end_y
-
+   sleep, 1000
    WinGetClass, class, A    ; get ahk_id of foreground window
    targetName = ahk_class %class%  ; get target window id
-   sleep, 500
+
    ThumbWidth := Rwidth
    ThumbHeight := Rheight
-   ;msgbox % ThumbWidth "-" Rheight "-" start_x "-" start_y
+   ;msgbox % targetName "-" ThumbHeight "-" Rheight "-" start_x "-" end_x
    thumbID := mainCode(targetName,ThumbWidth,ThumbHeight,start_x,start_y,Rwidth,Rheight)
   CoordMode, Mouse, screen
 return
@@ -142,7 +184,7 @@ Gui +AlwaysOnTop +ToolWindow +Resize
 ; Now we can show it:
 Thumbnail_Show(hThumb) ; but it is not visible now...
 Gui Show, w%windowWidth% h%windowHeight%, Live Thumbnail ; ... until we show the GUI
-OnMessageEx(0x201, "WM_LBUTTONDOWN")
+OnMessageEX(0x201, "WM_LBUTTONDOWN")
 DetectHiddenWindows,on
 return hThumb
 }
@@ -190,68 +232,27 @@ SendClickThrough(mX,mY)
  ;ControlClick, x%convertedX% y%convertedY%, %targetName%,,,, NA u
 }
 
-
-
-ThumbMake:
-VarSetCapacity(thumbnail,4,0)
-hr1:=DllCall("dwmapi.dll\DwmRegisterThumbnail","UInt",target,"UInt",source,"UInt",&thumbnail)
-thumbnail:=NumGet(thumbnail)
-
-/*
-DWM_TNP_RECTDESTINATION (0x00000001)
-Indicates a value for rcDestination has been specified.
-DWM_TNP_RECTSOURCE (0x00000002)
-Indicates a value for rcSource has been specified.
-DWM_TNP_OPACITY (0x00000004)
-Indicates a value for opacity has been specified.
-DWM_TNP_VISIBLE (0x00000008)
-Indicates a value for fVisible has been specified.
-DWM_TNP_SOURCECLIENTAREAONLY (0x00000010)
-Indicates a value for fSourceClientAreaOnly has been specified.
-*/
-
-dwFlags:=0X1 | 0x2 | 0x10
-opacity:=150
-fVisible:=1
-fSourceClientAreaOnly:=1
-
-WinGetPos,wwx,wwy,www,wwh,ahk_id %target%
-
-VarSetCapacity(dskThumbProps,45,0)
-;struct _DWM_THUMBNAIL_PROPERTIES
-NumPut(dwFlags,dskThumbProps,0,"UInt")
-NumPut(0,dskThumbProps,4,"Int")
-NumPut(0,dskThumbProps,8,"Int")
-NumPut(www,dskThumbProps,12,"Int")
-NumPut(wwh,dskThumbProps,16,"Int")
-NumPut(0,dskThumbProps,20,"Int")
-NumPut(0,dskThumbProps,24,"Int")
-NumPut(www/zoom,dskThumbProps,28,"Int")
-NumPut(wwh/zoom,dskThumbProps,32,"Int")
-NumPut(opacity,dskThumbProps,36,"UChar")
-NumPut(fVisible,dskThumbProps,37,"Int")
-NumPut(fSourceClientAreaOnly,dskThumbProps,41,"Int")
-hr2:=DllCall("dwmapi.dll\DwmUpdateThumbnailProperties","UInt",thumbnail,"UInt",&dskThumbProps)
-Return
-
-
-
 /*
 title: Thumbnail library
 wrapped by maul.esel
+URL: https://github.com/maul-esel/AeroThumbnail/
+
 Credits:
 	- skrommel for example how to show a thumbnail (http://www.autohotkey.com/forum/topic34318.html)
 	- RaptorOne & IsNull for correcting some mistakes in the code
+
 Requirements:
 	OS - Windows Vista or Windows7 (tested on Windows 7)
 	AutoHotkey - AHK classic or AHK_L
 To make this work on 64bit you should use AHK_L.
+
 Quick-Tutorial:
 To add a thumbnail to a gui, you must know the following:
 	- the HWND / id of your gui
 	- the HWND / id of the window to show
 	- the coordinates where to show the thumbnail
 	- the coordinates of the area to be shown
+
 1. Create a thumbnail with <Thumbnail_Create()>
 2. Set its regions with <Thumbnail_SetRegion()>, optionally query for the source windows width and height before with <Thumbnail_GetSourceSize()>.
 3. optionally set the opacity with <Thumbnail_SetOpacity()>
@@ -262,11 +263,14 @@ To add a thumbnail to a gui, you must know the following:
 /*
 Function: Thumbnail_Create()
 creates a thumbnail relationship between two windows
+
 Parameters::
 	HWND hDestination - the window that will show the thumbnail
 	HWND hSource - the window whose thumbnail will be shown
+
 Returns:
 	HANDLE hThumb - thumbnail id on success, false on failure
+
 Remarks:
 	To get the HWNDs, you could use WinExist().
 */
@@ -283,6 +287,7 @@ Thumbnail_Create(hDestination, hSource)
 /*
 Function: Thumbnail_SetRegion()
 defines dimensions of a previously created thumbnail
+
 Parameters::
 	HANDLE hThumb - the thumbnail id returned by <Thumbnail_Create()>
 	INT xDest - the x-coordinate of the rendered thumbnail inside the destination window
@@ -293,6 +298,7 @@ Parameters::
 	INT ySource - the y-coordinate of the area that will be shown inside the thumbnail
 	INT wSource - the width of the area that will be shown inside the thumbnail
 	INT hSource - the height of the area that will be shown inside the thumbnail
+
 Returns:
 	BOOL success - true on success, false on failure
 */
@@ -321,8 +327,10 @@ Thumbnail_SetRegion(hThumb, xDest, yDest, wDest, hDest, xSource, ySource, wSourc
 /*
 Function: Thumbnail_Show()
 shows a previously created and sized thumbnail
+
 Parameters::
 	HANDLE hThumb - the thumbnail id returned by <Thumbnail_Create()>
+
 Returns:
 	BOOL success - true on success, false on failure
 */
@@ -342,8 +350,10 @@ Thumbnail_Show(hThumb)
 /*
 Function: Thumbnail_Hide()
 hides a thumbnail. It can be shown again without recreating
+
 Parameters::
 	HANDLE hThumb - the thumbnail id returned by <Thumbnail_Create()>
+
 Returns:
 	BOOL success - true on success, false on failure
 */
@@ -364,8 +374,10 @@ Thumbnail_Hide(hThumb)
 /*
 Function: Thumbnail_Destroy()
 destroys a thumbnail relationship
+
 Parameters::
 	HANDLE hThumb - the thumbnail id returned by <Thumbnail_Create()>
+
 Returns:
 	BOOL success - true on success, false on failure
 */
@@ -380,10 +392,12 @@ Thumbnail_Destroy(hThumb)
 /*
 Function: Thumbnail_GetSourceSize()
 gets the width and height of the source window - can be used with <Thumbnail_SetRegion()>
+
 Parameters::
 	HANDLE hThumb - the thumbnail id returned by <Thumbnail_Create()>
 	ByRef INT width - receives the width of the window
 	ByRef INT height - receives the height of the window
+
 Returns:
 	BOOL success - true on success, false on failure
 */
@@ -403,9 +417,11 @@ Thumbnail_GetSourceSize(hThumb, ByRef width, ByRef height)
 /*
 Function: Thumbnail_SetOpacity()
 sets the current opacity level
+
 Parameters::
 	HANDLE hThumb - the thumbnail id returned by <Thumbnail_Create()>
 	INT opacity - the opacity level from 0 to 255 (will wrap to the other end if invalid)
+
 Returns:
 	BOOL success - true on success, false on failure
 */
@@ -425,9 +441,11 @@ Thumbnail_SetOpacity(hThumb, opacity)
 /*
 Function: Thumbnail_SetIncludeNC()
 sets whether the source's non-client area should be included. The default value is true.
+
 Parameters:
 	HANDLE hThumb - the thumbnail id returned by <Thumbnail_Create()>
 	BOOL include - true to include the non-client area, false to exclude it
+
 Returns:
 	BOOL success - true on success, false on failure
 */

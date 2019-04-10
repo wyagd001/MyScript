@@ -6,7 +6,7 @@ return
 #ifWinActive ahk_Group ccc
 $Space::
 ;重命名时，或中文输入法时，直接发送空格
-if(A_Cursor="IBeam") or IsRenaming() or (IME_GetSentenceMode(_mhwnd())= 0)
+if(A_Cursor="IBeam") or IsRenaming()
 {
  send {space}
  return

@@ -35,6 +35,7 @@ Return
 
 regsvr32dll:
 	RegisterShellExtension(0)
+	gosub savetoreg
 Return
 
 unregsvr32dll:
@@ -85,7 +86,7 @@ RegisterShellExtension(Silent=1)
 {
 	If(Vista7)
 	{
-		uacrep := DllCall("shell32\ShellExecute", uint, 0, str, "RunAs", str, "regsvr32", str, "/s """ A_ScriptDir "\" (A_PtrSize=8 ? "ShellExtension_x64.dll" : "ShellExtension_x32.dll") "", str, A_ScriptDir, int, 1)
+		uacrep := DllCall("shell32\ShellExecute", uint, 0, str, "RunAs", str, "regsvr32", str, "/s """ A_ScriptDir "\" (A_PtrSize=8 ? "ShellExtension_x64.dll" : "ShellExtension_x32.dll") """", str, A_ScriptDir, int, 1)
 		If(uacrep = 42) ; UAC Prompt confirmed, application may run as admin
 		{
 			If(!Silent)
@@ -102,7 +103,7 @@ UnregisterShellExtension(Silent=1)
 {
 	If(Vista7)
 {
-		uacrep := DllCall("shell32\ShellExecute", uint, 0, str, "RunAs", str, "regsvr32", str, "/s /u """ A_ScriptDir "\" (A_PtrSize=8 ? "ShellExtension_x64.dll" : "ShellExtension_x32.dll") "", str, A_ScriptDir, int, 1)
+		uacrep := DllCall("shell32\ShellExecute", uint, 0, str, "RunAs", str, "regsvr32", str, "/s /u """ A_ScriptDir "\" (A_PtrSize=8 ? "ShellExtension_x64.dll" : "ShellExtension_x32.dll") """", str, A_ScriptDir, int, 1)
 		If(uacrep = 42) ;UAC Prompt confirmed, application may run as admin
 		{
 			If(!Silent)
