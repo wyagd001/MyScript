@@ -110,7 +110,7 @@ onChange="javascript:document.getElementById('ccdd').value=document.getElementBy
 <!--下面的option的样式是为了使字体为灰色，只是视觉问题，看起来像是注释一样-->
 <option value="" style="color:#c2c2c2;">---请选择---</option>
 <option value="%stableitem1%">hichat2626</option>
-<option value="%stableitem2%">项目二</option>
+<option value="%stableitem2%">关机</option>
 <option value="%stableitem3%">项目三</option>
 <option value="%stableitem4%">项目四</option>
 <option value="%stableitem5%">项目五</option>

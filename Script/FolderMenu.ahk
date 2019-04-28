@@ -1098,7 +1098,7 @@ f_OpenReg(RegPath)
 		}
 		IfNotInString, RegPath, %MyComputer%\
 			RegPath := MyComputer "\" RegPath
-
+;tooltip % RegPath
 		WinActivate, ahk_class RegEdit_RegEdit
 		ControlGet, hwnd, hwnd, , SysTreeView321, ahk_class RegEdit_RegEdit
 		TVPath_Set(hwnd, RegPath, matchPath)

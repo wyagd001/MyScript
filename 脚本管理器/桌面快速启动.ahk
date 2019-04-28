@@ -25,13 +25,13 @@ WinTitle = BasicDock
 WinWidth := S//2
 MaxIcos := WinWidth/35
 
-Menu,GCM1,Add,Move Right,MRight
-Menu,GCM1,Add,Delete,Remove
-Menu,GCM2,Add,Move Left,MLeft
-Menu,GCM2,Add,Move Right,MRight
-Menu,GCM2,Add,Delete,Remove
-Menu,GCM3,Add,Move Left,MLeft
-Menu,GCM3,Add,Delete,Remove
+Menu,GCM1,Add,向右移,MRight
+Menu,GCM1,Add,删除,Remove
+Menu,GCM2,Add,向左移,MLeft
+Menu,GCM2,Add,向右移,MRight
+Menu,GCM2,Add,删除,Remove
+Menu,GCM3,Add,向左移,MLeft
+Menu,GCM3,Add,删除,Remove
 
 
 
@@ -66,15 +66,11 @@ Gui,1: Show,xCenter  y-28 w%WinWidth% h48,%WinTitle%
 WinGet, WinID, ,BasicDock
 WinSet,Region,4-27 W%WinWidth% H48 R10-10, ahk_id %WinID%
 WinGet, DesktopID, ID, ahk_class WorkerW
-;MsgBox %WinID% - %DesktopID%
 if !DesktopID
     WinGet, DesktopID, ID, Program Manager
 ;ControlGet,id1,hwnd,,SHELLDLL_DefView1,ahk_class Progman
 ;ControlGet,DesktopID,hwnd,,SysListView321,ahk_id %id1%
 DllCall("SetParent", "UInt", WinID, "UInt", DesktopID)
-;msgbox % qq "-" DesktopID "-" WinID
-;WinGet, DesktopID, ID, Program Manager
-;MsgBox %WinID% - %DesktopID%
 Return
 
 GetMouse:
@@ -121,17 +117,17 @@ Return
 ;Add Application label
 AddApp:
 Gui,2: Destroy
-Gui,2: Add,Text,,Insert the path to the application you want to link to in the box below
+Gui,2: Add,Text,,在下面的框中插入应用程序的路径
 Gui,2: Add,Edit,vPath w200 gFillIco,
-Gui,2: Add,Text,,Icon Path
+Gui,2: Add,Text,,图标路径
 Gui,2: Add,Edit,vIcon w200,
-Gui,2: Add,Text,,Icon number
+Gui,2: Add,Text,,图标号
 Gui,2: Add,Edit,vIconNum Number w200,
-Gui,2: Add,Text,,Name
+Gui,2: Add,Text,,名称
 Gui,2: Add,Edit,vName w200,
-Gui,2: Add,Text,,Parameters
-Gui,2: Add,Edit,vParameters +ReadOnly w200,Not Implented yet
-Gui,2: Add,Button,gEnterApps,Go!
+Gui,2: Add,Text,,参数
+Gui,2: Add,Edit,vParameters +ReadOnly w200,未实现
+Gui,2: Add,Button,x170 gEnterApps,确定!
 Gui,2: Show
 Return
 
@@ -176,7 +172,7 @@ If (Count < MaxIcos) {
   Goto ConfigRead
 }
 else
-  MsgBox,% "You reached the max number of Icons allowed with your screen size: " MaxIcos
+  MsgBox,% "您达到了屏幕大小允许的最大图标数量: " MaxIcos
 Return
 
 GuiContextMenu:
@@ -264,4 +260,3 @@ Switch(Dir = "Right") {
 	FileDelete,%Ini%
 	FileAppend,%Var13%,%Ini%
 }
-

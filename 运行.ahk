@@ -602,26 +602,29 @@ hWinEventHook := SetWinEventHook( 0x4, 0x4,0, HookProcAdr, 0, 0, 0 )   ;0x4 EVEN
 ;拦截关机
 If Auto_ShutdownMonitor
 {
-ShutdownBlock := true
-RegWrite ,REG_SZ,HKEY_CURRENT_USER,Control Panel\Desktop,AutoEndTasks,0
-;关机时首先响应  To make a script the last process to terminate change "0x4FF" to "0x0FF".
-;HKEY_CURRENT_USER,Control Panel\Desktop,AutoEndTasks,0
-;Vista+关机提示结束进程
-Temp_Value:=DllCall("User32.dll\ShutdownBlockReasonCreate","uint",hAHK,"wstr",A_ScriptFullPath " is still running")
-if !Temp_Value
-CF_ToolTip("ShutdownBlockReasonCreate 创建失败！错误码： " A_LastError,3000)
-Temp_Value :=DllCall("kernel32.dll\SetProcessShutdownParameters", UInt, 0x4FF, UInt, 0)
-if !Temp_Value
-CF_ToolTip("SetProcessShutdownParameters 失败！",3000)
-;监视关机
-HookProcAdr2 := RegisterCallback( "HookProc", "F" )
-hWinEventHook2 := SetWinEventHook( 0x1, 0x17,0, HookProcAdr2, 0, 0, 0 )
-if !hWinEventHook2
-CF_ToolTip("注册监视关机失败",3000)
-OnMessage(0x11, "WM_QUERYENDSESSION")
+	ShutdownBlock := true
+	; HKEY_CURRENT_USER, Control Panel\Desktop, AutoEndTasks, 0
+	; AutoEndTasks 值为 1, 表示关机时自动结束任务 
+	; AutoEndTasks 值为 0, Vista+ 关机时提示是否结束进程
+	RegWrite, REG_SZ,HKEY_CURRENT_USER, Control Panel\Desktop, AutoEndTasks, 0
+	; 调用阻止系统关机的API
+	Temp_Value:=DllCall("User32.dll\ShutdownBlockReasonCreate", "uint", hAHK, "wstr", A_ScriptFullPath " 正在运行, 是否确定关机？")
+	if !Temp_Value
+		CF_ToolTip("ShutdownBlockReasonCreate 创建失败！错误码： " A_LastError,3000)
+	; 关机时第一个响应，若要使脚本成为最后一个要终止的进程，将 "0x4FF" 改为 "0x0FF".
+	Temp_Value :=DllCall("kernel32.dll\SetProcessShutdownParameters", UInt, 0x4FF, UInt, 0)
+	if !Temp_Value
+		CF_ToolTip("SetProcessShutdownParameters 失败！", 3000)
+	; 监视关机对话框的选择
+	HookProcAdr2 := RegisterCallback( "HookProc", "F" )
+	hWinEventHook2 := SetWinEventHook(0x1, 0x17,0, HookProcAdr2, 0, 0, 0)
+	if !hWinEventHook2
+		CF_ToolTip("注册监视关机失败",3000)
+	OnMessage(0x11, "WM_QUERYENDSESSION")
 }
 ;----------监视关机对话框的选择----------
 
+; 运行条目添加删除图标
 Gosub, Combo_WinEvent
 
 ;----------整点报时功能----------

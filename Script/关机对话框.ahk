@@ -1,26 +1,27 @@
 WM_QUERYENDSESSION(wParam, lParam)
 {
-   global ShutdownBlock
-   If not ShutdownBlock
-      Exit
-   SetTimer, ShutdownDialog, 30
-   Return false
-   /*   ;XP
-    ENDSESSION_LOGOFF = 0x80000000
-    If (lParam & ENDSESSION_LOGOFF)  ; 用户正在注销
-        EventType = 注销
-    Else  ; 系统正在关闭或重启。
-        EventType = 关机
-   Return false
-    MsgBox, 4,, 正在%EventType%，是否允许？
-    IfMsgBox Yes
-        Return true  ; 告诉操作系统允许让 关机/注销 操作继续。
-    Else
-    {
-    DllCall("ShutdownBlockReasonDestroy","Uint",hAhk)
-    Return false  ; 告诉操作系统终止 关机/注销。
-     }
-     */
+	global ShutdownBlock
+	If not ShutdownBlock
+		Exit
+	SetTimer, ShutdownDialog, 30
+  DllCall("AbortSystemShutdown", "Str","")
+	Return false
+	/*   ; XP
+	ENDSESSION_LOGOFF = 0x80000000
+	If (lParam & ENDSESSION_LOGOFF)  ; 用户正在注销
+		EventType = 注销
+	Else  ; 系统正在关闭或重启。
+		EventType = 关机
+	MsgBox, 4,, 正在%EventType%，是否允许？
+	IfMsgBox Yes
+		Return true  ; 告诉操作系统允许 关机/注销 操作继续。
+	Else
+	{
+		; 不在阻止系统关机
+		DllCall("ShutdownBlockReasonDestroy","Uint",hAhk)
+	Return false  ; 告诉操作系统终止 关机/注销。
+	}
+	*/
 }
 
 ShutdownDialog:

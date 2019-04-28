@@ -11,8 +11,7 @@
 		If(files)
 		{
 			AppendToClipboard(files)
-			TrayTip, 追加复制到剪贴板,%files%`n已经追加复制到剪贴板。
-			SetTimer, RemoveTrayTip, 3000
+			CF_Traytip("追加复制到剪贴板", files "`n已经追加复制到剪贴板。", 3000)
 		}
 }
 	Else
@@ -27,8 +26,7 @@ Return
 		If(files)
 		{
 			AppendToClipboard(files,1)
-			TrayTip, 追加剪切到剪贴板,%files%`n已经追加剪切到剪贴板。
-			SetTimer, RemoveTrayTip, 3000
+			CF_Traytip("追加剪贴到剪贴板", files "`n已经追加剪贴到剪贴板。", 3000)
 		}
 	}
 	Else

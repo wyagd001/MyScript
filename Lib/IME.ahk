@@ -1,17 +1,24 @@
+; 测试用的，win8以下的系统一些API只对调用它的进程有效
+;Gui, Add, Edit, r9 vMyEdit w135, Text to appear 
+;gui,show
+;return
+
 ;^space::
+; 自己用的快捷键，我只留下了搜狗，把其他所有输入法都删除了
 ;if zhcn_sougou
 ;{
-;IME_SetConvMode(268435456)
+;IME_SetConvMode(0)
 ;zhcn_sougou:=0
 ;}
 ;else
 ;{
-;IME_SetConvMode(268436481)
+;IME_SetConvMode(1025)
 ;zhcn_sougou:=1
 ;}
 ;sleep ,200
 ;send {Shift}
 ;return
+
 
 IME_Switch_QQPinYin()
 {
@@ -37,10 +44,28 @@ if temp_Val=0
 return true
 else if (temp_Val=1024)
 return true
-else if (temp_Val=268435456)
-return true
 else 
 return false
+}
+
+/*
+q::
+msgbox % IME_GetKeyboardLayoutList()
+return
+*/
+
+IME_GetKeyboardLayoutList()
+{
+	if count := DllCall("GetKeyboardLayoutList", "UInt", 0, "Ptr", 0)
+		VarSetCapacity(hklbuf, count*A_PtrSize, 0)
+	DllCall("GetKeyboardLayoutList", "UInt", count, "UPtr", &hklbuf)
+	Loop, %count%
+	{
+		HKL := NumGet(hklbuf, A_PtrSize*(A_Index-1), "UPtr")   ;  原脚本为 Ptr  改为 UPtr
+		HKL := Hex2Str(HKL, 8, true)
+		HKLList .= A_Index ": " HKL "`n"
+	}
+return HKLList
 }
 
 IME_SwitchToEng()
@@ -57,6 +82,11 @@ IME_Switch(dwLayout)
     SendMessage, 0x50, 0, HKL, %ctl%, A
 }
 
+/*
+q::
+IME_SetLayout("E01F0804")
+return
+*/
 ; dwLayout 参数为字符串 例如 "E01F0804"
 IME_SetLayout(dwLayout,WinTitle="A"){
 ControlGet,hwnd,HWND,,,%WinTitle%
@@ -70,13 +100,18 @@ DllCall("SendMessage", UInt, HWND, UInt, 80, UInt, 1, UInt, DllCall("ActivateKey
 return
 }
 
+/*
+q::
+IME_UnloadLayout(0xE01F0804)
+IME_UnloadLayout(0x08040804)
+return
+*/
 ; dwLayout 参数为数字 例如 0xE01F0804
 IME_UnloadLayout(dwLayout)
 {
 DllCall("UnloadKeyboardLayout", "uint",dwLayout)
 return
 }
-
 
 _mhwnd()
 {
@@ -96,33 +131,98 @@ Return "ahk_id " . hwnd
 ; Links.........: https://msdn.microsoft.com/en-us/library/ms646296.aspx
 ;                 https://msdn.microsoft.com/en-us/library/windows/desktop/ms646296.aspx
 ; ===============================================================================================================================
-IME_GetKeyboardLayout(Thread := 0)
-{
-	HKL := DllCall("GetKeyboardLayout", "UInt", Thread, "Ptr")
-SetFormat, integer, hex
-HKL += 0
-SetFormat, integer, D
-	Return HKL
-}
 
 /* C++ ==========================================================================================================================
-HKL WINAPI GetKeyboardLayout(                                                        // Ptr
-    _In_  DWORD idThread                                                             // UInt
+HKL WINAPI GetKeyboardLayout(               // Ptr
+    _In_  DWORD idThread                   // UInt
 );
 ============================================================================================================================== 
 */
+/*
+q::
+msgbox % IME_GetKeyboardLayout()
+return
+*/
+;                          Ptr       UPtr
+; 英语美国 美式键盘    0x4090409    0x4090409
+; 中文简体 美式键盘    0x8040804    0x8040804
+; 智能ABC             -0x1FE0F7FC   0xE01F0804
+; 搜狗拼音            -0x1FDDF7FC   0xE0220804
+IME_GetKeyboardLayout(WinTitle="A")
+{
+	ControlGet,hwnd,HWND,,,%WinTitle%
+	ThreadID := DllCall("GetWindowThreadProcessId", "Ptr", hwnd, "Ptr", 0 )
+	; ThreadID 指定线程id，0 表示本进程
+	HKL := DllCall("GetKeyboardLayout", "UInt", ThreadID, "UPtr") ; UPtr 改为 Ptr 得到不一样的值
+	HKL := dec2hex(HKL)
 
+Return HKL
+}
+
+
+/*
+q::
+msgbox % Get_ime_file("E0220804")
+return
+*/
+
+Get_ime_file(dwLayout){
+    ;; ImmGetIMEFileName 函数
+    ;; http://msdn.microsoft.com/ja-jp/library/cc448001.aspx
+    SubKey := Get_reg_Keyboard_Layouts(dwLayout)
+    RegRead, ime_file_name, HKEY_LOCAL_MACHINE, %SubKey%, Ime File
+    return ime_file_name
+}
+
+/*
+q::
+msgbox % Get_Layout_Text("E01F0804")
+return
+*/
+
+Get_Layout_Text(dwLayout){
+    SubKey := Get_reg_Keyboard_Layouts(dwLayout)
+    RegRead, layout_text, HKEY_LOCAL_MACHINE, %SubKey%, Layout Text
+    return layout_text
+}
+
+Get_reg_Keyboard_Layouts(dwLayout){
+    hKL := RegExReplace(dwLayout, "0x", "")
+    return "System\CurrentControlSet\control\keyboard layouts\" . hKL ;"
+}
+
+/*
+w::
+tooltip % IME_GetKeyboardLayoutName()
+return
+*/
+
+; win8之前只对调用调用线程或当前进程有效，
+; 即只对本脚本有效 例如脚本的Gui界面的edit输入控件中切换，对其他程序无效。
 ; win7 测试 搜狗 E0220804 智能ABC E01F0804
 IME_GetKeyboardLayoutName()
 {
-	VarSetCapacity(Str, 1000)
-	DllCall("GetKeyboardLayoutName", "Str", Str, "Int")
-	Return Str
+	VarSetCapacity(Str, 16)
+	 DllCall("GetKeyboardLayoutName", "Str", Str)
+Return Str
 }
 
-IME_ActivateKeyboardLayout(HKL) ; This does not work.
+/*
+q::
+yy:=DllCall("LoadKeyboardLayout","Str","E01F0804","uint",1, "Int")
+IME_ActivateKeyboardLayout(yy)
+;DllCall("SystemParametersInfo", "UInt", 0x005A, "UInt", 0, "UPtr", yy, "UInt", 2)
+return
+*/
+
+; 为调用线程或当前进程设置输入区域设置标识符(以前称为键盘布局句柄)。
+; win8之前只对调用调用线程或当前进程有效，即只对本脚本有效（gui），对其他程序无效。
+; 输入区域设置标识符指定区域设置以及键盘的物理布局。
+IME_ActivateKeyboardLayout(HKL)   
 {
-	T := DllCall("ActivateKeyboardLayout", "UInt", HKL, "UInt", 0x00000000, "PTR")
+	; 函数成功，返回值是之前的输入区域设置标识符 HKL
+	T := DllCall("ActivateKeyboardLayout", "Int", HKL, "UInt", 0x100, "UInt")
+tooltip % T
 	If (!T)
 	{
 		MsgBox, Error.
@@ -189,15 +289,7 @@ IME_ActivateKeyboardLayout(HKL) ; This does not work.
 ;  返回值          1:ON / 0:OFF
 ;-----------------------------------------------------------
 IME_GET(WinTitle="A")  {
-	ControlGet,hwnd,HWND,,,%WinTitle%
-	if	(WinActive(WinTitle))	{
-		ptrSize := !A_PtrSize ? 4 : A_PtrSize
-	    VarSetCapacity(stGTI, cbSize:=4+4+(PtrSize*6)+16, 0)
-	    NumPut(cbSize, stGTI,  0, "UInt")   ;	DWORD   cbSize;
-		hwnd := DllCall("GetGUIThreadInfo", Uint,0, Ptr,&stGTI)
-	             ? NumGet(stGTI,8+PtrSize,"Ptr") : hwnd
-	}
-
+    hwnd :=GetGUIThreadInfo_hwndActive(WinTitle)
     return DllCall("SendMessage"
           , Ptr, DllCall("imm32\ImmGetDefaultIMEWnd", Ptr,hwnd)
           , UInt, 0x0283  ;Message : WM_IME_CONTROL
@@ -212,17 +304,9 @@ IME_GET(WinTitle="A")  {
 ;   返回值          0:成功 / 0以外:失败
 ;-----------------------------------------------------------
 IME_SET(SetSts, WinTitle="A")    {
-	ControlGet,hwnd,HWND,,,%WinTitle%
-	if	(WinActive(WinTitle))	{
-		ptrSize := !A_PtrSize ? 4 : A_PtrSize
-	    VarSetCapacity(stGTI, cbSize:=4+4+(PtrSize*6)+16, 0)
-	    NumPut(cbSize, stGTI,  0, "UInt")   ;	DWORD   cbSize;
-		hwnd := DllCall("GetGUIThreadInfo", Uint,0, Ptr,&stGTI)
-	             ? NumGet(stGTI,8+PtrSize,"Ptr") : hwnd
-	}
-
+    hwnd :=GetGUIThreadInfo_hwndActive(WinTitle)
     return DllCall("SendMessage"
-          , Ptr, DllCall("imm32\ImmGetDefaultIMEWnd", Ptr,hwnd)
+          , Ptr, DllCall("imm32\ImmGetDefaultIMEWnd", Ptr, hwnd)
           , UInt, 0x0283  ;Message : WM_IME_CONTROL
           , UPtr, 0x006   ;wParam  : IMC_SETOPENSTATUS
           ,  Ptr, SetSts) ;lParam  : 0 or 1
@@ -266,34 +350,39 @@ IME_SET(SetSts, WinTitle="A")    {
 ; win7 x32
 ; 中文简体 美式键盘  返回 0。
 ; 
-;               QQ拼音输入法中文输入模式     QQ拼音英文输入模式     搜狗输入法中文   搜狗输入法英文
-; 半角+中文标点        1025                                             268436481
-; 半角+英文标点           1　                     1024                  268435457         268435456
-; 全角+中文标点        1033                                             268436489
-; 全角+英文标点           9                       1032                  268435465         268435464
+;               QQ拼音输入法中文输入模式   QQ拼音英文输入模式     搜狗输入法中文      搜狗输入法英文
+; 半角+中文标点        1025                                        268436481(1025)
+; 半角+英文标点           1　                    1024              268435457(1)        268435456(0)
+; 全角+中文标点        1033                                        268436489(1033)
+; 全角+英文标点           9                      1032              268435465(9)        268435464(8)
 
 ;                智能ABC中文输入标准模式    智能ABC中文输入双打模式    智能ABC英文标准   智能ABC英文双打
-; 半角+中文标点        1025                      -2147482623              1024               -2147482624
-; 半角+英文标点           1                      -2147483647                 0               -2147483648
-; 全角+中文标点        1033                      -2147482615              1032               -2147482616
-; 全角+英文标点           9                      -2147483639                 8               -2147483640
+; 半角+中文标点        1025                   -2147482623(1025)          1024               -2147482624
+; 半角+英文标点           1                   -2147483647(1)                0               -2147483648
+; 全角+中文标点        1033                   -2147482615(1033)          1032               -2147482616
+; 全角+英文标点           9                   -2147483639(9)                8               -2147483640
 
+/*
+q::
+tooltip % IME_GetConvMode()
+return
+*/
 
 IME_GetConvMode(WinTitle="A")   {
-    ControlGet,hwnd,HWND,,,%WinTitle%
-    if    (WinActive(WinTitle))    {
-        ptrSize := !A_PtrSize ? 4 : A_PtrSize
-        VarSetCapacity(stGTI, cbSize:=4+4+(PtrSize*6)+16, 0)
-        NumPut(cbSize, stGTI,  0, "UInt")   ;    DWORD   cbSize;
-        hwnd := DllCall("GetGUIThreadInfo", Uint,0, Uint,&stGTI)
-                 ? NumGet(stGTI,8+PtrSize,"UInt") : hwnd
-    }
+    hwnd :=GetGUIThreadInfo_hwndActive(WinTitle)
     return DllCall("SendMessage"
-          , UInt, DllCall("imm32\ImmGetDefaultIMEWnd", Uint,hwnd)
-          , UInt, 0x0283  ;Message : WM_IME_CONTROL
-          ,  Int, 0x001   ;wParam  : IMC_GETCONVERSIONMODE
-          ,  Int, 0)      ;lParam  : 0
+          , "Ptr", DllCall("imm32\ImmGetDefaultIMEWnd", "Ptr", hwnd)
+          , "UInt", 0x0283  ;Message : WM_IME_CONTROL
+          ,  "Int", 0x001   ;wParam  : IMC_GETCONVERSIONMODE
+          ,  "Int", 0) & 0xffff     ;lParam  : 0 ， & 0xffff 表示只取低16位
 }
+
+/*
+; 测试时 搜狗的全半角切换快捷键关闭时,不能切换到搜狗的全角
+w::
+tooltip % IME_SetConvMode(1)
+return
+*/
 
 ;-------------------------------------------------------
 ; IME输入模式设置
@@ -301,20 +390,13 @@ IME_GetConvMode(WinTitle="A")   {
 ;   WinTitle="A"    対象Window
 ;   返回值          0:成功 / 0以外:失败
 ;--------------------------------------------------------
-IME_SetConvMode(ConvMode,WinTitle="A")   {
-	ControlGet,hwnd,HWND,,,%WinTitle%
-	if	(WinActive(WinTitle))	{
-		ptrSize := !A_PtrSize ? 4 : A_PtrSize
-	    VarSetCapacity(stGTI, cbSize:=4+4+(PtrSize*6)+16, 0)
-	    NumPut(cbSize, stGTI,  0, "UInt")   ;	DWORD   cbSize;
-		hwnd := DllCall("GetGUIThreadInfo", Uint,0, Ptr,&stGTI)
-	             ? NumGet(stGTI,8+PtrSize,"Ptr") : hwnd
-	}
+IME_SetConvMode(ConvMode, WinTitle="A")   {
+    hwnd :=GetGUIThreadInfo_hwndActive(WinTitle)
     return DllCall("SendMessage"
-          , Ptr, DllCall("imm32\ImmGetDefaultIMEWnd", Ptr,hwnd)
-          , UInt, 0x0283      ;Message : WM_IME_CONTROL
-          , UPtr, 0x002       ;wParam  : IMC_SETCONVERSIONMODE
-          ,  Ptr, ConvMode)   ;lParam  : CONVERSIONMODE
+          , "Ptr", DllCall("imm32\ImmGetDefaultIMEWnd", "Ptr", hwnd)
+          , "UInt", 0x0283      ;Message : WM_IME_CONTROL
+          , "UPtr", 0x002       ;wParam  : IMC_SETCONVERSIONMODE
+          ,  "Ptr", ConvMode)   ;lParam  : CONVERSIONMODE
 }
 
 ;===========================================================================
@@ -332,22 +414,16 @@ IME_SetConvMode(ConvMode,WinTitle="A")   {
 ;          ATOK系  0:固定   1:复合词           4:自动 8:联文
 ;          WXG4             1:复合词  2:无转换 4:自动 8:联文
 ;------------------------------------------------------------------
-
+; 此消息由应用程序发送到输入法编辑器(IME)窗口，以获得当前句子模式。
+; 返回IME语句模式值的组合。
 ; 测试时，WIN7 下切换到 搜狗拼音/智能ABC/QQ拼音 时返回值都为0，英文键盘返回值为8
 IME_GetSentenceMode(WinTitle="A")   {
-	ControlGet,hwnd,HWND,,,%WinTitle%
-	if	(WinActive(WinTitle))	{
-		ptrSize := !A_PtrSize ? 4 : A_PtrSize
-	    VarSetCapacity(stGTI, cbSize:=4+4+(PtrSize*6)+16, 0)
-	    NumPut(cbSize, stGTI,  0, "UInt")   ;	DWORD   cbSize;
-		hwnd := DllCall("GetGUIThreadInfo", Uint,0, Ptr,&stGTI)
-	             ? NumGet(stGTI,8+PtrSize,"Ptr") : hwnd
-	}
+    hwnd :=GetGUIThreadInfo_hwndActive(WinTitle)
     return DllCall("SendMessage"
-          , Ptr, DllCall("imm32\ImmGetDefaultIMEWnd", Ptr,hwnd)
-          , UInt, 0x0283  ;Message : WM_IME_CONTROL
-          , UPtr, 0x003   ;wParam  : IMC_GETSENTENCEMODE
-          ,  Ptr, 0)      ;lParam  : 0
+          , "Ptr", DllCall("imm32\ImmGetDefaultIMEWnd", "Ptr", hwnd)
+          , "UInt", 0x0283  ;Message : WM_IME_CONTROL
+          , "UPtr", 0x003   ;wParam  : IMC_GETSENTENCEMODE
+          ,  "Ptr", 0)      ;lParam  : 0
 }
 
 ;----------------------------------------------------------------
@@ -360,17 +436,27 @@ IME_GetSentenceMode(WinTitle="A")   {
 ;   返回值          0:成功 / 0以外:失败
 ;-----------------------------------------------------------------
 IME_SetSentenceMode(SentenceMode,WinTitle="A")  {
+    hwnd :=GetGUIThreadInfo_hwndActive(WinTitle)
+    return DllCall("SendMessage"
+          , "Ptr", DllCall("imm32\ImmGetDefaultIMEWnd", "Ptr", hwnd)
+          , "UInt", 0x0283          ;Message : WM_IME_CONTROL
+          , "UPtr", 0x004           ;wParam  : IMC_SETSENTENCEMODE
+          ,  "Ptr", SentenceMode)   ;lParam  : SentenceMode
+}
+
+GetGUIThreadInfo_hwndActive(WinTitle="A")
+{
 	ControlGet,hwnd,HWND,,,%WinTitle%
 	if	(WinActive(WinTitle))	{
-		ptrSize := !A_PtrSize ? 4 : A_PtrSize
-	    VarSetCapacity(stGTI, cbSize:=4+4+(PtrSize*6)+16, 0)
-	    NumPut(cbSize, stGTI,  0, "UInt")   ;	DWORD   cbSize;
-		hwnd := DllCall("GetGUIThreadInfo", Uint,0, Ptr,&stGTI)
-	             ? NumGet(stGTI,8+PtrSize,"Ptr") : hwnd
-	}
-    return DllCall("SendMessage"
-          , Ptr, DllCall("imm32\ImmGetDefaultIMEWnd", Ptr,hwnd)
-          , UInt, 0x0283          ;Message : WM_IME_CONTROL
-          , UPtr, 0x004           ;wParam  : IMC_SETSENTENCEMODE
-          ,  Ptr, SentenceMode)   ;lParam  : SentenceMode
+	  ptrSize := !A_PtrSize ? 4 : A_PtrSize
+	  VarSetCapacity(stGTI, cbSize:=4+4+(PtrSize*6)+16, 0)
+	  NumPut(cbSize, stGTI,  0, "UInt")   ;	DWORD   cbSize;
+	return  hwnd := DllCall("GetGUIThreadInfo", "Uint", 0, "Ptr", &stGTI)
+	             ? NumGet(stGTI, 8+PtrSize, "Ptr") : hwnd
+  }
+  else
+  return  hwnd
 }
+
+#include *i %A_ScriptDir%\Lib\进制转换.ahk
+#include *i 进制转换.ahk
