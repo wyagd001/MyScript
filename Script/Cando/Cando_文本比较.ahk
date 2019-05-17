@@ -77,18 +77,16 @@ compare()
 	ToolTip,正在比较文本，请等待...
 	StartTime:=A_TickCount
 
+	if (compmode=1) && ((strlen(t1text) > 10000) or (strlen(t2text) > 10000))
+		compmode=2
+	compmode := strlen(t1text) > 20000 ? 3 : compmode
+
 	if (compmode=1) 
 		de := ""
 	else if (compmode=2)
 		de := ["，" , "。", " ", "`n", "`r"]
 	else
 		de := ["`n", "`r"]
-
-	if (compmode=1) && ((strlen(t1text) > 10000) or (strlen(t2text) > 10000))
-	{
-		compmode=2
-		de := ["，" , "。", " ", "`n", "`r"]
-	}
 
 	a := strsplit(t1text, de), b := strsplit(t2text, de), c := lcs(a, b)
 	t1s := 1, t1e := 1, t2s := 1, t2e := 1, t1m := [], t2m := []

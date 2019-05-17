@@ -3,8 +3,7 @@ WM_QUERYENDSESSION(wParam, lParam)
 	global ShutdownBlock
 	If not ShutdownBlock
 		Exit
-	SetTimer, ShutdownDialog, 30
-  DllCall("AbortSystemShutdown", "Str","")
+	SetTimer, ShutdownDialog, 300
 	Return false
 	/*   ; XP
 	ENDSESSION_LOGOFF = 0x80000000
@@ -17,14 +16,35 @@ WM_QUERYENDSESSION(wParam, lParam)
 		Return true  ; 告诉操作系统允许 关机/注销 操作继续。
 	Else
 	{
-		; 不在阻止系统关机
+		; 不再阻止系统关机
 		DllCall("ShutdownBlockReasonDestroy","Uint",hAhk)
 	Return false  ; 告诉操作系统终止 关机/注销。
 	}
 	*/
 }
 
+WM_ENDSESSION(wParam, lParam)
+{
+	global ShutdownBlock
+	If not ShutdownBlock
+		Exit
+	Return false
+}
+
+
 ShutdownDialog:
+;sendplay {esc}
+;DllCall("AbortSystemShutdown", "Str", 0)
+if SubStr(A_OSVersion,1,3) = "10."
+{
+   sleep 1000
+   WinRing0.KeyPress("escape")
+    sleep 400
+   WinClose, ahk_class Progman
+   SetTimer, ShutdownDialog, off
+}
+else
+{
 WinWait, ahk_class BlockedShutdownResolver
 If not ErrorLevel
 {
@@ -33,6 +53,7 @@ If not ErrorLevel
    IfNotEqual, ErrorLevel, 1, WinClose, ahk_class Progman
    SetTimer, ShutdownDialog, off
 }
+}
 Return
 
 #IfWinActive, 关闭 Windows ahk_class #32770
@@ -40,7 +61,7 @@ Enter::
 Space::
 ControlGet, Choice, Choice, , ComboBox1
 ControlGetFocus, Focus
-If Choice in 注销,重新启动,关机,安装更新并关机
+If Choice in 注销,重新启动,关机,安装更新并关机,重启
 {
    If (Focus = "ComboBox1" && A_ThisHotkey = "Enter")
       or (Focus = "Button3")
@@ -62,7 +83,7 @@ HookProc(hWinEventHook2, Event, hWnd)
 		if (Class = "Button" and Title = "确定")
 		{
 			ControlGet, Choice, Choice, , ComboBox1, ahk_id %hShutdownDialog%
-			if Choice in 注销,重新启动,关机,安装更新并关机
+			if Choice in 注销,重新启动,关机,安装更新并关机,重启
 				ShutdownBlock := false
 		}
 	}

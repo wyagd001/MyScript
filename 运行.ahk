@@ -16,7 +16,7 @@ CoordMode, Mouse, Screen
 
 ; 开机时启动脚本，等待时间设置长些，使托盘图标可以显示出来
 if(A_TickCount<80000)
-	sleep,% 80000 - A_TickCount
+	sleep,% (80000 - A_TickCount)
 
 global run_iniFile := A_ScriptDir "\settings\setting.ini"
 IfNotExist, %run_iniFile%
@@ -621,6 +621,7 @@ If Auto_ShutdownMonitor
 	if !hWinEventHook2
 		CF_ToolTip("注册监视关机失败",3000)
 	OnMessage(0x11, "WM_QUERYENDSESSION")
+	OnMessage(0x16, "WM_ENDSESSION")
 }
 ;----------监视关机对话框的选择----------
 
@@ -1056,15 +1057,17 @@ EmptyMem()
 Return
 
 onClipboardChange:
+	if !Auto_Clip  ;关闭剪贴板监控时返回
+	return
 	timeDiff := A_TickCount - lastClipboardTime
 	lastClipboardTime := A_TickCount
-	if (timeDiff < 200)
+	if (timeDiff < 200)  ; 两次复制间的时间太短返回
 	return
-	if !Auto_Clip
+	if A_IsPaused ; 脚本暂停时返回
 	return
-	if !monitor
+	if !monitor  ; 按下^V时返回
 	return
-	ClipWait, 1, 1
+	ClipWait, 1, 1 ; 等待剪贴板
 	if !clipboard
 	return
 	if ErrorLevel
@@ -1072,7 +1075,19 @@ onClipboardChange:
 		CF_ToolTip("剪贴板复制出错.",700)
 	return
 	}
-	if GetClipboardFormat(1)=1
+	If Auto_ClipPlugin ; 
+	{
+		tempid=0
+		If ClipPlugin_git
+		{
+			IfInString, Clipboard, docs/
+			{
+				gosub git
+			return
+			}
+		}
+	}
+	if GetClipboardFormat(1)=1  ; 判断剪贴板中的内容是否是文本
 	{
 		tempid=0
 		lastclipid := clipid
@@ -1102,7 +1117,7 @@ onClipboardChange:
 			}
 		}
 	}
-	else
+	else ; 剪贴板中的内容是图片或文件等非文本时
 		tempid=1
 return
 
@@ -1625,10 +1640,11 @@ return
 #include %A_ScriptDir%\Lib\ProcessMemory.ahk
 #include %A_ScriptDir%\Lib\WinEventHook.ahk
 #include %A_ScriptDir%\Lib\ActiveScript.ahk
-#include %A_ScriptDir%\Lib\_GuiDropFiles.ahk
+#include %A_ScriptDir%\Lib\Class_GuiDropFiles.ahk
 #include %A_ScriptDir%\Lib\Class_SQLiteDB.ahk
 #include %A_ScriptDir%\Lib\Class_JSON.ahk
 #include %A_ScriptDir%\Lib\Class_WinHttp.ahk
+#include %A_ScriptDir%\Lib\Class_WinRing0.ahk
 #Include *i %A_ScriptDir%\Lib\进制转换.ahk
 #Include *i %A_ScriptDir%\Lib\string.ahk
 #include, %A_ScriptDir%\lib\AHKhttp.ahk

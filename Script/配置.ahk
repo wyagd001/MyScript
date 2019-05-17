@@ -28,7 +28,7 @@ Gui,Add,Tab,x-4 y1 w640 h330 ,快捷键|Plugins|常规|自动激活|7Plus菜单|整点报时|播
 Gui,Tab,快捷键
 Gui,Add,text,x10 y30 w550,注意:#表示Win,!表示Alt,+表示Shift,^表示Ctrl,Space表示空格键,Up表示向上箭头,~表示按键原功能不会被屏蔽，*表示有其它键同时按下时快捷键仍然生效
 
-Gui,Add,ListView,x6 y60 w570 h245 vhotkeysListview ghotkeysListview checked Grid -Multi +NoSortHdr -LV0x10 +LV0x4000 +AltSubmit,快捷键标签|快捷键|适用窗口|序号
+Gui,Add,ListView,x10 y60 w570 h245 vhotkeysListview ghotkeysListview checked Grid -Multi +NoSortHdr -LV0x10 +LV0x4000 +AltSubmit,快捷键标签|快捷键|适用窗口|序号
 Gui,listview,hotkeysListview 
 LV_Delete()
 for k,v in myhotkey
@@ -49,20 +49,19 @@ LV_Modify(1,"Vis")
 LV_ColorInitiate(99)
 sleep,500
 Gui,Tab,Plugins
-Gui,Add,ListView,x6 y30 w570 h245 vPluginsListview ghotkeysListview Grid -Multi -LV0x10 +LV0x4000 +AltSubmit,名称|快捷键|其他调用方法|序号
+Gui,Add,ListView,x10 y30 w570 h245 vPluginsListview ghotkeysListview Grid -Multi -LV0x10 +LV0x4000 +AltSubmit,名称|快捷键|其他调用方法|序号
 Gosub, Load_PluginsList
 Gui,Add,Button,x10 y280 w80 h30 gEdit_PluginsHotkey,编辑菜单(&E)
 Gui,Add,Button,x90 y280 w80 h30 gLoad_PluginsList,刷新菜单(&R)
 Gui,Add,Button,x450 y280 w70 h30 gRun_Plugin,运行插件
 
 Gui,Tab,常规
-Gui,Add,CheckBox,Checked%询问% x26 y41 w70 h20 vask,截图询问
-
-Gui,Add,Text ,x136 y45,保存类型
-Gui,Add,Radio,x206 y41 w40 h20 vtp1 gche,png
-Gui,Add,Radio,x256 y41 w40 h20 vtp2 gche,jpg
-Gui,Add,Radio,x306 y41 w40 h20 vtp3 gche,bmp
-Gui,Add,Radio,x356 y41 w40 h20 vtp4 gche,gif
+Gui,Add,CheckBox,Checked%询问% x26 y30 w70 h20 vask,截图询问
+Gui,Add,Text ,x136 y34,保存类型
+Gui,Add,Radio,x206 y30 w40 h20 vtp1 gche,png
+Gui,Add,Radio,x256 y30 w40 h20 vtp2 gche,jpg
+Gui,Add,Radio,x306 y30 w40 h20 vtp3 gche,bmp
+Gui,Add,Radio,x356 y30 w40 h20 vtp4 gche,gif
 If(filetp="png"){
 	GuiControl,,tp1,1
 }
@@ -76,20 +75,20 @@ Else If(filetp="gif"){
 	GuiControl,,tp4,1
 }
 
-Gui,Add,CheckBox,Checked%Auto_Update% x26 y61 w100 h20 vupdate,启动时检测更新
+Gui,Add,CheckBox,Checked%Auto_Update% x26 y50 w100 h20 vupdate,启动时检测更新
 Gui,Font,Cred
-Gui,Add,Text,x136 y66 ,对脚本的启动速度有影响
+Gui,Add,Text,x136 y54 ,对脚本的启动速度有影响
 Gui,Font
 
-Gui,Add,CheckBox,Checked%Auto_runwithsys% x26 y81 w100 h20 vautorun,开机启动
+Gui,Add,CheckBox,Checked%Auto_runwithsys% x26 y70 w100 h20 vautorun,开机启动
 
-Gui,Add,CheckBox,Checked%Auto_mousetip% x26 y100 w100 h20 vmtp,鼠标提示
+Gui,Add,CheckBox,Checked%Auto_mousetip% x26 y90 w100 h20 vmtp,鼠标提示
 
-Gui,Add,Text,x26 y130 w100 h20,显示位置
-Gui,Add,Radio,x85 y127 w80 h20 vdef1 gxy1,左上角
-Gui,Add,Radio,x170 y127 w80 h20 vdef2 gxy2,右上角
-Gui,Add,Radio,x85 y147 w80 h20 vdef3 gxy3,左下角
-Gui,Add,Radio,x170 y147 w80 h20 vdef4 gxy4,右下角
+Gui,Add,Text,x26 y120 w100 h20,显示位置
+Gui,Add,Radio,x85 y117 w80 h20 vdef1 gxy1,左上角
+Gui,Add,Radio,x170 y117 w80 h20 vdef2 gxy2,右上角
+Gui,Add,Radio,x85 y137 w80 h20 vdef3 gxy3,左下角
+Gui,Add,Radio,x170 y137 w80 h20 vdef4 gxy4,右下角
 If(x_x=0 && y_y=0){
 	GuiControl,,def1,1
 }
@@ -102,10 +101,10 @@ If(x_x=0 && y_y=y_y2){
 If(x_x=x_x2 && y_y=y_y2){
 	GuiControl,,def4,1
 }
-Gui,Add,text,x285 y127 w15 h20,X=
-Gui,Add,Edit,x300 y124 w50 h20 vx1,%x_x%
-Gui,Add,text,x285 y157 w15 h20,Y=
-Gui,Add,Edit,x300 y154 w50 h20 vy1,%y_y%
+Gui,Add,text,x285 y124 w15 h20,X=
+Gui,Add,Edit,x300 y121 w50 h20 vx1,%x_x%
+Gui,Add,text,x285 y144 w15 h20,Y=
+Gui,Add,Edit,x300 y141 w50 h20 vy1,%y_y%
 
 Gui,Add,Button,x26 y185 w144 gf_OptionsGUI,Folder Menu 选项
 Gui,Font,Cred
@@ -125,18 +124,18 @@ Gui,Add,Edit,x350 y247 w150 h20 vImageEditor,%ImageEditor%
 Gui,Add,Button,x500 y247 w30 h20 gImageBrowse,...
 
 Gui,Tab,自动激活
-Gui,Add,CheckBox,x26 y41 w200 h20 vAuto_Raise gAutoRaise,开启鼠标自动激活(点击)功能
-Gui,Add,CheckBox,x26 y61 w500 h20 vhover_task_buttons,任务栏按钮自动点击功能（鼠标悬停在任务栏按钮上时自动点击）
-Gui,Add,CheckBox,x44 y81 w250 h20 vhover_task_group,开启任务栏分组按钮自动点击功能(未测试)
-Gui,Add,CheckBox,x44 y101 w410 h20 vhover_task_min_info,任务栏最小化窗口只显示悬浮信息（最小化的窗口不自动点击,Win7无效）
-Gui,Add,CheckBox,x26 y121 w410 h20 vhover_start_button,开始菜单自动点击功能（鼠标悬停在开始菜单位置时自动点击开始菜单）
-Gui,Add,CheckBox,x26 y141 w410 h20 vhover_min_max,标题栏按钮自动点击（鼠标悬停在最小化，最大化/还原按钮时自动点击）
-Gui,Add,Text,x26 y165 w180 h20 vtext1,鼠标悬停所在窗口时的动作：
-Gui,Add,CheckBox,x26 y185 w115 h20 vhover_any_window gundermouse,窗口自动激活
-Gui,Add,CheckBox,x44 y205 w200 h20 vhover_keep_zorder,激活时不更改窗口顺序(效果一般)
-Gui,Add,Text,x26 y235 w150 h20 vtext,悬停延迟响应时间（毫秒）：
-Gui,Add,Edit,x170 y230 w50 h20 vhover_delay,%hover_delay%
-Gui,Add,CheckBox,x26 y255 w300 h20 vscrollundermouse gundermouse,在不激活窗口情况下使滚轮生效(窗口有滚动条时)
+Gui,Add,CheckBox,x26 y30 w200 h20 vAuto_Raise gAutoRaise,开启鼠标自动激活(点击)功能
+Gui,Add,CheckBox,x26 y50 w500 h20 vhover_task_buttons,任务栏按钮自动点击功能（鼠标悬停在任务栏按钮上时自动点击）
+Gui,Add,CheckBox,x44 y70 w250 h20 vhover_task_group,开启任务栏分组按钮自动点击功能(未测试)
+Gui,Add,CheckBox,x44 y90 w410 h20 vhover_task_min_info,任务栏最小化窗口只显示悬浮信息（最小化的窗口不自动点击,Win7无效）
+Gui,Add,CheckBox,x26 y110 w410 h20 vhover_start_button,开始菜单自动点击功能（鼠标悬停在开始菜单位置时自动点击开始菜单）
+Gui,Add,CheckBox,x26 y130 w410 h20 vhover_min_max,标题栏按钮自动点击（鼠标悬停在最小化，最大化/还原按钮时自动点击）
+Gui,Add,Text,x26 y155 w180 h20 vtext1,鼠标悬停所在窗口时的动作：
+Gui,Add,CheckBox,x26 y175 w115 h20 vhover_any_window gundermouse,窗口自动激活
+Gui,Add,CheckBox,x44 y195 w200 h20 vhover_keep_zorder,激活时不更改窗口顺序(效果一般)
+Gui,Add,Text,x26 y220 w150 h20 vtext,悬停延迟响应时间（毫秒）：
+Gui,Add,Edit,x170 y215 w50 h20 vhover_delay,%hover_delay%
+Gui,Add,CheckBox,x26 y240 w300 h20 vscrollundermouse gundermouse,在不激活窗口情况下使滚轮生效(窗口有滚动条时)
 
  GuiControl,,hover_task_buttons,%hover_task_buttons%
  GuiControl,,hover_task_group,%hover_task_group%
@@ -172,7 +171,7 @@ If(Auto_Raise=1){
 }
 
 Gui,Tab,7Plus菜单
-Gui,Add,ListView,r12 w570 h245 v7pluslistview Grid -Multi +NoSortHdr Checked AltSubmit -LV0x10 g7plusListView,激活|ID  |菜单名称
+Gui,Add,ListView,x10 y30 r12 w570 h245 v7pluslistview Grid -Multi +NoSortHdr Checked AltSubmit -LV0x10 g7plusListView,激活|ID  |菜单名称
 ;如果窗口含有多个 ListView 控件,默认情况下函数操作于最近添加的那个. 要改变这种情况,请指定 Gui,ListView,ListViewName
 Gosub, Load_List
 Gui,Add,Button,x10 y280 w80 h30 gButtun_Edit,编辑菜单(&E)
@@ -305,43 +304,45 @@ Else If(DefaultPlayer="AhkPlayer"){
 }
 
 Gui,Tab,运行
-Gui,Add,Text,x26 y41,运行输入框下拉列表中固定的项目(各项目间用“|”分开):
-Gui,Add,Edit,x26 y61 w530 r4 vsp,%stableProgram%
+Gui,Add,Text,x26 y30,运行输入框下拉列表中固定的项目(各项目间用“|”分开):
+Gui,Add,Edit,x26 y55 w530 r4 vsp,%stableProgram%
 Gui,Add,Text,x26 y135,运行输入框中自定义短语(一行一个,例如“c = c:\”，只对本程序有效):
 Gui,Add,Edit,x26 y155 w530 r8 vop,%otherProgram%
 Gui,Add,Text,x26 y290,系统注册表中已注册的命令对本程序同样有效
 Gui,Add,Button,x490 y285 g自定义运行命令_click,查看修改
 
 Gui,Tab,其他
-Gui,Add,CheckBox,x26 y41 w210 h20 vvAuto_DisplayMainWindow Checked%Auto_DisplayMainWindow%,启动时显示主窗口
-Gui,Add,CheckBox,x26 y61 w210 h20 vvAuto_Trayicon Checked%Auto_Trayicon%,启动时检测托盘图标
-Gui,Add,CheckBox,x44 y81 w200 h20 vvAuto_Trayicon_showmsgbox Checked%Auto_Trayicon_showmsgbox%,没有托盘图标显示重启脚本对话框
-Gui,Add,CheckBox,x26 y101 w210 h20 vvAuto_ShutdownMonitor Checked%Auto_ShutdownMonitor%,监视关机出现关机对话框
-Gui,Add,CheckBox,x26 y121 w210 h20 vvAuto_PasteAndOpen Checked%Auto_PasteAndOpen%,粘贴并打开
-Gui,Add,CheckBox,x26 y141 w210 h20 vvAuto_Clip Checked%Auto_Clip%,三重剪贴板(复制文字时生效)
-Gui,Add,CheckBox,x44 y161 w130 h20 vvAuto_Cliphistory Checked%Auto_Cliphistory%,剪贴板历史(文字)
+Gui,Add,CheckBox,x26 y30 w210 h20 vvAuto_DisplayMainWindow Checked%Auto_DisplayMainWindow%,启动时显示主窗口
+Gui,Add,CheckBox,x26 y50 w210 h20 vvAuto_Trayicon Checked%Auto_Trayicon%,启动时检测托盘图标
+Gui,Add,CheckBox,x44 y70 w200 h20 vvAuto_Trayicon_showmsgbox Checked%Auto_Trayicon_showmsgbox%,没有托盘图标显示重启脚本对话框
+Gui,Add,CheckBox,x26 y90 w210 h20 vvAuto_ShutdownMonitor Checked%Auto_ShutdownMonitor%,监视关机使用传统关机对话框
+Gui,Add,CheckBox,x26 y110 w210 h20 vvAuto_PasteAndOpen Checked%Auto_PasteAndOpen%,粘贴并打开
+Gui,Add,CheckBox,x26 y130 w210 h20 vvAuto_Clip Checked%Auto_Clip%,三重剪贴板(复制文字时生效)
+Gui,Add,CheckBox,x44 y150 w130 h20 vvAuto_Cliphistory Checked%Auto_Cliphistory%,剪贴板历史(文字)
 Gui,Font,cgreen
-Gui,Add,text,x190 y164 w60 h20 ggui_clipHistory,查看
+Gui,Add,text,x190 y154 w60 h20 ggui_clipHistory,查看
 Gui,Font
-Gui,Add,CheckBox,x26 y181 w210 h20 vvAuto_Capslock Checked%Auto_Capslock%, 按住 Capslock 改变窗口大小位置
-Gui,Add,CheckBox,x26 y201 w210 h20 vvAuto_mouseclick Checked%Auto_mouseclick%, 鼠标左键增强(热键)
-Gui,Add,CheckBox,x26 y221 w210 h20 vvAuto_midmouse Checked%Auto_midmouse%, 鼠标中键增强(热键)
-Gui,Add,CheckBox,x26 y241 w210 h20 vvAuto_Spacepreview Checked%Auto_Spacepreview%, Space 预览文件(热键)
-Gui,Add,CheckBox,x26 y261 w210 h20 vvAuto_AhkServer Checked%Auto_AhkServer%, ahk 网页控制
-Gui,Add,CheckBox,x46 y281 w210 h20 vvLoginPass Checked%LoginPass%, 启动默认已登录状态
+Gui,Add,CheckBox,x44 y170 w230 h20 vvAuto_ClipPlugin Checked%Auto_ClipPlugin%,根据剪贴板内容自动运行标签
+Gui,Add,CheckBox,x62 y190 w130 h20 vvClipPlugin_git Checked%ClipPlugin_git%,git
+Gui,Add,CheckBox,x26 y210 w210 h20 vvAuto_Capslock Checked%Auto_Capslock%, 按住 Capslock 改变窗口大小位置
+Gui,Add,CheckBox,x26 y230 w210 h20 vvAuto_mouseclick Checked%Auto_mouseclick%, 鼠标左键增强(热键)
+Gui,Add,CheckBox,x26 y250 w210 h20 vvAuto_midmouse Checked%Auto_midmouse%, 鼠标中键增强(热键)
+Gui,Add,CheckBox,x26 y270 w210 h20 vvAuto_Spacepreview Checked%Auto_Spacepreview%, Space 预览文件(热键)
+Gui,Add,CheckBox,x26 y290 w210 h20 vvAuto_AhkServer Checked%Auto_AhkServer%, ahk 网页控制
+Gui,Add,CheckBox,x46 y310 w210 h20 vvLoginPass Checked%LoginPass%, 启动默认已登录状态
 
 Gui,Tab,关于
-Gui,Add,Text,x26 y40,名称：运行 - Ahk
-Gui,Add,Text,x26 y60,作者：桂林小廖
-Gui,Add,Text,x26 y80,主页：
+Gui,Add,Text,x26 y30,名称：运行 - Ahk
+Gui,Add,Text,x26 y50,作者：桂林小廖
+Gui,Add,Text,x26 y70,主页：
 Gui,Font,CBlue
 ;Gui,Font,CBlue Underline
 Gui,Add,Text,x+ gg vURL,https://github.com/wyagd001/MyScript
 Gui,Font
-Gui,Add,Text,x26 y100,% "版本：" AppVersion
-Gui,Add,Text,x26 y120,适配 Autohotkey：1.1.28.00(Unicode) 系统：Win7 SP1 32bit 中文版
-Gui,Add,Text,x26 y140,% "当前 Autohotkey：" A_AhkVersion "(" (A_IsUnicode?"Unicode":"ansi") ") 系统：" A_OSVersion " " (A_Is64bitOS?64:32) "bit"
-Gui,Add,Button,x26 y165 gUpdate,检查更新
+Gui,Add,Text,x26 y90, % "版本：" AppVersion
+Gui,Add,Text,x26 y110, 适配 Autohotkey：1.1.28.00(Unicode) 系统：Win7 SP1 32bit/Win10 64bit 中文版
+Gui,Add,Text,x26 y130, % "当前 Autohotkey：" A_AhkVersion "(" (A_IsUnicode?"Unicode":"ansi") ") 系统：" A_OSVersion " " (A_Is64bitOS?64:32) "bit"
+Gui,Add,Button,x26 y155 gUpdate,检查更新
 
 ;Gui & Hyperlink - AGermanUser
 ;http://www.autohotkey.com/forum/viewtopic.php?p=107703
@@ -960,6 +961,8 @@ IniWrite,% vAuto_ShutdownMonitor,%run_iniFile%,功能开关,Auto_ShutdownMonitor
 IniWrite,% vAuto_PasteAndOpen,%run_iniFile%,功能开关,Auto_PasteAndOpen
 IniWrite,% vAuto_Clip,%run_iniFile%,功能开关,Auto_Clip
 IniWrite,% vAuto_Cliphistory,%run_iniFile%,功能开关,Auto_Cliphistory
+IniWrite,% vAuto_ClipPlugin,%run_iniFile%,功能开关,Auto_ClipPlugin
+IniWrite,% vClipPlugin_git,%run_iniFile%,功能开关,ClipPlugin_git
 IniWrite,% vAuto_Capslock,%run_iniFile%,功能开关,Auto_Capslock
 IniWrite,% vAuto_mouseclick,%run_iniFile%,功能开关,Auto_mouseclick
 IniWrite,% vAuto_midmouse,%run_iniFile%,功能开关,Auto_midmouse

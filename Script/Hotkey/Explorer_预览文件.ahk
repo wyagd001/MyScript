@@ -5,7 +5,7 @@ return
 
 #ifWinActive ahk_Group ccc
 $Space::
-;重命名时，或中文输入法时，直接发送空格
+;重命名时，直接发送空格
 if(A_Cursor="IBeam") or IsRenaming()
 {
  send {space}
@@ -46,6 +46,8 @@ hgif1 := ""
 gif_prew:=0
 return
 }
+if Tmp_value
+Tmp_value:=""
 Gui,PreWWin:Destroy
 ;if prewpToken
 ;{
@@ -199,10 +201,22 @@ Cando_rar_prew:
 	}
 Sort, Tmp_value
 Gui, +ReSize
-Gui, Add, Edit, w800 h600 ReadOnly vdisplayArea,
+ImageListID := IL_Create(5)  ; 创建初始容量为 5 个图标的图像列表.
+Loop 5  ; 加载一些标准系统图标到图像列表中.
+    IL_Add(ImageListID, "shell32.dll", A_Index)
+Gui, Add, TreeView,r30 w800 h580 ImageList%ImageListID%
+Gui, Add, button,gtree2text,显示文本
+AddBranchesToTree(Tmp_value)
+
 Gui,PreWWin: Show, AutoSize Center, % Files " - 文件预览"
-GuiControl,, displayArea, %Tmp_value%
-textvalue:=Tmp_value:=Tmp_val:=""
+;GuiControl,, displayArea, %Tmp_value%
+textvalue:=Tmp_val:=""
+return
+
+tree2text:
+Gui,66:Default 
+Gui, Add, Edit, w600 h300 ReadOnly,%Files%`n%Tmp_value%
+Gui show, AutoSize Center, % Files " - 文件预览"
 return
 
 cmdSilenceReturn(command){
@@ -216,6 +230,74 @@ cmdSilenceReturn(command){
 		FileDelete,%A_Temp%\%cmdFN%
 	}catch{}
 return  CMDReturn
+}
+
+; 来源网址: https://autohotkey.com/board/topic/39809-script-to-open-list-of-filesfolders-in-treeview/
+AddBranchesToTree(filelist)
+{
+	level = 0
+	parent0 = 0
+	Loop, parse, filelist, `n, `r
+	{
+		if A_LoopField =
+			continue
+		stringsplit, parts, A_LoopField, \	; drive + folders ( + file)
+		if level = 0				; first record, insert all parts
+		{
+			gosub build_tree
+			continue
+		}
+		ifinstring, A_LoopField, %hprev_file%	; sub folders or files
+		{
+			gosub build_tree
+			continue
+		}
+							; other drive or folder
+		line := A_LoopField              
+		if (parts0 > level)			; ignore parts > level
+			loop, % parts0 - level - 1
+				StringLeft, line, line, % InStr(line,"\",false,0)
+		else
+			level := parts0			; set level to no of parts
+		loop, % level
+		{
+			StringLeft, line, line, % InStr(line,"\",false,0)-1  
+			level--
+			if level = 0			; other drive
+			{
+				hprev_file =
+				bs =
+			}
+		else					; find corresponding level
+			{
+				hprev_file := file%level%
+				ifnotinstring, line, %hprev_file%
+					continue
+				if level = 0
+					level++
+			}
+			gosub build_tree
+			break
+		}
+	}
+	return
+
+build_tree:
+	loop, % parts0 - level
+	{
+        
+		prev_parent = parent%level%
+		level++
+		ifnotinstring parts%level%,.
+		parent%level% := tv_add(parts%level%, %prev_parent%, "expand Icon4")
+		else
+ parent%level% := tv_add(parts%level%, %prev_parent%, "expand")
+		if level <> 1
+			bs = \
+		file%level% := hprev_file bs parts%level%
+		hprev_file := file%level%
+	}
+	return
 }
 
 Cando_gif_prew:

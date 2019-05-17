@@ -1,5 +1,5 @@
-;该脚本下载地址：https://autohotkey.com/boards/viewtopic.php?p=9186#p9186
-;作用是操纵右下角 系统托盘区 的图标，可右键点击调出菜单等
+;来源网址：https://autohotkey.com/boards/viewtopic.php?p=9186#p9186
+;作用是操控右下角 系统托盘区 的图标，可右键点击调出菜单等
 
 ; ----------------------------------------------------------------------------------------------------------------------
 ; Name ..........: TrayIcon library
@@ -9,11 +9,14 @@
 ; Update Author .: Cyruz (http://ciroprincipe.info) (http://ahkscript.org/boards/viewtopic.php?f=6&t=1229)
 ; Mod Author ....: Fanatic Guru
 ; License .......: WTFPL - http://www.wtfpl.net/txt/copying/
-; Version Date...: 2016 - 03 - 08
+; Version Date...: 2019 - 04 - 04
 ; Note ..........: Many people have updated Sean's original work including me but Cyruz's version seemed the most straight
 ; ...............: forward update for 64 bit so I adapted it with some of the features from my Fanatic Guru version.
 ; Update 20160120: Went through all the data types in the DLL and NumGet and matched them up to MSDN which fixed IDcmd.
 ; Update 20160308: Fix for Windows 10 NotifyIconOverflowWindow
+; Update 20180313: Fix problem with "VirtualFreeEx" pointed out by nnnik
+; Update 20180313: Additional fix for previous Windows 10 NotifyIconOverflowWindow fix breaking non-hidden icons
+; Update 20190404: Added TrayIcon_Set by Cyruz
 ; ----------------------------------------------------------------------------------------------------------------------
 
 ; ----------------------------------------------------------------------------------------------------------------------
@@ -44,21 +47,12 @@ TrayIcon_GetInfo(sExeName := "")
 	oTrayIcon_GetInfo := {}
 	For key, sTray in ["NotifyIconOverflowWindow", "Shell_TrayWnd"]
 	{
-		idxTB := TrayIcon_GetTrayBar()
+		idxTB := TrayIcon_GetTrayBar(sTray)
 		WinGet, pidTaskbar, PID, ahk_class %sTray%
 		
 		hProc := DllCall("OpenProcess", UInt, 0x38, Int, 0, UInt, pidTaskbar)
 		pRB   := DllCall("VirtualAllocEx", Ptr, hProc, Ptr, 0, UPtr, 20, UInt, 0x1000, UInt, 0x4)
 
-		if (SubStr(A_OSVersion,1,2)=10)
-{
-			if ("Shell_TrayWnd" == sTray) {
-    SendMessage, 0x418, 0, 0, ToolbarWindow32%idxTB%, ahk_class %sTray%   ; TB_BUTTONCOUNT
-} else if ("NotifyIconOverflowWindow" == sTray) {
-    SendMessage, 0x418, 0, 0, ToolbarWindow32%key%, ahk_class %sTray%   ; TB_BUTTONCOUNT
-}
-}
-		else	
 			SendMessage, 0x418, 0, 0, ToolbarWindow32%idxTB%, ahk_class %sTray%   ; TB_BUTTONCOUNT
 		
 		szBtn := VarSetCapacity(btn, (A_Is64bitOS ? 32 : 20), 0)
@@ -67,15 +61,6 @@ TrayIcon_GetInfo(sExeName := "")
 		
 		Loop, %ErrorLevel%
 		{
-			if (SubStr(A_OSVersion,1,2)=10)
-{
-if ("Shell_TrayWnd" == sTray) {
-    SendMessage, 0x417, A_Index - 1, pRB, ToolbarWindow32%idxTB%, ahk_class %sTray%   ; TB_GETBUTTON
-} else if ("NotifyIconOverflowWindow" == sTray) {
-    SendMessage, 0x417, A_Index - 1, pRB, ToolbarWindow32%key%, ahk_class %sTray%   ; TB_GETBUTTON
-}
-}
-			else
 				SendMessage, 0x417, A_Index - 1, pRB, ToolbarWindow32%idxTB%, ahk_class %sTray%   ; TB_GETBUTTON
 			DllCall("ReadProcessMemory", Ptr, hProc, Ptr, pRB, Ptr, &btn, UPtr, szBtn, UPtr, 0)
 
@@ -113,7 +98,7 @@ if ("Shell_TrayWnd" == sTray) {
 				oTrayIcon_GetInfo[Index,"Tray"]    := sTray
 			}
 		}
-		DllCall("VirtualFreeEx", Ptr, hProc, Ptr, pProc, UPtr, 0, Uint, 0x8000)
+		DllCall("VirtualFreeEx", Ptr, hProc, Ptr, pRB, UPtr, 0, Uint, 0x8000)
 		DllCall("CloseHandle", Ptr, hProc)
 	}
 	DetectHiddenWindows, %Setting_A_DetectHiddenWindows%
@@ -186,20 +171,54 @@ TrayIcon_Move(idxOld, idxNew, sTray := "Shell_TrayWnd")
 }
 
 ; ----------------------------------------------------------------------------------------------------------------------
+; Function .....: TrayIcon_Set
+; Description ..: Modify icon with the given index for the given window.
+; Parameters ...: hWnd       - Window handle.
+; ..............: uId        - Application defined identifier for the icon.
+; ..............: hIcon      - Handle to the tray icon.
+; ..............: hIconSmall - Handle to the small icon, for window menubar. Optional.
+; ..............: hIconBig   - Handle to the big icon, for taskbar. Optional.
+; Return .......: True on success, false on failure.
+; Info .........: NOTIFYICONDATA structure  - https://goo.gl/1Xuw5r
+; ..............: Shell_NotifyIcon function - https://goo.gl/tTSSBM
+; ----------------------------------------------------------------------------------------------------------------------
+TrayIcon_Set(hWnd, uId, hIcon, hIconSmall:=0, hIconBig:=0)
+{
+    d := A_DetectHiddenWindows
+    DetectHiddenWindows, On
+    ; WM_SETICON = 0x0080
+    If ( hIconSmall ) 
+        SendMessage, 0x0080, 0, hIconSmall,, ahk_id %hWnd%
+    If ( hIconBig )
+        SendMessage, 0x0080, 1, hIconBig,, ahk_id %hWnd%
+    DetectHiddenWindows, %d%
+
+    VarSetCapacity(NID, szNID := ((A_IsUnicode ? 2 : 1) * 384 + A_PtrSize*5 + 40),0)
+    NumPut( szNID, NID, 0                           )
+    NumPut( hWnd,  NID, (A_PtrSize == 4) ? 4   : 8  )
+    NumPut( uId,   NID, (A_PtrSize == 4) ? 8   : 16 )
+    NumPut( 2,     NID, (A_PtrSize == 4) ? 12  : 20 )
+    NumPut( hIcon, NID, (A_PtrSize == 4) ? 20  : 32 )
+    
+    ; NIM_MODIFY := 0x1
+    Return DllCall("Shell32.dll\Shell_NotifyIcon", UInt,0x1, Ptr,&NID)
+}
+
+; ----------------------------------------------------------------------------------------------------------------------
 ; Function .....: TrayIcon_GetTrayBar
 ; Description ..: Get the tray icon handle.
 ; ----------------------------------------------------------------------------------------------------------------------
-TrayIcon_GetTrayBar()
+TrayIcon_GetTrayBar(Tray:="Shell_TrayWnd")
 {
 	DetectHiddenWindows, % (Setting_A_DetectHiddenWindows := A_DetectHiddenWindows) ? "On" :
-	WinGet, ControlList, ControlList, ahk_class Shell_TrayWnd
+	WinGet, ControlList, ControlList, ahk_class %Tray%
 	RegExMatch(ControlList, "(?<=ToolbarWindow32)\d+(?!.*ToolbarWindow32)", nTB)
 	Loop, %nTB%
 	{
-		ControlGet, hWnd, hWnd,, ToolbarWindow32%A_Index%, ahk_class Shell_TrayWnd
+		ControlGet, hWnd, hWnd,, ToolbarWindow32%A_Index%, ahk_class %Tray%
 		hParent := DllCall( "GetParent", Ptr, hWnd )
 		WinGetClass, sClass, ahk_id %hParent%
-		If (sClass <> "SysPager")
+		If !(sClass = "SysPager" or sClass = "NotifyIconOverflowWindow" )
 			Continue
 		idxTB := A_Index
 		Break
