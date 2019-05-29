@@ -1,3 +1,5 @@
+; https://www.autohotkey.com/boards/viewtopic.php?f=6&t=4890&start=40
+; https://www.autohotkey.com/boards/viewtopic.php?p=277982#p277982
 class Uri
 {
     Decode(str) {
@@ -106,53 +108,55 @@ HttpHandler(sEvent, iSocket = 0, sName = 0, sAddr = 0, sPort = 0, ByRef bData = 
     if (sEvent == "DISCONNECTED") {
         socket.request := false
         sockets[iSocket] := false
-    } 
-else if (sEvent == "SEND") {
+    } else if (sEvent == "SEND") {
         if (socket.TrySend()) {
             socket.Close()
         }
 
-    } 
-else if (sEvent == "RECEIVED") {
+    } else if (sEvent == "RECEIVED") {
         server := HttpServer.servers[sPort]
+
         text := StrGet(&bData, "UTF-8")
-;qqq:=StrGet(&bData, bDataLength, "UTF-8")
-;tooltip % qqq
-        request := new HttpRequest(text)
-        if (request.IsMultipart()) {
+
+        ; New request or old?
+        if (socket.request) {
+            ; Get data and append it to the existing request body
+            socket.request.bytesLeft -= StrLen(text)
+            socket.request.body := socket.request.body . text
+            request := socket.request
+        } else {
+            ; Parse new request
+            request := new HttpRequest(text)
+
             length := request.headers["Content-Length"]
             request.bytesLeft := length + 0
 
             if (request.body) {
                 request.bytesLeft -= StrLen(request.body)
             }
+        }
+
+        if (request.bytesLeft <= 0) {
+            request.done := true
+        } else {
             socket.request := request
-        } else if (socket.request) {
-            ; Get data and append it to the request body
-            socket.request.bytesLeft -= StrLen(text)
-            socket.request.body := socket.request.body . text
         }
 
-        if (socket.request) {
-            request := socket.request
-            if (request.bytesLeft <= 0) {
-                request.done := true
+        if (request.done || request.IsMultipart()) {
+            response := server.Handle(request)
+            if (response.status) {
+                socket.SetData(response.Generate())
             }
         }
-
-        response := server.Handle(request)
-        if (response.status) {
-            socket.SetData(response.Generate())
-            if (socket.TrySend()) {
-                if (!request.IsMultipart() || (request.IsMultipart() && request.done)) {
-                    socket.Close()
-                }
+        if (socket.TrySend()) {
+            if (!request.IsMultipart() || request.done) {
+                socket.Close()
             }
-        }
+        }    
+        
     }
 }
 
-; 网页请求
 class HttpRequest
 {
     __New(data = "") {
@@ -215,35 +219,37 @@ class HttpRequest
     }
 }
 
-; 服务器响应 
 class HttpResponse
 {
     __New() {
         this.headers := {}
         this.status := 0
         this.protocol := "HTTP/1.1"
-
+        this.buffer:=""
         this.SetBodyText("")
     }
-
+	__Delete(){
+		this.buffer:=""
+	}
+    
     Generate() {
         FormatTime, date,, ddd, d MMM yyyy HH:mm:ss
         this.headers["Date"] := date
 
-        headers := this.protocol . " " . this.status . "`n"
+        headers := this.protocol . " " . this.status . "`r`n"
         for key, value in this.headers {
-            headers := headers . key . ": " . value . "`n"
+            headers := headers . key . ": " . value . "`r`n"
         }
-        headers := headers . "`n"
+        headers := headers . "`r`n"
         length := this.headers["Content-Length"]
 
-        buffer := new Buffer((StrLen(headers) * 2) + length)
-        buffer.WriteStr(headers)
+        this.buffer := new Buffer((StrLen(headers) * 2) + length)
+        this.buffer.WriteStr(headers)
 
-        buffer.Append(this.body)
-        buffer.Done()
+        this.buffer.Append(this.body)
+        this.buffer.Done()
 
-        return buffer
+        return this.buffer
     }
 
     SetBody(ByRef body, length) {
@@ -311,12 +317,15 @@ class Buffer
         this.SetCapacity("buffer", len)
         this.length := 0
     }
+	__Delete(){
+		this.buffer:=""
+	}
 
     FromString(str, encoding = "UTF-8") {
         length := Buffer.GetStrSize(str, encoding)
-        buffer := new Buffer(length)
-        buffer.WriteStr(str)
-        return buffer
+        this.buffer := new Buffer(length)
+        this.buffer.WriteStr(str)
+        return this.buffer
     }
 
     GetStrSize(str, encoding = "UTF-8") {

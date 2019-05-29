@@ -288,6 +288,7 @@ build_tree:
         
 		prev_parent = parent%level%
 		level++
+;msgbox % parts0 "-" level "-" A_LoopField
 		ifnotinstring parts%level%,.
 		parent%level% := tv_add(parts%level%, %prev_parent%, "expand Icon4")
 		else
@@ -296,6 +297,7 @@ build_tree:
 			bs = \
 		file%level% := hprev_file bs parts%level%
 		hprev_file := file%level%
+    ;msgbox % hprev_file
 	}
 	return
 }
@@ -316,6 +318,7 @@ gif_prew:=true
 return
 
 Cando_text_prew:
+FileEncoding, % File_GetEncoding(files)
 if TF_CountLines(files)>100
 {
 Loop, Read,% files
@@ -327,8 +330,8 @@ break
 }
 else
 FileRead,textvalue,%files%
+FileEncoding
 Gui, +ReSize
-;Gui, Add,text,,qqqq
 Gui, Add, Edit, w800 h600 ReadOnly vdisplayArea,
 Gui,PreWWin: Show, AutoSize Center, % Files " - нд╪Чт╓юю"
 GuiControl,, displayArea,%textvalue%

@@ -125,6 +125,7 @@ global textfile := []
 IniRead, content, %run_iniFile% , CloseWindowList
 CloseWindowList := StrSplit(content,"`n")
 Array_Sort(CloseWindowList)
+
 IniRead, content, %run_iniFile% , ClosetextfileList
 ClosetextfileList := StrSplit(content,"`n")
 Array_Sort(ClosetextfileList)
@@ -621,7 +622,7 @@ If Auto_ShutdownMonitor
 	if !hWinEventHook2
 		CF_ToolTip("注册监视关机失败",3000)
 	OnMessage(0x11, "WM_QUERYENDSESSION")
-	OnMessage(0x16, "WM_ENDSESSION")
+	;OnMessage(0x16, "WM_ENDSESSION")
 }
 ;----------监视关机对话框的选择----------
 

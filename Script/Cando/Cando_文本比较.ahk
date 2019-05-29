@@ -4,7 +4,9 @@ Cando_文本比较:
 		Gui,66:Default 
 		if Candy_isFile
 		{
+			FileEncoding, % File_GetEncoding(CandySel)
 			fileread,default2,%CandySel%
+			FileEncoding
 			GuiControl,, textfile2,%CandySel%
 			if (strlen(default2) > 10000)
 				GuiControl,Disable,compmode
@@ -26,7 +28,9 @@ Cando_文本比较:
 		gui +ReSize +hwndGuiID
 		if Candy_isFile
 		{
+			FileEncoding, % File_GetEncoding(CandySel)
 			fileread,default1,%CandySel%
+			FileEncoding
 			textfile1:=CandySel
 		}
 		else

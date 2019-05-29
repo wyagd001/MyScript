@@ -11,7 +11,7 @@ ShellWM(wp,lp)
 		{
 			folder.InsertAt(lp,{cmd:GetShellFolderPath()})
 		}
-		else if ProcessName in notepad.exe,notepad2.exe
+		else if ProcessName in notepad.exe, notepad2.exe, notepad3.exe
 		{
 			textfile.InsertAt(lp,{cmd:GetTextFilePath(ProcessName,lp)})
 		}
@@ -62,20 +62,50 @@ GetTextFilePath(ProcessName,hwnd)
 {
 	sleep,2000
 	WinGetTitle,_Title,ahk_id %hwnd%
+	WinGet pid, pid,ahk_id %hwnd%
 	if ProcessName = notepad.exe
 	{
 		If(_Title="无标题 - 记事本")
 			Return
 		else
+		{
+			if filepath:=commandline_notepad(pid)
+			return filepath
+			else
 			return JEE_NotepadGetPath(hWnd)
+		}
 	}
-	else if ProcessName = notepad2.exe
+	else if (ProcessName = notepad2.exe) or (ProcessName = notepad3.exe)
 	{
 		RegExMatch(_Title, "i)^\*?\K.*\..*(?= [-*] )", FileFullPath)
-		If FileFullPath
+		If FileFullPath && FileExist(FileFullPath)
 			Return FileFullPath
 	}
 return
+}
+
+; 命令行提取记事本路径
+commandline_notepad(hpid)
+{
+	wmi := ComObjGet("winmgmts:")
+	queryEnum := wmi.ExecQuery(""
+		. "Select * from Win32_Process where ProcessId=" . hpid)
+		._NewEnum()
+	if queryEnum[process]
+	{
+		file_path := process.CommandLine
+		StringReplace, file_path, file_path, "%A_Space%,,
+		StringReplace, file_path, file_path, ",, All
+		StringReplace, file_path, file_path, C:\Windows\system32\notepad.exe,,
+		StringReplace, file_path, file_path, C:\Windows\notepad.exe,,
+		wmi := queryEnum := process := ""
+	return file_path
+	}
+	else
+	{
+		wmi := queryEnum := process := ""
+	return ""
+	}
 }
 
 ; retrieve folder path in the specified shell browser. If hwnd is omitted, get hwnd of activated window

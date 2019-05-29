@@ -8,7 +8,7 @@ Critical,On
 Files := GetSelectedFiles()
 If !Files
 {
-	MsgBox,,,获取文件路径失败5。,3
+	MsgBox,,,获取文件路径失败4。,3
 Return
 }
 run "%TextEditor%" "%files%"

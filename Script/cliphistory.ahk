@@ -68,8 +68,9 @@ Old_Clipboard := ClipboardAll
 Clipboard := ClipSaved%clipnum%
 sleep,200
 Send, ^{vk56}
-sleep,200
-Clipboard := Old_Clipboard
+sleep,1500
+if (Clipboard != Old_Clipboard)
+	Clipboard := Old_Clipboard
 sleep,200
 monitor=1
 Old_Clipboard := ""

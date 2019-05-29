@@ -231,7 +231,6 @@ Loop
 }
 return
 
-
 ;#V::
 代码保存并运行:
 SelCode:=GetSelText(2,, bin,5)
@@ -246,7 +245,7 @@ while format := NumGet(bin, n, "uint")
         RegExMatch(html, "(*ANYCRLF)SourceURL:\K.*", sourceURL)
         break
     }
-    n += 8 + size
+    n += A_PtrSize + 4 + size
 }
 SelCode := sourceURL ? (";来源网址: " sourceURL "`r`n" SelCode) : SelCode
 if SelCode 

@@ -23,13 +23,13 @@ WM_QUERYENDSESSION(wParam, lParam)
 	*/
 }
 
-WM_ENDSESSION(wParam, lParam)
-{
-	global ShutdownBlock
-	If not ShutdownBlock
-		Exit
-	Return false
-}
+;WM_ENDSESSION(wParam, lParam)
+;{
+;	global ShutdownBlock
+;	If not ShutdownBlock
+;		Exit
+;	Return false
+;}
 
 
 ShutdownDialog:
@@ -39,8 +39,12 @@ if SubStr(A_OSVersion,1,3) = "10."
 {
    sleep 1000
    WinRing0.KeyPress("escape")
-    sleep 400
+   sleep 500
+   send {esc}
+   sleep 400
    WinClose, ahk_class Progman
+   sleep 200
+   WinActivate, 关闭 Windows ahk_class #32770
    SetTimer, ShutdownDialog, off
 }
 else
@@ -61,7 +65,7 @@ Enter::
 Space::
 ControlGet, Choice, Choice, , ComboBox1
 ControlGetFocus, Focus
-If Choice in 注销,重新启动,关机,安装更新并关机,重启
+If Choice in 注销,重新启动,关机,更新并重启,重启,更新并关机
 {
    If (Focus = "ComboBox1" && A_ThisHotkey = "Enter")
       or (Focus = "Button3")
@@ -83,7 +87,7 @@ HookProc(hWinEventHook2, Event, hWnd)
 		if (Class = "Button" and Title = "确定")
 		{
 			ControlGet, Choice, Choice, , ComboBox1, ahk_id %hShutdownDialog%
-			if Choice in 注销,重新启动,关机,安装更新并关机,重启
+			if Choice in 注销,重新启动,关机,更新并重启,重启,更新并关机
 				ShutdownBlock := false
 		}
 	}

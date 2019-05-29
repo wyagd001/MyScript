@@ -1,4 +1,6 @@
 /*
+  https://www.autohotkey.com/boards/viewtopic.php?f=6&t=9009
+
 	硬件驱动级发送按键
 	使用需要注意的地方
 	0. 不支持USB键盘
@@ -306,29 +308,32 @@ Class WinRing0 {
 	}
 
 	Init() {
-		;Ensure_Admin_And_Compiled()   ; 主脚本已使用管理员权限所以注释掉了
+		;this.Ensure_Admin()   ; 主脚本已使用管理员权限所以注释掉了
 		; win7系统下没有使用，主要用于win10 关机结束任务页面
 		if SubStr(A_OSVersion,1,3) != "10."
 			return
 
-		this.dll := (A_PtrSize = 8) ? "WinRing0_x64.dll" : "WinRing0_x32.dll"
+		this.dll := (A_PtrSize = 8) ? A_ScriptDir "\WinRing0_x64.dll" : A_ScriptDir "\WinRing0_x32.dll"
 		this.hModule := DllCall("LoadLibrary", "Str", this.dll, "Ptr")
 		If !DllCall(this.dll . "\InitializeOls") {
-			MsgBox, 48, InitializeOls 初始化错误, % this.GetDllStatus()  "，可能原因有：`n1.没有以管理员权限运行`n2.驱动文件WinRing0(或 WinRing0x64).sys没有放入autohotkey.exe目录"
-			;ExitApp
+			MsgBox, 48, InitializeOls 初始化错误, % this.GetDllStatus()  "，可能原因有：`n1. 没有以管理员权限运行`n2. 驱动文件WinRing0(或 WinRing0x64).sys 没有放入 autohotkey.exe 目录", 3
+			this.Ensure_Admin()
 		}
 		Return True
 	}
 
-	Ensure_Admin_And_Compiled() {
-		If(!A_IsAdmin){
-			Loop %0%
-				params .= " " (InStr(%A_Index%, " ") ? """" %A_Index% """" : %A_Index%)
-		uacrep := DllCall("shell32\ShellExecute", uint, 0, str, "RunAs", str, A_AhkPath, str, """" A_ScriptFullPath """" params, str, A_WorkingDir, int, 1)
-		}
-		if !A_IsAdmin {
-			Run *RunAs "%A_ScriptFullPath%"  ; Requires v1.0.92.01+
-			ExitApp
+	Ensure_Admin() {
+		full_command_line := DllCall("GetCommandLine", "str")
+
+		if not (A_IsAdmin or RegExMatch(full_command_line, " /restart(?!\S)"))
+		{
+			try
+			{
+        if A_IsCompiled
+            Run *RunAs "%A_ScriptFullPath%" /restart
+        else
+            Run *RunAs "%A_AhkPath%" /restart "%A_ScriptFullPath%"
+			}
 		}
 }
 
