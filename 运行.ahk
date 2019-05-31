@@ -1632,6 +1632,7 @@ return
 #include %A_ScriptDir%\Script\关机对话框.ahk
 #include %A_ScriptDir%\Script\cliphistory.ahk
 #include %A_ScriptDir%\Lib\Clip.ahk
+#include %A_ScriptDir%\Lib\File_CpTransform.ahk
 #include %A_ScriptDir%\Lib\Variables.ahk
 #include %A_ScriptDir%\Lib\Functions.ahk
 #include %A_ScriptDir%\Lib\Explorer.ahk

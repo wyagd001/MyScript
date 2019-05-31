@@ -12,6 +12,7 @@
 	返回值:
 		字符串
 		0      - 错误, 文件不存在
+		1      - 编译的二进制文件
 		CP936  - ANSI (CP936), 必须带有中文字符串, 才能和 UTF-8 无签名 区分开.
 		UTF-16 - text Utf-16 LE File
 		CP1201 - text Utf-16 BE File
@@ -30,9 +31,9 @@ Loop, Files, *.txt
 msgbox % A_LoopFileName " - " File_GetEncoding(A_LoopFileLongPath)
 */
 
-File_GetEncoding(aFile, aNumBytes = 100, aMinimum = 4)
+File_GetEncoding(aFile, aNumBytes = 700, aMinimum = 4)
 {
-	if !FileExist(aFile)
+	if !FileExist(aFile) or InStr(FileExist(aFile), "D")
 		return 0
 	_rawBytes := ""
 	_hFile := FileOpen(aFile, "r")
@@ -80,94 +81,99 @@ File_GetEncoding(aFile, aNumBytes = 100, aMinimum = 4)
 		return "UTF-32"
 	}
 
-		while(_i < _nBytes)
+	while(_i < _nBytes)
+	{
+		;// ASCII
+		if (_bytesArr[_i] == 0x09)
+		|| (_bytesArr[_i] == 0x0A)
+		|| (_bytesArr[_i] == 0x0D)
+		|| ((0x20 <= _bytesArr[_i]) && (_bytesArr[_i] <= 0x7E))
 		{
-			;// ASCII
-			if (_bytesArr[_i] == 0x09)
-			|| (_bytesArr[_i] == 0x0A)
-			|| (_bytesArr[_i] == 0x0D)
-			|| ((0x20 <= _bytesArr[_i]) && (_bytesArr[_i] <= 0x7E))
-			{
-				_i += 1
-				continue
-			}
-
-			;// non-overlong 2-byte
-			if (0xC2 <= _bytesArr[_i])
-			&& (_bytesArr[_i] <= 0xDF)
-			&& (0x80 <= _bytesArr[_i + 1])
-			&& (_bytesArr[_i + 1] <= 0xBF)
-			{
-				_i += 2
-				continue
-			}
-
-			;// excluding overlongs, straight 3-byte, excluding surrogates
-			if (((_bytesArr[_i] == 0xE0)
-			&& ((0xA0 <= _bytesArr[_i + 1])
-			&& (_bytesArr[_i + 1] <= 0xBF))
-			&& ((0x80 <= _bytesArr[_i + 2])
-			&& (_bytesArr[_i + 2] <= 0xBF)))
-			|| ((((0xE1 <= _bytesArr[_i])
-			&& (_bytesArr[_i] <= 0xEC))
-			|| (_bytesArr[_i] == 0xEE)
-			|| (_bytesArr[_i] == 0xEF))
-			&& ((0x80 <= _bytesArr[_i + 1])
-			&& (_bytesArr[_i + 1] <= 0xBF))
-			&& ((0x80 <= _bytesArr[_i + 2])
-			&& (_bytesArr[_i + 2] <= 0xBF)))
-			|| ((_bytesArr[_i] == 0xED)
-			&& ((0x80 <= _bytesArr[_i + 1])
-			&& (_bytesArr[_i + 1] <= 0x9F))
-			&& ((0x80 <= _bytesArr[_i + 2])
-			&& (_bytesArr[_i + 2] <= 0xBF))))
-			{
-				_i += 3
-				continue
-			}
-			;// planes 1-3, planes 4-15, plane 16
-			if (((_bytesArr[_i] == 0xF0)
-			&& ((0x90 <= _bytesArr[_i + 1])
-			&& (_bytesArr[_i + 1] <= 0xBF))
-			&& ((0x80 <= _bytesArr[_i + 2])
-			&& (_bytesArr[_i + 2] <= 0xBF))
-			&& ((0x80 <= _bytesArr[_i + 3])
-			&& (_bytesArr[_i + 3] <= 0xBF)))
-			|| (((0xF1 <= _bytesArr[_i])
-			&& (_bytesArr[_i] <= 0xF3))
-			&& ((0x80 <= _bytesArr[_i + 1])
-			&& (_bytesArr[_i + 1] <= 0xBF))
-			&& ((0x80 <= _bytesArr[_i + 2])
-			&& (_bytesArr[_i + 2] <= 0xBF))
-			&& ((0x80 <= _bytesArr[_i + 3])
-			&& (_bytesArr[_i + 3] <= 0xBF)))
-			|| ((_bytesArr[_i] == 0xF4)
-			&& ((0x80 <= _bytesArr[_i + 1])
-			&& (_bytesArr[_i + 1] <= 0x8F))
-			&& ((0x80 <= _bytesArr[_i + 2])
-			&& (_bytesArr[_i + 2] <= 0xBF))
-			&& ((0x80 <= _bytesArr[_i + 3])
-			&& (_bytesArr[_i + 3] <= 0xBF))))
-			{
-				_i += 4
-				continue
-			}
-			_t := 1
-			break
+			_i += 1
+			continue
 		}
 
-		; while 循环没有失败，然后确认为utf-8
-		if (_t = 0)
+		;// non-overlong 2-byte
+		if (0xC2 <= _bytesArr[_i])
+		&& (_bytesArr[_i] <= 0xDF)
+		&& (0x80 <= _bytesArr[_i + 1])
+		&& (_bytesArr[_i + 1] <= 0xBF)
 		{
-			return "UTF-8"
+			_i += 2
+			continue
 		}
 
+		;// excluding overlongs, straight 3-byte, excluding surrogates
+		if (((_bytesArr[_i] == 0xE0)
+		&& ((0xA0 <= _bytesArr[_i + 1])
+		&& (_bytesArr[_i + 1] <= 0xBF))
+		&& ((0x80 <= _bytesArr[_i + 2])
+		&& (_bytesArr[_i + 2] <= 0xBF)))
+		|| ((((0xE1 <= _bytesArr[_i])
+		&& (_bytesArr[_i] <= 0xEC))
+		|| (_bytesArr[_i] == 0xEE)
+		|| (_bytesArr[_i] == 0xEF))
+		&& ((0x80 <= _bytesArr[_i + 1])
+		&& (_bytesArr[_i + 1] <= 0xBF))
+		&& ((0x80 <= _bytesArr[_i + 2])
+		&& (_bytesArr[_i + 2] <= 0xBF)))
+		|| ((_bytesArr[_i] == 0xED)
+		&& ((0x80 <= _bytesArr[_i + 1])
+		&& (_bytesArr[_i + 1] <= 0x9F))
+		&& ((0x80 <= _bytesArr[_i + 2])
+		&& (_bytesArr[_i + 2] <= 0xBF))))
+		{
+			_i += 3
+			continue
+		}
+		;// planes 1-3, planes 4-15, plane 16
+		if (((_bytesArr[_i] == 0xF0)
+		&& ((0x90 <= _bytesArr[_i + 1])
+		&& (_bytesArr[_i + 1] <= 0xBF))
+		&& ((0x80 <= _bytesArr[_i + 2])
+		&& (_bytesArr[_i + 2] <= 0xBF))
+			&& ((0x80 <= _bytesArr[_i + 3])
+		&& (_bytesArr[_i + 3] <= 0xBF)))
+		|| (((0xF1 <= _bytesArr[_i])
+		&& (_bytesArr[_i] <= 0xF3))
+		&& ((0x80 <= _bytesArr[_i + 1])
+		&& (_bytesArr[_i + 1] <= 0xBF))
+		&& ((0x80 <= _bytesArr[_i + 2])
+		&& (_bytesArr[_i + 2] <= 0xBF))
+		&& ((0x80 <= _bytesArr[_i + 3])
+		&& (_bytesArr[_i + 3] <= 0xBF)))
+		|| ((_bytesArr[_i] == 0xF4)
+		&& ((0x80 <= _bytesArr[_i + 1])
+		&& (_bytesArr[_i + 1] <= 0x8F))
+		&& ((0x80 <= _bytesArr[_i + 2])
+		&& (_bytesArr[_i + 2] <= 0xBF))
+		&& ((0x80 <= _bytesArr[_i + 3])
+		&& (_bytesArr[_i + 3] <= 0xBF))))
+		{
+			_i += 4
+			continue
+		}
+		_t := 1
+		break
+	}
+
+	; while 循环没有失败，然后确认为utf-8
+	if (_t = 0)
+	{
+		return "UTF-8"
+	}
+
+	; 如果通过以上判断没有获取到文件编码
+	; 通过检测文件是否含有不可见字符来简单判断是否为exe类型的二进制文件
 	loop, %_nBytes%
 	{
-		if ((_bytesArr[(A_Index - 1)] < 160) && (_bytesArr[(A_Index - 1)] > 127))
+		if ((_bytesArr[(A_Index - 1)] > 0) && (_bytesArr[(A_Index - 1)] < 9))
+		|| ((_bytesArr[(A_Index - 1)] > 13) && (_bytesArr[(A_Index - 1)] < 32))
 		{
-			return "CP936"
+			return 1
 		}
 	}
-  return "CP" DllCall("GetACP")  ; 返回系统默认 ansi 内码 简体中文  默认返回的是 CP936
+	; 未符合上面条件的返回系统默认 ansi 内码
+	; 简体中文系统默认返回的是 CP936
+	return "CP" DllCall("GetACP")  
 }  

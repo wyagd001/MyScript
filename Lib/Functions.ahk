@@ -11,7 +11,7 @@ RunStingFunc(str:="")
 {
 	strfunc:=StrSplit(str, "(", ")")
 	tempfunc:=strfunc[1]
-	params:=StrSplit(strfunc[2], ",")
+	params:=StrSplit(strfunc[2], ",", " `t")
 	if (params.MaxIndex() = "")
 	{
 		%tempfunc%()
@@ -19,22 +19,52 @@ RunStingFunc(str:="")
 	}
 	else if (params.MaxIndex() = 1)
 	{
+
 		%tempfunc%(params[1])
 	return
 	}
 	else if (params.MaxIndex() = 2)
 	{
-		%tempfunc%(params[1],params[2])
+		o := params[1]
+		p := params[2]
+		if !InStr(o,"""")
+			Transform,o1,Deref,% %o%
+		if !InStr(p,"""")
+			Transform,p1,Deref,% %p%
+		
+		%tempfunc%(o1?o1:InStr(o,"""")=1?Trim(o, """"):o, p1?p1:InStr(p,"""")=1?Trim(p, """"):p)
 	return
 	}
 	else if (params.MaxIndex() = 3)
 	{
-		%tempfunc%(params[1],params[2],params[3])
+		o := params[1]
+		p := params[2]
+		q := params[3]
+		if !InStr(o,"""")
+			Transform,o1,Deref,% %o%
+		if !InStr(p,"""")
+			Transform,p1,Deref,% %p%
+		if !InStr(q,"""")
+			Transform,q1,Deref,% %q%
+
+		%tempfunc%(o1?o1:InStr(o,"""")=1?Trim(o, """"):o, p1?p1:InStr(p,"""")=1?Trim(p, """"):p, q1?q1:InStr(q,"""")=1?Trim(q, """"):q)
 	return
 	}
 	else (params.MaxIndex() = 4)
 	{
-		%tempfunc%(params[1],params[2],params[3],params[4])
+		o := params[1]
+		p := params[2]
+		q := params[3]
+		r := params[3]
+		if !InStr(o,"""")
+			Transform,o1,Deref,% %o%
+		if !InStr(p,"""")
+			Transform,p1,Deref,% %p%
+		if !InStr(q,"""")
+			Transform,q1,Deref,% %q%
+		if !InStr(r,"""")
+			Transform,r1,Deref,% %r%
+		%tempfunc%(o1?o1:InStr(o,"""")=1?Trim(o, """"):o, p1?p1:InStr(p,"""")=1?Trim(p, """"):p, q1?q1:InStr(q,"""")=1?Trim(q, """"):q, r1?r1:InStr(r,"""")=1?Trim(r, """"):r)
 	return
 	}
 }

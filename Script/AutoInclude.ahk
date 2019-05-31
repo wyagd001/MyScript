@@ -19,7 +19,6 @@
 #Include *i %A_ScriptDir%\Script\Cando\Cando_字符编码查看.ahk
 #Include *i %A_ScriptDir%\Script\Cando\Cando_Msdn搜索.ahk
 #Include *i %A_ScriptDir%\Script\Cando\Cando_十进制十六进制转换.ahk
-#Include *i %A_ScriptDir%\Script\Cando\Cando_文件转换编码.ahk
 #Include *i %A_ScriptDir%\Script\Cando\Cando_生成二维码.ahk
 #Include *i %A_ScriptDir%\Script\Cando\Cando_添加单词到翻译文件.ahk
 #Include *i %A_ScriptDir%\Script\Cando\Cando_文本比较.ahk
@@ -46,6 +45,7 @@
 #Include *i %A_ScriptDir%\Script\Hotkey\Thumbnail.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Eval.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_剪贴板到文件.ahk
+#Include *i %A_ScriptDir%\Script\Hotkey\git.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\窗口程序和打开的文件.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_预览文件.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_显示隐藏文件.ahk

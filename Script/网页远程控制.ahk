@@ -424,31 +424,34 @@ return
 
 ; 空格会变+号 使用★代替+号
 runcom(ByRef req, ByRef res){
-Global
-pp:=req.queries["ccdd"]
-qq:=StringToHex(pp)
-MCode(varchinese, qq)
-command:=StrGet(&varchinese,"cp65001")
-command := StrReplace(command, "+", " ")
-command := StrReplace(command, "★", "+")
-if loginpass
-{
-if IsLabel(command)
-{
-gosub % command
-return
-}
-if IsStingFunc(command)
- RunStingFunc(command)
-Run,%command%,,UseErrorLevel
-If ErrorLevel
+	Global
+	pp:=req.queries["ccdd"]
+	qq:=StringToHex(pp)
+	MCode(varchinese, qq)
+	command:=StrGet(&varchinese,"cp65001")
+	command := StrReplace(command, "+", " ")
+	command := StrReplace(command, "★", "+")
+	if loginpass
 	{
-If % %dir%<>""
+		if IsLabel(command)
 		{
-			Run,% %Dir%,,UseErrorLevel
-}
-}
-}
+			gosub % command
+		return
+		}
+		if IsStingFunc(command)
+		{
+			RunStingFunc(command)
+		return
+		}
+		Run,%command%,,UseErrorLevel
+		If ErrorLevel
+		{
+			If % %dir%<>""
+			{
+				Run,% %Dir%,,UseErrorLevel
+			}
+		}
+	}
 	Index(req, res)
 return
 }

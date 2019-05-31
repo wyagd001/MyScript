@@ -1,6 +1,5 @@
 f_DerefPath(ThisPath)
 {
-	old:=ThisPath
 	StringReplace, ThisPath, ThisPath, ``, ````, All
 	StringReplace, ThisPath, ThisPath, `%F_CurrentDir`%, ```%F_CurrentDir```%, All
 	Transform, ThisPath, deref, %ThisPath%

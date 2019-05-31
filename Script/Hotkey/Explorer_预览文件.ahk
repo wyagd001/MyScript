@@ -318,6 +318,11 @@ gif_prew:=true
 return
 
 Cando_text_prew:
+if (File_GetEncoding(files) = 0) or (File_GetEncoding(files) = 1)
+{
+msgbox 不支持的文件类型或编码。
+return
+}
 FileEncoding, % File_GetEncoding(files)
 if TF_CountLines(files)>100
 {
