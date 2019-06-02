@@ -64,6 +64,46 @@ JCTF:
 	}
 	if tx
 		msgbox % tx
+
+	aTX =
+	IniRead, CFData, %run_iniFile%, 公历节日
+	If(CFData="")
+	{
+		CFArray := {"公历新年": "0101", "劳动节": "0501", "儿童节": "0601", "国庆节": "1001", "圣诞节": "1225"}
+	}
+	else
+	{
+		temp_array := StrSplit(Trim(CFData), ["=", "`n"])
+		CFArray := {}, i := 0
+		Loop % temp_array.length()/2
+		{
+			currentLoopIterationIniKeyName := temp_array[++i]
+			CFArray[currentLoopIterationIniKeyName] := temp_array[++i]
+		}
+		temp_array := CFData := ""
+	}
+
+	for k,v in CFArray
+	{
+		Leafdays := A_YYYY v
+		NLeafdays := A_YYYY+1 v
+		Leafdays -= today, days
+		NLeafdays -= today, days
+
+		if (Leafdays<=5 and Leafdays>=0) or (NLeafdays<=5 and NLeafdays>=0)
+		{
+			settimer, MCTF, 30000
+			if ( Leafdays=0 )
+				aTX .="今天是" k "`n"
+			else
+				aTX .= "距离" k "还有" (Leafdays>0 ? Leafdays : NLeafdays) "天`n"
+		}
+		if (Leafdays=6)
+			settimer, MCTF, 30000
+	}
+	if atx
+		msgbox % atx
+
 return
 
 MCTF:

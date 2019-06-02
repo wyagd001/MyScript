@@ -331,6 +331,8 @@ Image = %A_ScriptDir%\pic\MusicPlayer\h_%DefaultPlayer%.bmp
 Gui,  +HwndHGUI +ToolWindow
 Gui, Add, Text, x1 y10 w90 h20 +Center, 目标/运行:
 Gui, Add, ComBoBox, x90 y10 w330 h300 +HwndhComBoBox vDir,% ComBoBoxShowItems
+ControlGet, ahMyEdit, hWnd,, Edit1,ahk_id %HGUI%
+DllCall("Shlwapi.dll\SHAutoComplete", "Ptr", ahMyEdit, "UInt", 0x1|0x10000000)  ; 只对编辑控件有效
 global hComBoBox
 global objListIDs:= Object() 
 global del_ico:=0 ; 0= text "X", 1= icon
