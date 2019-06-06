@@ -56,7 +56,7 @@ GetBrowserURL_DDE(sClass) {
 	Return sWindowInfo2
 }
 
-GetBrowserURL_ACC(sClass) {
+GetBrowserURL_ACC(sClass, WithProtocol:=1) {
 	global nWindow, accAddressBar
 	If (nWindow != WinExist("ahk_class " sClass)) ; reuses accAddressBar if it's the same window
 	{
@@ -71,8 +71,9 @@ GetBrowserURL_ACC(sClass) {
 			Try sURL := accAddressBar.accValue(0)
 		}
 	}
+
 	If ((sURL != "") and (SubStr(sURL, 1, 4) != "http")) ; Modern browsers omit "http://"
-		sURL := "http://" sURL
+		sURL := WithProtocol ? "http://" sURL : sURL
 	If (sURL == "")
 		nWindow := -1 ; Don't remember the window if there is no URL
 	Return sURL
@@ -87,11 +88,15 @@ GetAddressBar(accObj) {
 
 	Try If ((accObj.accRole(0) == 42) and IsURL("http://" accObj.accValue(0))) ; Modern browsers omit "http://"
 		Return accObj
+
+	Try If ((accObj.accRole(0) == 42) and InStr( accObj.accValue(0),":/"))
+		Return accObj
+
 	For nChild, accChild in Acc_Children(accObj)
 		If IsObject(accAddressBar := GetAddressBar(accChild))
 			Return accAddressBar
 }
 
 IsURL(sURL) {
-	Return RegExMatch(sURL, "^(?<Protocol>https?|ftp)://(?<Domain>(?:[\w-]+\.)+\w\w+)(?::(?<Port>\d+))?/?(?<Path>(?:[^:/?# ]*/?)+)(?:\?(?<Query>[^#]+)?)?(?:\#(?<Hash>.+)?)?$")
+	Return RegExMatch(sURL, "^(?<Protocol>https?|ftp|file):///?(?<Domain>(?:[\w-]+\.)+\w\w+)(?::(?<Port>\d+))?/?(?<Path>(?:[^:/?# ]*/?)+)(?:\?(?<Query>[^#]+)?)?(?:\#(?<Hash>.+)?)?$")
 }

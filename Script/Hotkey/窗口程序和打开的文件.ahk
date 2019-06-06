@@ -78,7 +78,7 @@ RegExMatch(FileFullPath, "i)([a-z]:\\.*\.\S*)", fff_)
 FileFullPath:=fff_1
 }
 
-if FileFullPath<>
+if FileFullPath
  goto OpenFileFullPath
 
 ; RealPlayer
@@ -94,7 +94,7 @@ StringReplace,_Title,_Title,/,\,1
 Loop, parse, _Title, `n, `r
  {
 	StringTrimLeft,FileFullPath,A_LoopField,7
-  If FileFullPath
+  If FileFullPath && FileExist(FileFullPath)
   gosub OpenFileFullPath
  }
 }
@@ -105,7 +105,7 @@ Return
 
 ; Word、WPS、Excel、et程序
 FileFullPath:=getDocumentPath(ProcessPath)  
-if FileFullPath<>
+if FileFullPath
   goto OpenFileFullPath
 
 ; 直接打开记事本程序，然后打开文本文件，命令行没有文件路径，使用读取内存的方法得到路径
@@ -118,7 +118,7 @@ Return
 }
 WinGet, hWnd, ID, A
 FileFullPath := JEE_NotepadGetPath(hWnd)
-if FileFullPath<>
+if FileFullPath
  gosub OpenFileFullPath
 }
 

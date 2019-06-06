@@ -33,10 +33,10 @@ return ; End automatic execution
 ; Labels =======================================================================
 ControlHandler:
     If (A_GuiControl = "ButtonDir") {
-        FileSelectFolder, DirSel,,, Choose Directory...
+        FileSelectFolder, DirSel,,, 选择目录...
         IfEqual, ErrorLevel, 1, return
         GuiControl,, EditDir, % DirSel
-        GuiControl,choose,EditDir,% DirSel
+        GuiControl, choose, EditDir, % DirSel
     } Else If (A_GuiControl = "ButtonSearch") {
         Gui, Submit, NoHide
         GuiControl, Choose, Tab, 2
@@ -46,7 +46,6 @@ ControlHandler:
         
         GuiControl, Disable, ButtonSearch
         GuiControl, Enable, ButtonStop
-        
         
         Loop, Files, % EditDir "\" (EditType ? EditType : "*.*"), FR
         {
@@ -79,6 +78,31 @@ Run,% "explorer.exe /select," FileFullPath
 else
 msgbox,未选中或文件不存在
 Return
+
+LV1x:
+Gui,1:default
+Gui,1:submit, nohide
+rcon := a_guicontrol
+Gui,1:ListView, %rcon%
+Extensions := "ahk,txt,bat,bas,ini,htm,html,csv,xml"    ;- some extensions with text
+  RN := LV_GetNext("C")
+  RF := LV_GetNext("F")
+  GC := LV_GetCount()
+  if (rn = 0)
+    return
+if A_GuiEvent = DoubleClick
+  {
+  LV_GetText(C2, a_eventinfo, 2)
+  SplitPath,c2, , , ext,
+  if Ext in %Extensions%
+    {
+    try
+    run, notepad "%c2%"
+		;run, "D:\Program Files\Editor\Notepad3\Notepad3.exe" "%c2%"
+       ;- open with notepad or other editors
+    }
+  }
+return
 
 GuiEscape:
 GuiClose:
@@ -133,7 +157,7 @@ GuiCreate() {
     GuiControl,choose,EditDir,% EditDir
 
     Gui, Tab, 2
-    Gui, Add, ListView, w460 r10 vListView Grid, 找到次数|文件路径
+    Gui, Add, ListView, w460 r10 vListView Grid +altsubmit vLV1 gLV1x, 找到次数|文件路径
 
     Gui, Tab
     Gui, Add, Button, w80 h24 default vButtonSearch gControlHandler, 搜索   

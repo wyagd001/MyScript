@@ -51,9 +51,11 @@ Gui, Add, Custom, ClassSysIPAddress32 x242 y102 w120 h20 hwndhgatewayControl vga
 Gui, Add, Button, x372 y59 w30 h20 ggateway2comp_ip, <+1
 
 Gui, Add, GroupBox, x152 y139 w260 h100 , DNS
-Gui, Add, CheckBox, x160 y160 w70 h20 vdns_ignore gdns_toggle, 忽略
-Gui, Add, CheckBox, x242 y159 w70 h20 vdns_auto gdns_toggle, 自动获取
-Gui, Add, Button, x312 y159 w90 h20 gset_google_dns, Google DNS
+Gui, Add, CheckBox, x160 y160 w40 h20 vdns_ignore gdns_toggle, 忽略
+Gui, Add, CheckBox, x210 y160 w65 h20 vdns_auto gdns_toggle, 自动获取
+
+Gui, Add, Button, x285 y159 w60 h20 gset_now_dns, 获取当前
+Gui, Add, Button, x350 y159 w60 h20 gset_google_dns, Google
 Gui, Add, Text, x162 y189 w80 h20 , 首选DNS服务器
 Gui, Add, Custom, ClassSysIPAddress32 x242 y189 w120 h20 vdns_1 gupdate_cmd
 Gui, Add, Text, x162 y209 w80 h20 , 备用DNS服务器
@@ -61,15 +63,18 @@ Gui, Add, Custom, ClassSysIPAddress32 x242 y209 w120 h20 vdns_2 gupdate_cmd
 
 Gui, Add, Text, x12 y260 w120 h20 , Cmd
 Gui, Add, Edit, x12 y280 w400 h70 vcmd, Edit
-Gui, Add, Button, x432 y299 w120 h30 grun_cmd, 应用设置
+Gui, Add, Button, x432 y299 w100 h30 grun_cmd, 应用设置
 
-Gui, Add, Button, x432 y19 w120 h30 gsave, 保存方案
+Gui, Add, Button, x432 y19 w100 h30 gsave, 保存方案
 
 Gui, Add, Text, x432 y69 w120 h20 , 其它
-Gui, Add, Button, x432 y89 w120 h30 gping, ping 网关
-Gui, Add, Button, x432 y129 w120 h30 gbrowse, 浏览 网关
-Gui, Add, Button, x432 y169 w120 h30 gtelnet, telnet 网关
-Gui, Add, Button, x432 y209 w120 h30 gssh, ssh 网关
+Gui, Add, Button, x432 y89 w100 h30 gping, ping 网关
+Gui, Add, Button, x535 y89 w100 h30 gbrowse, 浏览 网关
+Gui, Add, Button, x432 y129 w100 h30 gScanSubnet, 扫描局域网
+Gui, Add, Button, x535 y129 w100 h30 gGetAdaptersInfo, 查看网卡信息
+Gui, Add, Button, x432 y169 w100 h30 gtelnet, telnet 网关
+Gui, Add, Button, x535 y169 w100 h30 gssh, ssh 网关
+
 Gui, Add, Text, x610 y340 w40 h20 vshowmoretext gshowmore,更多∨
 
 Gui, Add, Text, xm+2 section
@@ -80,7 +85,7 @@ Gui, Add, GroupBox, x15 y420 w550 h80 , IE 代理设置
 Gui, Add, CheckBox, x25 y440 w100 h20 vieproxy , 使用代理服务器
 Gui, Add, Text,x25 y470 w100 h20,代理服务器:端口:
 Gui, Add, edit,x130 y465 w300 h20 vieproxyserver
-Gui, Add, Button, x432 y445 w120 h30 gieproxy, 应用代理
+Gui, Add, Button, x432 y435 w100 h30 gieproxy, 应用代理
 
 ; Generated using SmartGUI Creator 4.0
 
@@ -330,6 +335,14 @@ set_google_dns:
 	gosub, update_cmd
 return
 
+set_now_dns:
+	dns_1 := GetDnsAddress()[1]
+	dns_2 := GetDnsAddress()[2]
+	guicontrol,, dns_1, % dns_1
+	guicontrol,, dns_2, % dns_2
+	gosub, update_cmd
+return
+
 ; gui-initiated stuff
 update_cmd:
 	gui, submit, nohide
@@ -380,6 +393,15 @@ update_gui:
 	gosub, ip_toggle
 	gosub, dns_toggle
 	gosub, update_cmd
+return
+
+ScanSubnet:
+Msgbox % ScanSubnet()
+return
+
+GetAdaptersInfo:
+OutPut := GetAdaptersInfo()
+PrintArr(OutPut)
 return
 
 preset_select:
@@ -691,5 +713,153 @@ ShellRun(prms*)
 ; ------------------------------------------------------------------------------------
 ; ending includefile: shellrun.ahk
 ; ------------------------------------------------------------------------------------
+;来源网址: https://blog.csdn.net/liuyukuan/article/details/90725786
+
+GetDnsAddress()
+{
+    if (DllCall("iphlpapi.dll\GetNetworkParams", "ptr", 0, "uint*", size) = 111) && !(VarSetCapacity(buf, size, 0))
+        throw Exception("Memory allocation failed for FIXED_INFO struct", -1)
+    if (DllCall("iphlpapi.dll\GetNetworkParams", "ptr", &buf, "uint*", size) != 0)
+        throw Exception("GetNetworkParams failed with error: " A_LastError, -1)
+    addr := &buf, DNS_SERVERS := []
+    DNS_SERVERS[1] := StrGet(addr + 264 + (A_PtrSize * 2), "cp0")
+    ptr := NumGet(addr+0, 264 + A_PtrSize, "uptr")
+    while (ptr) {
+        DNS_SERVERS[A_Index + 1] := StrGet(ptr+0 + A_PtrSize, "cp0")
+        ptr := NumGet(ptr+0, "uptr")
+    }
+    return DNS_SERVERS
+}
+
+; 来源网址: https://www.autohotkey.com/boards/viewtopic.php?f=6&t=60367&sid=23a0b8fb8403b0329e8fe6e452ccc8b9
+;ScanSubnet() Basically Does what all those IP scanners do,with WMI...Pretty Darn Fast Too,almost as fast as Nmap.
+
+ScanSubnet(addresses:="") {	;pings IP ranges & returns active IP's
+	BL := A_BatchLines
+	SetBatchLines, -1
+	If !addresses{	;scan all active network adapters/connections for active IP's... if no ip's were specified...
+		colItems := ComObjGet( "winmgmts:" ).ExecQuery("Select * from Win32_NetworkAdapterConfiguration WHERE IPEnabled = True")._NewEnum
+		while colItems[objItem]
+			addresses .= addresses ? " " objItem.IPAddress[0] : objItem.IPAddress[0]
+	}
+	
+	Loop, Parse, addresses, % A_Space
+	{
+		If ( A_LoopField && addrArr := StrSplit(A_LoopField,".") )
+			Loop 256
+				addr .= addr ? A_Space "or Address = '" addrArr.1 "." addrArr.2 "." addrArr.3 "." A_Index-1 "'" : "Address = '" addrArr.1 "." addrArr.2 "." addrArr.3 "." A_Index-1 "'"
+		colPings := ComObjGet( "winmgmts:" ).ExecQuery("Select * From Win32_PingStatus where " addr "")._NewEnum
+		While colPings[objStatus]
+			rVal .= (oS:=(objStatus.StatusCode="" or objStatus.StatusCode<>0)) ? "" : (rVal ? "`n" objStatus.Address : objStatus.Address)
+		addr := ""	;the quota on Win32_PingStatus prevents more than roughtly two ip ranges being scanned simultaneously...so each range is scanned individually.
+	}
+	SetBatchLines, % BL
+	Return rVal
+}
+
+;来源网址: https://blog.csdn.net/liuyukuan/article/details/90725735
+
+;转自 https://www.autohotkey.com/boards/viewtopic.php?f=9&t=18768&p=91413&hilit=GetAdaptersInfo#p91413
+ 
+
+GetAdaptersInfo()
+{
+    ; initial call to GetAdaptersInfo to get the necessary size
+    if (DllCall("iphlpapi.dll\GetAdaptersInfo", "ptr", 0, "UIntP", size) = 111) ; ERROR_BUFFER_OVERFLOW
+        if !(VarSetCapacity(buf, size, 0))  ; size ==>  1x = 704  |  2x = 1408  |  3x = 2112
+            return "Memory allocation failed for IP_ADAPTER_INFO struct"
+ 
+    ; second call to GetAdapters Addresses to get the actual data we want
+    if (DllCall("iphlpapi.dll\GetAdaptersInfo", "ptr", &buf, "UIntP", size) != 0) ; NO_ERROR / ERROR_SUCCESS
+        return "Call to GetAdaptersInfo failed with error: " A_LastError
+ 
+    ; get some information from the data we received
+    addr := &buf, IP_ADAPTER_INFO := {}
+    while (addr)
+    {
+        IP_ADAPTER_INFO[A_Index, "ComboIndex"]          := NumGet(addr+0, o := A_PtrSize, "UInt")   , o += 4
+        IP_ADAPTER_INFO[A_Index, "AdapterName"]         := StrGet(addr+0 + o, 260, "CP0")           , o += 260
+        IP_ADAPTER_INFO[A_Index, "Description"]         := StrGet(addr+0 + o, 132, "CP0")           , o += 132
+        IP_ADAPTER_INFO[A_Index, "AddressLength"]       := NumGet(addr+0, o, "UInt")                , o += 4
+        loop % IP_ADAPTER_INFO[A_Index].AddressLength
+            mac .= Format("{:02X}",                        NumGet(addr+0, o + A_Index - 1, "UChar")) "-"
+        IP_ADAPTER_INFO[A_Index, "Address"]             := SubStr(mac, 1, -1), mac := ""            , o += 8
+        IP_ADAPTER_INFO[A_Index, "Index"]               := NumGet(addr+0, o, "UInt")                , o += 4
+        IP_ADAPTER_INFO[A_Index, "Type"]                := NumGet(addr+0, o, "UInt")                , o += 4
+        IP_ADAPTER_INFO[A_Index, "DhcpEnabled"]         := NumGet(addr+0, o, "UInt")                , o += A_PtrSize
+                                                    Ptr := NumGet(addr+0, o, "UPtr")                , o += A_PtrSize
+        IP_ADAPTER_INFO[A_Index, "CurrentIpAddress"]    := Ptr ? StrGet(Ptr + A_PtrSize, "CP0") : ""
+        IP_ADAPTER_INFO[A_Index, "IpAddressList"]       := StrGet(addr + o + A_PtrSize, "CP0")
+        ;~ IP_ADAPTER_INFO[A_Index, "IpMaskList"]          := StrGet(addr + o + A_PtrSize + 16, "CP0") , o += A_PtrSize + 32 + A_PtrSize
+        IP_ADAPTER_INFO[A_Index, "IpMaskList"]          := StrGet(addr + o + A_PtrSize * 3, "CP0") , o += A_PtrSize + 32 + A_PtrSize
+		
+        IP_ADAPTER_INFO[A_Index, "GatewayList"]         := StrGet(addr + o + A_PtrSize, "CP0")      , o += A_PtrSize + 32 + A_PtrSize
+        IP_ADAPTER_INFO[A_Index, "DhcpServer"]          := StrGet(addr + o + A_PtrSize, "CP0")      , o += A_PtrSize + 32 + A_PtrSize
+        IP_ADAPTER_INFO[A_Index, "HaveWins"]            := NumGet(addr+0, o, "Int")                 , o += A_PtrSize
+        IP_ADAPTER_INFO[A_Index, "PrimaryWinsServer"]   := StrGet(addr + o + A_PtrSize, "CP0")      , o += A_PtrSize + 32 + A_PtrSize
+        IP_ADAPTER_INFO[A_Index, "SecondaryWinsServer"] := StrGet(addr + o + A_PtrSize, "CP0")      , o += A_PtrSize + 32 + A_PtrSize
+        IP_ADAPTER_INFO[A_Index, "LeaseObtained"]       := DateAdd(NumGet(addr+0, o, "Int"))        , o += A_PtrSize
+        IP_ADAPTER_INFO[A_Index, "LeaseExpires"]        := DateAdd(NumGet(addr+0, o, "Int"))
+        addr := NumGet(addr+0, "UPtr")
+    }
+ 
+    ; output the data we received and free the buffer
+    return IP_ADAPTER_INFO, VarSetCapacity(buf, 0), VarSetCapacity(addr, 0)
+}
+ 
+DateAdd(time)
+{
+    if (time = 0)
+        return 0
+    datetime := 19700101
+    datetime += time, s
+    FormatTime, OutputVar, datetime, yyyy-MM-dd HH:mm:ss
+    return OutputVar
+}
+ 
+ 
+PrintArr(Arr, Option := "w800 h200", GuiNum := 90)
+{
+    for index, obj in Arr {
+        if (A_Index = 1) {
+            for k, v in obj {
+                Columns .= k "|"    
+                cnt++
+            }
+            Gui, %GuiNum%: Margin, 5, 5
+            Gui, %GuiNum%: Add, ListView, %Option%, % Columns
+        }
+        RowNum := A_Index        
+        Gui, %GuiNum%: default
+        LV_Add("")
+        for k, v in obj {
+            LV_GetText(Header, 0, A_Index)
+            if (k <> Header) {    
+                FoundHeader := False
+                loop % LV_GetCount("Column") {
+                    LV_GetText(Header, 0, A_Index)
+                    if (k <> Header)
+                        continue
+                    else {
+                        FoundHeader := A_Index
+                        break
+                    }
+                }
+                if !(FoundHeader) {
+                    LV_InsertCol(cnt + 1, "", k)
+                    cnt++
+                    ColNum := "Col" cnt
+                } else
+                    ColNum := "Col" FoundHeader
+            } else
+                ColNum := "Col" A_Index
+            LV_Modify(RowNum, ColNum, (IsObject(v) ? "Object()" : v))
+        }
+    }
+    loop % LV_GetCount("Column")
+        LV_ModifyCol(A_Index, "AutoHdr")
+    Gui, %GuiNum%: Show,, Array
+}
+
 
 #include %A_ScriptDir%\..\Lib\CF.ahk

@@ -12,19 +12,8 @@ IfInString,_Title,:\
 ;FullNamell:=RegExReplace(_Title,"^.*(.:(\\)?.*)\\.*$","$1")
 ;编辑器文件修改后标题开头带“*”
 RegExMatch(_Title, "i)^\*?\K.*\..*(?= [-*] )", FileFullPath)
-If FileFullPath
+If FileFullPath  && FileExist(FileFullPath)
   return FileFullPath
-}
-
-IfInString,_Title,记事本
-{
-If(_Title="无标题 - 记事本")
-{
-Return
-}
-FileFullPath := JEE_NotepadGetPath(_id)
-if FileFullPath<>
- return FileFullPath
 }
 
 ;;;;;;;;;;;;;;提取命令行;;;;;;;;;
@@ -43,6 +32,16 @@ RegExMatch(FileFullPath, "i).*?\s+(.*)", fff_)
 FileFullPath:=fff_1
 }
 startzimu:=ff_:=ff_1:=fff_:=fff_1:=""
-if FileFullPath<>
+if FileFullPath && FileExist(FileFullPath)
   return FileFullPath
+
+IfInString,_Title,记事本
+{
+If(_Title="无标题 - 记事本")
+Return
+
+FileFullPath := JEE_NotepadGetPath(_id)
+if FileFullPath && FileExist(FileFullPath)
+ return FileFullPath
+}
 }

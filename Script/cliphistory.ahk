@@ -230,6 +230,7 @@ h=500
  * @param  {Boolean} partial perform partial search
  * @return {void}
  */
+ 
 historyUpdate(crit="", create=true, partial=false){
 	; Updates the clipboard history window list
 	; works when search content is changed

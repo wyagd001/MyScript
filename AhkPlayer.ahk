@@ -37,6 +37,19 @@ IniRead, huifushangci, %run_iniFile%, AhkPlayer, huifushangci
 IniRead, notepad2, %run_iniFile%, otherProgram, notepad2
 lrceditor:=notepad2?notepad2:notepad.exe
 
+global DB := new SQLiteDB
+global DBPATH:= A_ScriptDir . "\Settings\AhkPlayer\musiclib.db"
+			if (!FileExist(DBPATH))
+				isnewdb := 1
+			else
+				isnewdb := 0
+				
+if (!DB.OpenDB(DBPATH))
+				MsgBox, 16, SQLite错误, % "消息:`t" . DB.ErrorMsg . "`n代码:`t" . DB.ErrorCode
+				
+if (isnewdb == 1)
+migrateHistory()
+
 hidelrc=0
 PlaylistIndex=1
 LrcPath:=(SubStr(A_OSVersion, 1, 2)=10)?LrcPath_Win10:LrcPath
@@ -91,8 +104,8 @@ Menu, PlayBack, Add, 顺序播放(&D), CheckPlayorder
 Menu, PlayBack, Add, 随机播放(&R), CheckPlayorder
 Menu, PlayBack, Add, 单曲循环(&E), CheckPlayorder
 Menu, PlayBack, Add
+Menu, PlayBack, Add, 下一首跟随鼠标(&F), PTLF
 Menu, PlayBack, Add, 播放列表(&L), PTList
-Menu, PlayBack, Add, --下一首跟随鼠标(&F), PTLF
 Menu, PlayBack, Add, 播放媒体库(&M), PTLib
 
 Menu, Lib, Add, 打开歌词库(&L), OpenLrc
@@ -107,18 +120,17 @@ Menu, Lib, Add, 更新媒体库(&U),UpdateMediaLib
 Menu, Lib, Add, 启动自动更新媒体库(&A),AutoUpdateMediaLib
 
 Menu, Help, Add, 关于(&A), About
-Menu,PlayBack,Disable,--下一首跟随鼠标(&F)
 If (PlayRandom="t")
 	Menu,PlayBack,Check,随机播放(&R)
 else
 	Menu,PlayBack,Check,顺序播放(&D)
 
+If (followmouse="t")
+		Menu,PlayBack,Check,下一首跟随鼠标(&F)
+
 If (PlayListdefalut="t")
 {
-	Menu,PlayBack,Enable,--下一首跟随鼠标(&F)
 	Menu,PlayBack,Check,播放列表(&L)
-	If (followmouse="t")
-		Menu,PlayBack,Check,--下一首跟随鼠标(&F)
 	Menu,PlayBack,Disable,播放列表(&L)
 }
 Else
@@ -189,8 +201,9 @@ Return
 
 UpdateMediaLib:
 	Count = 0
+	tempV:=""
+	filelistarray:={}
 	FileDelete, %AhkMediaLibFile%
-	Fileappend, , %AhkMediaLibFile%
 	Loop, %AhkMediaLib%\*.*, 0,1
 	{
 		mp3_loop := A_loopfilename
@@ -200,11 +213,14 @@ UpdateMediaLib:
 			Continue
 		else
 		{
-			FileAppend, %a_loopfilefullpath%`n, %AhkMediaLibFile%
+			tempV .= a_loopfilefullpath "`n"
+			filelistarray[a_loopfilefullpath]:=1
 			Count++
 		}
 	}
-
+	FileAppend, % tempV, %AhkMediaLibFile%
+	updateMlib()
+	tempV:=""
 	Count -= 1
 	IniWrite, %Count%, %run_iniFile%, AhkPlayer, Count
 	CF_ToolTip("更新媒体库完毕!		",2500)
@@ -238,19 +254,15 @@ StarPlay:
 
 	if (PlayRandom = "t")  ; 随机播放
 	{
-		if (PlayListdefalut="t")  ; 播放列表
-		{
 			if (followmouse="t")   ; 跟随鼠标
 			{
 				if (PlaylistIndex != LV_GetNext(Row))
 				{
 					PlaylistIndex:=LV_GetNext(Row)
-					LV_GetText(Mp3,PlaylistIndex,4)
 				}
 				else   ; 鼠标所在行是上一首播放的
 				{
 					Random, Rand, 1, %Count%
-					FileReadLine, Mp3, %NowPlayFile%, %Rand%
 					LV_Modify(0,"-Select")
 					LV_Modify(Rand,"+Select +Focus +Vis")
 					PlaylistIndex:=LV_GetNext(Row)
@@ -259,22 +271,14 @@ StarPlay:
 			else   ; 不跟随鼠标
 			{
 				Random, Rand, 1, %Count%
-				FileReadLine, Mp3, %NowPlayFile%, %Rand%
 				LV_Modify(0,"-Select")
 				LV_Modify(Rand,"+Select +Focus +Vis")
 				PlaylistIndex:=LV_GetNext(Row)
 			}
-		}
-		else  ; 播放媒体库
-		{
-			Random, Rand, 1, %Count%
-			FileReadLine, Mp3, %NowPlayFile%, %Rand%
-		}
+		LV_GetText(Mp3,PlaylistIndex,4)
 	}
 	else   ; 顺序播放
 	{
-		if (PlayListdefalut="t")   ; 播放列表
-		{
 			if (PlaylistIndex>=LV_GetCount())
 				PlaylistIndex:=1
 			else if (followmouse="t")
@@ -293,19 +297,11 @@ StarPlay:
 			LV_GetText(Mp3,PlaylistIndex,4)
 			LV_Modify(0,"-Select")
 			LV_Modify(PlaylistIndex,"+Select +Focus +Vis")
-		}
-		else  ; 播放媒体库
-		{
-			;IniRead, PlayIndex, %run_iniFile%, AhkPlayer, PlayIndex
-			PlayIndex++
-			if (PlayIndex>Count)
-				PlayIndex = 1
-			;Iniwrite, %PlayIndex%, %run_iniFile%,AhkPlayer, PlayIndex
-			FileReadLine, Mp3, %NowPlayFile%, %PlayIndex%
-		}
 	}
 	IniWrite, %mp3%, %run_iniFile%, AhkPlayer, Mp3Playing
 	Iniwrite, %PlaylistIndex%, %run_iniFile%,AhkPlayer, PlaylistIndex
+
+Gplay:
 if (mp3!="位置")
 {
 oldEncode:=A_FileEncoding
@@ -317,7 +313,6 @@ file.close()
 FileEncoding, % oldEncode
 tempV:=""
 }
-Gplay:
 	hSound := MCI_Open(Mp3, "myfile")
 	SetTimer UpdateSlider,off
 	GUIControl,,Slider,0
@@ -390,7 +385,7 @@ Gui, Add,Button, x+5 yp h20 gfind Default,查找
 Gui, Add,Button, x+5 yp h20 grefreshList,返回列表
 Gui, Add,Button, x+5 yp h20 gFindToList,追加到列表
 
-Gui, Add,ListView ,xm Grid w600 h400 gListView vListView Altsubmit, 序号|曲名|类型|位置
+Gui, Add,ListView ,xm Grid w600 h400 gListView Count5000 vListView Altsubmit, 序号|曲名|类型|位置|创建时间|上次播放|大小|播放次数
 Gui, Add,Slider,xm w600 h25 +Disabled -ToolTip vSlider gSlider AltSubmit
 Gui, Add,Picture,xm+150 y+10 vstop gStop,%A_ScriptDir%\pic\AhkPlayer\stop.bmp
 Gui, Add,Picture,x+1 yp-1 gprev,%A_ScriptDir%\pic\AhkPlayer\prev.bmp
@@ -408,22 +403,18 @@ vol_Master := VA_GetVolume()
 Guicontrol,,VSlider,%vol_Master%
 SB_SetParts(300,100,220)
 SB_SetProgress(0 ,3,"-smooth")
-AhkPlayer_Title:="播放媒体库 - AhkPlayer"
 gosub CreatContext
 If (PlayListdefalut="t"){
 AhkPlayer_Title:="播放列表 - AhkPlayer"
-Loop, read, %AhkMediaListFile%
-	{
-	xuhao++
-	SetFormat, float ,03
-	mp3_loop = %A_LoopReadline%
-	SplitPath, mp3_loop,,,ext, name
-    LV_Add("", xuhao+0.0,name, ext,mp3_loop)
-    LV_ModifyCol()
-}
+gosub,refreshList
 }
 else
+{
+AhkPlayer_Title:="播放媒体库 - AhkPlayer"
+if !mLiblistview()
+gosub,refreshList
 menu, Context, DeleteAll
+}
 Gui,Show,,%AhkPlayer_Title%
 Return
 
@@ -459,6 +450,10 @@ ToolTipMP3:
 			pos := MCI_Position(hSound)
 			If(pos >= len){
 			IniWrite, %mp3%, %run_iniFile%, AhkPlayer, LastPlay
+			if (PlayListdefalut = "f")
+			{
+				updatemusicfile(mp3)
+			}
 			Break
 	}
 
@@ -1031,14 +1026,6 @@ Menu, PlayBack,UnCheck,播放媒体库(&M)
 Menu, PlayBack,Disable,播放列表(&L)
 Menu, PlayBack, Enable,播放媒体库(&M)
 GuiControl, choose, Selectedplaylist, 1
-;IniRead, PlayListdefalut, %run_iniFile%, AhkPlayer, PlayListdefalut
-;If (PlayListdefalut="t")
-;{
-Menu,PlayBack,Enable,--下一首跟随鼠标(&F)
-IniRead, followmouse, %run_iniFile%, AhkPlayer, followmouse
-If (followmouse="t")
-Menu,PlayBack,Check,--下一首跟随鼠标(&F)
-;}
 }
 menu, Context, DeleteAll
 gosub,refreshList
@@ -1062,12 +1049,12 @@ Menu, PlayBack, Check,播放媒体库(&M)
 Menu, PlayBack, Disable,播放媒体库(&M)
 Menu, PlayBack, Enable,播放列表(&L)
 Menu, PlayBack, UnCheck,播放列表(&L)
-Menu, PlayBack, Disable,--下一首跟随鼠标(&F)
 GuiControl, choose, Selectedplaylist, 2
 PlayListdefalut := "f"
 AhkPlayer_Title:="播放媒体库 - AhkPlayer"
 IniWrite,f, %run_iniFile%, AhkPlayer, PlayListdefalut
 LV_Delete()
+mLiblistview()
 menu, Context, DeleteAll
 Gui,Show,,%AhkPlayer_Title%
 Return
@@ -1076,13 +1063,13 @@ PTLF:
 IniRead, followmouse, %run_iniFile%, AhkPlayer, followmouse
 If (followmouse="t")
 {
-Menu,PlayBack,unCheck,--下一首跟随鼠标(&F)
+Menu,PlayBack,unCheck,下一首跟随鼠标(&F)
 IniWrite,f, %run_iniFile%, AhkPlayer, followmouse
 followmouse:="f"
 }
 Else
 {
-Menu,PlayBack,Check,--下一首跟随鼠标(&F)
+Menu,PlayBack,Check,下一首跟随鼠标(&F)
 IniWrite,t, %run_iniFile%, AhkPlayer, followmouse
 followmouse:="t"
 }
@@ -1212,15 +1199,15 @@ refreshList:
 LV_Delete()
 xuhao = 0
 SetFormat,float ,3.0
-Loop, read, %AhkMediaListFile%
+Loop, read, %NowPlayFile%
 	{
 	xuhao++
 	mp3_loop = %A_LoopReadline%
 	SplitPath, mp3_loop,,,ext, name
 	SetFormat, float ,03
     LV_Add("",xuhao+0.0, name, ext,mp3_loop)
-    LV_ModifyCol()
 }
+LV_ModifyCol()
 Return
 
 ; 查找结果追加到列表
@@ -1517,3 +1504,5 @@ NumpadSub::gosub !F7
 #include %A_ScriptDir%\Lib\MCI.ahk
 #include %A_ScriptDir%\Lib\LRC.ahk
 #include %A_ScriptDir%\Lib\SB.ahk
+#include %A_ScriptDir%\Lib\Mlib.ahk
+#include %A_ScriptDir%\Lib\Class_SQLiteDB.ahk

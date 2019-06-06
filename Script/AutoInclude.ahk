@@ -23,9 +23,11 @@
 #Include *i %A_ScriptDir%\Script\Cando\Cando_添加单词到翻译文件.ahk
 #Include *i %A_ScriptDir%\Script\Cando\Cando_文本比较.ahk
 #Include *i %A_ScriptDir%\Script\Cando\Cando_DllIcon.ahk
+#Include *i %A_ScriptDir%\Script\Cando\Cando_DllFun.ahk
 #Include *i %A_ScriptDir%\Script\Windo\Windo.ahk
 #Include *i %A_ScriptDir%\Script\Windo\Windo_其他浏览器打开.ahk
 #Include *i %A_ScriptDir%\Script\Windo\Windo_其他编辑器打开.ahk
+#Include *i %A_ScriptDir%\Script\Windo\Windo_记事本打开浏览器打开的文件.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_文件属性.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_复制路径.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_定位文件.ahk
