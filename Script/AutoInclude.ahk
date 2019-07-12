@@ -52,6 +52,7 @@
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_预览文件.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_显示隐藏文件.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\git.ahk
+#Include *i %A_ScriptDir%\Script\Hotkey\剪贴板最近的项目.ahk
 #Include *i %A_ScriptDir%\Script\7plus右键菜单\创建目录联接.ahk
 #Include *i %A_ScriptDir%\Script\7plus右键菜单\百度搜索文件名.ahk
 #Include *i %A_ScriptDir%\Script\7plus右键菜单\复制文件夹结构.ahk

@@ -13,11 +13,11 @@ if !ClipSaved1   ; 脚本启动时的剪贴板 直接粘贴
 Send, ^{vk56}
 return
 }
-;if (Clipboard!=ClipSaved%clipid%)   ; 未记录的剪贴板 直接粘贴
-;{
-;Send, ^{vk56}
-;return
-;}
+if (Clipboard!=ClipSaved%clipid%)   ; 未记录的剪贴板 直接粘贴
+{
+Send, ^{vk56}
+return
+}
 monitor=0
 first+=1
 if first=4

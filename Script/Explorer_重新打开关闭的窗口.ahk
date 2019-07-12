@@ -11,7 +11,7 @@ ShellWM(wp,lp)
 		{
 			folder.InsertAt(lp,{cmd:GetShellFolderPath()})
 		}
-		else if ProcessName in notepad.exe, notepad2.exe, notepad3.exe
+		else if ProcessName in notepad.exe,notepad2.exe,notepad3.exe  ;列表中不能有空格
 		{
 			textfile.InsertAt(lp,{cmd:GetTextFilePath(ProcessName,lp)})
 		}
@@ -63,19 +63,19 @@ GetTextFilePath(ProcessName,hwnd)
 	sleep,2000
 	WinGetTitle,_Title,ahk_id %hwnd%
 	WinGet pid, pid,ahk_id %hwnd%
-	if ProcessName = notepad.exe
+	if (ProcessName = "notepad.exe")
 	{
 		If(_Title="无标题 - 记事本")
 			Return
 		else
 		{
-			if filepath:=commandline_notepad(pid)
+			if filepath:=commandline_notepad(pid) && FileExist(filepath)
 			return filepath
 			else
 			return JEE_NotepadGetPath(hWnd)
 		}
 	}
-	else if (ProcessName = notepad2.exe) or (ProcessName = notepad3.exe)
+	else if (ProcessName = "notepad2.exe") or (ProcessName = "notepad3.exe")
 	{
 		RegExMatch(_Title, "i)^\*?\K.*\..*(?= [-*] )", FileFullPath)
 		If FileFullPath && FileExist(FileFullPath)
@@ -96,8 +96,8 @@ commandline_notepad(hpid)
 		file_path := process.CommandLine
 		StringReplace, file_path, file_path, "%A_Space%,,
 		StringReplace, file_path, file_path, ",, All
-		StringReplace, file_path, file_path, C:\Windows\system32\notepad.exe,,
-		StringReplace, file_path, file_path, C:\Windows\notepad.exe,,
+		StringReplace, file_path, file_path, %A_WinDir%\system32\notepad.exe,,
+		StringReplace, file_path, file_path, %A_WinDir%\notepad.exe,,
 		wmi := queryEnum := process := ""
 	return file_path
 	}

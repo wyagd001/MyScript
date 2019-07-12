@@ -19,7 +19,12 @@ for key, value in translist
 {
 if (tempV = key)
 {
-send % translist[key]
+if InStr(value, "``r")
+{
+value:=SubStr(value,1,-2)
+value:=value "`r"
+}
+Send {text}%value%
 return
 }
 }
