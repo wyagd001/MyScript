@@ -73,6 +73,40 @@ JCTF:
 	}
 	else
 	{
+		If instr(CFData, "清明节")
+		{
+			qingmingdata := "040" qingming(A_YYYY)
+			IniRead, qingmingd, %run_iniFile%, 公历节日, 清明节
+			If (qingmingd != qingmingdata)
+			{
+				IniWrite, % qingmingdata, %run_iniFile%, 公历节日, 清明节
+				reloaddata:=1
+			}
+		}
+		If InStr(CFData, "冬至")
+		{
+			dongzhidata := "12" dongzhi(A_YYYY)
+			IniRead, dongzhid, %run_iniFile%, 公历节日, 冬至
+			If (dongzhid != dongzhidata)
+			{
+				IniWrite, % dongzhidata, %run_iniFile%, 公历节日, 冬至
+				reloaddata:=1
+			}
+		}
+		If InStr(CFData, "复活节")
+		{
+			Easterdata := Easter(A_YYYY)
+			IniRead, Easterd, %run_iniFile%, 公历节日, 复活节
+			If (Easterd != Easterdata)
+			{
+				IniWrite, % Easterdata, %run_iniFile%, 公历节日, 复活节
+				reloaddata:=1
+			}
+		}
+		if reloaddata
+		{
+			IniRead, CFData, %run_iniFile%, 公历节日
+		}
 		temp_array := StrSplit(Trim(CFData), ["=", "`n"])
 		CFArray := {}, i := 0
 		Loop % temp_array.length()/2
@@ -103,7 +137,6 @@ JCTF:
 	}
 	if atx
 		msgbox % atx
-
 return
 
 MCTF:
@@ -113,6 +146,45 @@ MCTF:
 		settimer,MCTF,off
 	}
 return
+
+qingming(Nyear)   ; 年份支持 1700-3100
+{
+	if (Nyear = 2232) {
+		return 4
+	}
+	coefficient := [5.15, 5.37, 5.59, 4.82, 5.02, 5.26, 5.48, 4.70, 4.92, 5.135, 5.36, 4.60, 4.81, 5.04, 5.26]
+	mod := Mod(Nyear, 100)
+	return Floor(mod * 0.2422 + coefficient[Floor(Nyear / 100 - 16)] - Floor(mod / 4))
+}
+
+dongzhi(Nyear)   ; 年份支持 1700-3100
+{
+	if (Nyear = 2232) {
+		return 23
+	}
+	if (Nyear = 2227) or (Nyear = 3068) {
+		return 22
+	}
+	coefficient := [22.11, 22.39, 22.66, 21.90, 22.18, 22.472, 22.72, 21.995, 22.27, 22.51, 22.75, 22.02, 22.27, 22.519, 22.80]
+	mod := Mod(Nyear, 100)
+	return Floor(mod * 0.2422 + coefficient[Floor(Nyear / 100 - 16)] - Floor(mod / 4))
+}
+
+Easter(Nyear)
+{
+	X := Nyear
+	K  := Floor(X/100)
+	M  := 15+Floor((3*K+3)/4)-Floor((8*K+13)/25)
+	S  := 2-Floor((3*K+3)/4)
+	A  := Mod(X,19)
+	D  := Mod(19*A+M,30)
+	R  := Floor(D/29)+(Floor(D/28)-Floor(D/29))*Floor(A/11)
+	OG := 21+D-R
+	SZ := 7-Mod(X+Floor(X/4)+S,7)
+	OE := 7-Mod(OG-SZ,7)
+	OS := OG+OE     ; 复活节（星期日）的3月日期 (可能延长到4月), (3月32日= 4月1日等.)
+	return (OS > 31 ? "04" SubStr("0"OS-31,-1) : "03" OS)
+}
 
 /*
 <参数>
