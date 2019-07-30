@@ -78,8 +78,9 @@ Label_Windy_Set_Pos_or_WinArea:
 ;
 ;[¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤¡¤]
 Label_Windy_DrawMenu:
-	Menu,Windymenubywannianshuyao,add
-	Menu,Windymenubywannianshuyao,DeleteAll
+	Menu, Windymenubywannianshuyao, add
+	Menu, Windymenubywannianshuyao, DeleteAll
+	Menu, Windymenubywannianshuyao, UseErrorLevel
 
 	IniRead,Windy_IconDir,%Windy_Profile_Ini%,Windy_Settings,icons_path                           ;Í¼±êÎÄ¼þ¼ÐÎ»ÖÃ
 	If Windy_The_Position!=      ;ÓÐ¹Ì¶¨µÄµÚÒ»ÐÐ£¬ÔòÓÃ¹Ì¶¨µÄµÚÒ»ÐÐ£¬±ÈÈç¡°×óÉÏ²¿¡±Ö®Àà

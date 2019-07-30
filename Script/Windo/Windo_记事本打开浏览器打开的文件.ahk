@@ -15,17 +15,19 @@ GetActiveBrowserURL2(sClass) {
 	If sClass In % ModernBrowsers
 	{
 		surl := GetBrowserURL_ACC(sClass,0)
+		surl := StrReplace(surl, "file:///")
 		htmfile := UrlDecode(surl)
 		htmfile := StrReplace(htmfile, "/" , "\")
+		;msgbox % htmfile
 		return htmfile
 	}
 	Else If sClass In % LegacyBrowsers
 	{
 		surl :=  GetBrowserURL_DDE(sClass)
 		surl := StrReplace(surl, "file:///")
-		htmfile:=UrlDecode(surl)
+		htmfile := UrlDecode(surl)
 		htmfile := StrReplace(htmfile, "/" , "\")
-		msgbox % htmfile
+		;msgbox % htmfile
 		Return htmfile
 }
 	Else If sClass In % OtherBrowsers

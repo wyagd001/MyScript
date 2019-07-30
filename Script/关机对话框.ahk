@@ -37,7 +37,7 @@ ShutdownDialog:
 ;DllCall("AbortSystemShutdown", "Str", 0)
 if SubStr(A_OSVersion,1,3) = "10."
 {
-   sleep 1000
+   sleep 2000
    WinRing0.KeyPress("escape")
    sleep 500
    send {esc}

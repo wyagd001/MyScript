@@ -3,23 +3,6 @@
 ;gui,show
 ;return
 
-;^space::
-; 自己用的快捷键，我只留下了搜狗，把其他所有输入法都删除了
-;if zhcn_sougou
-;{
-;IME_SetConvMode(0)
-;zhcn_sougou:=0
-;}
-;else
-;{
-;IME_SetConvMode(1025)
-;zhcn_sougou:=1
-;}
-;sleep ,200
-;send {Shift}
-;return
-
-
 IME_Switch_QQPinYin()
 {
 static i:=0
@@ -39,7 +22,14 @@ return
 
 IME_IsENG()
 {
+if (A_OSVersion="WIN_8.1")
+{
+if !IME_GET()
+return true
+}
+
 temp_Val:=IME_GetConvMode(_mhwnd())
+;msgbox % temp_Val
 if temp_Val=0
 return true
 else if (temp_Val=1024)
@@ -49,6 +39,7 @@ return false
 }
 
 /*
+; win10 测试 未安装其他输入法系统自带的微软拼音  08040804
 q::
 msgbox % IME_GetKeyboardLayoutList()
 return
@@ -70,7 +61,7 @@ return HKLList
 
 IME_SwitchToEng()
 {
-    ; 下方代码可只保留一个
+    ; 下方代码可只保留一个, win 10 下下面两行代码都是切换到英语输入, 无法切换到微软拼音
     IME_Switch(0x04090409) ; 英语(美国) 美式键盘
     IME_Switch(0x08040804) ; 中文(中国) 简体中文-美式键盘
 }
@@ -93,6 +84,17 @@ ControlGet,hwnd,HWND,,,%WinTitle%
     DllCall("SendMessage", "UInt", hwnd, "UInt", "80", "UInt", "1", "UInt", (DllCall("LoadKeyboardLayout", "Str", dwLayout, "UInt", "257")))
 }
 
+; Win 10中可以在英文409409和微软拼音804804间切换
+/*
+q::
+msgbox % DllCall("ActivateKeyboardLayout", UInt, 1, UInt, 256)
+return
+
+w::
+IME_SwitchLayout()
+return
+*/
+
 IME_SwitchLayout(WinTitle="A")
 {
 ControlGet,hwnd,HWND,,,%WinTitle%
@@ -102,10 +104,12 @@ return
 
 /*
 q::
-IME_UnloadLayout(0xE01F0804)
-IME_UnloadLayout(0x08040804)
+;IME_UnloadLayout(0xE01F0804)
+;IME_UnloadLayout(0x08040804)
+IME_UnloadLayout(0x04090409)
 return
 */
+
 ; dwLayout 参数为数字 例如 0xE01F0804
 IME_UnloadLayout(dwLayout)
 {
@@ -283,6 +287,12 @@ tooltip % T
 ;---------------------------------------------------------------------------
 ;  通用函数 (大多数IME都能使用)
 
+/*
+q::
+tooltip % IME_Get()
+return
+*/
+
 ;-----------------------------------------------------------
 ; IME状态的获取
 ;  WinTitle="A"    対象Window
@@ -311,7 +321,6 @@ IME_SET(SetSts, WinTitle="A")    {
           , UPtr, 0x006   ;wParam  : IMC_SETOPENSTATUS
           ,  Ptr, SetSts) ;lParam  : 0 or 1
 }
-
 
 ;===========================================================================
 ;    0000xxxx    假名输入
@@ -398,6 +407,12 @@ IME_SetConvMode(ConvMode, WinTitle="A")   {
           , "UPtr", 0x002       ;wParam  : IMC_SETCONVERSIONMODE
           ,  "Ptr", ConvMode)   ;lParam  : CONVERSIONMODE
 }
+
+/*
+q::
+tooltip % IME_GetSentenceMode()
+return
+*/
 
 ;===========================================================================
 ; IME 转换模式(ATOK由ver.16测试，可能会略有不同，具体取决于版本)

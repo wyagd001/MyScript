@@ -39,14 +39,14 @@ Cando_文件列表:
    ; dateCut := A_Now
    ; EnvAdd, dateCut, -1, days       ; sets a date -24 hours from now
    列表产生的文件=%A_Temp%\万年书妖文件列表临时文件_%A_now%.txt
-;    MsgBox %CandySel%
+
    loop, %CandySel%\*.*, 1, 1   ; change the folder name
    {
    ;    if (A_LoopFileTimeModified >= dateCut)
          str .= A_LoopFileFullPath "`n"
    }
    FileAppend,%str%,%列表产生的文件%
-;    Sleep,50
+	str := ""
    Run,notepad.exe %列表产生的文件%
    Return
 

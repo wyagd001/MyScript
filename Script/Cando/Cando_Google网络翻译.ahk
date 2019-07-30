@@ -47,7 +47,7 @@ GoogleApi(KeyWord)
 		LangOut := "zh",LangIn := "en"
 	url := "https://translate.google.cn/translate_a/single?client=gtx&dt=t&dj=1&ie=UTF-8&sl=" LangIn "&tl=" LangOut "&q=" UrlEncode(KeyWord,"UTF-8")
 	response := WinHttp.URLGet(url,"Charset:UTF-8","User-Agent:Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36")
-
+	;msgbox % response
 	json_obj := JSON.Load(response)
 	trans := ""
 	for value, sentence in json_obj.sentences

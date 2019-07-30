@@ -14,10 +14,10 @@ SetTitleMatchMode 2
 ; 设置鼠标的坐标模式为相对于整个屏幕的坐标模式
 CoordMode, Mouse, Screen
 
-; 开机时启动脚本，等待时间设置长些，使托盘图标可以显示出来
-if(A_TickCount<60000)
-	sleep,% (60000 - A_TickCount)
-
+; 开机时启动脚本等待至60s
+;Stime := A_TickCount
+if (A_TickCount < 60000)
+	sleep, % (60000 - A_TickCount)
 global run_iniFile := A_ScriptDir "\settings\setting.ini"
 IfNotExist, %run_iniFile%
 	FileCopy, %A_ScriptDir%\Backups\setting.ini, %run_iniFile%
@@ -38,7 +38,7 @@ If(!A_IsAdmin)
 			params .= " " (InStr(%A_Index%, " ") ? """" %A_Index% """" : %A_Index%)
 		uacrep := DllCall("shell32\ShellExecute", uint, 0, str, "RunAs", str, A_AhkPath, str, """" A_ScriptFullPath """" params, str, A_WorkingDir, int, 1)
 		If(uacrep = 42) ; UAC Prompt confirmed, application may Run as admin
-			MsgBox, 成功启用管理员权限
+			Tooltip, 成功启用管理员权限
 		Else
 			MsgBox, 没有启用管理员权限
 }
@@ -458,11 +458,12 @@ ControlGet,hComboBoxEdit,hWnd,,Edit1,ahk_id %HGUI%
 ;=========图形界面的"绘制"2=========
 
 ;----------不显示托盘图标则重启脚本----------
-Menu, Tray, Icon
+; 可根据需要设置等待时间(开机后120s)，使托盘图标可以显示出来
 if Auto_Trayicon
 {
-  While (180000 - A_TickCount) > 0
+  While (100000 - A_TickCount) > 0
    sleep,100
+	Menu, Tray, Icon
  Script_pid:=DllCall("GetCurrentProcessId")
  Tray_Icons := {}
  Tray_Icons := TrayIcon_GetInfo(Ahk_FileName)
@@ -517,6 +518,8 @@ if Auto_Trayicon
   }
  }
 }
+else
+	Menu, Tray, Icon
 ;----------不显示托盘图标则重启脚本----------
 
 ;=========窗口分组=========
@@ -954,6 +957,9 @@ WinSet, Transparent, %iTrans%	;Set transparency
 ;Establish timer
 SetTimer, ProcessMouse, 500
 SetTimer, ProcessMouse, OFF
+
+;StimeDiff := A_TickCount - Stime
+;msgbox % "加载完毕耗时" StimeDiff/1000  "秒"
 
 Loop {
 	;Check state

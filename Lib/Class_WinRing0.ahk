@@ -308,10 +308,10 @@ Class WinRing0 {
 	}
 
 	Init() {
-		;this.Ensure_Admin()   ; 主脚本已使用管理员权限所以注释掉了
-		; win7系统下没有使用，主要用于win10 关机结束任务页面
+		; win7 系统下没有使用，主要用于 win10 关机, 结束任务页面
 		if SubStr(A_OSVersion,1,3) != "10."
 			return
+		this.Ensure_Admin()   ; 主脚本已使用管理员权限所以注释掉了
 
 		this.dll := (A_PtrSize = 8) ? A_ScriptDir "\WinRing0_x64.dll" : A_ScriptDir "\WinRing0_x32.dll"
 		this.hModule := DllCall("LoadLibrary", "Str", this.dll, "Ptr")

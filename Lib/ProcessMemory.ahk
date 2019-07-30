@@ -84,6 +84,7 @@ JEE_NotepadGetPath(hWnd)
 		DllCall("psapi\GetMappedFileName", Ptr, hProc, Ptr, vMbiBaseAddress, Str, vPath, UInt, MAX_PATH*2, UInt)
 		;msgbox %vPath%  ; 结果如下
 		; \Device\HarddiskVolume6\WINDOWS\notepad.exe XP C盘
+		; \Device\HarddiskVolume1\Windows\System32\notepad.exe  win8 J盘
 		; \Device\HarddiskVolume10\Windows\notepad.exe  win7 G盘
 
 		if !InStr(vPath, "notepad")
@@ -105,14 +106,24 @@ JEE_NotepadGetPath(hWnd)
 					;MsgBox, % Format("0x{:X}", vMbiBaseAddress) "`r`n" Format("0x{:X}", vAddress)
 			}
 		}
-		if (vPVersionnum < 10) ; Win7
+		if (vPVersionnum < 10) 
 		{
 			;MsgBox, % Format("0x{:X}", vMbiBaseAddress)
 			; get address where path starts
-			if vPIs64
-				vAddress := vMbiBaseAddress + 0x10B40
-			else
-				vAddress := vMbiBaseAddress + 0xCAE0 ;(vMbiBaseAddress + 0xD378 also appears to work)
+			if (vPVersion = "6.1.7601.18917")  ; Win7
+			{
+				if vPIs64
+					vAddress := vMbiBaseAddress + 0x10B40
+				else
+					vAddress := vMbiBaseAddress + 0xCAE0 ;(vMbiBaseAddress + 0xD378 also appears to work)
+			}
+			if (vPVersion = "6.3.9600.17930")  ; Win8
+			{
+				if vPIs64
+					vAddress := vMbiBaseAddress + 0x10B40
+				else
+					vAddress := vMbiBaseAddress + 0x17960  ;(vMbiBaseAddress + 0x18260 对拖拽无效)
+			}
 		}
 	}
 
@@ -122,6 +133,7 @@ JEE_NotepadGetPath(hWnd)
 
 	if A_IsUnicode
 	{
+		;msgbox % vPath
 		If FileExist(vPath)
 			return vPath
 	}
