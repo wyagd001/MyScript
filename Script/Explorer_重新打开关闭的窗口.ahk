@@ -11,7 +11,7 @@ ShellWM(wp,lp)
 		{
 			folder.InsertAt(lp,{cmd:GetShellFolderPath()})
 		}
-		else if ProcessName in notepad.exe,notepad2.exe,notepad3.exe  ;列表中不能有空格
+		else if ProcessName in notepad.exe,notepad2.exe,notepad3.exe  ; 程序列表中不能有空格
 		{
 			textfile.InsertAt(lp,{cmd:GetTextFilePath(ProcessName,lp)})
 		}
@@ -69,10 +69,18 @@ GetTextFilePath(ProcessName,hwnd)
 			Return
 		else
 		{
-			if filepath:=commandline_notepad(pid) && FileExist(filepath)
+			if filepath := commandline_notepad(pid) && FileExist(filepath)
+			return filepath
+			else if filepath := JEE_NotepadGetPath(hWnd)
 			return filepath
 			else
-			return JEE_NotepadGetPath(hWnd)
+			{
+				OSRecentTextFile := A_AppData "\Microsoft\Windows\Recent\" StrReplace(_Title, " - 记事本") ".lnk"
+				FileGetShortcut, % OSRecentTextFile, filepath
+				;tooltip % OSRecentTextFile "`n" filepath
+				if FileExist(filepath)
+				return filepath
+			}
 		}
 	}
 	else if (ProcessName = "notepad2.exe") or (ProcessName = "notepad3.exe")

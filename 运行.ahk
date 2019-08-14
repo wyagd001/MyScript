@@ -371,14 +371,14 @@ Guicontrol,,VSlider,%vol_Master%
 
 Process, Exist, %DefaultPlayer%.exe
 If ErrorLevel = 0
-GuiControl, Disable,fhc
+	GuiControl, Disable,fhc
 Else
 {
-If (DefaultPlayer="Foobar2000")
-          {
-              If WinExist("foo_httpcontrol")
-              GuiControl,Enable,fhc
-          }
+	If (DefaultPlayer="Foobar2000")
+	{
+		If WinExist("foo_httpcontrol")
+			GuiControl,Enable,fhc
+	}
 }
 
 Menu,  addf, Add, 开机启动, runwithsys
@@ -390,49 +390,50 @@ Menu,  addf, Add, 恢复桌面图标, RestoreDesktopIconsPositions
 
 if Auto_DisplayMainWindow
 {
-Gui, Show, x%x_x% y%y_y% w624 h78, %AppTitle%
-visable = 1
+	Gui, Show, x%x_x% y%y_y% w624 h78, %AppTitle%
+	visable = 1
 }
 else
 {
-是否检测:=0
-Gui, Show, hide x%x_x% y%y_y% w624 h78, %AppTitle%
-visable= 0
+	是否检测:=0
+	Gui, Show, hide x%x_x% y%y_y% w624 h78, %AppTitle%
+	visable= 0
 }
 ;=========图形界面的"绘制"=========
 
 ;=========图形界面的"绘制"2=========
 If Auto_runwithsys
-	{
-		Menu, addf, Check, 开机启动
-	}
+{
+	Menu, addf, Check, 开机启动
+}
 Else
-	{
-		Menu, addf, UnCheck, 开机启动
+{
+	Menu, addf, UnCheck, 开机启动
 }
 
 If Auto_smartchooserbrowser
-	{
-		Menu, addf, Check,智能浏览器
-        writeahkurl()
-        }
+{
+	Menu, addf, Check,智能浏览器
+	writeahkurl()
+}
 Else
-	{
-		Menu, addf, UnCheck, 智能浏览器
+{
+	Menu, addf, UnCheck, 智能浏览器
 }
 
 If (Auto_SaveDeskIcons=1)
-	{
-        Menu, addf, Check, 启动时记忆桌面图标
-        SetTimer,SaveDesktopIconsPositionsdelay,30000
-        Menu, addf, Disable,  恢复桌面图标
-	}
+{
+	Menu, addf, Check, 启动时记忆桌面图标
+	Timer_SDIP := 1
+	SetTimer,SaveDesktopIconsPositions,20000
+	Menu, addf, Disable,  恢复桌面图标
+}
 Else
-	{
-		Menu, addf, UnCheck, 启动时记忆桌面图标
-        IfNotExist,%SaveDeskIcons_inifile%
-        Menu, addf, Disable,  恢复桌面图标
-	}
+{
+	Menu, addf, UnCheck, 启动时记忆桌面图标
+	IfNotExist,%SaveDeskIcons_inifile%
+	Menu, addf, Disable,  恢复桌面图标
+}
 
 ;检测鼠标,图片按钮的鼠标效果
 OnMessage(0x200, "MouseMove")
@@ -461,62 +462,64 @@ ControlGet,hComboBoxEdit,hWnd,,Edit1,ahk_id %HGUI%
 ; 可根据需要设置等待时间(开机后120s)，使托盘图标可以显示出来
 if Auto_Trayicon
 {
-  While (100000 - A_TickCount) > 0
-   sleep,100
+	While (100000 - A_TickCount) > 0
+		sleep,100
 	Menu, Tray, Icon
- Script_pid:=DllCall("GetCurrentProcessId")
- Tray_Icons := {}
- Tray_Icons := TrayIcon_GetInfo(Ahk_FileName)
- for index, Icon in Tray_Icons {
-  trayicons_pid .= Icon.Pid ","
- }
+	Script_pid:=DllCall("GetCurrentProcessId")
+	Tray_Icons := {}
+	Tray_Icons := TrayIcon_GetInfo(Ahk_FileName)
+	for index, Icon in Tray_Icons
+	{
+		trayicons_pid .= Icon.Pid ","
+	}
 
- If trayicons_pid not contains %Script_pid%
- {
-  Menu, Tray, NoIcon
-  sleep,300
-  Menu, Tray, Icon
-  Tray_Icons := {}
-  trayicons_pid := ""
-  Tray_Icons := TrayIcon_GetInfo(Ahk_FileName)
-  for index, Icon in Tray_Icons {
-   trayicons_pid .= Icon.Pid ","
-  }
- }
+	If trayicons_pid not contains %Script_pid%
+	{
+		Menu, Tray, NoIcon
+		sleep,300
+		Menu, Tray, Icon
+		Tray_Icons := {}
+		trayicons_pid := ""
+		Tray_Icons := TrayIcon_GetInfo(Ahk_FileName)
+		for index, Icon in Tray_Icons
+		{
+			trayicons_pid .= Icon.Pid ","
+		}
+	}
 
- If trayicons_pid not contains %Script_pid%
- {
-  if Auto_Trayicon_showmsgbox
-  {
-   msgbox,4,错误,未检测到脚本的托盘图标，点"是"重启脚本，点"否"继续运行脚本。`n默认(超时)自动重启脚本。,6
-   IfMsgBox Yes
-    Auto_reload=1
-   else IfMsgBox timeout
-    Auto_reload=1
-  }
-  else
-   Auto_reload=1
+	If trayicons_pid not contains %Script_pid%
+	{
+		if Auto_Trayicon_showmsgbox
+		{
+			msgbox,4,错误,未检测到脚本的托盘图标，点"是"重启脚本，点"否"继续运行脚本。`n默认(超时)自动重启脚本。,6
+			IfMsgBox Yes
+				Auto_reload=1
+			else IfMsgBox timeout
+				Auto_reload=1
+		}
+		else
+			Auto_reload=1
 
-  连续重启次数:=CF_IniRead(run_iniFile,"时间","连续重启次数",0)
-  if 连续重启次数 > 5
-  {
-   IniWrite,0,% run_iniFile,时间,连续重启次数
-   IniWrite,0,% run_iniFile,功能开关,Auto_Trayicon
-   Msgbox 脚本多次运行都不能检测到托盘图标，脚本下次启动将不再检测托盘图标。
-  }
-  else
-  {
-   连续重启次数 += 1
-   IniWrite,% 连续重启次数,% run_iniFile,时间,连续重启次数
-  }
+		连续重启次数:=CF_IniRead(run_iniFile,"时间","连续重启次数",0)
+		if 连续重启次数 > 5
+		{
+			IniWrite,0,% run_iniFile,时间,连续重启次数
+			IniWrite,0,% run_iniFile,功能开关,Auto_Trayicon
+			Msgbox 脚本多次运行都不能检测到托盘图标，脚本下次启动将不再检测托盘图标。
+		}
+		else
+		{
+			连续重启次数 += 1
+			IniWrite,% 连续重启次数,% run_iniFile,时间,连续重启次数
+		}
 
-  if(Auto_reload=1)
-  {
-		sleep,2000
-		Reload
-	Return
-  }
- }
+		if(Auto_reload=1)
+		{
+			sleep,2000
+			Reload
+		Return
+		}
+	}
 }
 else
 	Menu, Tray, Icon

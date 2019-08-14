@@ -28,57 +28,45 @@
 */
 
 SaveDesktopIconsPositions:
+	if Timer_SDIP
+	{
+		SetTimer, SaveDesktopIconsPositions, Off
+		Timer_SDIP := 0
+	}
 	coords := DeskIcons()
 	if (coords = "")
 	{
-		MsgBox,无法保存桌面图标，请重试！
+		MsgBox, 无法保存桌面图标，请重试！
 	Return
 	}
 	FileRead, read_coords, %SaveDeskIcons_inifile%
+ 
+	if (read_coords != coords)
+	{
+		if 每隔几小时结果为真(12)
+			FileAppend, %read_coords%,*%A_ScriptDir%\settings\tmp\SaveDeskIcons_%A_Now%.ini
+		FileDelete, %SaveDeskIcons_inifile%
+		FileAppend, %coords%, *%SaveDeskIcons_inifile%
+	}
 
-	if (read_coords!= coords)
-		FileAppend, %read_coords%,*%A_ScriptDir%\settings\tmp\SaveDeskIcons_%A_Now%.ini
-
-	FileDelete, %SaveDeskIcons_inifile%
-	FileAppend, %coords%, *%SaveDeskIcons_inifile%
-	read_coords:=coords:=""
+	read_coords := coords := ""
 	IfExist, %SaveDeskIcons_inifile%
-		Menu, addf, Enable,  恢复桌面图标
+	{
+		Menu, addf, Enable, 恢复桌面图标
+	}
 	Else
-		MsgBox,保存桌面图标出现错误，请重试！
-Return
-
-SaveDesktopIconsPositionsDelay:
-	coords := DeskIcons()
-	if (coords = "")
-	{
-		MsgBox,无法保存桌面图标，请重试！
-		SetTimer, SaveDesktopIconsPositionsdelay, Off
-	Return
-	}
-	FileRead, read_coords, %SaveDeskIcons_inifile%
-
-	if (read_coords!= coords)
-	FileAppend, %read_coords%, *%A_ScriptDir%\settings\tmp\SaveDeskIcons_%A_Now%.ini
-
-	FileDelete, %SaveDeskIcons_inifile%
-	FileAppend, %coords%, *%SaveDeskIcons_inifile%
-	read_coords:=coords:=""
-
-	IfExist,%SaveDeskIcons_inifile%
-	{
-		Menu, addf, Enable,  恢复桌面图标
-		SetTimer, SaveDesktopIconsPositionsdelay, Off
-	}
+		MsgBox, 保存桌面图标出现错误，请重试！
 Return
 
 RestoreDesktopIconsPositions:
 	FileRead, coords, %SaveDeskIcons_inifile%
 	if (coords != "")
+	{
 		DeskIcons(coords)
+		coords := ""
+	}
 	Else
-		MsgBox,没有读取到配置文件，请保存桌面图标后，再重试。
-	coords := ""
+		MsgBox, 没有读取到配置文件，请保存桌面图标后，再重试。
 Return
 
 DeskIcons(coords := "")

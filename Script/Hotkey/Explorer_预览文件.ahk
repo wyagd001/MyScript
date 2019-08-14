@@ -3,7 +3,7 @@ $Space::
 gosub PreWWinGuiClose
 return
 
-#ifWinActive ahk_Group ccc
+#ifWinActive ahk_Group ExplorerGroup
 $Space::
 ;重命名时，直接发送空格
 if(A_Cursor="IBeam") or IsRenaming()
