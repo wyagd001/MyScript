@@ -14,7 +14,7 @@ SetTitleMatchMode 2
 ; 设置鼠标的坐标模式为相对于整个屏幕的坐标模式
 CoordMode, Mouse, Screen
 
-; 开机时启动脚本等待至60s
+; 开机时脚本启动后等待至60s
 ;Stime := A_TickCount
 if (A_TickCount < 60000)
 	sleep, % (60000 - A_TickCount)
@@ -459,7 +459,7 @@ ControlGet,hComboBoxEdit,hWnd,,Edit1,ahk_id %HGUI%
 ;=========图形界面的"绘制"2=========
 
 ;----------不显示托盘图标则重启脚本----------
-; 可根据需要设置等待时间(开机后120s)，使托盘图标可以显示出来
+; 等待至开机后100s，可根据需要设置，使托盘图标可以显示出来
 if Auto_Trayicon
 {
 	While (100000 - A_TickCount) > 0
@@ -521,7 +521,7 @@ if Auto_Trayicon
 		}
 	}
 }
-else
+else  ; 直接显示图标, 而不监控图标是否显示出来
 	Menu, Tray, Icon
 ;----------不显示托盘图标则重启脚本----------
 
@@ -1634,7 +1634,7 @@ return
 #include %A_ScriptDir%\Script\Explorer_重新打开关闭的窗口.ahk
 #include %A_ScriptDir%\Script\鼠标自动激活窗口.ahk
 #include %A_ScriptDir%\Script\时间_报时和定时任务.ahk
-#include %A_ScriptDir%\Script\时间_判断农历节日.ahk
+#include %A_ScriptDir%\Script\时间_节日提醒.ahk
 #include %A_ScriptDir%\Script\Candy.ahk
 #include %A_ScriptDir%\Script\Windy.ahk
 #include %A_ScriptDir%\Script\Dock To Edge.ahk
