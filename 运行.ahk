@@ -33,14 +33,14 @@ If Auto_Include
 
 ; 管理员权限
 If(!A_IsAdmin)
-	{
-		Loop %0%
-			params .= " " (InStr(%A_Index%, " ") ? """" %A_Index% """" : %A_Index%)
-		uacrep := DllCall("shell32\ShellExecute", uint, 0, str, "RunAs", str, A_AhkPath, str, """" A_ScriptFullPath """" params, str, A_WorkingDir, int, 1)
-		If(uacrep = 42) ; UAC Prompt confirmed, application may Run as admin
-			Tooltip, 成功启用管理员权限
-		Else
-			MsgBox, 没有启用管理员权限
+{
+	Loop %0%
+		params .= " " (InStr(%A_Index%, " ") ? """" %A_Index% """" : %A_Index%)
+	uacrep := DllCall("shell32\ShellExecute", uint, 0, str, "RunAs", str, A_AhkPath, str, """" A_ScriptFullPath """" params, str, A_WorkingDir, int, 1)
+	If(uacrep = 42) ; UAC Prompt confirmed, application may Run as admin
+		Tooltip, 成功启用管理员权限
+	Else
+		MsgBox, 没有启用管理员权限
 }
 
 ; 退出脚本时，执行ExitSub，关闭自动启动的脚本、恢复窗口等等操作。
