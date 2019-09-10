@@ -18,6 +18,25 @@ Files:=Files . "\"
 CopyDirStructure(Files,A_Desktop,1)
 Return
 
+; https://autohotkey.com/board/topic/63944-function-copydirstructure/
+/*
+CopyDirStructure()
+
+复制目录结构
+(复制一个文件夹及其所有子文件夹——但不复制文件)
+
+参数:
+	_inpath - 要复制的文件夹的绝对路径
+	_outpath - 目标文件夹的绝对路径
+	_i - 是否包括顶层文件夹(true/false)
+
+返回值: 
+	如果有问题返回 1，否则为空
+
+gahks - 2011 - GNU GPL v3
+*/
+
+
 CopyDirStructure(_inpath,_outpath,_i=true) {
    If (_i) {
       SplitPath, _inpath,,_indir

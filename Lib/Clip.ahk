@@ -18,12 +18,12 @@ GetClipboardFormat(type=1)  ;Thanks nnnik
 }
 
 ; returnnum = 0 不还原剪贴板，返回新剪贴板
-; returnnum = 1 还原剪贴板，清空 _isFile _ClipAll，返回新剪贴板
-; returnnum = 2/3/4.. 还原剪贴板，赋值 _isFile _ClipAll，返回新剪贴板
+; returnnum = 1 还原剪贴板，清空 _isFile _ClipAll，返回旧剪贴板
+; returnnum = 2/3/4.. 还原剪贴板，赋值 _isFile _ClipAll，返回旧剪贴板
 GetSelText(returnnum:=1, ByRef _isFile:="", ByRef _ClipAll:="",waittime:=2)
 {
 	global monitor
-	monitor := returnnum = 0 ? 1 : 0
+	monitor := (returnnum = 0) ? 1 : 0
 	Saved_ClipBoard := ClipboardAll    ; 备份剪贴板
 	Clipboard=    ; 清空剪贴板
 	Send, ^c
@@ -47,7 +47,7 @@ GetSelText(returnnum:=1, ByRef _isFile:="", ByRef _ClipAll:="",waittime:=2)
 	}
 	ClipSel := Clipboard
 
-	Clipboard := Saved_ClipBoard  ;还原粘贴板
+	Clipboard := Saved_ClipBoard  ; 还原粘贴板
 	sleep 200
 	monitor := 1
 	return ClipSel

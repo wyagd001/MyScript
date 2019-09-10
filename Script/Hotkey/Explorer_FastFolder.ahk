@@ -16,7 +16,7 @@
 				}
 			}
 		}
-		hwnd:=WinExist("A")
+		F_hwnd:=WinExist("A")
 		Menu, FastFolders, Show
 return
 ;#ifWinActive
@@ -36,9 +36,9 @@ FastFolderMenuClicked(index)
 	if(x)
 	{
 		if(ctrldown)
-			ShellFileOperation(0x2, x, y,0,hwnd)
+			ShellFileOperation(0x2, x, y,0,F_hwnd)
 		if(shiftdown)
-			ShellFileOperation(0x1, x, y,0,hwnd)
+			ShellFileOperation(0x1, x, y,0,F_hwnd)
 		Else
 		   {
 		    Sleep 100

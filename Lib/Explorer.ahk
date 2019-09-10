@@ -52,9 +52,13 @@ ShellNavigate(sPath, bExplore=False, hWnd=0)
 	{
 		SetTitleMatchMode, %tmm%
 		For window in ComObjCreate("Shell.Application").Windows
+		{
+			msgbox % window.hWnd
 			If (window.hWnd = hWnd)
 				window.Navigate2[sPath]
+		}
 		Until (window.hWnd = hWnd)
+
 	}
 	Else If bExplore
 		ComObjCreate("Shell.Application").Explore[sPath]
@@ -1013,14 +1017,15 @@ SetDirectory(sPath)
 	{
 		If (InStr(FileExist(sPath), "D") || SubStr(sPath,1,3)="::{" || SubStr(sPath,1,6)="ftp://" || strEndsWith(sPath,".search-ms"))
 		{
-			hWnd:=WinExist("A")
+			hWnd := WinExist("A")
 			ShellNavigate(sPath,0,hwnd)
 		}
-    }
+	}
 	Else If (IsDialog())
 		SetDialogDirectory(sPath)
 	Else
-		MsgBox 不能导航: 当前窗口不是资源管理器窗口。
+		f_RunPath(sPath)
+	return
 }
 
 SetDialogDirectory(Path)

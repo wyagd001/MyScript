@@ -3,7 +3,7 @@ WM_QUERYENDSESSION(wParam, lParam)
 	global ShutdownBlock
 	If not ShutdownBlock
 		Exit
-	SetTimer, ShutdownDialog, 300
+	SetTimer, ShutdownDialog, 100
 	Return false
 	/*   ; XP
 	ENDSESSION_LOGOFF = 0x80000000
@@ -52,26 +52,35 @@ else
 WinWait, ahk_class BlockedShutdownResolver
 If not ErrorLevel
 {
+	 Sleep, 500
+	 send {Esc}
    WinClose, ahk_class BlockedShutdownResolver
-   WinWaitClose, ahk_class BlockedShutdownResolver
-   IfNotEqual, ErrorLevel, 1, WinClose, ahk_class Progman
+   ;WinWaitClose, ahk_class BlockedShutdownResolver
+   ;IfNotEqual, ErrorLevel, 1
+	 Sleep, 500
+	 ;WinClose, ahk_class Progman
+	 ControlSend, SysListView321, !{F4}, ahk_class Progman
    SetTimer, ShutdownDialog, off
 }
 }
 Return
 
 #IfWinActive, 关闭 Windows ahk_class #32770
-Enter::
-Space::
+$Enter::
 ControlGet, Choice, Choice, , ComboBox1
 ControlGetFocus, Focus
+tooltip % Choice 
 If Choice in 注销,重新启动,关机,更新并重启,重启,更新并关机
 {
-   If (Focus = "ComboBox1" && A_ThisHotkey = "Enter")
-      or (Focus = "Button3")
+tooltip % Choice "-" Focus "-" A_ThisHotkey
+   If (Focus = "ComboBox1" && A_ThisHotkey = "$Enter") or (Focus = "Button3")
+{
       ShutdownBlock := false
+tooltip % OOOOOOk
 }
-SendInput, % "{" . A_ThisHotkey . "}"
+}
+sleep, 200
+SendInput, {Enter}
 Return
 #IfWinActive
 

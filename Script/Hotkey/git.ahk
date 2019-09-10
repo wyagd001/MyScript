@@ -1,8 +1,7 @@
-; github 上帮助文件更新时复制路径后，自动打开本地文件
+; 复制路径后，自动打开本地文件(用于github 上帮助文件更新时自动打开本地文件同步更新)
 git:
-SelectedPath := Clipboard
 if !SelectedPath
-SelectedPath := GetSelText()
+	SelectedPath := GetSelText()
 SelectedPath := StrReplace(SelectedPath, "/", "\")
 SetTitleMatchMode, 2
 if WinExist("N:\资料\autohotkey 帮助\v1\docs ahk_class CabinetWClass") && FileExist("N:\资料\autohotkey 帮助\v1\" SelectedPath)

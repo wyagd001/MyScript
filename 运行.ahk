@@ -425,7 +425,7 @@ If (Auto_SaveDeskIcons=1)
 {
 	Menu, addf, Check, 启动时记忆桌面图标
 	Timer_SDIP := 1
-	SetTimer,SaveDesktopIconsPositions,20000
+	SetTimer,SaveDesktopIconsPositions,30000
 	Menu, addf, Disable,  恢复桌面图标
 }
 Else
@@ -1094,12 +1094,14 @@ onClipboardChange:
 		{
 			IfInString, Clipboard, docs/
 			{
+				SelectedPath := Clipboard
 				gosub git
+				Clipboard := ClipSaved%clipid%
 			return
 			}
 		}
 	}
-	if GetClipboardFormat(1)=1  ; 判断剪贴板中的内容是否是文本
+	if GetClipboardFormat(1)=1  ; 剪贴板中的内容是文本
 	{
 		tempid=0
 		lastclipid := clipid
@@ -1129,7 +1131,7 @@ onClipboardChange:
 			}
 		}
 	}
-	else ; 剪贴板中的内容是图片或文件等非文本时
+	else ; 剪贴板中的内容是图片或文件等非文本内容
 		tempid=1
 return
 

@@ -3,7 +3,7 @@ $Space::
 gosub PreWWinGuiClose
 return
 
-#ifWinActive ahk_Group ExplorerGroup
+#ifWinActive ahk_Group ccc
 $Space::
 ;重命名时，直接发送空格
 if(A_Cursor="IBeam") or IsRenaming()
@@ -318,12 +318,26 @@ gif_prew:=true
 return
 
 Cando_text_prew:
-if (File_GetEncoding(files) = 0) or (File_GetEncoding(files) = 1)
+File_Encode := File_GetEncoding(files)
+if (File_Encode = 0) or (File_Encode = 1)
 {
 msgbox 不支持的文件类型或编码。
 return
 }
-FileEncoding, % File_GetEncoding(files)
+FileEncoding, % File_Encode
+	if (File_Encode = "CP936") or (File_Encode = "UTF-8-RAW")
+	{
+		FileReadLine, LineVar, % files, 1
+		MsgBox, 36, 选择源文件的编码ANSI/UTF-8, 文件第一行内容: %LineVar%`n当前使用编码为: %File_Encode%`n文本正常显示点击"是"，否则点击"否"。
+		IfMsgBox, No
+		{
+			File_Encode := (File_Encode = "CP936") ? "UTF-8" : "CP936"
+			FileEncoding, % File_Encode
+		}
+		IfMsgBox, yes
+			File_Encode := (File_Encode = "CP936") ? "CP936" : "UTF-8"
+	}
+
 if TF_CountLines(files)>100
 {
 Loop, Read,% files

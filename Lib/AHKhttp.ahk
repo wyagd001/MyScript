@@ -34,7 +34,7 @@ class HttpServer
             return false
 
         FileRead, data, % file
-        types := StrSplit(data, "`n")
+        types := StrSplit(data, "`r`n")
         this.mimes := {}
         for i, data in types {
             info := StrSplit(data, " ")
@@ -67,7 +67,7 @@ class HttpServer
         f.Close()
 
         response.SetBody(data, length)
-        res.headers["Content-Type"] := this.GetMimeType(file)
+        response.headers["Content-Type"] := this.GetMimeType(file)
     }
 
     SetPaths(paths) {
