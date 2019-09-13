@@ -1092,7 +1092,7 @@ onClipboardChange:
 		tempid=0
 		If ClipPlugin_git
 		{
-			IfInString, Clipboard, docs/
+			If (InStr(Clipboard, "docs/") = 1)
 			{
 				SelectedPath := Clipboard
 				gosub git

@@ -324,11 +324,13 @@ if (File_Encode = 0) or (File_Encode = 1)
 msgbox 不支持的文件类型或编码。
 return
 }
+
+FileGetSize, File_Size, % files
 FileEncoding, % File_Encode
-	if (File_Encode = "CP936") or (File_Encode = "UTF-8-RAW")
+	if (File_Size > 20480) && ((File_Encode = "CP936") or (File_Encode = "UTF-8-RAW"))
 	{
 		FileReadLine, LineVar, % files, 1
-		MsgBox, 36, 选择源文件的编码ANSI/UTF-8, 文件第一行内容: %LineVar%`n当前使用编码为: %File_Encode%`n文本正常显示点击"是"，否则点击"否"。
+		MsgBox, 36, 选择源文件的编码ANSI/UTF-8, 文件第一行内容: %LineVar%`n当前使用编码为: %File_Encode%`n文本正常显示点击"是"，否则点击"否"。, 2
 		IfMsgBox, No
 		{
 			File_Encode := (File_Encode = "CP936") ? "UTF-8" : "CP936"
@@ -354,7 +356,7 @@ Gui, +ReSize
 Gui, Add, Edit, w800 h600 ReadOnly vdisplayArea,
 Gui,PreWWin: Show, AutoSize Center, % Files " - 文件预览"
 GuiControl,, displayArea,%textvalue%
-textvalue=
+textvalue := File_Encode := File_Size := ""
 return
 
 ; https://www.autohotkey.com/boards/viewtopic.php?p=112572

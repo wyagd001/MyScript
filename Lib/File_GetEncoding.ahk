@@ -172,7 +172,7 @@ File_GetEncoding(aFile, aNumBytes = 0, aMinimum = 4)
 	loop, %_nBytes%
 	{
 		if ((_bytesArr[(A_Index - 1)] > 0) && (_bytesArr[(A_Index - 1)] < 9))
-		|| ((_bytesArr[(A_Index - 1)] > 13) && (_bytesArr[(A_Index - 1)] < 32))
+		|| ((_bytesArr[(A_Index - 1)] > 13) && (_bytesArr[(A_Index - 1)] < 20))
 		{
 			return 1
 		}
