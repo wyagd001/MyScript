@@ -1664,4 +1664,5 @@ return
 #Include *i %A_ScriptDir%\Lib\string.ahk
 #include, %A_ScriptDir%\lib\AHKhttp.ahk
 #include <AHKsock>
+#include <URL>
 #include *i %A_ScriptDir%\Script\AutoInclude.ahk

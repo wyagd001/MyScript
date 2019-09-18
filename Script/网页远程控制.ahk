@@ -1,6 +1,7 @@
 indexInit:
 mytext:=CF_IniRead(run_iniFile, "serverConfig","mytext")
-
+SplitPath, txtfile, txtFileName
+SplitPath, excelfile, excelFileName
 Index_Html =
 (
 <!doctype html>
@@ -87,9 +88,9 @@ window.location.href="/";
 
 <p>文件下载</p>
 <p> 
-<a href="/music"> <button> mp3 文件</button> </a> 
-<a href="/excel" download="通服工作日志.xls"> <button> xls 文件</button> </a>
-<a href="/txt" download="中文歌曲.txt"> <button> txt 文件</button> </a>
+<a href="/mp3"> <button> mp3 文件</button> </a> 
+<a href="/excel" download="%excelFileName%"> <button> xls 文件</button> </a>
+<a href="/txt" download="%txtFileName%"> <button> txt 文件</button> </a>
 </p>
 
 <p>发送文本</p>
@@ -167,6 +168,11 @@ SiteContents =
 global UserLogin
 global UserPass
 global StoredReqBody
+global selectedFile :=
+global selectedFileName :=
+
+selectedFile := "G:\Users\lyh\Desktop\我爱我家.txt"
+SplitPath, selectedFile, selectedFileName
 
 if indexInit_activated
 	Return	;to return only after first initilisation,i.e from a 'Gosub'
@@ -183,6 +189,7 @@ paths["/previous"] := Func("previous")
 paths["/pause_play"] := Func("pause_play")
 paths["/next"] := Func("next")
 paths["/exitapp"] := Func("exitapp")
+paths["/music"] := Func("Func_music")
 
 paths["/vp"] := Func("vp")
 paths["/vm"] := Func("vm")
@@ -199,17 +206,24 @@ paths["/serverReload"] := Func("serverReload")
 
 paths["/submit"] := Func("submit")
 paths["/runcom"] :=Func("runcom")
+paths["/runCmd"] := Func("Func_runCmd")
+paths["/setclip"] := Func("Func_setClip")
+paths["/getclip"] := Func("Func_getClip")
+paths["/getchromeurl"] := Func("Func_getchromeUrl")
 
-paths["/music"] := Func("music")
+paths["/mp3"] := Func("mp3")
 paths["/excel"] := Func("excel")
 paths["/txt"] := Func("txt")
+paths["/downFile"] := Func("Fun_downFile")
+paths["/downFileName"] := Func("Fun_downFileName")
 
 paths["404"] := Func("NotFound")
 
-server := new HttpServer()
+global server := new HttpServer()
 server.LoadMimes(A_ScriptDir . "/lib/mime.types")
 server.SetPaths(paths)
 server.Serve(serverPort)
+global url := new URL()
 return
 
 Logo(ByRef req, ByRef res, ByRef server) {
@@ -422,6 +436,65 @@ iniwrite, % mytext, %run_iniFile%, serverConfig, mytext
 return
 }
 
+Func_RunCmd(ByRef req, ByRef res) {
+
+    bodyMap := ParseBody(req.body)
+    cmd := bodyMap["cmd"]
+    if (cmd) {
+		if IsLabel(cmd)
+		{
+			gosub % cmd
+		return
+		}
+		if IsStingFunc(cmd)
+		{
+			RunStingFunc(cmd)
+		return
+		}
+		Run,%cmd%,,UseErrorLevel
+		If ErrorLevel
+			Msg(, "命令 %command% 运行失败")
+    }
+    res.status := 200
+}
+
+Func_setClip(ByRef req, ByRef res) {
+
+    bodyMap := ParseBody(req.body)
+    mobileClip := bodyMap["clip"]
+    mobileUrl := bodyMap["url"]
+    if (mobileClip) {
+        Clipboard := url.Decode(mobileClip)
+        CF_ToolTip("remoteControl:文字已复制!")
+    }
+    if (mobileUrl) {
+        mobileUrl := url.Decode(mobileUrl)
+        FoundPos := RegExMatch(mobileUrl, "(http|ftp|https|file)://[\w]{1,}([\.\w]{1,})+[\w-_/?&=#%:]*", mobileUrl2) ; 校验\分离出url
+        if (FoundPos != 0) {
+            run, %mobileUrl2%
+        } else {
+            run, www.baidu.com/s?wd=%mobileUrl%
+        }
+}
+    res.status := 200
+}
+
+Func_getClip(ByRef req, ByRef res) {
+    res.SetBodyText(Clipboard)
+    res.status := 200
+}
+
+Func_getchromeUrl(ByRef req, ByRef res) {
+    chromeUrl := GetActiveBrowserURL("Chrome_WidgetWin_1")
+    if chromeUrl{
+    res.SetBodyText(chromeUrl)
+    res.status := 200
+    }
+    else {
+        res.status := 404
+    }
+}
+
 ; 空格会变+号 使用★代替+号
 runcom(ByRef req, ByRef res){
 	Global
@@ -445,15 +518,25 @@ runcom(ByRef req, ByRef res){
 		}
 		Run,%command%,,UseErrorLevel
 		If ErrorLevel
-		{
-			If % %dir%<>""
-			{
-				Run,% %Dir%,,UseErrorLevel
-			}
-		}
+			Msg(, "命令 %command% 运行失败")
 	}
 	Index(req, res)
 return
+}
+
+Func_music(ByRef req, ByRef res) {
+    bodyMap := ParseBody(req.body)
+    musicAction := bodyMap["action"]
+    if (musicAction == "toggle") {
+        gosub GB2_down_up
+    } else if (musicAction == "next") {
+        gosub GB3_down_up
+    } else if (musicAction == "prev") {
+        gosub GB1_down_up
+    }else if (musicAction == "start") {
+        gosub OpenAudioPlayer
+    }
+    res.status := 200
 }
 
 startaudioplayer(ByRef req, ByRef res){
@@ -520,9 +603,9 @@ Msg(, "Un/Mute")
 	Send {Volume_Mute} ;  mute volume toggle
 }
 
-music(ByRef req, ByRef res){
+mp3(ByRef req, ByRef res){
 Global
-Msg(, "Music")
+Msg(, "mp3")
     f := FileOpen(mp3file, "r") ; example mp3 file
     length := f.RawRead(data, f.Length)
     f.Close()
@@ -540,7 +623,7 @@ Msg(, "excel")
     f.Close()
     res.status := 200
     ;res.headers["Content-Type"] := "audio/x-mpequrl"
-res.headers["content-disposition"] := "attachment;filename=通服工作日志.xls"
+res.headers["content-disposition"] := "attachment; filename=" excelFileName
     res.SetBody(data, length)
 }
 
@@ -552,12 +635,49 @@ Msg(, "txt")
     f.Close()
     res.status := 200
     ;res.headers["Content-Type"] := "audio/x-mpequrl"
-res.headers["content-disposition"] := "attachment;filename=中文歌曲.txt"
+res.headers["content-disposition"] := "attachment; filename=" txtFileName
     res.SetBody(data, length)
+}
+
+Fun_downFile(ByRef req, ByRef res) {
+    if (!selectedFile) {
+        res.SetBodyText("请先在PC上选择文件(Win+U)")
+        server.AddHeader(res, "Content-type", "text/plain; charset=utf-8")
+        res.status := 404
+        return
+    }
+    server.ServeFile(res, selectedFile)
+    server.AddHeader(res, "Content-Disposition", "attachment; filename=" selectedFileName)
+    res.status := 200
+}
+
+Fun_downFileName(ByRef req, ByRef res) {    ;辅助/downFile路径, 方便客户端获取要下载的文件名
+    if (selectedFileName) {
+        res.SetBodyText(selectedFileName)
+        res.status := 200
+    } else {
+        res.SetBodyText("请先在PC上选择文件(Win+U)")
+        server.AddHeader(res, "Content-type", "text/plain; charset=utf-8")
+        res.status := 404
+    }
 }
 
 NotFound(ByRef req, ByRef res) {
     res.SetBodyText("Page not found")
+}
+
+;========================= 公共函数 =========================
+ParseBody(body) {
+    ;bodyArray := StrSplit(body, "`n")
+    bodyArray := StrSplit(body, "&")
+    bodyMap := {}
+    for i, value in bodyArray {
+        pos := InStr(value, "=")
+        key := SubStr(value, 1, pos - 1)
+        val := SubStr(value, pos + 1)
+        bodyMap[key] := val
+    }
+    return bodyMap
 }
 
 ;========================================================================================================================================================================================

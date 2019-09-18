@@ -140,4 +140,7 @@ https://github.com/jleb/AHKsock
 
 44.Media-Remote-Control  
 https://github.com/sunwind/Media-Remote-Control  
-https://autohotkey.com/boards/viewtopic.php?f=6&t=32336  
+https://autohotkey.com/boards/viewtopic.php?f=6&t=32336
+
+44.ahk-remote-control(Tasker 项目的导出文件来源)  
+https://github.com/bjc5233/ahk-remote-control
