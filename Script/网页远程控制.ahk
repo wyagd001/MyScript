@@ -88,9 +88,11 @@ window.location.href="/";
 
 <p>文件下载</p>
 <p> 
-<a href="/mp3"> <button> mp3 文件</button> </a> 
-<a href="/excel" download="%excelFileName%"> <button> xls 文件</button> </a>
-<a href="/txt" download="%txtFileName%"> <button> txt 文件</button> </a>
+<a href="/mp3"> <button>mp3</button> </a> 
+<a href="/excel" download="%excelFileName%"> <button>xls</button> </a>
+<a href="/txt" download="%txtFileName%"> <button>txt</button> </a>
+<a href="/downFile"> <button>文件(Cando)</button> </a>
+<a href="/printscreenToDown"> <button>电脑截屏</button> </a>
 </p>
 
 <p>发送文本</p>
@@ -168,11 +170,8 @@ SiteContents =
 global UserLogin
 global UserPass
 global StoredReqBody
-global selectedFile :=
-global selectedFileName :=
-
-selectedFile := "G:\Users\lyh\Desktop\我爱我家.txt"
-SplitPath, selectedFile, selectedFileName
+global HttpServer_File :=
+global HttpServer_FileName :=
 
 if indexInit_activated
 	Return	;to return only after first initilisation,i.e from a 'Gosub'
@@ -215,6 +214,7 @@ paths["/mp3"] := Func("mp3")
 paths["/excel"] := Func("excel")
 paths["/txt"] := Func("txt")
 paths["/downFile"] := Func("Fun_downFile")
+paths["/printscreenToDown"] := Func("Fun_printscreenToDown")
 paths["/downFileName"] := Func("Fun_downFileName")
 
 paths["404"] := Func("NotFound")
@@ -640,23 +640,32 @@ res.headers["content-disposition"] := "attachment; filename=" txtFileName
 }
 
 Fun_downFile(ByRef req, ByRef res) {
-    if (!selectedFile) {
-        res.SetBodyText("请先在PC上选择文件(Win+U)")
+    if (!HttpServer_File) {
+        res.SetBodyText("请先在PC上选择文件")
         server.AddHeader(res, "Content-type", "text/plain; charset=utf-8")
         res.status := 404
         return
     }
-    server.ServeFile(res, selectedFile)
-    server.AddHeader(res, "Content-Disposition", "attachment; filename=" selectedFileName)
+    server.ServeFile(res, HttpServer_File)
+    server.AddHeader(res, "Content-Disposition", "attachment; filename=" HttpServer_FileName)
+    res.status := 200
+}
+
+Fun_printscreenToDown(ByRef req, ByRef res) {
+    CaptureScreen(0, True, 0)
+    Convert(0,  A_ScriptDir . "\Settings\tmp\Screen.jpg")
+    Msg(, "客户端正在截取本机屏幕")
+    server.ServeFile(res, A_ScriptDir . "\Settings\tmp\Screen.jpg")
+    server.AddHeader(res, "Content-Disposition", "attachment; filename=Screen.jpg")
     res.status := 200
 }
 
 Fun_downFileName(ByRef req, ByRef res) {    ;辅助/downFile路径, 方便客户端获取要下载的文件名
-    if (selectedFileName) {
-        res.SetBodyText(selectedFileName)
+    if (HttpServer_FileName) {
+        res.SetBodyText(HttpServer_FileName)
         res.status := 200
     } else {
-        res.SetBodyText("请先在PC上选择文件(Win+U)")
+        res.SetBodyText("请先在PC上选择文件")
         server.AddHeader(res, "Content-type", "text/plain; charset=utf-8")
         res.status := 404
     }

@@ -53,7 +53,6 @@ ShellNavigate(sPath, bExplore=False, hWnd=0)
 		SetTitleMatchMode, %tmm%
 		For window in ComObjCreate("Shell.Application").Windows
 		{
-			msgbox % window.hWnd
 			If (window.hWnd = hWnd)
 				window.Navigate2[sPath]
 		}

@@ -22,11 +22,8 @@ lrcECHO(lrcfile,GuiTitle){
 	if hidelrc=0
 		Gui, 2:Show, NoActivate, %GuiTitle% - AhkPlayer  ; 不激活窗体避免改变当前激活的窗口
 
-	FileEncoding
-	file :=FileOpen(lrcfile,"r")
-	encoding := file.encoding
-	if(encoding!="cp936")
-		FileEncoding, %encoding%
+	File_Encode := File_GetEncoding(lrcfile)
+	FileEncoding, %File_Encode%
 
 	; 读取lrc文件的内容
 	n:=1

@@ -32,6 +32,7 @@ return ; End automatic execution
 
 ; Labels =======================================================================
 ControlHandler:
+    VarCount := ""
     If (A_GuiControl = "ButtonDir") {
         FileSelectFolder, DirSel,,, 选择目录...
         IfEqual, ErrorLevel, 1, return
@@ -51,9 +52,17 @@ ControlHandler:
         {
             Try FileRead, MatchRead, % A_LoopFileFullPath
             IfEqual, SearchStop, 1, Break
-            StringReplace, MatchRead, MatchRead, % EditString, % EditString, UseErrorLevel
-            IfEqual, ErrorLevel, 0, Continue
-            LV_Add("", ErrorLevel, A_LoopFileFullPath)
+            if !fullword
+            {
+              StringReplace, MatchRead, MatchRead, % EditString, % EditString, UseErrorLevel
+              IfEqual, ErrorLevel, 0, Continue
+            }
+            else
+            {
+              MatchRead := RegExReplace(MatchRead, "i)\b" EditString "\b", EditString, VarCount) 
+              IfEqual, VarCount, 0, Continue
+            } 
+            LV_Add("", (VarCount != "") ? VarCount : ErrorLevel, A_LoopFileFullPath)
             LV_ModifyCol(1, "AutoHdr")
             LV_ModifyCol(2, "AutoHdr")
             SB_SetText("`t`t搜索 " A_Index . " 个文件, (" LV_GetCount() "个匹配)", 2)
@@ -64,6 +73,7 @@ ControlHandler:
         GuiControl, Disable, ButtonStop
         GuiControl, Enable, ButtonSearch
         GuiControl, Enable, OpenFileFullPath
+        GuiControl, Enable, OpenFile
         
         SB_SetText("扫描完毕", 1)
     } Else If (A_GuiControl = "ButtonStop") {
@@ -76,7 +86,15 @@ LV_GetText(FileFullPath, LV_GetNext("F"), 2)
 If Fileexist(FileFullPath)
 Run,% "explorer.exe /select," FileFullPath
 else
-msgbox,未选中或文件不存在
+msgbox,未选中或文件不存在。
+Return
+
+OpenFile:
+LV_GetText(FileFullPath, LV_GetNext("F"), 2)
+If Fileexist(FileFullPath)
+Run,"D:\Program Files\Editor\Notepad2\Notepad2.exe"  "%FileFullPath%"
+else
+msgbox,未选中或文件不存在。
 Return
 
 LV1x:
@@ -97,8 +115,8 @@ if A_GuiEvent = DoubleClick
   if Ext in %Extensions%
     {
     try
-    run, notepad "%c2%"
-		;run, "D:\Program Files\Editor\Notepad3\Notepad3.exe" "%c2%"
+    ;run, notepad "%c2%"
+		run, "D:\Program Files\Editor\Notepad3\Notepad3.exe" "%c2%"
        ;- open with notepad or other editors
     }
   }
@@ -155,6 +173,7 @@ GuiCreate() {
     Gui, Add, Text, xs y+20 w460 BackgroundTrans, 字符:
     Gui, Add, Edit, y+10 w460 vEditString, % EditString
     GuiControl,choose,EditDir,% EditDir
+    Gui, Add, CheckBox, xs y+10 h20 vfullword,全字符匹配(单词边界)
 
     Gui, Tab, 2
     Gui, Add, ListView, w460 r10 vListView Grid +altsubmit vLV1 gLV1x, 找到次数|文件路径
@@ -162,7 +181,8 @@ GuiCreate() {
     Gui, Tab
     Gui, Add, Button, w80 h24 default vButtonSearch gControlHandler, 搜索   
     Gui, Add, Button, x+10 w80 h24 vButtonStop gControlHandler Disabled, 停止
-    Gui, Add, Button, x+10 w100 h24 vOpenFileFullPath gOpenFileFullPath Disabled, 打开文件位置    
+    Gui, Add, Button, x+10 w100 h24 vOpenFileFullPath gOpenFileFullPath Disabled, 打开文件位置
+    Gui, Add, Button, x+10 w100 h24 vOpenFile gOpenFile Disabled, 打开文件  
     
     Gui, Add, StatusBar,,
     SB_SetParts(120)

@@ -58,7 +58,7 @@ http://www.autohotkey.com/forum/topic18146.html
 http://wwww.snow518.cn  
 
 18.Hi, Eddy--------------Eddy  
-http://www.hieddy.com/  
+~~http://www.hieddy.com/~~
 
 19.智能重命名----------------JSLover  
 http://jslover.secsrv.net/AutoHotkey/Scripts/Rename-Manager.ahk  
@@ -130,7 +130,8 @@ http://www.cnblogs.com/easysky/p/4931042.html
 40.RunZ | 专业的快速启动工具  
 https://github.com/goreliu/runz  
 
-41.COM.ahk,VA.ahk,Gdip.ahk 等等  
+41.库文件
+VA.ahk,Gdip.ahk,tf.ahk,Class_SQLiteDB.ahk,Class_RichEdit.ahk 等等  
 
 42.AHKhttp  
 https://github.com/zhamlin/AHKhttp  
@@ -140,7 +141,7 @@ https://github.com/jleb/AHKsock
 
 44.Media-Remote-Control  
 https://github.com/sunwind/Media-Remote-Control  
-https://autohotkey.com/boards/viewtopic.php?f=6&t=32336
+https://autohotkey.com/boards/viewtopic.php?f=6&t=32336  
 
-44.ahk-remote-control(Tasker 项目的导出文件来源)  
-https://github.com/bjc5233/ahk-remote-control
+45.ahk-remote-control(Tasker 项目的导出文件来源)  
+https://github.com/bjc5233/ahk-remote-control  

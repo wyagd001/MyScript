@@ -304,13 +304,10 @@ StarPlay:
 Gplay:
 if (mp3!="位置")
 {
-oldEncode:=A_FileEncoding
-FileEncoding, UTF-8
 FileRead, tempV, %historyFile%
-file := FileOpen(historyFile, "w", "UTF-8")
+file := FileOpen(historyFile, "w", "UTF-16")
 file.Write(mp3 "`r`n" tempV)
 file.close()
-FileEncoding, % oldEncode
 tempV:=""
 }
 	hSound := MCI_Open(Mp3, "myfile")
@@ -333,13 +330,10 @@ Gplay2:
 	IniWrite, %mp3%, %run_iniFile%, AhkPlayer, Mp3Playing
 if (mp3!="位置")
 {
-oldEncode:=A_FileEncoding
-FileEncoding, UTF-8
 FileRead, tempV, %historyFile%
-file := FileOpen(historyFile, "w", "UTF-8")
+file := FileOpen(historyFile, "w", "UTF-16")
 file.Write(mp3 "`r`n" tempV)
 file.close()
-FileEncoding, % oldEncode
 tempV:=""
 }
 	if (PlayListdefalut="t") && (PlayRandom = "f")
@@ -984,12 +978,12 @@ return
 else  ; 历史列表
 {
 LV_Delete()
-file := FileOpen(historyFile, "r", "UTF-8")
+file := FileOpen(historyFile, "r", "UTF-16")
 history:=""
 loop,100
 history.=file.ReadLine()
 file.Close()
-file :=FileOpen(historyFile, "w", "UTF-8")
+file :=FileOpen(historyFile, "w", "UTF-16")
 file.Write(history)
 file.Close()
 history:=""
