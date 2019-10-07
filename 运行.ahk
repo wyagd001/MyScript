@@ -1659,10 +1659,10 @@ return
 #include %A_ScriptDir%\Lib\Class_SQLiteDB.ahk
 #include %A_ScriptDir%\Lib\Class_JSON.ahk
 #include %A_ScriptDir%\Lib\Class_WinHttp.ahk
-#include %A_ScriptDir%\Lib\Class_WinRing0.ahk
-#Include *i %A_ScriptDir%\Lib\进制转换.ahk
-#Include *i %A_ScriptDir%\Lib\string.ahk
-#include, %A_ScriptDir%\lib\AHKhttp.ahk
+#include %A_ScriptDir%\Lib\Class_Interception.ahk
+#Include %A_ScriptDir%\Lib\进制转换.ahk
+#Include %A_ScriptDir%\Lib\string.ahk
+#include %A_ScriptDir%\lib\AHKhttp.ahk
 #include <AHKsock>
 #include <URL>
 #include *i %A_ScriptDir%\Script\AutoInclude.ahk
