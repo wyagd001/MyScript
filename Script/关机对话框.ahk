@@ -38,7 +38,7 @@ ShutdownDialog:
 if SubStr(A_OSVersion,1,3) = "10."
 {
    sleep 2000
-   WinRing0.KeyPress("escape")
+   Interception.send("Esc", 1)
    sleep 500
    send {esc}
    sleep 400

@@ -6,6 +6,8 @@
 ; http://www.autohotkey.com/forum/topic44873.html
 ; 2000下弹出U盘无效 XP下弹出后，盘符图标还在，托盘仍有显示
 ; https://autohotkey.com/boards/viewtopic.php?t=4491
+; Eject() : For Removable storage devices
+; https://www.autohotkey.com/boards/viewtopic.php?f=6&t=4491
 
 弹出U盘:
 Devs =  `r`n
@@ -289,50 +291,70 @@ DeviceEject( DeviceID ) {
  DllCall( "FreeLibrary", UInt,hMod )
 }
 
-Eject( DRV  ) {                       ;  By SKAN,  http://goo.gl/pUUGRt,  CD:01/Sep/2014 | MD:13/Sep/2014
-Local hMod, hVol, queryEnum, VAR := "", sPHDRV := "", nDID := 0, nVT := 1, nTC := A_TickCount 
-Local IOCTL_STORAGE_GET_DEVICE_NUMBER := 0x2D1080, STORAGE_DEVICE_NUMBER,  FILE_DEVICE_DISK := 0x00000007 
+Eject(DRV, DontCheck:=0, DontEject:=0) {  ;       By SKAN on CT91/D29R @ goo.gl/pUUGRt  
+Local  STORAGE_DEVICE_NUMBER, IOCTL_STORAGE_GET_DEVICE_NUMBER:=0x2D1080    
+Local  OPEN_EXISTING:=3, hVol:=0, sPHDRV:="", qStr:="", qEnum:= "", nDID:=0, nVT:=1
+Local  AMT := "[Removable Media][External hard disk media]", dObj:={}, VT, VAR 
 
-  DriveGet, VAR, Type, % DRV := SubStr( DRV, 1, 1 ) ":"
-  If ( VAR = "" )
-     Return  ( ErrorLevel := -1 ) + 1
-        
-  If ( VAR = "CDROM" ) {
-     Drive, Eject, %DRV%  
-     If ( nTC + 1000 > A_Tickcount ) 
-        Drive, Eject, %DRV%, 1
-     Return  ( ErrorLevel ? 0 : 1 )
-  } 
+  hVol := DllCall("CreateFile", "Str","\\.\" . (DRV:=SubStr(DRV,1,1) . ":"), "UInt",0
+                    ,"UInt",0, "Ptr",0,"UInt",OPEN_EXISTING, "UInt",0, "Ptr",0, "Ptr")
+  If (hVol = -1 )
+   {
+     ErrorLevel := FileExist(DRV) ? "Mapped/substitute drive" : "Invalid drive letter"
+     Return dObj
+   }
 
-; Find physical drive number from drive letter.   
-  hVol := DllCall( "CreateFile", "Str","\\.\" DRV, "Int",0, "Int",0, "Int",0, "Int",3, "Int",0, "Int",0 )
-
-  VarSetcapacity( STORAGE_DEVICE_NUMBER, 12, 0 )
-  DllCall( "DeviceIoControl", "Ptr",hVol, "UInt",IOCTL_STORAGE_GET_DEVICE_NUMBER
-         , "Int",0, "Int",0, "Ptr",&STORAGE_DEVICE_NUMBER, "Int",12, "PtrP",0, "Ptr",0 )  
-
+  VarSetcapacity(STORAGE_DEVICE_NUMBER,12,0)
+  DllCall("DeviceIoControl", "Ptr",hVol, "UInt",IOCTL_STORAGE_GET_DEVICE_NUMBER
+         ,"Int",0, "Int",0, "Ptr",&STORAGE_DEVICE_NUMBER, "Int",12, "PtrP",0, "Ptr",0)  
   DllCall( "CloseHandle", "Ptr",hVol )
+      
+  sPHDRV := "\\\\.\\PHYSICALDRIVE" . NumGet(STORAGE_DEVICE_NUMBER,4,"UInt")
+  qStr   := "Select * from Win32_DiskDrive where DeviceID='$$$'"
+  qEnum  := ComObjGet("winmgmts:").ExecQuery(StrReplace(qStr,"$$$",sPHDRV))._NewEnum()
+  qEnum[dObj]
 
-  If (  NumGet( STORAGE_DEVICE_NUMBER, "UInt" ) = FILE_DEVICE_DISK  ) 
-     sPHDRV := "\\\\.\\PHYSICALDRIVE" NumGet( STORAGE_DEVICE_NUMBER, 4, "UInt" )
-  
-; Find PNPDeviceID = USBSTOR for given physical drive
-  queryEnum := ComObjGet( "winmgmts:" ).ExecQuery( "Select * from Win32_DiskDrive "
-                      . "where DeviceID='" sPHDRV "' and InterfaceType='USB'" )._NewEnum()
-  If not queryEnum[ DRV ]
-     Return ( ErrorLevel := -2 ) + 2
-     
-  hMod := DllCall( "LoadLibrary", "Str","SetupAPI.dll", "UPtr" )
-  
-; Locate USBSTOR node and move up to its parent
-  DllCall( "SetupAPI\CM_Locate_DevNode", "PtrP",nDID, "Str",DRV.PNPDeviceID, "Int",0 )
-  DllCall( "SetupAPI\CM_Get_Parent", "PtrP",nDID, "UInt",nDID, "Int",0 )
+  If ( DontEject )
+    {
+      ErrorLevel := ""
+      Return dObj 
+    }
 
-  VarSetCapacity( VAR, 520, 0 )
-  While % ( nDID and nVT and A_Index < 4 ) 
-    DllCall( "SetupAPI\CM_Request_Device_Eject", "UInt",nDID, "PtrP",nVT, "Str",VAR, "Int",260, "Int",0 )
-  
-  DllCall("FreeLibrary", "Ptr",hMod ),    DllCall( "SetLastError", "UInt",nVT )     
+  If ! ( DontCheck || InStr(AMT, "[" . dObj.MediaType . "]", True) )
+    {
+      ErrorLevel := (dObj.MediaType=="Fixed hard disk media" 
+                 ?  "Media is a Fixed hard disk" : "Media type Unknown")
+      Return dObj 
+    }
 
-Return ( nVT ? ( ErrorLevel := -3 ) + 3 : 1 )  
+  If ! ( DllCall("GetModuleHandle", "Str","SetupAPI.dll", "Ptr") ) 
+    {
+         DllCall("LoadLibrary", "Str","SetupAPI.dll", "Ptr")
+    }
+
+  DllCall("SetupAPI\CM_Locate_DevNode", "PtrP",nDID, "Str",dObj.PNPDeviceID, "Int",0)
+  DllCall("SetupAPI\CM_Get_Parent", "PtrP",nDID, "UInt",nDID, "Int",0)
+
+  VarSetCapacity(VAR,520,0)
+  DllCall("SetupAPI\CM_Request_Device_Eject"
+          ,"UInt",nDID, "PtrP",nVT,"Str",VAR, "Int",260, "Int",0)
+
+  ErrorLevel := ( nVT=0 ? 0 : ["PNP_VetoTypeUnknown`nThe specified operation was reje"
+  . "cted for an unknown reason.","PNP_VetoLegacyDevice`nThe device does not support "
+  . "the specified PnP operation.","PNP_VetoPendingClose`nThe specified operation can"
+  . "not be completed because of a pending close operation.","PNP_VetoWindowsApp`nA M"
+  . "icrosoft Win32 application vetoed the specified operation.","PNP_VetoWindowsServ"
+  . "ice`nA Win32 service vetoed the specified operation.","PNP_VetoOutstandingOpen`n"
+  . "The requested operation was rejected because of outstanding open handles.","PNP_"
+  . "VetoDevice`nThe device supports the specified operation, but the device rejected"
+  . " the operation.","PNP_VetoDriver`nThe driver supports the specified operation, b"
+  . "ut the driver rejected the operation.","PNP_VetoIllegalDeviceRequest`nThe device"
+  . " does not support the specified operation.","PNP_VetoInsufficientPower`nThere is"
+  . " insufficient power to perform the requested operation.","PNP_VetoNonDisableable"
+  . "`nThe device cannot be disabled.","PNP_VetoLegacyDriver`nThe driver does not sup"
+  . "port the specified PnP operation.","PNP_VetoInsufficientRights`nThe caller has i"
+  . "nsufficient privileges to complete the operation.","PNP_VetoAlreadyRemoved`nThe "
+  . "device has been already removed"][nVT] )
+
+Return dObj                    
 }

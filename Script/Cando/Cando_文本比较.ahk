@@ -1,24 +1,22 @@
 Cando_文本比较:
-	IfWinExist,文字比较 ahk_class AutoHotkeyGUI
+	IfWinExist, ahk_id %GuiID%
 	{
 		Gui,66:Default 
 		if Candy_isFile
 		{
 			FileEncoding, % File_GetEncoding(CandySel)
-			fileread,default2,%CandySel%
+			fileread, default2, %CandySel%
 			FileEncoding
-			GuiControl,, textfile2,%CandySel%
-			if (strlen(default2) > 10000)
-				GuiControl,Disable,compmode
+			GuiControl,, textfile2, %CandySel%
 			t2.SetText(default2)
 		}
 		else
 		{
-			if (strlen(CandySel) > 10000)
-			GuiControl,Disable,compmode
 			t2.SetText(CandySel)
 		}
-		WinActivate,文字比较 ahk_class AutoHotkeyGUI
+		WinActivate, ahk_id %GuiID%
+		GuiControl, Focus, % t2.HWND
+		gosub UpdateSBText
 		SetTimer, WatchScrollBar, 100
 	}
 	else
@@ -29,33 +27,47 @@ Cando_文本比较:
 		if Candy_isFile
 		{
 			FileEncoding, % File_GetEncoding(CandySel)
-			fileread,default1,%CandySel%
+			fileread, default1, %CandySel%
 			FileEncoding
 			textfile1:=CandySel
 		}
 		else
 			textfile1:=""
-		twidth := 600, bwidth := 150, bwidth2 := 100, opts := "x5 y30 r40  0x100000"
+		Menu, ContextMenu, deleteall
+		Menu, ContextMenu, Add, 撤消, RichEdit_Undo
+		Menu, ContextMenu, Add, 重做, RichEdit_Redo
+		Menu, ContextMenu, Add
+		Menu, ContextMenu, Add, 剪切, RichEdit_Cut
+		Menu, ContextMenu, Add, 复制, RichEdit_Copy
+		Menu, ContextMenu, Add, 粘贴, RichEdit_Paste
+		Menu, ContextMenu, Add
+		Menu, ContextMenu, Add, 全选, RichEdit_SelAll
+		twidth := 600, bwidth := 150, bwidth2 := 100, opts := "x5 y30 r40 0x100000 gMessageHandler"
 		Gui, Add,text ,,%textfile1%
-		Gui, Add,text,x600 yp w600 vtextfile2, 
+		Gui, Add,text, x610 yp w600 vtextfile2, 
 		t1 := new RichEdit(66, opts " w" twidth)
 		t2 := new RichEdit(66, opts " w" twidth " xp" twidth)
+		t1.SetEventMask(["SELCHANGE"])   ; 监控控件消息
+		t2.SetEventMask(["SELCHANGE"])
 		Gui, Add, Button, Default w%bwidth% x520 gcompare, 比较/更新
 		Gui, Add,text, x700 yp+10 h25,模式：
-		Gui, Add, Radio,  x740 yp-8 h25 gsub Group vcompmode,字
-		Gui, Add, Radio,  x790 yp h25 gsub, 连字
-		Gui, Add, Radio,  x860 yp h25 gsub Checked,行
-		gui show,,文字比较
+		Gui, Add, Radio, x740 yp-8 h25 gsub Group vcompmode,字
+		Gui, Add, Radio, x790 yp h25 gsub, 连字
+		Gui, Add, Radio, x860 yp h25 gsub Checked,行
+		Gui, Add, Statusbar
+		SB_SetParts(610)
+		gui show,, 文字比较
+		gosub UpdateSBText
 		if Candy_isFile
 		{
 			if (strlen(default1) > 10000)
-				GuiControl,Disable,compmode
+				GuiControl, Disable, compmode
 			t1.SetText(default1)
 		}
 		else
 		{
 			if (strlen(CandySel) > 10000)
-				GuiControl,Disable,compmode
+				GuiControl, Disable, compmode
 			t1.SetText(CandySel)
 		}
 	}
@@ -64,9 +76,9 @@ return
 sub:
 	Gui Submit, NoHide
 	if (strlen(t1.GetText()) < 10000) && (strlen(t2.GetText()) < 10000)
-		GuiControl,enable,compmode
+		GuiControl, enable, compmode
 	else
-		GuiControl,Disable,compmode
+		GuiControl, Disable, compmode
 return
 
 ; https://www.autohotkey.com/boards/viewtopic.php?f=6&t=59029
@@ -74,11 +86,11 @@ return
 ; 修改为 v1 版本  不区分大小写
 compare()
 {
-	global t1, t2, compmode, c:= [], t1Arr := [], t2Arr := []
+	global t1, t2, GuiID, compmode, c:= [], t1Arr := [], t2Arr := []
 	t1text:=t1.GetText(), t1.SetText(t1text)
 	t2text:=t2.GetText(), t2.SetText(t2text)
 	t1.WordWrap("on"), t2.WordWrap("on")
-	ToolTip,正在比较文本，请等待...
+	ToolTip, 正在比较文本，请等待...
 	StartTime:=A_TickCount
 
 	if (compmode=1) && ((strlen(t1text) > 10000) or (strlen(t2text) > 10000))
@@ -151,10 +163,10 @@ compare()
 	,t1.SetSel(0, 0), t1.ScrollCaret(), t1Arr.Push(SubStr(t1text, start1 + 1))
 	,t2.SetSel(start2, -1), t2.SetFont({BkColor:"GREEN", Color:"WHITE"})
 	,t2.SetSel(0, 0), t2.ScrollCaret(), t2Arr.Push(SubStr(t2text, start2 + 1))
-	WinActivate,文字比较 ahk_class AutoHotkeyGUI
+	WinActivate, ahk_id %GuiID%
 	ElapsedTime := (A_TickCount - StartTime) / 1000
 	ElapsedTime := ZTrim(ElapsedTime)
-	CF_ToolTip("比较完成。用时: " ElapsedTime "秒。",3000)
+	CF_ToolTip("比较完成。用时: " ElapsedTime "秒。", 3000)
 return
 }
 
@@ -208,17 +220,15 @@ consolidate(tm, t)
 				; https://rosettacode.org/wiki/Longest_common_subsequence#AutoHotkey
 				; https://en.wikipedia.org/wiki/Longest_common_subsequence_problem
 				; modified to accept array of strings. Comparison is CASE SENSITIVE.
-
 		len := [], t:= []
 
 		Loop % a.Length() + 2 {   	; Initialize
 			i := A_Index - 1
  
 			Loop % b.Length() + 2 
-{
+			{
 				j := A_Index - 1, len[i, j] := 0
-
-}
+			}
 
 		}
 		
@@ -244,20 +254,141 @@ consolidate(tm, t)
 		Return t
 	}
 
+MessageHandler:
+	If (A_GuiEvent = "N")  && (NumGet(A_EventInfo + 0, A_PtrSize * 2, "Int") = 0x0702) ; EN_SELCHANGE
+	{
+		SetTimer, UpdateSBText, -10
+	}
+return
+
+66GuiContextMenu:
+	MouseGetPos, , , , HControl, 2
+	WinGetClass, Class, ahk_id %HControl%
+	If (Class = RichEdit.Class)     ; RICHEDIT50W
+	{
+		Menu, ContextMenu, Show
+	}
+Return
+
+RichEdit_Undo:
+	ControlGetFocus, FocusedControl, ahk_id %GuiID%
+	if (FocusedControl = "RICHEDIT50W1")
+	{
+		t1.Undo()
+		GuiControl, Focus, % t1.HWND
+	Return
+	}
+	if (FocusedControl = "RICHEDIT50W2")
+	{
+		t2.Undo()
+		GuiControl, Focus, % t2.HWND
+	}
+Return
+
+RichEdit_Redo:
+	ControlGetFocus, FocusedControl, ahk_id %GuiID%
+	if (FocusedControl = "RICHEDIT50W1")
+	{
+		t1.Redo()
+		GuiControl, Focus, % t1.HWND
+	Return
+	}
+	if (FocusedControl = "RICHEDIT50W2")
+	{
+		t2.Redo()
+		GuiControl, Focus, % t2.HWND
+	}
+Return
+
+RichEdit_Cut:
+	ControlGetFocus, FocusedControl, ahk_id %GuiID%
+	if (FocusedControl = "RICHEDIT50W1")
+	{
+		t1.Cut()
+		GuiControl, Focus, % t1.HWND
+	Return
+	}
+	if (FocusedControl = "RICHEDIT50W2")
+	{
+		t2.Cut()
+		GuiControl, Focus, % t2.HWND
+	}
+Return
+
+RichEdit_Copy:
+	ControlGetFocus, FocusedControl, ahk_id %GuiID%
+	if (FocusedControl = "RICHEDIT50W1")
+	{
+		t1.Copy()
+		GuiControl, Focus, % t1.HWND
+	Return
+	}
+	if (FocusedControl = "RICHEDIT50W2")
+	{
+		t2.Copy()
+		GuiControl, Focus, % t2.HWND
+	}
+Return
+
+RichEdit_Paste:
+	ControlGetFocus, FocusedControl, ahk_id %GuiID%
+	if (FocusedControl = "RICHEDIT50W1")
+	{
+		t1.Paste()
+		GuiControl, Focus, % t1.HWND
+	Return
+	}
+	if (FocusedControl = "RICHEDIT50W2")
+	{
+		t2.Paste()
+		GuiControl, Focus, % t2.HWND
+	}
+Return
+
+RichEdit_SelALL:
+	ControlGetFocus, FocusedControl, ahk_id %GuiID%
+	if (FocusedControl = "RICHEDIT50W1")
+	{
+		t1.SelALL()
+		GuiControl, Focus, % t1.HWND
+	Return
+	}
+	if (FocusedControl = "RICHEDIT50W2")
+	{
+		t2.SelALL()
+		GuiControl, Focus, % t2.HWND
+	}
+Return
+
+UpdateSBText:
+	Gui, 66:Default
+	ControlGetFocus, FocusedControl, ahk_id %GuiID%
+	if (FocusedControl = "RICHEDIT50W1")
+	{
+		Stats := t1.GetStatistics()
+		SB_SetText("左: " Stats.Line . " : " . Stats.LinePos, 1)
+	return
+	}
+	if (FocusedControl = "RICHEDIT50W2")
+	{
+		Stats := t2.GetStatistics()
+		SB_SetText("右: " Stats.Line . " : " . Stats.LinePos, 2)
+	}
+Return
+
 WatchScrollBar:
-ActiveWindow := WinExist("A")
-if not ActiveWindow  ; 没有活动窗口.
-    return
-ControlGetFocus, FocusedControl, ahk_id %ActiveWindow%
-if not FocusedControl  ; 没有焦点控件.
-    return
-IfWinActive,文字比较 ahk_class AutoHotkeyGUI
-{
-t1ScrollPos:=t1.GetScrollPos()
-t2ScrollPos:=t2.GetScrollPos()
-if (FocusedControl="RICHEDIT50W2")
-t1.SetScrollPos(0,t2ScrollPos.Y)
-}
-IfWinNotExist,文字比较 ahk_class AutoHotkeyGUI
-SetTimer, WatchScrollBar, off
+	IfWinActive,ahk_id %GuiID%
+	{
+		ControlGetFocus, FocusedControl, ahk_id %GuiID%
+		t1ScrollPos := t1.GetScrollPos()
+		t2ScrollPos := t2.GetScrollPos()
+		if (FocusedControl = "RICHEDIT50W2")
+		t1.SetScrollPos(0, t2ScrollPos.Y)
+	return
+	}
+	IfWinNotExist,ahk_id %GuiID%
+	{
+		t1 := t2 := default1 := default2 := ""
+		SetTimer, WatchScrollBar, off
+	}
 return
