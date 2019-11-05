@@ -160,7 +160,8 @@ class WinHttp
 		Loop
 		{
 			WebRequest.Send()
-			WebRequest.WaitForResponse(-1)								;WaitForResponse方法确保获取的是完整的响应。-1表示总是使用SetTimeouts设置的超时
+			WebRequest.WaitForResponse(-1)  ; 等待
+			;WaitForResponse方法确保获取的是完整的响应。-1表示总是使用SetTimeouts设置的超时
 
 			;获取状态码，一般status为200说明请求成功
 			this.Status:=WebRequest.Status()
@@ -168,7 +169,7 @@ class WinHttp
 
 			if (Options["expected_status"]="" or Options["expected_status"]=this.Status)
 				break
-			;尝试指定次数后页面返回的状态码依旧与预期状态码不一致，则抛出错误及详细错误信息（可使用我另一个错误处理函数专门记录处理它们）
+				;尝试指定次数后页面返回的状态码依旧与预期状态码不一致，则抛出错误及详细错误信息（可使用我另一个错误处理函数专门记录处理它们）
 			;即使number_of_retries为空，表达式依然成立，所以不用为number_of_retries设置初始值。
 			else if (A_Index>=Options["number_of_retries"])
 			{
@@ -180,7 +181,7 @@ class WinHttp
 			}
 		}
 
-		if (Options["Charset"]<>"") or (FilePath<>"")						;设置字符集 或保存文件
+		if (Options["Charset"]<>"") or (FilePath<>"")						;设置字符集或保存文件
 		{
 			this.ResponseHeaders:=this.解析信息到对象(WebRequest.GetAllResponseHeaders())
 			ADO:=ComObjCreate("adodb.stream")   		;使用 adodb.stream 编码返回值。参考 http://bbs.howtoadmin.com/ThRead-814-1-1.html

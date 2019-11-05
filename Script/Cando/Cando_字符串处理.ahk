@@ -51,7 +51,8 @@ Cando_等号对齐:
 		IfNotInString,A_loopfield,=              ;本行没有等号，过
 			Continue
 		ItemLeft :=RegExReplace(A_LoopField,"\s*(.*?)\s*=.*$","$1")        ;本条目的 等号 左侧部分
-		ThisLen:=StrLen(regexreplace(ItemLeft,"[^\x00-\xff]","11"))       ;本条左侧的长度
+		;ThisLen:=StrLen(regexreplace(ItemLeft,"[^\x00-\xff]","11"))       ;本条左侧的长度
+		ThisLen:=DllCall("MSVCRT.DLL\strlen", "AStr", ItemLeft)       ;本条左侧的长度
 		MaxLen:=( ThisLen > MaxLen And ThisLen <= LimitMax) ? ThisLen : MaxLen       ;得到小于LimitMax内的最大的长度，这个是最终长度
 	}
 	loop, parse, CandySel, `n,`r

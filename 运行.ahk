@@ -884,7 +884,7 @@ if Auto_AhkServer
 StoredLogin:=CF_IniRead(run_iniFile, "serverConfig","StoredLogin", "admin")
 StoredPass:=CF_IniRead(run_iniFile, "serverConfig","StoredPass", 1234)
 LoginPass:=CF_IniRead(run_iniFile, "serverConfig","LoginPass", 0)
-buttonSize:=CF_IniRead(run_iniFile, "serverConfig","buttonSize", "40px")
+buttonSize:=CF_IniRead(run_iniFile, "serverConfig","buttonSize", "30px")
 serverPort:=CF_IniRead(run_iniFile, "serverConfig","serverPort", "8000")  ; 端口号 设置为 2525 默认 8000
 textFontSize:=CF_IniRead(run_iniFile, "serverConfig","textFontSize", "16px")
 pagePadding:=CF_IniRead(run_iniFile, "serverConfig","pagePadding", "50px")
@@ -920,7 +920,7 @@ If Auto_Update
 	{
 		WinHttp.URLGet("https://raw.githubusercontent.com/wyagd001/MyScript/master/version.txt",,, update_txtFile)
 		FileGetSize, sizeq,%update_txtFile%
-		If(sizeq<20)
+		If(sizeq<20) and (sizeq!=0)
 		{
 			FileReadLine, CurVer, %update_txtFile%, 1
 			If(CurVer!=AppVersion)

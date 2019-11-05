@@ -12,13 +12,15 @@ Index_Html =
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <style>
 p {
-  font-family: Arial,Helvetica,sans-serif;
+  font-family: sans-serif;
   font-size: %textFontSize%;
 }
 
 button {
-  font-family: Arial,Helvetica,sans-serif;
+  font-family: sans-serif;
   font-size: %buttonSize%;
+  height: 48px;
+  vertical-align:middle;
 }
 
 h1 {
@@ -79,9 +81,9 @@ window.location.href="/";
 <p>
 <a href="/standby"> <button> 待机 </button> </a>
 <a href="/hibernate"> <button> 休眠 </button> </a>
-<a href="/monitorOnOff"> <button> 屏幕开关 </button> </a>
+<a href="/monitoronoff"> <button> 屏幕开关 </button> </a>
 <a href="/logout"> <button> 退出登录 </button> </a>
-<a href="/serverReload"> <button> 重启服务 </button> </a>
+<a href="/serverreload"> <button> 重启服务 </button> </a>
 </p>
 
 <p> &nbsp; </p>
@@ -91,19 +93,31 @@ window.location.href="/";
 <a href="/mp3"> <button>mp3</button> </a> 
 <a href="/excel" download="%excelFileName%"> <button>xls</button> </a>
 <a href="/txt" download="%txtFileName%"> <button>txt</button> </a>
-<a href="/downFile"> <button>文件(Cando)</button> </a>
-<a href="/printscreenToDown"> <button>电脑截屏</button> </a>
+<a href="/downfile"> <button>文件(Cando)</button> </a>
+<a href="/printscreentodown"> <button>电脑截屏</button> </a>
 </p>
+<p> &nbsp; </p>
+
+<p>文件上传(尚未实现)</p>
+  <form action="/upload" method="POST" enctype="multipart/form-data">  
+    <!--input style="color:#c2c2c2; background-color: white; vertical-align:middle;" type="file" name="file" /--!>  
+<span>
+    <!--input style="width: 0px; height: 0px; vertical-align:middle;" type="hidden" value="上传" / --!>  
+</sapn>
+  </form>  
+<p> &nbsp; </p>
 
 <p>发送文本</p>
 <form action="/submit" method="get">
-<input type="text" id="1234" name="mytext" value="%mytext%" />
-<input type=submit style="width: 80px; height: 55px;" value="保存文字"/>  
+<input style="vertical-align:middle;" type="text" id="1234" name="mytext" value="%mytext%" />
+<span>
+<input type=submit style="width: 80px; height: 55px; vertical-align:middle;" value="保存文字" />  
+</sapn>
 <!-- <a href="/submit"> <button> 提交 </button> </a> --!>
 </form>
+<p> &nbsp; </p>
 
 <p>运行命令</p>
-
 <!--select标签和input外面的span标签的格式是为了使两个位置在同一位置，控制位置-->
 <!--有name属性都会提交-->
 <form action="/runcom" method="get">
@@ -120,10 +134,10 @@ onChange="javascript:document.getElementById('ccdd').value=document.getElementBy
 </select> 
 </span> 
 <span style="position:absolute;border-top:1pt solid #c1c1c1;border-left:1pt solid #c1c1c1;border-bottom:1pt solid #c1c1c1;width:700px;height:50px;"> 
-<input type="text" name="ccdd" id="ccdd" placeholder="请输入要运行的内容, 回车提交">
+<input type="text" name="ccdd" id="ccdd" placeholder="请输入要运行的内容, 回车提交" />
 </span>
 <span> 
-<input type="submit" style="width: 80px; height: 50px;" value="提交"/>
+<input type="submit" style="width: 80px; height: 50px;" value="提交" />
 </span> 
 </form>
 
@@ -193,15 +207,15 @@ paths["/music"] := Func("Func_music")
 paths["/vp"] := Func("vp")
 paths["/vm"] := Func("vm")
 paths["/u_m"] := Func("u_m")
-paths["/vHigh"] := Func("vHigh")
-paths["/vMed"] := Func("vMed")
-paths["/vLow"] := Func("vLow")
+paths["/vhigh"] := Func("vHigh")
+paths["/vmed"] := Func("vMed")
+paths["/vlow"] := Func("vLow")
 
 paths["/standby"] := Func("standby")
 paths["/hibernate"] := Func("hibernate")
-paths["/monitorOnOff"] := Func("monitorOnOff")
+paths["/monitoronoff"] := Func("monitorOnOff")
 paths["/logout"] := Func("logout")
-paths["/serverReload"] := Func("serverReload")
+paths["/serverreload"] := Func("serverReload")
 
 paths["/submit"] := Func("submit")
 paths["/runcom"] :=Func("runcom")
@@ -213,9 +227,11 @@ paths["/getchromeurl"] := Func("Func_getchromeUrl")
 paths["/mp3"] := Func("mp3")
 paths["/excel"] := Func("excel")
 paths["/txt"] := Func("txt")
-paths["/downFile"] := Func("Fun_downFile")
-paths["/printscreenToDown"] := Func("Fun_printscreenToDown")
-paths["/downFileName"] := Func("Fun_downFileName")
+paths["/downfile"] := Func("Func_downFile")
+paths["/downfilename"] := Func("Func_downFileName")
+paths["/printscreentodown"] := Func("printscreenToDown")
+paths["/upload"] := Func("upload")
+paths["/downClientFile"] := Func("Fun_downClientFile")
 
 paths["404"] := Func("NotFound")
 
@@ -223,7 +239,8 @@ global server := new HttpServer()
 server.LoadMimes(A_ScriptDir . "/lib/mime.types")
 server.SetPaths(paths)
 server.Serve(serverPort)
-global url := new URL()
+global clientWebServerUrl := "http://192.168.1.214:10000"
+global urlUtil := new URL()
 return
 
 Logo(ByRef req, ByRef res, ByRef server) {
@@ -464,11 +481,11 @@ Func_setClip(ByRef req, ByRef res) {
     mobileClip := bodyMap["clip"]
     mobileUrl := bodyMap["url"]
     if (mobileClip) {
-        Clipboard := url.Decode(mobileClip)
+        Clipboard := urlUtil.Decode(mobileClip)
         CF_ToolTip("remoteControl:文字已复制!")
     }
     if (mobileUrl) {
-        mobileUrl := url.Decode(mobileUrl)
+        mobileUrl := urlUtil.Decode(mobileUrl)
         FoundPos := RegExMatch(mobileUrl, "(http|ftp|https|file)://[\w]{1,}([\.\w]{1,})+[\w-_/?&=#%:]*", mobileUrl2) ; 校验\分离出url
         if (FoundPos != 0) {
             run, %mobileUrl2%
@@ -639,7 +656,15 @@ res.headers["content-disposition"] := "attachment; filename=" txtFileName
     res.SetBody(data, length)
 }
 
-Fun_downFile(ByRef req, ByRef res) {
+
+upload(ByRef req, ByRef res) {
+				fileappend,% Array_ToString(req),%A_ScriptDir%\bbbb.txt
+res.status := 200
+tooltip 处理完毕！
+}
+
+
+Func_downFile(ByRef req, ByRef res) {
     if (!HttpServer_File) {
         res.SetBodyText("请先在PC上选择文件")
         server.AddHeader(res, "Content-type", "text/plain; charset=utf-8")
@@ -651,7 +676,7 @@ Fun_downFile(ByRef req, ByRef res) {
     res.status := 200
 }
 
-Fun_printscreenToDown(ByRef req, ByRef res) {
+printscreenToDown(ByRef req, ByRef res) {
     CaptureScreen(0, True, 0)
     Convert(0,  A_ScriptDir . "\Settings\tmp\Screen.jpg")
     Msg(, "客户端正在截取本机屏幕")
@@ -660,7 +685,7 @@ Fun_printscreenToDown(ByRef req, ByRef res) {
     res.status := 200
 }
 
-Fun_downFileName(ByRef req, ByRef res) {    ;辅助/downFile路径, 方便客户端获取要下载的文件名
+Func_downFileName(ByRef req, ByRef res) {    ;辅助/downFile路径, 方便客户端获取要下载的文件名
     if (HttpServer_FileName) {
         res.SetBodyText(HttpServer_FileName)
         res.status := 200
@@ -671,8 +696,33 @@ Fun_downFileName(ByRef req, ByRef res) {    ;辅助/downFile路径, 方便客户端获取要
     }
 }
 
+Fun_downClientFile(ByRef req, ByRef res) {
+    bodyMap := ParseBody(req.body)
+    clientFilePath := bodyMap["filePath"]
+    clientFileName := bodyMap["fileName"]
+    if !clientFileName
+    {
+      ftext:= "%2F"
+      StringGetPos, hPos, clientFilePath, % ftext, R1
+      StringMid, clientFileName, % clientFilePath, % hPos+4
+    }
+    if (!StrLen(clientFilePath) || !StrLen(clientFileName)) {
+        res.SetBodyText("/downClientFile=> 需要配置参数filePath fileName")
+        res.status := 404
+    } else {
+        clientFileName := urlUtil.Decode(clientFileName)
+        clientFileDownPath := "N:\" clientFileName
+        clientFileDownUrl := clientWebServerUrl "/download?path=" clientFilePath
+        WinHttp.URLGet(clientFileDownUrl, "","",clientFileDownPath)
+        ;TODO 下载失败通知  DownloadSync失败需要返回处理(返回false)
+        Msg(,"下载文件[" clientFileName "]成功!")
+        res.SetBodyText("/downClientFile=> 文件下载成功:" clientFileDownPath)
+        res.status := 200
+    }
+}
+
 NotFound(ByRef req, ByRef res) {
-    res.SetBodyText("Page not found")
+    res.SetBodyText("找不到网页")
 }
 
 ;========================= 公共函数 =========================

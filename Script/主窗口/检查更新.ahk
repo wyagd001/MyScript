@@ -20,7 +20,7 @@ If InternetCheckConnection(URL)
 	return
 	}
 	FileGetSize, sizeq,%update_txtFile%
-	if(sizeq>20)
+	if(sizeq>20) or (sizeq=0)
 	{
 		msgbox,,升级通知,下载的更新文件大小不符，请检查您的网络连接。
 		FileDelete, %update_txtFile%

@@ -21,8 +21,8 @@
 		UTF-8  - text Utf-8 File (UTF-8 + BOM)
 		UTF-8-RAW  - UTF-8 无签名. 
 		对于 UTF-8-RAW 的说明：
-		1.文件小于20k 读取整个文件, 必须带有中文字符串(文件中存在乱码时可能得到错误的结果), 才能和 CP936 区分开.
-		2.文件大于20k 读取文件前9个字节，前3个字符为中文时才有较大可能取得正确的结果, 才能和 CP936 区分开。
+		1.文件小于100k 读取整个文件, 必须带有中文字符串(文件中存在乱码时可能得到错误的结果), 才能和 CP936 区分开.
+		2.文件大于100k 读取文件前9个字节，前3个字符为中文时才有较大可能取得正确的结果, 才能和 CP936 区分开。
 */
 
 ; isBinFile
@@ -43,8 +43,8 @@ File_GetEncoding(aFile, aNumBytes = 0, aMinimum = 4)
 	;force position to 0 (zero)
 	_hFile.Position := 0
 
-	; 文件小于20k,则读取整个文件
-	_nBytes := (_hFile.length < 20480) ? (_hFile.RawRead(_rawBytes, _hFile.length)) : (aNumBytes > 0) ? (_hFile.RawRead(_rawBytes, aNumBytes)) : (_hFile.RawRead(_rawBytes, 9))
+	; 文件小于100k,则读取整个文件
+	_nBytes := (_hFile.length < 1024000) ? (_hFile.RawRead(_rawBytes, _hFile.length)) : (aNumBytes > 0) ? (_hFile.RawRead(_rawBytes, aNumBytes)) : (_hFile.RawRead(_rawBytes, 9))
 
 	_hFile.Close()
 
