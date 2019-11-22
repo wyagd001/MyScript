@@ -11,7 +11,8 @@
 	Loop, % CHPIFNo := CHPIFArray.Length()
 	{
 		temp_V := ""
-		temp_V := SubStr(getFromTable("history", "data", "id=" CHPIFArray[A_index])[1], 1, 40)
+		tpos:=InStr(temp_Va := getFromTable("history", "data", "id=" CHPIFArray[A_index])[1], "`n")
+		temp_V := SubStr(temp_Va, 1, tpos=0?40:tpos<40?tpos-2:40) . (tpos=0?"":" ... (多行)")
 		cliphistoryPIList .= A_index "." temp_V "`n"
 	}
 	Num := 9 - CHPIFNo
@@ -19,21 +20,15 @@
 	Loop, % Num
 	{
 		temp_V := ""
-		temp_V := SubStr(cliphistoryPI[A_index], 1, 40)
+		tpos:=InStr(temp_Va := cliphistoryPI[A_index], "`n")
+		temp_V := SubStr(temp_Va, 1, tpos=0?40:tpos<40?tpos-2:40) . (tpos=0?"":" ... (多行)")
 		cliphistoryPIList .= A_index + CHPIFNo "." temp_V "`n"
 	}
 	ToolTip, % cliphistoryPIList, A_CaretX + 10, A_CaretY + 20
+	WinActivate, ahk_class tooltips_class32
 	CHPITooltip := 1
+	settimer DCHPITooltip, -10000
 return
-
-DCHPITooltip()
-{
-	global CHPITooltip
-	ToolTip
-	CHPITooltip := 0
-	CHPIFArray := cliphistoryPIList := CHPIFNo :=cliphistoryPI := ""
-return
-}
 
 #if CHPITooltip
 Space::CHPI2Screen(1)
@@ -47,6 +42,7 @@ Space::CHPI2Screen(1)
 8::CHPI2Screen(8)
 9::CHPI2Screen(9)
 Esc::DCHPITooltip()
+~LButton::Gosub MenuClick
 #if
 
 CHPI2Screen(Num)
@@ -73,3 +69,28 @@ CHPI2Screen(Num)
 	DCHPITooltip()
 return
 }
+
+DCHPITooltip()
+{
+	global CHPITooltip
+	ToolTip
+	settimer DCHPITooltip, Off
+	CoordMode, Mouse, Screen
+	CHPITooltip := 0, CHPIFArray := cliphistoryPIList := CHPIFNo :=cliphistoryPI := ""
+return
+}
+
+MenuClick:
+	IfWinNotActive, ahk_class tooltips_class32
+	{
+		DCHPITooltip()
+	Return
+	}
+	CoordMode, Mouse, Relative
+	MouseGetPos, , mY
+	mY -= 38
+	IfLess, mY, 1, Return
+	mY /= 17
+	CHPI2Screen(mY+1)
+	DCHPITooltip()
+return

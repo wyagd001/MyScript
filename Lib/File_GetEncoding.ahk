@@ -44,7 +44,7 @@ File_GetEncoding(aFile, aNumBytes = 0, aMinimum = 4)
 	_hFile.Position := 0
 
 	; 文件小于100k,则读取整个文件
-	_nBytes := (_hFile.length < 1024000) ? (_hFile.RawRead(_rawBytes, _hFile.length)) : (aNumBytes > 0) ? (_hFile.RawRead(_rawBytes, aNumBytes)) : (_hFile.RawRead(_rawBytes, 9))
+	_nBytes := (_hFile.length < 102400) ? (_hFile.RawRead(_rawBytes, _hFile.length)) : (aNumBytes > 0) ? (_hFile.RawRead(_rawBytes, aNumBytes)) : (_hFile.RawRead(_rawBytes, 9))
 
 	_hFile.Close()
 

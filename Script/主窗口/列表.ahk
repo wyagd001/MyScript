@@ -1,12 +1,12 @@
 ;目标文件夹的文件列表
 liebiao:
-if !TargetFolder or !FileExist(TargetFolder)
-{
-TargetFolder=
-IniWrite,%TargetFolder%, %run_iniFile%,路径设置, TargetFolder
-msgbox,没有设置目标文件夹，请拖拽文件夹到窗口或选择一个文件夹。
-return
-}
+	if !TargetFolder or !FileExist(TargetFolder)
+	{
+		TargetFolder=
+		IniWrite,%TargetFolder%, %run_iniFile%,路径设置, TargetFolder
+		msgbox,没有设置目标文件夹，请拖拽文件夹到窗口或选择一个文件夹。
+	return
+	}
 
 rootdir := TargetFolder       ;快捷方式目录
 updatealways =1      ;1自动刷新，0禁止自动刷新

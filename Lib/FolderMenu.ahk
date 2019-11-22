@@ -7,11 +7,12 @@
 ; MenuName               是否指定菜单名称，类型：字符串，默认值为空
 ; ShowIcon               菜单是否带图标，类型：布尔值 0 或 1，默认值 1
 ; ShowOpenFolderMenu     是否显示子文件夹的“打开”菜单，类型：布尔值 0 或 1，默认值 1
-;                        特殊值 2，在底部显示主目录的打开菜单
+;                        特殊值 2, 效果等同于 0，不同的在于在底部显示主目录的打开菜单
 ; Showhide               是否显示隐藏文件，类型：布尔值 0 或 1，默认值 0
 ; FolderFirst            子文件夹在前，类型：布尔值 0 或 1，默认值 1
-;                        值为 1 时，文件菜单按文件名排序（中文排序不准），值为 0 时，不排序(按loop文件的顺序)
+;                        值为 1 时，文件菜单按文件名排序(中文排序不准)，值为 0 时，不排序(按loop文件的顺序)
 ; FolderMenu 函数返回值  菜单名称 MenuName
+;                        子文件夹数量超过 50，文件数量超过 500，返回空值
 
 
 FolderMenu(FolderPath, SpecifyExt:="*", MenuName:="",ShowIcon:=1, ShowOpenFolderMenu:=1, Showhide:=0, FolderFirst:=1)
@@ -32,6 +33,11 @@ FolderMenu(FolderPath, SpecifyExt:="*", MenuName:="",ShowIcon:=1, ShowOpenFolder
 		ExistSubMenuName:={}
 		Loop, %FolderPath%\*.%SpecifyExt%, 0, 1  ; 文件
 		{
+			if (A_Index > 500)
+			{
+				msgbox, ,目录菜单创建失败, 选定文件夹内文件过多，无法创建菜单。`n限制数量`n文件夹：50，文件：500。
+			return
+			}
 			if !Showhide
 			{
 				if A_LoopFileAttrib contains H,R,S  ; 跳过具有 H(隐藏), R(只读) 或 S(系统) 属性的任何文件. 注意: 在 "H,R,S" 中不含空格.
@@ -54,24 +60,26 @@ FolderMenu(FolderPath, SpecifyExt:="*", MenuName:="",ShowIcon:=1, ShowOpenFolder
 			;msgbox %  pos "`n" A_LoopFileLongPath "`n" ParentFolderDirectory "`n" A_LoopFileName
 			FileMenuName := (A_LoopFileExt!="lnk")?A_LoopFileName:StrReplace(A_LoopFileName, ".lnk")
 			BoundRun := Func("Run").Bind(A_LoopFileLongPath)
+			Menu, %ParentFolderDirectory%, add, %FileMenuName%, %BoundRun%
 			if ShowIcon
-				Menu, %ParentFolderDirectory%, add, %FileMenuName%, %BoundRun%
-			FolderMenu_AddIcon(ParentFolderDirectory, FileMenuName)
+				FolderMenu_AddIcon(ParentFolderDirectory, FileMenuName)
 		}
 	}
 
 	Loop, %FolderPath%\*.*, 2, 1   ; 文件夹
 	{
+		if (A_Index > 50)
+		{
+			msgbox, ,目录菜单创建失败, 选定文件夹内文件过多，无法创建菜单。`n限制数量`n文件夹：50，文件：500。
+		return
+		}
 		if !Showhide
 		{
 			if A_LoopFileAttrib contains H,R,S  ; 跳过具有 H(隐藏), R(只读) 或 S(系统) 属性的任何文件. 注意: 在 "H,R,S" 中不含空格.
 			continue  ; 跳过这个文件并前进到下一个.
 		}
 		StringGetPos, pos, A_LoopFileLongPath, \, R
-		;if (pos <> -1) ; it has a parent
 			StringLeft, ParentFolderDirectory, A_LoopFileLongPath, %pos%
-		;if (pos = -1) ; it has no parent 
-		;	ParentFolderDirectory := FolderPath
 		;msgbox %  pos "`n" A_LoopFileLongPath "`n" ParentFolderDirectory "`n" A_LoopFileName
 		ParentFolderDirectory := (ParentFolderDirectory=FolderPath) ? MenuName : ParentFolderDirectory
 		if FolderFirst || !ExistSubMenuName[A_LoopFileLongPath]
@@ -118,6 +126,11 @@ FolderMenu(FolderPath, SpecifyExt:="*", MenuName:="",ShowIcon:=1, ShowOpenFolder
 	{
 		Loop, %FolderPath%\*.%SpecifyExt%, 0, 1  ; 文件
 		{
+			if (A_Index > 500)
+			{
+				msgbox, ,目录菜单创建失败, 选定文件夹内文件过多，无法创建菜单。`n限制数量`n文件夹：50，文件：500。
+			return
+			}
 			FileList .= A_LoopFileLongPath "`n"
 		}
 		Sort, FileList, \
@@ -153,7 +166,7 @@ FolderMenu(FolderPath, SpecifyExt:="*", MenuName:="",ShowIcon:=1, ShowOpenFolder
 	return MenuName
 }
 
-Run( a) {
+Run(a) {
 	run, %a%
 }
 

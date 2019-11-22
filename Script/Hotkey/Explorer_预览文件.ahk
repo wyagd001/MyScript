@@ -5,14 +5,16 @@ return
 
 #ifWinActive ahk_Group ccc
 $Space::
+
 ;重命名时，直接发送空格
 if(A_Cursor="IBeam") or IsRenaming()
 {
  send {space}
  return
 }
+Files := ""
 Files := ShellFolder(0,2)
-if !Files or f_IsFolder(Files) or instr(CandySel,"`n")
+if !Files or f_IsFolder(Files)
 {
  send {space}
  return
@@ -327,7 +329,7 @@ return
 
 FileGetSize, File_Size, % files
 FileEncoding, % File_Encode
-	if (File_Size > 20480) && ((File_Encode = "CP936") or (File_Encode = "UTF-8-RAW"))
+	if (File_Size > 102400) && ((File_Encode = "CP936") or (File_Encode = "UTF-8-RAW"))
 	{
 		FileReadLine, LineVar, % files, 1
 		MsgBox, 36, 选择源文件的编码ANSI/UTF-8, 文件第一行内容: %LineVar%`n当前使用编码为: %File_Encode%`n文本正常显示点击"是"，否则点击"否"。, 2

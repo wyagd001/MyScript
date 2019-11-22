@@ -22,7 +22,7 @@ If InternetCheckConnection(URL)
 	FileGetSize, sizeq,%update_txtFile%
 	if(sizeq>20) or (sizeq=0)
 	{
-		msgbox,,升级通知,下载的更新文件大小不符，请检查您的网络连接。
+		msgbox,,升级通知,下载的更新文件大小不符，网络连接超时或资源访问出错。
 		FileDelete, %update_txtFile%
 	return
 	}
@@ -30,7 +30,7 @@ If InternetCheckConnection(URL)
 	If not ErrorLevel
 	{
 		FileDelete, %update_txtFile%
-		if(CurVer!=AppVersion)
+		if(Trim(CurVer)!=AppVersion)
 		{
 			msgbox,262148,升级通知,当前版本为:%AppVersion%`n最新版本为:%CurVer%`n是否前往主页下载？
 			IfMsgBox Yes
