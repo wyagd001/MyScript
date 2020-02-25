@@ -1124,8 +1124,20 @@ Return
 EditLrc:
 	IfExist,%LrcPath%\%name%.lrc
 		run,%lrceditor% %LrcPath%\%name%.lrc
+	else
+	{
+		newname:=StrReplace(name, " - ", "-",,1)
+		If FileExist(LrcPath "\" newname ".lrc")
+			run,%lrceditor% %LrcPath%\%newname%.lrc
+	}
 	IfExist,%LrcPath_2%\%name%.lrc
 		run,%lrceditor% %LrcPath_2%\%name%.lrc
+	else
+	{
+		newname:=StrReplace(name, " - ", "-",,1)
+		If FileExist(LrcPath "\" newname ".lrc")
+			run,%lrceditor% %LrcPath_2%\%newname%.lrc
+	}
 Return
 
 EditOption:

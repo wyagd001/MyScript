@@ -12,6 +12,7 @@
 ;                   0.0.07.00/2016-03-28/just me   -  Added support for PRAGMA statements.
 ;                   0.0.08.00/2019-03-09/just me   -  Added basic support for application-defined functions
 ;                   0.0.09.00/2019-07-09/just me   -  Added basic support for prepared statements, minor bug fixes
+;                   0.0.10.00/2019-12-12/just me   -  Fixed bug in EscapeStr method
 ; Remarks:          Names of "private" properties / methods are prefixed with an underscore,
 ;                   they must not be set / called by the script!
 ;                   
@@ -1144,7 +1145,8 @@ Class SQLiteDB {
       }
       If Str Is Number
          Return True
-      OP := Quote ? "%Q" : "%q"
+      VarSetCapacity(OP, 16, 0)
+      StrPut(Quote ? "%Q" : "%q", &OP, "UTF-8")
       This._StrToUTF8(Str, UTF8)
       Ptr := DllCall(This.base._SQLiteDLL "\sqlite3_mprintf", "Ptr", &OP, "Ptr", &UTF8, "Cdecl UPtr")
       If (ErrorLevel) {

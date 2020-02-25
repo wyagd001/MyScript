@@ -328,6 +328,7 @@ StringReplace, gui_AppsListBox, s_Apps_OthersList, `,, |, A ; | seperated for Li
 f_SetConfig()
 f_WriteConfig()
 f_ReadFavorites()
+TipsState(0)
 Gui, Destroy
 Gui, 77:Destroy
 return
@@ -335,6 +336,7 @@ return
 f_OptionCancel:
 88GuiClose:
 88GuiEscape:
+TipsState(0)
 Gui, 77:Destroy
 Gui, Destroy
 return

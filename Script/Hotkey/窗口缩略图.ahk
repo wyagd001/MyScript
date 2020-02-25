@@ -9,9 +9,8 @@ MiniMizeNum++
 
 loop %fi%
 {
-if ( t_%MiniMizeNum% != "")
+if ( MT_%MiniMizeNum% != "")
 MiniMizeNum++
-;MsgBox % t_%i%
 if (MiniMizeNum>fi+50)
 Return
 }
@@ -20,11 +19,9 @@ Winicon:= ProcessPath,1
 
 picname:=MiniMizeNum . ".bmp"
 WinGet, active_id, ID, A
-tt:=active_id . "*" . MiniMizeNum
 WinGetTitle, this_title, ahk_id %active_id%
 
-t_%MiniMizeNum% :=  active_id . "*" . MiniMizeNum
-w_%MiniMizeNum% :=  this_title
+MT_%MiniMizeNum% := MiniTitle := active_id . "*" . MiniMizeNum
 
 if shuiping
 {
@@ -44,9 +41,9 @@ WinHide, ahk_id %active_id%
 Gui, %MiniMizeNum%: add,Picture,x0 y0 w%picw% h%fh% vpic_%MiniMizeNum% gcol,%A_ScriptDir%\settings\tmp\%picname%
 Gui, %MiniMizeNum%: add,Picture,x%iconx% y%icony% gcol,%Winicon%
 Gui, %MiniMizeNum%: -Caption +AlwaysOnTop +ToolWindow
-Gui, %MiniMizeNum%: Show,x%fx% y%fy% w%fw%  h%fh% , %tt%
+Gui, %MiniMizeNum%: Show,x%fx% y%fy% w%fw%  h%fh% , %Minititle%
 
-setTip(pic_%MiniMizeNum%, w_%MiniMizeNum%, MiniMizeNum)
+setTip(pic_%MiniMizeNum%, this_title, MiniMizeNum)
 return
 
 col:
@@ -58,32 +55,43 @@ Title2MiniMize:=data1
 LoopNum2MiniMize:=data2
 
 If (LoopNum2MiniMize="51")
-MiniMizeNum=50
+	MiniMizeNum=50
 Else
 {
- loop,% LoopNum2MiniMize-51
- {
-  LMiniMize:=A_Index+50
-    if (t_%LMiniMize% ="")
-  {
-    MiniMizeNum:=LMiniMize-1
-    Break
+	loop,% LoopNum2MiniMize-51
+	{
+		LMiniMize:=A_Index+50
+		if (MT_%LMiniMize% ="")
+		{
+			MiniMizeNum:=LMiniMize-1
+			Break
     }
-  if (t_%LMiniMize% !="")
-  {
-      MiniMizeNum:=LMiniMize
-      }
- }
+		else
+			MiniMizeNum:=LMiniMize
+	}
 }
+MT_%LoopNum2MiniMize%=
 
+MiniMizeWinExist=0
+loop %fi%
+{
+	LMiniMize:=A_Index+50
+	if (MT_%LMiniMize% !="")
+	{
+		MiniMizeWinExist=1
+		break
+	}
+}
+if !MiniMizeWinExist
+	TipsState(0)
 Gui Destroy
-t_%LoopNum2MiniMize%=
+
 Winshow, ahk_id %Title2MiniMize%
 WinActivate, ahk_id %Title2MiniMize%
 return
 
 /*
-;已移动到主窗口_图片按钮MouseLDown中。貌似缩略窗口gui也没位置点击移动
+;已移动到主窗口_图片按钮MouseLDown中。
 WM_LBUTTONDOWN() {   ; this is the function that moves the gui
   If A_Gui
   PostMessage, 0xA1, 2

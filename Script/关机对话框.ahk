@@ -76,10 +76,8 @@ tooltip % Choice "-" Focus "-" A_ThisHotkey
    If (Focus = "ComboBox1" && A_ThisHotkey = "$Enter") or (Focus = "Button3")
 {
       ShutdownBlock := false
-tooltip % OOOOOOk
 }
 }
-sleep, 200
 SendInput, {Enter}
 Return
 #IfWinActive

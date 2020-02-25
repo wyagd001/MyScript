@@ -130,8 +130,8 @@ http://www.cnblogs.com/easysky/p/4931042.html
 40.RunZ | 专业的快速启动工具  
 https://github.com/goreliu/runz  
 
-41.库文件
-VA.ahk,Gdip.ahk,tf.ahk,Class_SQLiteDB.ahk,Class_RichEdit.ahk 等等  
+41.库文件  
+VA.ahk, Gdip.ahk, tf.ahk, Class_SQLiteDB.ahk, Class_RichEdit.ahk 等等  
 
 42.AHKhttp  
 https://github.com/zhamlin/AHKhttp  

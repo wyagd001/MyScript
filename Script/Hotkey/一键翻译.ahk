@@ -14,7 +14,7 @@ $`::
 	}
 	for key, value in translist
 	{
-		if (tempV = key)
+		if (tempV = key) or (tempV = key "s")
 		{
 			if InStr(value, "``r")
 			{

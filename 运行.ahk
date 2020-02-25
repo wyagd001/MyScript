@@ -48,6 +48,7 @@ OnExit, ExitSub
 
 ;========变量设置开始========
 FileReadLine, AppVersion, %A_ScriptDir%\version.txt, 1
+AppVersion := Trim(AppVersion)
 AppTitle = 拖拽移动文件到目标文件夹(自动重命名)
 
 FloderMenu_iniFile = %A_ScriptDir%\settings\FloderMenu.ini
@@ -923,7 +924,7 @@ If Auto_Update
 		If(sizeq<20) and (sizeq!=0)
 		{
 			FileReadLine, CurVer, %update_txtFile%, 1
-			If(CurVer!=AppVersion)
+			If(Trim(CurVer)!=AppVersion)
 			{
 				msgbox,4,升级通知,当前版本为:%AppVersion%`n最新版本为:%CurVer%`n是否前往主页下载?
 				IfMsgBox Yes
@@ -1092,7 +1093,7 @@ onClipboardChange:
 		tempid=0
 		If ClipPlugin_git
 		{
-			If (InStr(Clipboard, "docs/") = 1)
+			If RegExMatch(Clipboard, "^(\\?|/?)docs(\\?|/?).+\.htm$")
 			{
 				SelectedPath := Clipboard
 				gosub git

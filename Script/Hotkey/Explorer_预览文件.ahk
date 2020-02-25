@@ -56,7 +56,6 @@ Gui,PreWWin:Destroy
 ;Gdip_ShutDown(prewpToken)
 ;sleep,200
 ;}
-
 return
 
 PreWWinGuiSize:
@@ -64,9 +63,10 @@ GuiControl, Move, displayArea, x0 y0 w%A_GuiWidth% h%A_GuiHeight%
 GuiControl, Move, WMP,x0 y0 w%A_GuiWidth% h%A_GuiHeight%
 return
 
+; œÍ«È  https://github.com/mozilla/pdf.js
 Cando_pdf_prew:
 gosub,IE_Open
-WB.Navigate("https://mozilla.github.io/pdf.js/web/viewer.html?file=blank.pdf")
+WB.Navigate("https://mozilla.github.io/pdf.js/es5/web/viewer.html")  ; ¿œ∞Ê‰Ø¿¿∆˜
 sleep,6000
 settimer,autoopenpdf,-2000 
 wb.document.getElementById("openFile").click()
@@ -78,6 +78,8 @@ WB.Navigate(Files)
 return
 
 IE_Open:
+if tipGui_Init
+	TipsState(0)
 Gui, +ReSize
 Gui Add, ActiveX,xm w1050 h800 vWB, Shell.Explorer
 WB.silent := true

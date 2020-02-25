@@ -6,12 +6,16 @@
 	Version: 1.2
 	By: Micahs
 
+	https://autohotkey.com/board/topic/39643-tooltipahk-version-2/
 	CallWith: (You can use Hwnd, var, text, classnn)
 	setTip("Button1", "This button does absolutely nothing.")   ;using the classnn
 	setTip("Ok", "Begin the Process")   ;using the caption
 	setTip("Cancel", "Cancel Whatever is Happening!")
 	setTip(DDL, "Dropdownlist")   ;using the variable
 	setTip(MYEdit, "The infamous edit control")   ;using the hwnd
+
+TipsState(0)   ;disable tooltips
+TipsState(1)   ;enable tooltips again
 */
 
 setTip(tipControl, tipText, guiNum=1)   ;tipControl - text,variable,hwnd,classnn ;   tipText - text to display ;   gui number, default is 1
@@ -39,12 +43,15 @@ setTip(tipControl, tipText, guiNum=1)   ;tipControl - text,variable,hwnd,classnn
 TipsState(ShowToolTips)
 {
 	global tipGui_Init
-	tipGui_Init = 1	;iniialize this latch
 	If(ShowToolTips)
-	{	OnMessageEx(0x200, "WM_MOUSEMOVE")   ;enable tips
+	{
+		OnMessageEx(0x200, "WM_MOUSEMOVE")   ;enable tips
+		tipGui_Init = 1
 	}
 	Else
-	{	OnMessageEx(0x200, "WM_MOUSEMOVE",0)   ;disable tips
+	{
+		OnMessageEx(0x200, "WM_MOUSEMOVE",0)   ;disable tips
+		tipGui_Init = 0	;iniialize this latch
 	}
 }
 
@@ -68,7 +75,8 @@ WM_MOUSEMOVE()
 	Gui, %A_Gui%:+LastFound
 		tipGui_ID := WinExist()
 		SetTimer, tipGui_killTip, 500
-		tooltip, % tipGui_%A_Gui%_%tipGui_outC%,,, 20
+		;tooltip % A_Gui   ; 测试语句 判断是否关闭
+		tooltip, % tipGui_%A_Gui%_%tipGui_outC%,,, 20   ; 控件类名有空格会报错
 	}
 	Return
 	tipGui_killTip:
