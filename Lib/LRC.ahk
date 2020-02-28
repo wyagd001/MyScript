@@ -23,7 +23,7 @@ lrcECHO(lrcfile,GuiTitle){
 		Gui, 2:Show, NoActivate, %GuiTitle% - AhkPlayer  ; 不激活窗体避免改变当前激活的窗口
 
 	File_Encode := File_GetEncoding(lrcfile)
-	FileEncoding, %File_Encode%
+	FileEncoding, % File_Encode != 1 ? File_Encode : 
 
 	; 读取lrc文件的内容
 	n:=1

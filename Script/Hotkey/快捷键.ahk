@@ -280,3 +280,8 @@ send % RunZ
 else
 Run,%A_AhkPath% "%A_ScriptDir%\RunZ.ahk" --show
 return
+
+CandyLast:
+Run_Candylast := 1
+gosub Candy
+return

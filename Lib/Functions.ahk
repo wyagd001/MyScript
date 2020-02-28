@@ -19,8 +19,10 @@ RunStingFunc(str:="")
 	}
 	else if (params.MaxIndex() = 1)
 	{
-
-		%tempfunc%(params[1])
+		o := params[1]
+		if !InStr(o,"""")
+			Transform,o1,Deref,% %o%
+		%tempfunc%(o1?o1:o)
 	return
 	}
 	else if (params.MaxIndex() = 2)

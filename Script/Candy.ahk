@@ -2,589 +2,600 @@
 ;<<<<Æô¶¯£¬»ñÈ¡¶ÔÏó>>>>        ÓÃ¿½±´µÄ·½·¨ÌáÈ¡ÄÚÈİ
 ;©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥
 Candy:
-SkSub_Clear_CandyVar()
-	MouseGetPos,,,Candy_CurWin_id         ;µ±Ç°Êó±êÏÂµÄ½ø³ÌID
-	WinGet, Candy_CurWin_Fullpath,ProcessPath,Ahk_ID %Candy_CurWin_id%    ;µ±Ç°½ø³ÌµÄÂ·¾¶
-	WinGetTitle, Candy_Title,Ahk_ID %Candy_CurWin_id%    ;µ±Ç°½ø³ÌµÄ±êÌâ
+	SkSub_Clear_CandyVar()
+	MouseGetPos,,, Candy_CurWin_id         ; µ±Ç°Êó±êÏÂµÄ½ø³ÌID
+	WinGet, Candy_CurWin_Fullpath, ProcessPath, Ahk_ID %Candy_CurWin_id%    ; µ±Ç°½ø³ÌµÄÂ·¾¶
+	WinGetTitle, Candy_Title, Ahk_ID %Candy_CurWin_id%    ; µ±Ç°½ø³ÌµÄ±êÌâ
 	CandySel := GetSelText(2, Candy_isFile, CandySel_Rich)
 	if !CandySel
 	Return
-	Transform,Candy_ProFile_Ini,Deref,%Candy_ProFile_Ini%
+	Transform, Candy_ProFile_Ini, Deref, %Candy_ProFile_Ini%
 
-	IfNotExist %Candy_ProFile_Ini%         ;Èç¹ûÅäÖÃÎÄ¼ş²»´æÔÚ£¬Ôò·¢³ö¾¯¸æ£¬ÇÒÖÕÖ¹
+	IfNotExist %Candy_ProFile_Ini%         ; Èç¹ûÅäÖÃÎÄ¼ş²»´æÔÚ£¬Ôò·¢³ö¾¯¸æ£¬ÇÒÖÕÖ¹
 	{
 		MsgBox ¶ÔÈÈ¼ü%A_thishotkey% ¶¨ÒåµÄÅäÖÃÎÄ¼ş²»´æÔÚ! `n--------`nÇë¼ì²é%Candy_ProFile_Ini%
-		Return
+	Return
 	}
  /*
 ¨X¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨[
-<<<<Ñ¡ÖĞÄÚÈİµÄºó×º¶¨Òå>>>>                                  ¨U
+¨U  <<<<Ñ¡ÖĞÄÚÈİµÄºó×º¶¨Òå>>>>                                                ¨U
 ¨^¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨a
 */
-	If(Fileexist(CandySel) && RegExMatch(CandySel,"^(\\\\|.:\\)")) ;ÎÄ¼ş»òÕßÎÄ¼ş¼Ğ,²»ÔÙÖ§³ÖÏà¶ÔÂ·¾¶µÄÎÄ¼şÂ·¾¶,µ«ÈİĞí¡°ÎÄ×ÖÄ£Ê½µÄÈ«Â·¾¶¡±
+	If(Fileexist(CandySel) && RegExMatch(CandySel, "^(\\\\|.:\\)")) ; ÎÄ¼ş»òÕßÎÄ¼ş¼Ğ,²»ÔÙÖ§³ÖÏà¶ÔÂ·¾¶µÄÎÄ¼şÂ·¾¶,µ«ÈİĞí¡°ÎÄ×ÖÄ£Ê½µÄÈ«Â·¾¶¡±
 	{
-		Candy_isFile:=1     ;Èç¹ûÊÇ¡°ÎÄ×ÖĞÍ¡±µÄÓĞĞ§Â·¾¶£¬Ç¿ÖÆÈÏ¶¨ÎªÎÄ¼ş
-		SplitPath,CandySel,CandySel_FileNameWithExt,CandySel_ParentPath,CandySel_Ext,CandySel_FileNameNoExt,CandySel_Drive
-		SplitPath,CandySel_ParentPath,CandySel_ParentName,,,, ;ÓÃÕâ¸öÌáÈ¡¡°ËùÔÚÎÄ¼ş¼ĞÃû¡±
-		If InStr(FileExist(CandySel), "D")  ;Çø·ÖÊÇ·ñÎÄ¼ş¼Ğ,Attrib= D ,ÔòÊÇÎÄ¼ş¼Ğ
+		Candy_isFile:=1     ; Èç¹ûÊÇ¡°ÎÄ×ÖĞÍ¡±µÄÓĞĞ§Â·¾¶£¬Ç¿ÖÆÈÏ¶¨ÎªÎÄ¼ş
+		SplitPath, CandySel, CandySel_FileNameWithExt, CandySel_ParentPath, CandySel_Ext, CandySel_FileNameNoExt, CandySel_Drive
+		SplitPath, CandySel_ParentPath, CandySel_ParentName,,,, ; ÓÃÕâ¸öÌáÈ¡¡°ËùÔÚÎÄ¼ş¼ĞÃû¡±
+		If InStr(FileExist(CandySel), "D")  ; Çø·ÖÊÇ·ñÎÄ¼ş¼Ğ,Attrib= D ,ÔòÊÇÎÄ¼ş¼Ğ
 		{
-			CandySel_FileNameNoExt:=CandySel_FileNameWithExt
-			CandySel_Ext:=RegExMatch(CandySel,"^.:\\$") ? "Driver":"Folder"            ;Ï¸·Ö£ºÅÌ·û»òÕßÎÄ¼ş¼Ğ
+			CandySel_FileNameNoExt := CandySel_FileNameWithExt
+			CandySel_Ext := RegExMatch(CandySel, "^.:\\$") ? "Driver" : "Folder"            ; Ï¸·Ö£ºÅÌ·û»òÕßÎÄ¼ş¼Ğ
 		}
-		Else  If (CandySel_Ext="")       ;Èô²»ÊÇÎÄ¼ş¼Ğ£¬ÇÒÎŞºó×º£¬Ôò¶¨ÒåÎªNoExt
+		Else If (CandySel_Ext = "")       ; Èô²»ÊÇÎÄ¼ş¼Ğ£¬ÇÒÎŞºó×º£¬Ôò¶¨ÒåÎªNoExt
 		{
-			CandySel_Ext:="NoExt"
+			CandySel_Ext := "NoExt"
 		}
-		if (CandySel_ParentName="")
-			CandySel_ParentName:=RTrim(CandySel_Drive,":")
+		if (CandySel_ParentName = "")
+			CandySel_ParentName := RTrim(CandySel_Drive, ":")
 	}
-	Else if(instr(CandySel,"`n") And  Candy_isFile=1)  ;Èç¹û°üº¬¶àĞĞ£¬ÇÒÕ³Ìù°åĞÔÖÊÎªÎÄ¼ş£¬ÔòÊÇ¡°¶àÎÄ¼ş¡±
+	Else if(instr(CandySel, "`n") And Candy_isFile = 1)  ; Èç¹û°üº¬¶àĞĞ£¬ÇÒÕ³Ìù°åĞÔÖÊÎªÎÄ¼ş£¬ÔòÊÇ¡°¶àÎÄ¼ş¡±
 	{
-		CandySel_Ext:="MultiFiles" ;¶àÎÄ¼şµÄºó×º=MultiFiles
-		CandySel_FirstFile:=RegExReplace(CandySel,"(.*)\r.*","$1")  ;È¡µÚÒ»ĞĞ
-		SplitPath ,CandySel_FirstFile,,CandySel_ParentPath,,  ;ÒÔµÚÒ»ĞĞµÄ¸¸Ä¿Â¼Îª¡°¶àÎÄ¼şµÄ¸¸Ä¿Â¼¡±
-		If RegExMatch(CandySel_ParentPath,"\:(|\\)$")  ;Èç¹û¸¸Ä¿Â¼ÊÇ´ÅÅÌ¸ùÄ¿Â¼,ÓÃÅÌ·û×ö¸¸Ä¿Â¼Ãû¡£
-			CandySel_ParentName:= RTrim(CandySel_ParentPath,":")
-		else  ;·ñÔò£¬ÌáÈ¡¸¸Ä¿Â¼Ãû
-			CandySel_ParentName:= RegExReplace(CandySel_ParentPath, ".*\\(.*)$", "$1")
+		CandySel_Ext := "MultiFiles" ; ¶àÎÄ¼şµÄºó×º=MultiFiles
+		CandySel_FirstFile :=RegExReplace(CandySel, "(.*)\r.*","$1")  ; È¡µÚÒ»ĞĞ
+		SplitPath, CandySel_FirstFile,, CandySel_ParentPath,,  ; ÒÔµÚÒ»ĞĞµÄ¸¸Ä¿Â¼Îª¡°¶àÎÄ¼şµÄ¸¸Ä¿Â¼¡±
+		If RegExMatch(CandySel_ParentPath, "\:(|\\)$")  ; Èç¹û¸¸Ä¿Â¼ÊÇ´ÅÅÌ¸ùÄ¿Â¼,ÓÃÅÌ·û×ö¸¸Ä¿Â¼Ãû¡£
+			CandySel_ParentName := RTrim(CandySel_ParentPath, ":")
+		else  ; ·ñÔò£¬ÌáÈ¡¸¸Ä¿Â¼Ãû
+			CandySel_ParentName := RegExReplace(CandySel_ParentPath, ".*\\(.*)$", "$1")
 	}
-	Else     ;ÎÄ±¾ÀàĞÍ
+	Else     ; ÎÄ±¾ÀàĞÍ
 	{
 		;-----------ÌØÊâÎÄ×Ö´®±æÎö-------------------
-		IniRead Candy_User_defined_TextType,%Candy_ProFile_Ini%,user_defined_TextType  ;ÊÇ·ñ·ûºÏÓÃ»§ÕıÔò¶¨ÒåµÄÎÄ±¾ÀàĞÍ£¬ÓĞÓÅÏÈË³ĞòµÄ£¬ÅÅÔÚÇ°ÃæµÄÓÅÏÈ
-		loop,parse,Candy_User_defined_TextType,`n
+		IniRead Candy_User_defined_TextType, %Candy_ProFile_Ini%, user_defined_TextType  ; ÊÇ·ñ·ûºÏÓÃ»§ÕıÔò¶¨ÒåµÄÎÄ±¾ÀàĞÍ£¬ÓĞÓÅÏÈË³ĞòµÄ£¬ÅÅÔÚÇ°ÃæµÄÓÅÏÈ
+		loop, parse, Candy_User_defined_TextType, `n
 		{
-			If(RegExMatch(CandySel,RegExReplace(A_LoopField,"^.*?=")))     ;¸ù¾İiniÀïÃæÓÃ»§×Ô¶¨Òå¶Î£¬ÖğÌõ²é¿´£¬ÓÒ²àÊÇÕıÔò¹æÔò
+			If(RegExMatch(CandySel, RegExReplace(A_LoopField, "^.*?=")))     ; ¸ù¾İiniÀïÃæÓÃ»§×Ô¶¨Òå¶Î£¬ÖğÌõ²é¿´£¬ÓÒ²àÊÇÕıÔò¹æÔò
 			{
-				CandySel_Ext:=RegExReplace(A_LoopField,"=.*?$")   ;×ó±ßÊÇ¡°ÎÄ±¾Ä³ÀàĞÍ¡±
-				Candy_Cmd:=SkSub_Regex_IniRead(Candy_ProFile_Ini, "TextType", "i)(^|\|)" CandySel_Ext "($|\|)") ;»ñÈ¡¸ÃÀàĞÍµÄ¡±²Ù×÷Éè¶¨¡°
-				If(Candy_Cmd!="Error")            ;Èç¹ûÓĞÏàÓ¦ºó×º×éµÄ¶¨Òå£¬ÔòÌø³öÈ¥ÔËĞĞ¡£
+				CandySel_Ext := RegExReplace(A_LoopField, "=.*?$")   ; ×ó±ßÊÇ¡°ÎÄ±¾Ä³ÀàĞÍ¡±
+				Candy_Cmd:=SkSub_Regex_IniRead(Candy_ProFile_Ini, "TextType", "i)(^|\|)" CandySel_Ext "($|\|)") ; »ñÈ¡¸ÃÀàĞÍµÄ¡±²Ù×÷Éè¶¨¡°
+				If(Candy_Cmd != "Error")            ; Èç¹ûÓĞÏàÓ¦ºó×º×éµÄ¶¨Òå£¬ÔòÌø³öÈ¥ÔËĞĞ¡£
 				{
 					Goto Label_Candy_Read_Value
 					Break
 				}
 			}
 		}
-		IniRead,Candy_ShortText_Length,%Candy_ProFile_Ini%,Candy_Settings,ShortText_Length,80   ;Ã»ÓĞ¶¨Òå£¬Ôò¸ù¾İËùÑ¡ÎÄ±¾µÄ³¤¶Ì£¬Éè¶¨Îª³¤ÎÄ±¾»òÕß¶ÌÎÄ±¾
-		CandySel_Ext:=StrLen(CandySel) < Candy_ShortText_Length ? "ShortText" : "LongText" ;Çø·Ö³¤¶ÌÎÄ±¾
-	} 
+		IniRead, Candy_ShortText_Length, %Candy_ProFile_Ini%, Candy_Settings, ShortText_Length, 80   ; Ã»ÓĞ¶¨Òå£¬Ôò¸ù¾İËùÑ¡ÎÄ±¾µÄ³¤¶Ì£¬Éè¶¨Îª³¤ÎÄ±¾»òÕß¶ÌÎÄ±¾
+		CandySel_Ext := StrLen(CandySel) < Candy_ShortText_Length ? "ShortText" : "LongText" ; Çø·Ö³¤¶ÌÎÄ±¾
+	}
 
  /*
 ¨X¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨[
-<<<<²éÕÒ¶¨Òå>>>>                                                  ¨U
+¨U<<<<²éÕÒ¶¨Òå>>>>                                                            ¨U
 ¨^¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨a
 */
-
 Label_Candy_Read_Value:
-	Candy_Type          :=Candy_isFile> 0 ? "FileType":"TextType"         ;¸ù¾İCandy_isFileÅĞ¶ÏÀàĞÍ£¬ÔÚÏàÓ¦µÄINI¶ÎÀïÃæ²éÕÒ¶¨Òå
-	Candy_Type_Any   :=Candy_isFile> 0 ? "AnyFile":"AnyText"         ;¸ù¾İCandy_isFileÅĞ¶ÏÀàĞÍ£¬¶ÔÓ¦µÄAnyµÄÃû³Æ
-	Candy_Cmd:=SkSub_Regex_IniRead(Candy_ProFile_Ini, Candy_Type, "i)(^|\|)" CandySel_Ext "($|\|)")  ;²éÕÒºó×ºÈº¶¨Òå
-	If(Candy_Cmd="Error")            ;Èç¹ûÃ»ÓĞÏàÓ¦ºó×º×éµÄ¶¨Òå£»ÏÂÃæÕâĞ©†ªàÂµÄĞ´·¨ÊÇÎªÁË¸÷ÖÖÈİ´í
+	if Last_Candy_Cmd && Run_Candylast
 	{
-		IfExist,%Candy_Profile_Dir%\%CandySel_Ext%.ini   ;¿´ÊÇ·ñÓĞ ºó×º.ini µÄÅäÖÃÎÄ¼ş´æÔÚ
+		Candy_Cmd := Last_Candy_Cmd
+		goto Label_Candy_RunCommand
+	}
+
+	Candy_Type := Candy_isFile> 0 ? "FileType" : "TextType"         ; ¸ù¾İCandy_isFileÅĞ¶ÏÀàĞÍ£¬ÔÚÏàÓ¦µÄINI¶ÎÀïÃæ²éÕÒ¶¨Òå
+	Candy_Type_Any := Candy_isFile > 0 ? "AnyFile" : "AnyText"         ; ¸ù¾İCandy_isFileÅĞ¶ÏÀàĞÍ£¬¶ÔÓ¦µÄAnyµÄÃû³Æ
+	Candy_Cmd := SkSub_Regex_IniRead(Candy_ProFile_Ini, Candy_Type, "i)(^|\|)" CandySel_Ext "($|\|)")  ;²éÕÒºó×ºÈº¶¨Òå
+	If(Candy_Cmd = "Error")            ; Èç¹ûÃ»ÓĞÏàÓ¦ºó×º×éµÄ¶¨Òå£»ÏÂÃæÕâĞ©†ªàÂµÄĞ´·¨ÊÇÎªÁË¸÷ÖÖÈİ´í
+	{
+		IfExist, %Candy_Profile_Dir%\%CandySel_Ext%.ini   ; ¿´ÊÇ·ñÓĞ ºó×º.ini µÄÅäÖÃÎÄ¼ş´æÔÚ
 		{
-			Candy_Cmd:="menu|" CandySel_Ext   ;Í¬Ê±£¬×ª»¯ÎªMenu|ÃüÁîĞĞĞ´·¨
+			Candy_Cmd := "menu|" CandySel_Ext   ; Í¬Ê±£¬×ª»¯ÎªMenu|ÃüÁîĞĞĞ´·¨
 		}
 		Else
 		{
-			IniRead,Candy_Cmd, %Candy_ProFile_Ini%,%Candy_Type%,%Candy_Type_Any%   ;Èç¹ûÃ»ÓĞÔò¿´¿´ AnyÔÚiniµÄ¶¨ÒåÓĞÃ»ÓĞ
-			If(Candy_Cmd="Error")   ;Ã»ÓĞ¶ÔAnyFile£¨»òAnyText£©µÄ¶¨Òå£¬Ôò¿´ÊÇ·ñÓĞ AnyFile.ini»òAnyText.iniÅäÖÃ´æÔÚ
+			IniRead, Candy_Cmd, %Candy_ProFile_Ini%, %Candy_Type%, %Candy_Type_Any%   ; Èç¹ûÃ»ÓĞÔò¿´¿´ AnyÔÚiniµÄ¶¨ÒåÓĞÃ»ÓĞ
+			If(Candy_Cmd = "Error")   ; Ã»ÓĞ¶ÔAnyFile£¨»òAnyText£©µÄ¶¨Òå£¬Ôò¿´ÊÇ·ñÓĞ AnyFile.ini»òAnyText.iniÅäÖÃ´æÔÚ
 			{
-				IfExist,%Candy_Profile_Dir%\%Candy_Type%.ini   ;ÓĞ£¬ÔòÒÔ´ËÎª×¼
+				IfExist, %Candy_Profile_Dir%\%Candy_Type%.ini   ; ÓĞ£¬ÔòÒÔ´ËÎª×¼
 				{
-					Candy_Cmd:="menu|" Candy_Type   ;Í¬Ê±£¬×ª»¯ÎªMenu|ÃüÁîĞĞĞ´·¨
+					Candy_Cmd := "menu|" Candy_Type   ; Í¬Ê±£¬×ª»¯ÎªMenu|ÃüÁîĞĞĞ´·¨
 				}
 				Else
 				{
-					Run,%CandySel%, ,UseErrorLevel  ;²ã²ã°Ñ¹Ø¶¼Ã»ÓĞÃ´£¬ºÃÊ§ÍûµÄËµ£¬¾ÍÖ±½ÓÔËĞĞ°É
-					Return
+					Run, %CandySel%,, UseErrorLevel  ; ²ã²ã°Ñ¹Ø¶¼Ã»ÓĞÃ´£¬ºÃÊ§ÍûµÄËµ£¬¾ÍÖ±½ÓÔËĞĞ°É
+				Return
 				}
 			}
 		}
 	}
 	If !(RegExMatch(Candy_Cmd,"i)^Menu\|"))
 	{
-		Goto Label_Candy_RunCommand            ;Èç¹û²»ÊÇmenuÖ¸Áî£¬Ö±½ÓÔËĞĞÓ¦ÓÃ³ÌĞò
+		Goto Label_Candy_RunCommand            ; Èç¹û²»ÊÇmenuÖ¸Áî£¬Ö±½ÓÌø×ªµ½ÔËĞĞÓ¦ÓÃ³ÌĞò
 	}
 
 ;©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥ 
 ;<<<<ÖÆ×÷²Ëµ¥>>>>  
 ;©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥
 Label_Candy_DrawMenu:
-	Menu,CandyTopLevelMenu,add
-    Menu,CandyTopLevelMenu,DeleteAll
-    CandyMenu_IconSize:=CF_IniRead(Candy_ProFile_Ini, "General_Settings", "MenuIconSize",16)
-    CandyMenu_IconDir:=CF_IniRead(Candy_ProFile_Ini, "General_Settings", "MenuIconDir")  ;²Ëµ¥Í¼±êÎ»ÖÃ
-   Transform,CandyMenu_IconDir,Deref,%CandyMenu_IconDir%
+	Menu, CandyTopLevelMenu, add
+	Menu, CandyTopLevelMenu, DeleteAll
+	CandyMenu_IconSize := CF_IniRead(Candy_ProFile_Ini, "General_Settings", "MenuIconSize", 16)
+	CandyMenu_IconDir := CF_IniRead(Candy_ProFile_Ini, "General_Settings", "MenuIconDir")  ;²Ëµ¥Í¼±êÎ»ÖÃ
+	Transform, CandyMenu_IconDir, Deref, %CandyMenu_IconDir%
 
- ;¼ÓµÚÒ»ĞĞ²Ëµ¥£¬ËõÂÔÏÔÊ¾Ñ¡ÖĞµÄÄÚÈİ£¬¸Ã²Ëµ¥ÈÃÄã¿½±´ÆäÄÚÈİ
-    CandyMenu_FirstItem:=Strlen(CdSel_NoSpace:=Trim(CandySel)) >20 ? SubStr0(CdSel_NoSpace,1,10) . "..." . SubStr0(CdSel_NoSpace,-10) : CdSel_NoSpace
-    Menu CandyTopLevelMenu,Add,%CandyMenu_FirstItem%,Label_Candy_CopyFullpath
-    Candy_Firstline_Icon:=SkSub_Get_Firstline_Icon(CandySel_Ext,CandySel,CandyMenu_IconDir "\Extension")
-    Menu CandyTopLevelMenu,icon,%CandyMenu_FirstItem%,%Candy_Firstline_Icon%,,%CandyMenu_IconSize%
-    Menu CandyTopLevelMenu,Add
+	; ¼ÓµÚÒ»ĞĞ²Ëµ¥£¬ËõÂÔÏÔÊ¾Ñ¡ÖĞµÄÄÚÈİ£¬¸Ã²Ëµ¥ÈÃÄã¿½±´ÆäÄÚÈİ
+	CandyMenu_FirstItem := Strlen(CdSel_NoSpace := Trim(CandySel)) > 20 ? SubStr0(CdSel_NoSpace, 1, 10) . "..." . SubStr0(CdSel_NoSpace, -10) : CdSel_NoSpace
+	Menu CandyTopLevelMenu, Add, %CandyMenu_FirstItem%, Label_Candy_CopyFullpath
+	Candy_Firstline_Icon := SkSub_Get_Firstline_Icon(CandySel_Ext, CandySel, CandyMenu_IconDir "\Extension")
+	Menu CandyTopLevelMenu, icon, %CandyMenu_FirstItem%, %Candy_Firstline_Icon%,, %CandyMenu_IconSize%
+	Menu CandyTopLevelMenu, Add
 
-    arrCandyMenuFrom:=StrSplit( Candy_Cmd,"|")
-    CandyMenu_ini:= arrCandyMenuFrom[2]="" ? Candy_ProFile_Ini_NameNoext : arrCandyMenuFrom[2]
+	arrCandyMenuFrom := StrSplit(Candy_Cmd, "|")
+	CandyMenu_ini := arrCandyMenuFrom[2] = "" ? Candy_ProFile_Ini_NameNoext : arrCandyMenuFrom[2]
 
-    CandyMenu_sec:= arrCandyMenuFrom[3]="" ? "Menu" : arrCandyMenuFrom[3]
+	CandyMenu_sec:= arrCandyMenuFrom[3] = "" ? "Menu" : arrCandyMenuFrom[3]
 
-    szMenuIdx:={}
-    szMenuContent:={}
-    szMenuWhichFile:={}
-    SkSub_GetMenuItem(Candy_Profile_Dir,CandyMenu_ini,CandyMenu_sec,"CandyTopLevelMenu","")
-    SkSub_DeleteSubMenus("CandyTopLevelMenu")
+	szMenuIdx := {}
+	szMenuContent := {}
+	szMenuWhichFile := {}
+	SkSub_GetMenuItem(Candy_Profile_Dir, CandyMenu_ini, CandyMenu_sec, "CandyTopLevelMenu", "")
+	SkSub_DeleteSubMenus("CandyTopLevelMenu")
 
-    For,k,v in szMenuIdx
-    {
-        SkSub_CreateMenu(v,"CandyTopLevelMenu","Label_Candy_HandleMenu",CandyMenu_IconDir,CandyMenu_IconSize)
-    }
-    MouseGetPos,CandyMenu_X, CandyMenu_Y
-    MouseMove,CandyMenu_X,CandyMenu_Y,0
-    MouseMove,CandyMenu_X,CandyMenu_Y,0
-;     ToolTip,% A_TickCount-CandyStartTick,200,0     ;ÈôÒªÆÀ¹À³ömenuÊ±¼ä£¬ÕâÀïĞè´ò¿ª ,¹²Èı´¦£¬2/3
-    Menu,CandyTopLevelMenu,show
-;     ToolTip ;ÈôÒªÆÀ¹À³ömenuÊ±¼ä£¬ÕâÀïĞè´ò¿ª ,¹²Èı´¦£¬3/3
-    Return
+	For k, v in szMenuIdx
+	{
+		SkSub_CreateMenu(v, "CandyTopLevelMenu", "Label_Candy_HandleMenu", CandyMenu_IconDir, CandyMenu_IconSize)
+	}
+	MouseGetPos, CandyMenu_X, CandyMenu_Y
+	MouseMove, CandyMenu_X, CandyMenu_Y, 0
+	MouseMove, CandyMenu_X, CandyMenu_Y, 0
+	;ToolTip, % A_TickCount-CandyStartTick, 200, 0     ; ÈôÒªÆÀ¹Àµ¯³ömenuÊ±¼ä£¬ÕâÀïĞè´ò¿ª ,¹²Èı´¦£¬2/3
+    Menu, CandyTopLevelMenu, show
+	;ToolTip ; ÈôÒªÆÀ¹Àµ¯³ömenuÊ±¼ä£¬ÕâÀïĞè´ò¿ª ,¹²Èı´¦£¬3/3
+Return
 
 ;================²Ëµ¥´¦Àí================================
 Label_Candy_HandleMenu:
-    If GetKeyState("Ctrl")			    ;[°´×¡CtrlÔòÊÇ½øÈëÅäÖÃ]
-    {
-        Candy_ctrl_ini_fullpath:=Candy_Profile_Dir . "\" . szMenuWhichFile[ A_thisMenu "/" A_ThisMenuItem] . ".ini"
-        Candy_Ctrl_Regex:= "=\s*\Q" szMenuContent[ A_thisMenu "/" A_ThisMenuItem] "\E\s*$"
-        SkSub_EditConfig(Candy_ctrl_ini_fullpath,Candy_Ctrl_Regex)
-    }
-    else
-    {
-        Candy_Cmd := szMenuContent[ A_thisMenu "/" A_ThisMenuItem]
-        CandyError_From_Menu:=1
-        Goto Label_Candy_RunCommand
-    }
-    return
+	If GetKeyState("Ctrl")        ; [°´×¡CtrlÔòÊÇ½øÈëÅäÖÃ]
+	{
+		Candy_ctrl_ini_fullpath:=Candy_Profile_Dir . "\" . szMenuWhichFile[ A_thisMenu "/" A_ThisMenuItem] . ".ini"
+		Candy_Ctrl_Regex:= "=\s*\Q" szMenuContent[ A_thisMenu "/" A_ThisMenuItem] "\E\s*$"
+		SkSub_EditConfig(Candy_ctrl_ini_fullpath, Candy_Ctrl_Regex)
+	}
+	else
+	{
+		Candy_Cmd := szMenuContent[ A_thisMenu "/" A_ThisMenuItem]
+		CandyError_From_Menu := 1
+		Goto Label_Candy_RunCommand
+	}
+return
 
 Label_Candy_CopyFullpath:
-    If GetKeyState("Ctrl")			    ;[°´×¡CtrlÔòÊÇ½øÈëÖ÷ÅäÖÃ]
-    {
-        Candy_Ctrl_Regex:="i)(^\s*|\|)" CandySel_Ext "(\||\s*)[^=]*="
-        SkSub_EditConfig(Candy_Profile_ini,Candy_Ctrl_Regex)
-    }
-    Else
-        Clipboard:=CandySel
-    Return
+	If GetKeyState("Ctrl")			    ;[°´×¡CtrlÔòÊÇ½øÈëÖ÷ÅäÖÃ]
+	{
+		Candy_Ctrl_Regex := "i)(^\s*|\|)" CandySel_Ext "(\||\s*)[^=]*="
+		SkSub_EditConfig(Candy_Profile_ini, Candy_Ctrl_Regex)
+	}
+	Else
+	{
+		Clipboard := CandySel
+		Last_Candy_Cmd :=
+	}
+Return
 
  /*
 ¨X¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨[
-<<<<±äÁ¿Ìæ»»>>>>                                                  ¨U
+¨U<<<<±äÁ¿Ìæ»»>>>>                                                            ¨U
 ¨^¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨a
 */
 Label_Candy_RunCommand:
-   Candy_Cmd:=SkSub_EnvTrans(Candy_Cmd)  ;Ìæ»»×Ô±äÁ¿ÒÔ¼°ÏµÍ³±äÁ¿,IniÀïÃæÓÃ~%±íÊ¾Ò»¸ö%,µ±È»ÒªÓÃ~~%£¬±íÊ¾Ò»¸öÔ­ÒåµÄ~%
-    Candy_Cmd=%Candy_Cmd%
-    If (instr(Candy_Cmd,"{SetClipBoard:pure}")+instr(Candy_Cmd,"{SetClipBoard:rich}") )       ;Õâ¸ö¿ª¹ØÖ¸Áî»áĞŞ¸ÄÏµÍ³Õ³Ìù°å£¬²»»á¶ÔÃüÁîĞĞ±¾Éí²úÉú×÷ÓÃ¡£ËùÒÔÏÈÒª´ÓÃüÁîĞĞÌæ»»µô¡£
-    {
-        Clipboard:=InStr(Candy_Cmd,"{SetClipBoard:pure}") ? CandySel : CandySel_Rich
-        Candy_Cmd:=RegExReplace(Candy_Cmd,"i)\{SetClipBoard\:.*\}")
-    }
-    If (instr(Candy_Cmd,"{icon:")) ;iconÍ¼±ê
-    {
-        Candy_Cmd:=RegExReplace(Candy_Cmd,"i)\{icon\:.*\}")
-    }
-    If Candy_Cmd=   ;Èç¹ûÖ»Ïë½øĞĞÒÔÉÏÁ½²½²Ù×÷£¬Èç¹ûÔËĞĞµÄÖ¸ÁîÎª¿Õ£¬ÔòÖ±½ÓÍË³ö
-        Return
-    If instr(Candy_Cmd,"{date:")     ; Ê±¼ä²ÎÊı£¡¶¨Òå·½·¨Îª:{date:yyyy_MM_dd} Ã°ºÅ:ºóÃæµÄ²¿·Ö¿ÉÒÔËæÒâ¶¨Òå
-    {
-        Candy_Time_Mode:=RegExReplace(Candy_Cmd,"i).*\{date\:(.*?)\}.*","$1")
-        FormatTime,Candy_Time_Formated,%A_nOW%,%Candy_Time_Mode%
-        Candy_Cmd:=RegExReplace(Candy_Cmd,"i)\{date\:(.*?)\}",Candy_Time_Formated)
-    }
-    If instr(Candy_Cmd,"{in:")    ; in£º¶àÎÄ¼şµÄºó×º°üº¬
-    {
-        Candy_in_M:="i`am)^.*\.(" RegExReplace(Candy_Cmd,"i).*\{in\:(.*?)\}.*","$1") ")$"
-        Grep(CandySel, Candy_in_M, CandySel, 1, 0, "`n")
-        Candy_Cmd:=RegExReplace(Candy_Cmd,"i)\{in\:.*\}")
-        If  (CandySel="")
-            Return
-        Else
-            StringReplace,CandySel,CandySel,`n,`r`n,all
-    }
-    If instr(Candy_Cmd,"{ex:")    ; ex£º¶àÎÄ¼şµÄºó×ºÅÅ³ı
-    {
-        Candy_ex_M:="i`am)^.*\.(" RegExReplace(Candy_Cmd,"i).*\{ex\:(.*?)\}.*","$1") ")$\R?"    ;¿ÉÓÃ£¬Ö»ÊÇ¶àÁËÒ»¸ö¡±ºó¿Õ°×ÎÊÌâ¡°
-        CandySel:=RegExReplace(CandySel,Candy_ex_M)
-        CandySel:=RegExReplace(CandySel,"\s*$","")         ;Çå³ıºó¿Õ°× CandySel:=trim(CandySel,"`r`n")         ;Çå³ıºó¿Õ°×
-                Candy_Cmd:=RegExReplace(Candy_Cmd,"i)\{ex\:.*\}")
-        Clipboard:=CandySel
-        If  (CandySel="")
-            Return
-    }
-    If instr(Candy_Cmd,"{input:")   ;ÌØ±ğµÄ²ÎÊı:´øÓĞpromptÌáÊ¾ÎÄ×ÖµÄinput Àı£º{Input:ÇëÊäÈëÑÓ³ÙÊ±¼ä£¬ÒÔmsÎªµ¥Î»},Ö§³Ö¶à¸öinputÊäÈë
-    {    ;Èç¹ûÒªÊäÈëÃÜÂë£¬ÇëĞ´³É{input:ÌáÊ¾ÎÄ×Ö:hide}
-        CdInput_P=1
-        Candy_Cmd_tmp:=Candy_Cmd
-        While	CdInput_P :=	RegExMatch(Candy_Cmd_tmp, "i)\{input\:(.*?)\}", CdInput_M, CdInput_P+strlen(CdInput_M))
-        {
-            CdInput_Prompt:= RegExReplace(CdInput_M,"i).*\{input\:(.*?)(:hide)?}.*","$1")
-            CdInput_Hide:= RegExMatch(CdInput_M,"i)\{input:.*?:hide}") ? "hide":""
-            Gui +LastFound +OWnDialogs +AlwaysOnTop
-            InputBox, CdInput_txt,Candy InputBox,`n%CdInput_Prompt% ,%CdInput_Hide%, 285, 175,,,,,
-            If ErrorLevel
-                Return
-            Else
-                StringReplace,Candy_Cmd,Candy_Cmd,%CdInput_M%,%CdInput_txt%
-        }
-    }
-    If instr(Candy_Cmd,"{box:Filebrowser}")
-    {
-        FileSelectFile, f_File ,,, ÇëÑ¡ÔñÎÄ¼ş
-        If ErrorLevel
-            return
-        StringReplace,Candy_Cmd,Candy_Cmd,{box:Filebrowser},%f_File%,All
-    }
-    If instr(Candy_Cmd,"{box:mFilebrowser}")
-    {
-        FileSelectFile, f_File ,M, , ÇëÑ¡ÔñÎÄ¼ş
-        If ErrorLevel
-            return
-        CdMfile_suffix  := RegExReplace(Candy_Cmd,"i).*\{box:mFilebrowser:.*LastFile(.*?)\}.*","$1")
-        CdMfile_prefix  := RegExReplace(Candy_Cmd,"i).*\{box:mFilebrowser:(.*?)FirstFile.*","$1")
-        CdMfile_midfix := RegExReplace(Candy_Cmd,"i).*\{box:mFilebrowser:.*FirstFile(.*?)LastFile.*\}.*","$1")
-        Firstline:=RegExReplace(f_File,"\n.*")
-        no_Firstline:=RegExReplace(f_File,"^.*?\n","$1")
-        StringReplace  ,CandySel_list,no_Firstline,`n,%CdMfile_midfix%%Firstline%/,all
-        CandySel_list=%CdMfile_prefix%%Firstline%\%CandySel_list%%CdMfile_suffix%
-        Candy_Cmd:=RegExReplace(Candy_Cmd,"i)\{.*FirstFile.*LastFile.*\}",CandySel_list)
-    }
-    If instr(Candy_Cmd,"{box:folderbrowser}")
-    {
-        FileSelectFolder, f_Folder , , , ÇëÑ¡ÔñÎÄ¼ş¼Ğ
-        If f_Folder <>
-            StringReplace,Candy_Cmd,Candy_Cmd,{box:folderbrowser},%f_Folder%,All
-        Else
-            Return
-    }
-    Candy_Cmd:=RegExReplace(Candy_Cmd,"(?<=\s|^)\{File:fullpath\}(?=\s|$|\|)","""{File:fullpath}""")     ;Ç¿ÖÆ°ÑÇ°ºóÓĞ¿Õ×Ö·û»òÕß¶¥¶ËµÄÈ«Â·¾¶£¬Ì×ÉÏÒıºÅ
-    If instr(Candy_Cmd,"{File:linktarget}")
-    {
-        FileGetShortcut,%CandySel%,CandySel_LinkTarget
-        StringReplace,Candy_Cmd,Candy_Cmd,{File:linktarget} ,%CandySel_LinkTarget%,All                      ;lnkµÄÄ¿±ê
-    }
-    CandyCmd_RepStr :=Object( "{File:ext}"         ,CandySel_Ext
-                             ,"{File:name}"        ,CandySel_FileNameNoExt
-                             ,"{File:parentpath}"  ,CandySel_ParentPath
-                             ,"{File:parentname}"  ,CandySel_ParentName
-                             ,"{File:Drive}"       ,CandySel_Drive
-                             ,"{File:Fullpath}"    ,CandySel
-                             ,"{Text}"             ,CandySel)
-    For k, v in CandyCmd_RepStr
-        StringReplace  ,Candy_Cmd,Candy_Cmd,%k%,%v%,All
-    If RegExMatch(Candy_Cmd,"i)\{.*FirstFile.*LastFile.*\}")  ;Èç¹ûÊÇÎÄ¼şÁĞ±í£¬ĞèÒªÏÈÕûÀí³ÉĞèÒªµÄÄ£Ê½
-    {   ;iniÀïÃæÎÄ¼şÁĞ±í¶¨Òå£º   {FirstFile LastFile}   FirstFile´ú±í·Ç×îºóÒ»¸öÎÄ¼ş£¬LastFile´ú±í×îºóÒ»¸öÎÄ¼ş¡£
-        CdMfile_prefix  := RegExReplace(Candy_Cmd,"i).*\{(.*?)FirstFile.*\}.*","$1")
-        CdMfile_suffix  := RegExReplace(Candy_Cmd,"i).*\{.*LastFile(.*?)\}.*","$1")
-        CdMfile_midfix := RegExReplace(Candy_Cmd,"i).*\{.*FirstFile(.*?)LastFile.*\}.*","$1")
- ;           MsgBox,%CdMfile_midfix% - %CdMfile_prefix% - %suffix%
-   ;         MsgBox,%CandySel%
-        StringReplace ,CandySel_list,CandySel,`r`n,%CdMfile_midfix%,all
+	if Run_Candylast
+		Run_Candylast := 0
+	else
+		Last_Candy_Cmd := Candy_Cmd
+	Candy_Cmd := SkSub_EnvTrans(Candy_Cmd)  ; Ìæ»»×Ô±äÁ¿ÒÔ¼°ÏµÍ³±äÁ¿,IniÀïÃæÓÃ~%±íÊ¾Ò»¸ö%,µ±È»ÒªÓÃ~~%£¬±íÊ¾Ò»¸öÔ­ÒåµÄ~%
+	Candy_Cmd = %Candy_Cmd%
+	If (instr(Candy_Cmd, "{SetClipBoard:pure}")+instr(Candy_Cmd, "{SetClipBoard:rich}") )       ; Õâ¸ö¿ª¹ØÖ¸Áî»áĞŞ¸ÄÏµÍ³Õ³Ìù°å£¬²»»á¶ÔÃüÁîĞĞ±¾Éí²úÉú×÷ÓÃ¡£ËùÒÔÏÈÒª´ÓÃüÁîĞĞÌæ»»µô¡£
+	{
+		Clipboard := InStr(Candy_Cmd, "{SetClipBoard:pure}") ? CandySel : CandySel_Rich
+		Candy_Cmd := RegExReplace(Candy_Cmd, "i)\{SetClipBoard\:.*\}")
+	}
+	If (instr(Candy_Cmd, "{icon:")) ; iconÍ¼±ê
+	{
+		Candy_Cmd := RegExReplace(Candy_Cmd, "i)\{icon\:.*\}")
+	}
+	If Candy_Cmd =   ; Èç¹ûÖ»Ïë½øĞĞÒÔÉÏÁ½²½²Ù×÷£¬Èç¹ûÔËĞĞµÄÖ¸ÁîÎª¿Õ£¬ÔòÖ±½ÓÍË³ö
+	Return
+	If instr(Candy_Cmd, "{date:")     ; Ê±¼ä²ÎÊı£¡¶¨Òå·½·¨Îª:{date:yyyy_MM_dd} Ã°ºÅ:ºóÃæµÄ²¿·Ö¿ÉÒÔËæÒâ¶¨Òå
+	{
+		Candy_Time_Mode := RegExReplace(Candy_Cmd, "i).*\{date\:(.*?)\}.*","$1")
+		FormatTime, Candy_Time_Formated, %A_nOW%, %Candy_Time_Mode%
+		Candy_Cmd := RegExReplace(Candy_Cmd, "i)\{date\:(.*?)\}", Candy_Time_Formated)
+	}
+	If instr(Candy_Cmd,"{in:")    ; in£º¶àÎÄ¼şµÄºó×º°üº¬
+	{
+		Candy_in_M := "i`am)^.*\.(" RegExReplace(Candy_Cmd, "i).*\{in\:(.*?)\}.*", "$1") ")$"
+		Grep(CandySel, Candy_in_M, CandySel, 1, 0, "`n")
+		Candy_Cmd := RegExReplace(Candy_Cmd, "i)\{in\:.*\}")
+		If (CandySel = "")
+		Return
+		Else
+			StringReplace, CandySel, CandySel, `n, `r`n, all
+	}
+	If instr(Candy_Cmd, "{ex:")    ; ex£º¶àÎÄ¼şµÄºó×ºÅÅ³ı
+	{
+		Candy_ex_M := "i`am)^.*\.(" RegExReplace(Candy_Cmd, "i).*\{ex\:(.*?)\}.*", "$1") ")$\R?"    ; ¿ÉÓÃ£¬Ö»ÊÇ¶àÁËÒ»¸ö¡±ºó¿Õ°×ÎÊÌâ¡°
+		CandySel := RegExReplace(CandySel, Candy_ex_M)
+		CandySel := RegExReplace(CandySel, "\s*$","")         ; Çå³ıºó¿Õ°× CandySel:=trim(CandySel,"`r`n")         ;Çå³ıºó¿Õ°×
+		Candy_Cmd := RegExReplace(Candy_Cmd, "i)\{ex\:.*\}")
+		Clipboard := CandySel
+		If (CandySel="")
+		Return
+	}
+	If instr(Candy_Cmd, "{input:")   ; ÌØ±ğµÄ²ÎÊı:´øÓĞpromptÌáÊ¾ÎÄ×ÖµÄinput Àı£º{Input:ÇëÊäÈëÑÓ³ÙÊ±¼ä£¬ÒÔmsÎªµ¥Î»},Ö§³Ö¶à¸öinputÊäÈë
+	{    ; Èç¹ûÒªÊäÈëÃÜÂë£¬ÇëĞ´³É{input:ÌáÊ¾ÎÄ×Ö:hide}
+		CdInput_P=1
+		Candy_Cmd_tmp := Candy_Cmd
+		While CdInput_P := RegExMatch(Candy_Cmd_tmp, "i)\{input\:(.*?)\}", CdInput_M, CdInput_P+strlen(CdInput_M))
+		{
+			CdInput_Prompt:= RegExReplace(CdInput_M, "i).*\{input\:(.*?)(:hide)?}.*", "$1")
+			CdInput_Hide:= RegExMatch(CdInput_M, "i)\{input:.*?:hide}") ? "hide" : ""
+			Gui +LastFound +OWnDialogs +AlwaysOnTop
+			InputBox, CdInput_txt, Candy InputBox, `n%CdInput_Prompt%, %CdInput_Hide%, 285, 175,,,,,
+			If ErrorLevel
+			Return
+			Else
+				StringReplace, Candy_Cmd, Candy_Cmd, %CdInput_M%, %CdInput_txt%
+		}
+	}
+	If instr(Candy_Cmd, "{box:Filebrowser}")
+	{
+		FileSelectFile, f_File,,, ÇëÑ¡ÔñÎÄ¼ş
+		If ErrorLevel
+		return
+		StringReplace, Candy_Cmd, Candy_Cmd, {box:Filebrowser}, %f_File%, All
+	}
+	If instr(Candy_Cmd, "{box:mFilebrowser}")
+	{
+		FileSelectFile, f_File ,M,, ÇëÑ¡ÔñÎÄ¼ş
+		If ErrorLevel
+		return
+		CdMfile_suffix := RegExReplace(Candy_Cmd, "i).*\{box:mFilebrowser:.*LastFile(.*?)\}.*", "$1")
+		CdMfile_prefix := RegExReplace(Candy_Cmd, "i).*\{box:mFilebrowser:(.*?)FirstFile.*", "$1")
+		CdMfile_midfix := RegExReplace(Candy_Cmd, "i).*\{box:mFilebrowser:.*FirstFile(.*?)LastFile.*\}.*", "$1")
+		Firstline := RegExReplace(f_File, "\n.*")
+		no_Firstline := RegExReplace(f_File, "^.*?\n", "$1")
+		StringReplace, CandySel_list, no_Firstline, `n, %CdMfile_midfix%%Firstline%/, all
+		CandySel_list = %CdMfile_prefix%%Firstline%\%CandySel_list%%CdMfile_suffix%
+		Candy_Cmd := RegExReplace(Candy_Cmd, "i)\{.*FirstFile.*LastFile.*\}", CandySel_list)
+	}
+	If instr(Candy_Cmd, "{box:folderbrowser}")
+	{
+		FileSelectFolder, f_Folder,,, ÇëÑ¡ÔñÎÄ¼ş¼Ğ
+		If f_Folder <>
+			StringReplace, Candy_Cmd, Candy_Cmd, {box:folderbrowser}, %f_Folder%, All
+		Else
+		Return
+	}
+	Candy_Cmd := RegExReplace(Candy_Cmd, "(?<=\s|^)\{File:fullpath\}(?=\s|$|\|)", """{File:fullpath}""")     ; Ç¿ÖÆ°ÑÇ°ºóÓĞ¿Õ×Ö·û»òÕß¶¥¶ËµÄÈ«Â·¾¶£¬Ì×ÉÏÒıºÅ
+	If instr(Candy_Cmd, "{File:linktarget}")
+	{
+		FileGetShortcut, %CandySel%, CandySel_LinkTarget
+		StringReplace, Candy_Cmd, Candy_Cmd, {File:linktarget}, %CandySel_LinkTarget%, All                      ; lnkµÄÄ¿±ê
+	}
+	CandyCmd_RepStr := Object("{File:ext}"          ,CandySel_Ext
+                           ,"{File:name}"         ,CandySel_FileNameNoExt
+                           ,"{File:parentpath}"   ,CandySel_ParentPath
+                           ,"{File:parentname}"   ,CandySel_ParentName
+                           ,"{File:Drive}"        ,CandySel_Drive
+                           ,"{File:Fullpath}"     ,CandySel
+                           ,"{Text}"              ,CandySel)
+	For k, v in CandyCmd_RepStr
+		StringReplace, Candy_Cmd, Candy_Cmd, %k%, %v%, All
+	If RegExMatch(Candy_Cmd, "i)\{.*FirstFile.*LastFile.*\}")  ; Èç¹ûÊÇÎÄ¼şÁĞ±í£¬ĞèÒªÏÈÕûÀí³ÉĞèÒªµÄÄ£Ê½
+	{   ; iniÀïÃæÎÄ¼şÁĞ±í¶¨Òå£º   {FirstFile LastFile}   FirstFile´ú±í·Ç×îºóÒ»¸öÎÄ¼ş£¬LastFile´ú±í×îºóÒ»¸öÎÄ¼ş¡£
+		CdMfile_prefix := RegExReplace(Candy_Cmd, "i).*\{(.*?)FirstFile.*\}.*", "$1")
+		CdMfile_suffix := RegExReplace(Candy_Cmd, "i).*\{.*LastFile(.*?)\}.*", "$1")
+		CdMfile_midfix := RegExReplace(Candy_Cmd, "i).*\{.*FirstFile(.*?)LastFile.*\}.*", "$1")
+
+		StringReplace ,CandySel_list, CandySel,`r`n,%CdMfile_midfix%,all
    ;     MsgBox % CandySel_list
-        CandySel_list=%CdMfile_prefix%%CandySel_list%%CdMfile_suffix%
+		CandySel_list = %CdMfile_prefix%%CandySel_list%%CdMfile_suffix%
    ;     MsgBox % CandySel_list
-        Candy_Cmd:=RegExReplace(Candy_Cmd,"i)\{.*FirstFile.*LastFile.*\}",CandySel_list)
-    }
-    If instr(Candy_Cmd,"{file:name:")
-    {
-        Candy_FileName_Coded:=
-        Candy_FileName_CodeType:= RegExReplace(Candy_Cmd,"i).*\{File\:name\:(.*?)\}.*","$1")
-        Candy_FileName_Coded:=SkSub_UrlEncode(CandySel_FileNameNoExt,Candy_FileName_CodeType)
-        Candy_Cmd:=RegExReplace(Candy_Cmd,"i)\{File\:name\:(.*?)\}",Candy_FileName_Coded)
-    }
-    If instr(Candy_Cmd,"{text:")  ;Èç¹ûÊÇĞèÒª¸ñÊ½»¯µÄÎÄ±¾£¬ÄÇÏÈ¸ñÊ½»¯ÔÙÌæ»»
-    {
-        Candy_Text_Coded:=
-        Candy_Text_CodeType:= RegExReplace(Candy_Cmd,"i).*\{Text\:(.*?)\}.*","$1")
-        Candy_Text_Coded:=SkSub_UrlEncode(CandySel,Candy_Text_CodeType)
-        Candy_Cmd:=RegExReplace(Candy_Cmd,"i)\{Text\:(.*?)\}",Candy_Text_Coded)
-    }
-    If instr(Candy_Cmd,"{mfile:")  ;¶àÎÄ¼şÖĞ£¬´øÓĞĞòºÅµÄÎÄ¼ş
-    {
-        Loop,parse,CandySel,`n
-            StringReplace,Candy_Cmd,Candy_Cmd,{mfile:%A_Index%},%A_loopfield%,All
-    }
+		Candy_Cmd:=RegExReplace(Candy_Cmd, "i)\{.*FirstFile.*LastFile.*\}", CandySel_list)
+	}
+	If instr(Candy_Cmd,"{file:name:")
+	{
+        Candy_FileName_Coded :=
+        Candy_FileName_CodeType := RegExReplace(Candy_Cmd, "i).*\{File\:name\:(.*?)\}.*", "$1")
+        Candy_FileName_Coded := SkSub_UrlEncode(CandySel_FileNameNoExt, Candy_FileName_CodeType)
+        Candy_Cmd := RegExReplace(Candy_Cmd, "i)\{File\:name\:(.*?)\}", Candy_FileName_Coded)
+	}
+	If instr(Candy_Cmd, "{text:")  ; Èç¹ûÊÇĞèÒª¸ñÊ½»¯µÄÎÄ±¾£¬ÄÇÏÈ¸ñÊ½»¯ÔÙÌæ»»
+	{
+		Candy_Text_Coded :=
+		Candy_Text_CodeType := RegExReplace(Candy_Cmd, "i).*\{Text\:(.*?)\}.*", "$1")
+		Candy_Text_Coded := SkSub_UrlEncode(CandySel, Candy_Text_CodeType)
+		Candy_Cmd:=RegExReplace(Candy_Cmd,"i)\{Text\:(.*?)\}", Candy_Text_Coded)
+	}
+	If instr(Candy_Cmd, "{mfile:")  ;¶àÎÄ¼şÖĞ£¬´øÓĞĞòºÅµÄÎÄ¼ş
+	{
+		Loop, parse, CandySel, `n
+			StringReplace, Candy_Cmd, Candy_Cmd, {mfile:%A_Index%}, %A_loopfield%,All
+	}
 
 /*
 ¨X¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨[
-<<<<ÖÕ¼«ÔËĞĞ>>>>                                                  ¨U
+¨U<<<<ÖÕ¼«ÔËĞĞ>>>>                                                            ¨U
 ¨^¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨a
 */
-    Candy_All_Cmd:="web|keys|msgbox|config|SetClipBoard|cando|Canfunc|cango|openwith|ow|run|rund|runp|ExeAhk"
-    If Not RegExMatch(Candy_Cmd,"i)^\s*(" Candy_All_Cmd ")\s*\|")
-        Candy_Cmd=OpenWith|%Candy_Cmd% ;Èç¹ûÃ»ÓĞ,ÔòÈËÎª²¹Ò»¸öOpenWith
-    Candy_Cmd:=RegExReplace(Candy_Cmd,"~\|",Chr(3))
-    arrCandy_Cmd_Str:=StrSplit(Candy_Cmd,"|"," `t")
-    Candy_Cmd_Str1:=arrCandy_Cmd_Str[1]
-    Candy_Cmd_Str2:=RegExReplace(arrCandy_Cmd_Str[2],Chr(3),"|")
-    Candy_Cmd_Str3:=RegExReplace(arrCandy_Cmd_Str[3],Chr(3),"|")
-    If (Candy_Cmd_Str1="web")
-    {
-        SkSub_WebSearch(Candy_CurWin_Fullpath,RegExReplace(Candy_Cmd,"i)^web\|(\s+|)|\s+"))
-    }
-    Else If (Candy_Cmd_Str1="Keys")  ;Èç¹ûÊÇÒÔkeys|¿ªÍ·£¬ÔòÊÇ·¢ÈÈ¼ü
-    {
-       Send %Candy_Cmd_Str2%
-    }
-    Else If (Candy_Cmd_Str1="MsgBox")  ;Èç¹ûÊÇÒÔMsgBox|¿ªÍ·£¬ÔòÊÇ·¢Ò»¸öÌáÊ¾¿ò
-    {
-        Gui +LastFound +OWnDialogs +AlwaysOnTop
-        MsgBox %Candy_Cmd_Str2%
-    }
-    Else If (Candy_Cmd_Str1="Config")
-    {
-        for k,v in szMenuWhichfile
-            Config_files .= v "`n"
-        Sort, Config_files, U
-        Loop ,parse, Config_files,`n
-            SkSub_EditConfig(Candy_Profile_Dir . "\" A_LoopField ".ini","")
-        Candy_Ctrl_Regex:="i)(^\s*|\|)" CandySel_Ext "(\||\s*)[^=]*="
-            SkSub_EditConfig(Candy_Profile_ini,Candy_Ctrl_Regex)
-    }
-    Else If (Candy_Cmd_Str1="SetClipBoard")   ;Ö®Ç°µÄ¿ª¹Ø£¬Ö»ÄÜ°ÑÑ¡ÖĞµÄÄÚÈİ·Å½øÕ³Ìù°å£¬¶øÕâ¸öÖ¸Áî£¬Ôò¿ÉÒÔ°ÑºóÃæ¸úËæµÄÄÚÈİ·Å½øÕ³Ìù°å¡££¨¸ü·á¸»£©
-    {
-        Clipboard := Candy_Cmd_Str2
-    }
-    Else If (Candy_Cmd_Str1="Cando")  ;Èç¹ûÊÇÒÔCando|¿ªÍ·£¬ÔòÊÇÔËĞĞÒ»Ğ©ÄÚ²¿³ÌĞò£¬·½±ãÓëÄãµÄÆäËü½Å±¾½øĞĞ¹Ò½Ó
-    {
-        CandySelected:=CandySel    ;¼æÈİÒÔÇ°µÄcando±äÁ¿Ğ´·¨
-        If IsLabel("Cando_" . Candy_Cmd_Str2)                       ;³ÌĞòÄÚÖÃµÄ±ğÃû
-            Goto % "Cando_" . Candy_Cmd_Str2
-        Else
-            Goto Label_Candy_ErrorHandle
-    }
-    Else If (Candy_Cmd_Str1="Canfunc")  ;Èç¹ûÊÇÒÔCanfunc|¿ªÍ·£¬ÔòÊÇÔËĞĞº¯Êı£¬·½±ãÓëÄãµÄÆäËü½Å±¾½øĞĞ¹Ò½Ó
-    {
-        CandySelected:=CandySel    ;¼æÈİÒÔÇ°µÄcando±äÁ¿Ğ´·¨
-        If IsStingFunc(Candy_Cmd_Str2)
-			{
-          RunStingFunc(Candy_Cmd_Str2)
-			return
-			}
-        Else
-            Goto Label_Candy_ErrorHandle
-    }
-    Else If (Candy_Cmd_Str1="Cango")   ;Èç¹ûÊÇÒÔCango|¿ªÍ·£¬ÔòÊÇÔËĞĞÒ»Ğ©Íâ²¿ahk³ÌĞò£¬·½±ãÓëÄãµÄÆäËü½Å±¾½øĞĞ¹Ò½Ó
-    {
-        IfExist,%Candy_Cmd_Str2%
-            Run %ahk% "%Candy_Cmd_Str2% %Candy_Cmd_Str3%" ;Íâ²¿µÄahk´úÂë¶Î£¬ÄãµÄahk¿ÉÒÔ´ø²ÎÊı
-        Else
-            Goto Label_Candy_ErrorHandle
-    }
-    Else If (Candy_Cmd_Str1="OpenWith" or Candy_Cmd_Str1="OW")     ;OpenWith|Ö¸¶¨ÓÃÄ³³ÌĞò´ò¿ªÑ¡¶¨µÄÄÚÈİ£¬ÕâÊ±ºò£¬Ó¦ÓÃ³ÌĞòºóÃæ²»ÄÜ´øÈÎºÎÃüÁîĞĞ£¬£¨ÑÏ¸ñµÄËµÊÇÄ¿±ê²ÎÊıÊÇÇÒ½öÊÇ¡°±»Ñ¡ÄÚÈİ¡°£¬Ö»ÊÇ±»Ê¡ÂÔÁË£©
-    {
-        Run ,%Candy_Cmd_Str2% "%CandySel%",%Candy_Cmd_Str3%,%Candy_Cmd_Str4% UseErrorLevel             ;1:³ÌĞò  2:¹¤×÷Ä¿Â¼ 3:×´Ì¬
-        If (ErrorLevel = "Error")               ;Èç¹ûÔËĞĞ³ö´íµÄ»°
-            Goto Label_Candy_ErrorHandle
-    }
-    Else If (Candy_Cmd_Str1="Run")     ;ÆäºóÃæÒª´øÃüÁîĞĞ£¬¼´Ê¹²Ù×÷¶ÔÏóÊÇ±»Ñ¡ÖĞµÄÎÄ¼ş£¬Ò²²»ÄÜÊ¡ÂÔ
-    {
-        Run,%Candy_Cmd_Str2% ,%Candy_Cmd_Str3%,%Candy_Cmd_Str4% UseErrorLevel             ;1:³ÌĞò  2:¹¤×÷Ä¿Â¼ 3:×´Ì¬
-        If (ErrorLevel = "Error")               ;Èç¹ûÔËĞĞ³ö´íµÄ»°
-            Goto Label_Candy_ErrorHandle
-    }
-    Else If (Candy_Cmd_Str1="RunD")     ;¸ñÊ½ÎªRunD|Ó¦ÓÃ³ÌĞò|Ó¦ÓÃ³ÌĞòµÄ±êÌâ|x|y|µÈ´ıÊ±¼ä
-    {       ;Ã»·¢ÏÖÕâ¸öx£¬yÆğ×÷ÓÃµÄÇé¿ö£¬ÔİÊ±·Å×Å
-        Run,%Candy_Cmd_Str2%,, UseErrorLevel
-        If (ErrorLevel = "Error")               ;Èç¹ûÔËĞĞ³ö´íµÄ»°
-            Goto Label_Candy_ErrorHandle
-        else
-        {
-            Sleep,% (Candy_Cmd_Str4="") ? 1000 : arrCandy_Cmd_Str[6]
-            WinWaitActive, %Candy_Cmd_Str3% ,,5
-            WinActivate, %Candy_Cmd_Str3%
-            Candy_RunD_x:=arrCandy_Cmd_Str[4] ? arrCandy_Cmd_Str[4] : 100
-            Candy_RunD_y:=arrCandy_Cmd_Str[5] ? arrCandy_Cmd_Str[5] : 100
-            PostMessage, 0x233, HDrop( CandySel,Candy_RunD_x,Candy_RunD_y), 0,, %Candy_Cmd_Str3%
-        }
-    }
-    Else If (Candy_Cmd_Str1="RunP")     ;¸ñÊ½ÎªRunP|Ó¦ÓÃ³ÌĞò|Ó¦ÓÃ³ÌĞòµÄ±êÌâ|µÈ´ıÊ±¼ä£»£»
-    {
-        Clipboard := CandySel_Rich
-        Run,%Candy_Cmd_Str2%,, UseErrorLevel
-        If (ErrorLevel = "Error")               ;Èç¹ûÔËĞĞ³ö´íµÄ»°
-            Goto Label_Candy_ErrorHandle
-        else
-        {
-            Sleep,% (Candy_Cmd_Str4="") ? 1000 : Candy_Cmd_Str4
-            WinWaitActive, %Candy_Cmd_Str3% ,,5
-            WinActivate, %Candy_Cmd_Str3%
-            Send ^v
-        }
-    }
-    Else If (Candy_Cmd_Str1="ExeAhk")
-		{      
-      ;msgbox % Candy_Cmd_Str2
-			RunScript(Candy_Cmd_Str2,Candy_Cmd_Str3)
+	Candy_All_Cmd:="web|keys|msgbox|config|SetClipBoard|cando|Canfunc|cango|openwith|ow|run|rund|runp|ExeAhk"
+	If Not RegExMatch(Candy_Cmd, "i)^\s*(" Candy_All_Cmd ")\s*\|")
+		Candy_Cmd = OpenWith|%Candy_Cmd% ; Èç¹ûÃ»ÓĞ,ÔòÈËÎª²¹Ò»¸öOpenWith
+	Candy_Cmd :=RegExReplace(Candy_Cmd, "~\|", Chr(3))
+	arrCandy_Cmd_Str :=StrSplit(Candy_Cmd, "|", " `t")
+	Candy_Cmd_Str1 := arrCandy_Cmd_Str[1]
+	Candy_Cmd_Str2 := RegExReplace(arrCandy_Cmd_Str[2], Chr(3), "|")
+	Candy_Cmd_Str3 := RegExReplace(arrCandy_Cmd_Str[3], Chr(3), "|")
+	If (Candy_Cmd_Str1 = "web")
+	{
+		SkSub_WebSearch(Candy_CurWin_Fullpath, RegExReplace(Candy_Cmd, "i)^web\|(\s+|)|\s+"))
+	}
+	Else If (Candy_Cmd_Str1 = "Keys")  ; Èç¹ûÊÇÒÔkeys|¿ªÍ·£¬ÔòÊÇ·¢ÈÈ¼ü
+	{
+		Send %Candy_Cmd_Str2%
+	}
+	Else If (Candy_Cmd_Str1 = "MsgBox")  ; Èç¹ûÊÇÒÔMsgBox|¿ªÍ·£¬ÔòÊÇ·¢Ò»¸öÌáÊ¾¿ò
+	{
+		Gui +LastFound +OWnDialogs +AlwaysOnTop
+		MsgBox %Candy_Cmd_Str2%
+	}
+	Else If (Candy_Cmd_Str1 = "Config")
+	{
+		for k,v in szMenuWhichfile
+			Config_files .= v "`n"
+		Sort, Config_files, U
+		Loop ,parse, Config_files,`n
+			SkSub_EditConfig(Candy_Profile_Dir. "\" A_LoopField ".ini","")
+		Candy_Ctrl_Regex:="i)(^\s*|\|)" CandySel_Ext "(\||\s*)[^=]*="
+		SkSub_EditConfig(Candy_Profile_ini, Candy_Ctrl_Regex)
+	}
+	Else If (Candy_Cmd_Str1 = "SetClipBoard")   ; Ö®Ç°µÄ¿ª¹Ø£¬Ö»ÄÜ°ÑÑ¡ÖĞµÄÄÚÈİ·Å½øÕ³Ìù°å£¬¶øÕâ¸öÖ¸Áî£¬Ôò¿ÉÒÔ°ÑºóÃæ¸úËæµÄÄÚÈİ·Å½øÕ³Ìù°å¡££¨¸ü·á¸»£©
+	{
+		Clipboard := Candy_Cmd_Str2
+	}
+	Else If (Candy_Cmd_Str1 = "Cando")  ; Èç¹ûÊÇÒÔCando|¿ªÍ·£¬ÔòÊÇÔËĞĞÒ»Ğ©ÄÚ²¿³ÌĞò£¬·½±ãÓëÄãµÄÆäËü½Å±¾½øĞĞ¹Ò½Ó
+	{
+		CandySelected := CandySel    ; ¼æÈİÒÔÇ°µÄcando±äÁ¿Ğ´·¨
+		If IsLabel("Cando_" . Candy_Cmd_Str2)                       ; ³ÌĞòÄÚÖÃµÄ±ğÃû
+			Goto % "Cando_" . Candy_Cmd_Str2
+		Else
+			Goto Label_Candy_ErrorHandle
+	}
+	Else If (Candy_Cmd_Str1 = "Canfunc")  ; Èç¹ûÊÇÒÔCanfunc|¿ªÍ·£¬ÔòÊÇÔËĞĞº¯Êı£¬·½±ãÓëÄãµÄÆäËü½Å±¾½øĞĞ¹Ò½Ó
+	{
+		CandySelected := CandySel    ; ¼æÈİÒÔÇ°µÄcando±äÁ¿Ğ´·¨
+		If IsStingFunc(Candy_Cmd_Str2)
+		{
+			RunStingFunc(Candy_Cmd_Str2)
+		return
 		}
-    Return
+		Else
+			Goto Label_Candy_ErrorHandle
+	}
+	Else If (Candy_Cmd_Str1 = "Cango")   ; Èç¹ûÊÇÒÔCango|¿ªÍ·£¬ÔòÊÇÔËĞĞÒ»Ğ©Íâ²¿ahk³ÌĞò£¬·½±ãÓëÄãµÄÆäËü½Å±¾½øĞĞ¹Ò½Ó
+	{
+		IfExist, %Candy_Cmd_Str2%
+			Run %ahk% "%Candy_Cmd_Str2% %Candy_Cmd_Str3%" ; Íâ²¿µÄahk´úÂë¶Î£¬ÄãµÄahk¿ÉÒÔ´ø²ÎÊı
+		Else
+			Goto Label_Candy_ErrorHandle
+	}
+	Else If (Candy_Cmd_Str1="OpenWith" or Candy_Cmd_Str1="OW")     ; OpenWith|Ö¸¶¨ÓÃÄ³³ÌĞò´ò¿ªÑ¡¶¨µÄÄÚÈİ£¬ÕâÊ±ºò£¬Ó¦ÓÃ³ÌĞòºóÃæ²»ÄÜ´øÈÎºÎÃüÁîĞĞ£¬£¨ÑÏ¸ñµÄËµÊÇÄ¿±ê²ÎÊıÊÇÇÒ½öÊÇ¡°±»Ñ¡ÄÚÈİ¡°£¬Ö»ÊÇ±»Ê¡ÂÔÁË£©
+	{
+		Run, %Candy_Cmd_Str2% "%CandySel%", %Candy_Cmd_Str3%, %Candy_Cmd_Str4% UseErrorLevel         ; 1:³ÌĞò  2:¹¤×÷Ä¿Â¼ 3:×´Ì¬
+		If (ErrorLevel = "Error")               ; Èç¹ûÔËĞĞ³ö´íµÄ»°
+			Goto Label_Candy_ErrorHandle
+	}
+	Else If (Candy_Cmd_Str1="Run")     ; ÆäºóÃæÒª´øÃüÁîĞĞ£¬¼´Ê¹²Ù×÷¶ÔÏóÊÇ±»Ñ¡ÖĞµÄÎÄ¼ş£¬Ò²²»ÄÜÊ¡ÂÔ
+	{
+		Run, %Candy_Cmd_Str2% , %Candy_Cmd_Str3%, %Candy_Cmd_Str4% UseErrorLevel         ; 1:³ÌĞò  2:¹¤×÷Ä¿Â¼ 3:×´Ì¬
+		If (ErrorLevel = "Error")               ; Èç¹ûÔËĞĞ³ö´íµÄ»°
+			Goto Label_Candy_ErrorHandle
+	}
+	Else If (Candy_Cmd_Str1="RunD")     ; ¸ñÊ½ÎªRunD|Ó¦ÓÃ³ÌĞò|Ó¦ÓÃ³ÌĞòµÄ±êÌâ|x|y|µÈ´ıÊ±¼ä
+	{       ; Ã»·¢ÏÖÕâ¸öx£¬yÆğ×÷ÓÃµÄÇé¿ö£¬ÔİÊ±·Å×Å
+		Run, %Candy_Cmd_Str2%,, UseErrorLevel
+		If (ErrorLevel = "Error")               ; Èç¹ûÔËĞĞ³ö´íµÄ»°
+			Goto Label_Candy_ErrorHandle
+		else
+		{
+			Sleep,% (Candy_Cmd_Str4="") ? 1000 : arrCandy_Cmd_Str[6]
+			WinWaitActive, %Candy_Cmd_Str3% ,,5
+			WinActivate, %Candy_Cmd_Str3%
+			Candy_RunD_x := arrCandy_Cmd_Str[4] ? arrCandy_Cmd_Str[4] : 100
+			Candy_RunD_y := arrCandy_Cmd_Str[5] ? arrCandy_Cmd_Str[5] : 100
+			PostMessage, 0x233, HDrop(CandySel, Candy_RunD_x, Candy_RunD_y), 0,, %Candy_Cmd_Str3%
+		}
+	}
+	Else If (Candy_Cmd_Str1 = "RunP")     ; ¸ñÊ½ÎªRunP|Ó¦ÓÃ³ÌĞò|Ó¦ÓÃ³ÌĞòµÄ±êÌâ|µÈ´ıÊ±¼ä£»£»
+	{
+		Clipboard := CandySel_Rich
+		Run, %Candy_Cmd_Str2%,, UseErrorLevel
+		If (ErrorLevel = "Error")               ; Èç¹ûÔËĞĞ³ö´íµÄ»°
+			Goto Label_Candy_ErrorHandle
+		else
+		{
+			Sleep, % (Candy_Cmd_Str4 = "") ? 1000 : Candy_Cmd_Str4
+			WinWaitActive, %Candy_Cmd_Str3% ,,5
+			WinActivate, %Candy_Cmd_Str3%
+			Send ^v
+		}
+	}
+	Else If (Candy_Cmd_Str1 = "ExeAhk")
+	{      
+      ;msgbox % Candy_Cmd_Str2
+			RunScript(Candy_Cmd_Str2, Candy_Cmd_Str3)
+	}
+Return
 
 /*
 ¨X¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨[
-<<<<³ö´í´¦Àí>>>>                                                  ¨U
+¨U<<<<³ö´í´¦Àí>>>>                                                            ¨U
 ¨^¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨a
 */
 
 Label_Candy_ErrorHandle:
-		If (CF_IniRead(Candy_ProFile_Ini,"Candy_Settings","ShowError", 0)=1 )     ;¿´¿´³ö´íÌáÊ¾¿ª¹Ø´ò¿ªÁËÃ»ÓĞ£¬´ò¿ªÁËµÄ»°£¬¾ÍÏÔÊ¾³ö´íĞÅÏ¢
+	If (CF_IniRead(Candy_ProFile_Ini, "Candy_Settings", "ShowError", 0) = 1)     ; ¿´¿´³ö´íÌáÊ¾¿ª¹Ø´ò¿ªÁËÃ»ÓĞ£¬´ò¿ªÁËµÄ»°£¬¾ÍÏÔÊ¾³ö´íĞÅÏ¢
 	{
 		Gui +LastFound +OwnDialogs +AlwaysOnTop
-        MsgBox, 4116,, ÏÂÊöÃüÁîĞĞ¶¨Òå³ö´í£º `n---------------------`n%Candy_Cmd%`n---------------------`nºó×ºÃû: %CandySel_Ext%`n`nÁ¢¼´ÅäÖÃÏàÓ¦ini£¿
+		MsgBox, 4116,, ÏÂÊöÃüÁîĞĞ¶¨Òå³ö´í£º `n---------------------`n%Candy_Cmd%`n---------------------`nºó×ºÃû: %CandySel_Ext%`n`nÁ¢¼´ÅäÖÃÏàÓ¦ini£¿
 		IfMsgBox Yes
 		{
-            if (CandyError_From_Menu=1)
-            {
-                Candy_This_ini:=szMenuWhichFile[ A_thisMenu "/" A_ThisMenuItem]
-                Candy_ctrl_ini_fullpath:=Candy_Profile_Dir . "\" . Candy_This_ini . ".ini"
-                Candy_Ctrl_Regex:= "=\s*\Q" szMenuContent[ A_thisMenu "/" A_ThisMenuItem] "\E\s*$"
-                SkSub_EditConfig(Candy_ctrl_ini_fullpath,Candy_Ctrl_Regex)
-            }
-            else
-            {
-                Candy_Ctrl_Regex:="i)(^\s*|\|)" CandySel_Ext "(\||\s*)[^=]*="
-                SkSub_EditConfig(Candy_Profile_ini,Candy_Ctrl_Regex)
-            }
+			if (CandyError_From_Menu = 1)
+			{
+				Candy_This_ini := szMenuWhichFile[ A_thisMenu "/" A_ThisMenuItem]
+				Candy_ctrl_ini_fullpath := Candy_Profile_Dir . "\" . Candy_This_ini . ".ini"
+				Candy_Ctrl_Regex := "=\s*\Q" szMenuContent[ A_thisMenu "/" A_ThisMenuItem] "\E\s*$"
+				SkSub_EditConfig(Candy_ctrl_ini_fullpath, Candy_Ctrl_Regex)
+			}
+			else
+			{
+				Candy_Ctrl_Regex := "i)(^\s*|\|)" CandySel_Ext "(\||\s*)[^=]*="
+				SkSub_EditConfig(Candy_Profile_ini, Candy_Ctrl_Regex)
+			}
 		}
 	}
-	Return
+Return
  /*
 ¨X¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨[
-<<<<FuctionsËùÓÃµ½µÄº¯Êı>>>>                                  ¨U
+¨U<<<<FuctionsËùÓÃµ½µÄº¯Êı>>>>                                                ¨U
 ¨^¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨a
 */
-SkSub_GetMenuItem(IniDir,IniNameNoExt,Sec,TopRootMenuName,Parent="")   ;´ÓÒ»¸öiniµÄÄ³¸ö¶Î»ñÈ¡ÌõÄ¿£¬ÓÃÓÚÉú³É²Ëµ¥¡£
+SkSub_GetMenuItem(IniDir, IniNameNoExt, Sec, TopRootMenuName, Parent="")   ; ´ÓÒ»¸öiniµÄÄ³¸ö¶Î»ñÈ¡ÌõÄ¿£¬ÓÃÓÚÉú³É²Ëµ¥¡£
 {
-    Items:=CF_IniRead_Section(IniDir "\" IniNameNoExt ".ini",sec)         ;±¾´Î²Ëµ¥µÄ·¢ÆğµØ
-    StringReplace,Items,Items,¡÷,`t,all
-    Loop,parse,Items,`n
-    {
-        Left:=RegExReplace(A_LoopField,"(?<=\/)\s+|\s+(?=\/)|^\s+|(|\s+)=[^!]*[^>]*")
-        Right:=RegExReplace(A_LoopField,"^.*?\=\s*(.*)\s*$","$1")
-        If (RegExMatch(left,"^/|//|/$|^$")) ;Èç¹û×îÓÒ¶ËÊÇ/£¬»òÕß×î×ó¶ËÊÇ/£¬»òÕß´æÔÚ//£¬ÔòÊÇÒ»¸ö´íÎóµÄ¶¨Òå£¬Å×Æú
-            Continue
-        If RegExMatch(Left,"i)(^|/)\+$")   ;Èç¹û×ó±ßµÄ×îÄ©¶ËÊÇ½ö½öÒ»¸ö"¶ÀÁ¢µÄ" + ºÅ
-        {
-            m_Parent := InStr(Left,"/") > 0 ? RegExReplace(Left,"/[^/]*$") "/" : ""  ;Èç¹û+ºÅÇ°ÃæÓĞ´æÔÚÉÏ¼¶²Ëµ¥,ÔòÓĞÉÏ¼¶²Ëµ¥£¬·ñÔòÃ»ÓĞ
-            Right:=RegExReplace(Right,"~\|",Chr(3))
-            arrRight:=StrSplit(Right,"|"," `t")
-            rr1:=arrRight[1]
-            rr2:=RegExReplace(arrRight[2],Chr(3),"|")
-            rr3:=RegExReplace(arrRight[3],Chr(3),"|")
-            rr4:=RegExReplace(arrRight[4],Chr(3),"|")
-            If (rr1="Menu")   ;Èç¹ûºóÃæÊÇ¡°²åÈë£¨×Ó£©²Ëµ¥¡±µÄÃüÁî £¬Ôò¼«ÓĞ¿ÉÄÜ²Ëµ¥ÀïÃæ»¹ÓĞ¡°Ç¶Ì×µÄÏÂ¼¶²Ëµ¥¡±¡£¡£
-            {
-                m_ini:= (rr2="") ? IniNameNoExt :  rr2
-                m_sec:= (rr3="") ? "Menu" : rr3
+	Items := CF_IniRead_Section(IniDir "\" IniNameNoExt ".ini",sec)         ; ±¾´Î²Ëµ¥µÄ·¢ÆğµØ
+	StringReplace, Items, Items, ¡÷, `t, all
+	Loop,parse,Items,`n
+	{
+		Left := RegExReplace(A_LoopField, "(?<=\/)\s+|\s+(?=\/)|^\s+|(|\s+)=[^!]*[^>]*")
+		Right := RegExReplace(A_LoopField, "^.*?\=\s*(.*)\s*$", "$1")
+		If (RegExMatch(left, "^/|//|/$|^$")) ;Èç¹û×îÓÒ¶ËÊÇ/£¬»òÕß×î×ó¶ËÊÇ/£¬»òÕß´æÔÚ//£¬ÔòÊÇÒ»¸ö´íÎóµÄ¶¨Òå£¬Å×Æú
+			Continue
+		If RegExMatch(Left, "i)(^|/)\+$")   ;Èç¹û×ó±ßµÄ×îÄ©¶ËÊÇ½ö½öÒ»¸ö"¶ÀÁ¢µÄ" + ºÅ
+		{
+			m_Parent := InStr(Left, "/") > 0 ? RegExReplace(Left,"/[^/]*$") "/" : ""  ;Èç¹û+ºÅÇ°ÃæÓĞ´æÔÚÉÏ¼¶²Ëµ¥,ÔòÓĞÉÏ¼¶²Ëµ¥£¬·ñÔòÃ»ÓĞ
+			Right:=RegExReplace(Right, "~\|", Chr(3))
+			arrRight:=StrSplit(Right, "|", " `t")
+			rr1:=arrRight[1]
+			rr2:=RegExReplace(arrRight[2], Chr(3), "|")
+			rr3:=RegExReplace(arrRight[3], Chr(3), "|")
+			rr4:=RegExReplace(arrRight[4], Chr(3), "|")
+			If (rr1="Menu")   ;Èç¹ûºóÃæÊÇ¡°²åÈë£¨×Ó£©²Ëµ¥¡±µÄÃüÁî £¬Ôò¼«ÓĞ¿ÉÄÜ²Ëµ¥ÀïÃæ»¹ÓĞ¡°Ç¶Ì×µÄÏÂ¼¶²Ëµ¥¡±¡£¡£
+			{
+				m_ini:= (rr2="") ? IniNameNoExt :  rr2
+				m_sec:= (rr3="") ? "Menu" : rr3
 				m_Parent:=Parent "" m_Parent
-                this:=SkSub_GetMenuItem(IniDir,m_ini,m_sec,TopRootMenuName,m_Parent)      ;Ç¶Ì×£¬Ñ­»·Ê¹ÓÃ´Ëº¯Êı£¬ÒÔ±ã´¦Àí¡°ÆäËûÎÄ¼şÀïµÄ£¬²åÈëµÄ²Ëµ¥¡±
-            }
-;             ÓÃ+µÄ·½·¨£¬¿ÉÒÔÈÃÄã¿ìËÙÀ©Õ¹×Ô¼º¶¨ÒåµÄ×Ó²Ëµ¥£¬·ñÔòÖ±½Ó¿ÉÒÔĞ´ÔÚ×ó²àÁË¡£
-        }
-        Else
-        {
-            szMenuIdx.Push( Parent ""  Left )
-            szMenuContent[ TopRootMenuName "/" Parent "" Left] := Right
-            szMenuWhichFile[ TopRootMenuName "/" Parent "" Left] :=IniNameNoExt
-        }
-    }
+				this:=SkSub_GetMenuItem(IniDir, m_ini, m_sec, TopRootMenuName, m_Parent)      ; Ç¶Ì×£¬Ñ­»·Ê¹ÓÃ´Ëº¯Êı£¬ÒÔ±ã´¦Àí¡°ÆäËûÎÄ¼şÀïµÄ£¬²åÈëµÄ²Ëµ¥¡±
+			}
+ ; ÓÃ+µÄ·½·¨£¬¿ÉÒÔÈÃÄã¿ìËÙÀ©Õ¹×Ô¼º¶¨ÒåµÄ×Ó²Ëµ¥£¬·ñÔòÖ±½Ó¿ÉÒÔĞ´ÔÚ×ó²àÁË¡£
+		}
+		Else
+		{
+			szMenuIdx.Push(Parent ""  Left )
+			szMenuContent[TopRootMenuName "/" Parent "" Left] := Right
+			szMenuWhichFile[TopRootMenuName "/" Parent "" Left] :=IniNameNoExt
+		}
+	}
 }
 
 SkSub_DeleteSubMenus(TopRootMenuName)
 {
-    For i,v in szMenuIdx
-    {
-        If instr(v,"/")>0
-        {
-            Item:=RegExReplace(v, "(.*)/.*", "$1")
-            Menu,%TopRootMenuName%/%Item%,add
-            Menu,%TopRootMenuName%/%Item%,DeleteAll
-        }
-    }
+	For i,v in szMenuIdx
+	{
+		If instr(v,"/")>0
+		{
+			Item:=RegExReplace(v, "(.*)/.*", "$1")
+			Menu, %TopRootMenuName%/%Item%, add
+			Menu, %TopRootMenuName%/%Item%, DeleteAll
+		}
+	}
 }
 
-SkSub_CreateMenu(Item,ParentMenuName,label,IconDir,IconSize)    ;ÌõÄ¿£¬ËüËù´¦µÄ¸¸²Ëµ¥Ãû£¬²Ëµ¥´¦ÀíµÄÄ¿±ê±êÇ©
+SkSub_CreateMenu(Item, ParentMenuName, label, IconDir, IconSize)    ;ÌõÄ¿£¬ËüËù´¦µÄ¸¸²Ëµ¥Ãû£¬²Ëµ¥´¦ÀíµÄÄ¿±ê±êÇ©
 {  ;ËÍ½øÀ´µÄItemÒÑ¾­¾­¹ıÁË¡°È¥¿Õ¸ñ´¦Àí¡±£¬·ÅĞÄÊ¹ÓÃ
 ;ÌáÈ¡²»µ½Í¼±ê»á±¨´í£¬Ìí¼ÓÏÂÃæÒ»ĞĞ·ÀÖ¹±¨´í
-    Menu, tray,UseErrorLevel
-    arrS:=StrSplit(Item,"/"," `t")
-    _s:=arrS[1]
-    if arrS.Maxindex()= 1      ;Èç¹ûÀïÃæÃ»ÓĞ /£¬¾ÍÊÇ×îÖÕµÄ¡±²Ëµ¥Ïî¡°¡£Ìí¼Óµ½¡±ËüµÄ¸¸²Ëµ¥¡±ÉÏ¡£
-    {
-        If InStr(_s,"-") = 1       ;¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª ·Ö¸îÏß
-          Menu, %ParentMenuName%, Add
-        Else If InStr(_s,"*") = 1       ;* »Ò²Ëµ¥
-        {
-            _s:=Ltrim(_s,"*")
-            Menu, %ParentMenuName%, Add,       %_s%,%Label%
-            Menu, %ParentMenuName%, Disable,  %_s%
-        }
-        Else
-        {
-            y:=szMenuContent[ ParentMenuName "/" Item]
-            z:=SkSub_Get_MenuItem_Icon( y ,IconDir)
-            Menu, %ParentMenuName%, Add,  %_s%,%Label%
-            Menu, %ParentMenuName%, icon,  %_s%,%z%,,%IconSize%
-        }
-    }
-    Else     ;Èç¹ûÓĞ /£¬ËµÃ÷»¹²»ÊÇ×îÖÕµÄ²Ëµ¥Ïî£¬»¹µÃÒ»²ãÒ»²ã·Ö²¦³öÀ´¡£
-    {
-        _Sub_ParentName=%ParentMenuName%/%_s%
-        StringTrimLeft,_subItem,Item,strlen(_s)+1
-        SkSub_CreateMenu(_subItem,_Sub_ParentName,label,IconDir,IconSize)
-        Menu,%ParentMenuName%,add,%_s%,:%_Sub_ParentName%
-    }
+	Menu, tray,UseErrorLevel
+	arrS:=StrSplit(Item,"/"," `t")
+	_s:=arrS[1]
+	if arrS.Maxindex()= 1      ;Èç¹ûÀïÃæÃ»ÓĞ /£¬¾ÍÊÇ×îÖÕµÄ¡±²Ëµ¥Ïî¡°¡£Ìí¼Óµ½¡±ËüµÄ¸¸²Ëµ¥¡±ÉÏ¡£
+	{
+		If InStr(_s,"-") = 1       ;¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª¡ª ·Ö¸îÏß
+			Menu, %ParentMenuName%, Add
+		Else If InStr(_s,"*") = 1       ;* »Ò²Ëµ¥
+		{
+			_s:=Ltrim(_s,"*")
+			Menu, %ParentMenuName%, Add,       %_s%,%Label%
+			Menu, %ParentMenuName%, Disable,  %_s%
+		}
+		Else
+		{
+			y := szMenuContent[ ParentMenuName "/" Item]
+			z := SkSub_Get_MenuItem_Icon( y ,IconDir)
+			Menu, %ParentMenuName%, Add,  %_s%,%Label%
+			Menu, %ParentMenuName%, icon,  %_s%,%z%,,%IconSize%
+		}
+	}
+	Else     ;Èç¹ûÓĞ /£¬ËµÃ÷»¹²»ÊÇ×îÖÕµÄ²Ëµ¥Ïî£¬»¹µÃÒ»²ãÒ»²ã·Ö²¦³öÀ´¡£
+	{
+		_Sub_ParentName = %ParentMenuName%/%_s%
+		StringTrimLeft, _subItem, Item, strlen(_s)+1
+		SkSub_CreateMenu(_subItem,_Sub_ParentName, label, IconDir,IconSize)
+		Menu, %ParentMenuName%, add, %_s%, :%_Sub_ParentName%
+	}
 }
 
 SkSub_EnvTrans(v)
 {
-    v:=RegExReplace(v,"~%",Chr(3))
-    Transform,v,Deref,%v% ;½â¾öSalaµÄiniÖĞÖ§³Ö%A_desktop%»ò%windir%µÈahk±äÁ¿»òÏµÍ³»·¾³±äÁ¿µÄ½âÊÍÎÊÌâ£¬@sunwind @Ğ¡¹Å
-    v:=RegExReplace(v,Chr(3),"%")
-    Return v
+	v:=RegExReplace(v,"~%",Chr(3))
+	Transform, v, Deref, %v% ; ½â¾öSalaµÄiniÖĞÖ§³Ö%A_desktop%»ò%windir%µÈahk±äÁ¿»òÏµÍ³»·¾³±äÁ¿µÄ½âÊÍÎÊÌâ£¬@sunwind @Ğ¡¹Å
+	v:=RegExReplace(v, Chr(3), "%")
+Return v
 }
 
 SkSub_Get_Firstline_Icon(ext,fullpath,iconpath)
 {
- ; dllÎÄ¼şÌáÈ¡²»µ½Í¼±ê»á±¨´í
- Menu, tray,UseErrorLevel
-	IfExist,%iconpath%\%ext%.ico             ;Èç¹û¹Ì¶¨µÄÎÄ¼ş¼ĞÀïÃæ´æÔÚ¸ÃÀàĞÍµÄÍ¼±ê
+	; dllÎÄ¼şÌáÈ¡²»µ½Í¼±ê»á±¨´í
+	Menu, tray,UseErrorLevel
+	IfExist, %iconpath%\%ext%.ico             ;Èç¹û¹Ì¶¨µÄÎÄ¼ş¼ĞÀïÃæ´æÔÚ¸ÃÀàĞÍµÄÍ¼±ê
 		x := iconpath "\" ext ".ico"
 	Else If ext in  bmp,gif,png,jpg,ico,icl,exe,dll
 		x := fullpath
 	Else
-		x:=AssocQueryApp(Ext)
-	Return %x%
+		x := AssocQueryApp(Ext)
+Return %x%
 }
 
 SkSub_Get_MenuItem_Icon(item,iconpath)   ; item=ĞèÒª»ñÈ¡Í¼±êµÄÌõÄ¿£¬iconpath=Äã¶¨ÒåµÄÍ¼±ê¿âÎÄ¼ş¼Ğ
 {
 	cmd:=RegExReplace(item,"^\s+|(|\s+)\|[^!]*[^>]*")
-    If instr(item,"{icon:")     ; ÓĞÍ¼±êÓ²¶¨Òå
-    {
-        Path_Icon:=RegExReplace(item,"i).*\{icon\:(.*?)\}.*","$1")
-        If(Fileexist(Path_Icon))         ;ÈôÓĞÈ«Â·¾¶µÄÍ¼±ê´æÔÚ
+	If instr(item,"{icon:")     ; ÓĞÍ¼±êÓ²¶¨Òå
+	{
+		Path_Icon:=RegExReplace(item,"i).*\{icon\:(.*?)\}.*","$1")
+		If(Fileexist(Path_Icon))         ;ÈôÓĞÈ«Â·¾¶µÄÍ¼±ê´æÔÚ
 			return Path_Icon
 		If(Fileexist(iconpath "\MyIcon\" Path_Icon))       ;ÈôÔÚMyIconÎÄ¼ş¼ĞÀïÃæ
 			return iconpath "\MyIcon\" Path_Icon
-    }
+	}
 	Else if FileExist(iconpath "\Command\" cmd ".ico")      ;Èô´æÔÚ "ÃüÁîÃû.ico" ÎÄ¼ş
 	{
 		Return  iconpath "\Command\" cmd ".ico"
 	}
 	item:=SkSub_envtrans(item)
-	if RegExMatch(item,"i)^(ow|openwith|rot|run|roa|runp|rund|exeahk)\|") ;ÔËĞĞÃüÁîÀà
+	if RegExMatch(item, "i)^(ow|openwith|rot|run|roa|runp|rund|exeahk)\|") ;ÔËĞĞÃüÁîÀà
 	{
-   		cmd_removed:=RegExReplace(item,"^.*?\|")      ;ÀïÃæ´¿´âµÄ Ó¦ÓÃ³ÌĞò Â·¾¶
-		x:=RegExReplace(cmd_removed,"i)\.exe[^!]*[^>]*", ".exe")
-   if(Fileexist(x))
-    Return %x%  ;Ô­½Å±¾Ö»ÓĞÕâÒ»¾ä
-   else if(Fileexist(A_WinDir "\system32\" x))
+		cmd_removed:=RegExReplace(item, "^.*?\|")      ;ÀïÃæ´¿´âµÄ Ó¦ÓÃ³ÌĞò Â·¾¶
+		x:=RegExReplace(cmd_removed, "i)\.exe[^!]*[^>]*", ".exe")
+		if(Fileexist(x))
+		Return %x%  ;Ô­½Å±¾Ö»ÓĞÕâÒ»¾ä
+		else if(Fileexist(A_WinDir "\system32\" x))
     Return %x%
 /*
       ;Ô­°æÌáÈ¡²»µ½Í¼±ê£¬²Ëµ¥´´½¨²»»á³ö´í, ×Ô¼ºµÄ½Å±¾³ö´í
@@ -594,37 +605,37 @@ SkSub_Get_MenuItem_Icon(item,iconpath)   ; item=ĞèÒª»ñÈ¡Í¼±êµÄÌõÄ¿£¬iconpath=Äã¶
 	Else if instr(item,".exe") ;Ê¡ÂÔÁËÖ¸ÁîµÄopenwith|
 	{
 		x:=RegExReplace(item,"i)\.exe[^!]*[^>]*", ".exe")
-    if(Fileexist(x))
+		if(Fileexist(x))
 		Return %x%
-   else if(Fileexist(A_WinDir "\system32\" x))
-    Return %x%
+		else if(Fileexist(A_WinDir "\system32\" x))
+		Return %x%
 	}
 	Else
 	{
-		t:=RegExReplace(item,"\s*\|.*?$")       ;È¥³ıÔËĞĞ²ÎÊı£¬Ö»±£ÁôµÚÒ»¸ö|×îÇ°ÃæµÄ²¿·Ö
+		t:=RegExReplace(item, "\s*\|.*?$")       ;È¥³ıÔËĞĞ²ÎÊı£¬Ö»±£ÁôµÚÒ»¸ö|×îÇ°ÃæµÄ²¿·Ö
 		x:=AssocQueryApp(t)
 		Return %x%
 	}
 }
 
 AssocQueryApp(sExt)
-{    ;http://www.autohotkey.com/board/topic/54927-regread-associated-program-for-a-file-extension/
-    sExt =.%sExt%  ;ASSOCSTR_EXECUTABLE
-    DllCall("shlwapi.dll\AssocQueryString", "uint", 0, "uint", 2, "uint", &sExt, "uint", 0, "uint", 0, "uint*", iLength)
-    VarSetCapacity(sApp, 2*iLength, 0)
-    DllCall("shlwapi.dll\AssocQueryString", "uint", 0, "uint", 2, "uint", &sExt, "uint", 0, "str", sApp, "uint*", iLength)
-    Return sApp
+{    ; http://www.autohotkey.com/board/topic/54927-regread-associated-program-for-a-file-extension/
+	sExt =.%sExt%  ; ASSOCSTR_EXECUTABLE
+	DllCall("shlwapi.dll\AssocQueryString", "uint", 0, "uint", 2, "uint", &sExt, "uint", 0, "uint", 0, "uint*", iLength)
+	VarSetCapacity(sApp, 2*iLength, 0)
+	DllCall("shlwapi.dll\AssocQueryString", "uint", 0, "uint", 2, "uint", &sExt, "uint", 0, "str", sApp, "uint*", iLength)
+Return sApp
 }
 
-SkSub_Regex_IniRead(ini,sec,reg)      ;ÕıÔò·½Ê½µÄ¶ÁÈ¡£¬µÈºÅ×ó²à·ûºÏÕıÔòÌõ¼ş
-{  ;ÔÚiniµÄÄ³¸ö¶ÎÄÚ£¬²éÕÒ·ûºÏÄ³ÕıÔò¹æÔòµÄ×Ö·û´®£¬Èç¹ûÕÒµ½·µ»ØvalueÖµ¡£ÕÒ²»µ½£¬Ôò·µ»Ø Error
-	IniRead,keylist,%ini%,%sec%,
-	Loop,Parse,keylist,`n
+SkSub_Regex_IniRead(ini, sec, reg)      ; ÕıÔò·½Ê½µÄ¶ÁÈ¡£¬µÈºÅ×ó²à·ûºÏÕıÔòÌõ¼ş
+{  ; ÔÚiniµÄÄ³¸ö¶ÎÄÚ£¬²éÕÒ·ûºÏÄ³ÕıÔò¹æÔòµÄ×Ö·û´®£¬Èç¹ûÕÒµ½·µ»ØvalueÖµ¡£ÕÒ²»µ½£¬Ôò·µ»Ø Error
+	IniRead, keylist, %ini%, %sec%,
+	Loop, Parse, keylist, `n
 	{
-		t:=RegExReplace(A_LoopField,"=.*?$")
+		t := RegExReplace(A_LoopField, "=.*?$")
 		If(RegExMatch(t, reg))
 		{
-			Return % RegExReplace(A_LoopField,"^.*?=")
+			Return % RegExReplace(A_LoopField, "^.*?=")
 			Break
 		}
 	}
@@ -643,8 +654,8 @@ grep(h, n, ByRef v, s = 1, e = 0, d = "")   ; ;by polythene
 
 SkSub_WebSearch(Win_Full_Path,Http)
 {
-	all_browser:=CF_IniRead(Candy_ProFile_Ini, "General_Settings", "InUse_Browser")
-	DefaultBrowser:=SkSub_EnvTrans(CF_IniRead(Candy_ProFile_Ini, "General_Settings", "Default_Browser"))
+	all_browser := CF_IniRead(Candy_ProFile_Ini, "General_Settings", "InUse_Browser")
+	DefaultBrowser := SkSub_EnvTrans(CF_IniRead(Candy_ProFile_Ini, "General_Settings", "Default_Browser"))
 	;µÚ¢Ù²½£¬¿´µ±Ç°µ±Ç°¼¤»î´°¿Ú ÊÇ·ñ ä¯ÀÀÆ÷
 	If Win_Full_Path Contains %All_Browser%
 	{
@@ -654,17 +665,17 @@ SkSub_WebSearch(Win_Full_Path,Http)
 	Else Loop,Parse,All_Browser,`,   ;¿´ËùÓĞ¶¨ÒåµÄä¯ÀÀÆ÷£¬
 	{
 		Useful_FullPath:=SkSub_process_exist_and_useful(A_LoopField)
-		If (  Useful_FullPath!= 0  and Useful_FullPath!= 1 )
+		If (Useful_FullPath!= 0 and Useful_FullPath != 1 )
 		{
-			Browser:=Useful_FullPath
+			Browser := Useful_FullPath
 			Break
 		}
 	}
 	; µÚ¢Û²½	£¬¶¼Ã»ÓĞÃ´£¬¿´iniÄ¬ÈÏä¯ÀÀÆ÷ÊÇ·ñ·ûºÏÌõ¼ş
 	If ( Browser="")  ;¿´iniÄ¬ÈÏä¯ÀÀÆ÷£¬a¡£¿´½ø³ÌÖĞÊÇ·ñÓĞ£¬²¢ÇÒÄÜ±»ÌáÈ¡³öÀ´£¨·ÀÖ¹ĞéÄâ×ÀÃæµÄ¸ôÀë£¬Ñı×Ô¼ºµÄĞèÇó£©¡£b¡£»òÕß½ø³ÌÀïÃæÃ»ÓĞ¡£
 	{
-		DefaultBrowser_È¥³ı²ÎÊı:= RegExReplace(DefaultBrowser, "exe[^!]*[^>]*", "exe")
-		SplitPath ,DefaultBrowser_È¥³ı²ÎÊı,DefaultBrowser_name
+		DefaultBrowser_È¥³ı²ÎÊı := RegExReplace(DefaultBrowser, "exe[^!]*[^>]*", "exe")
+		SplitPath, DefaultBrowser_È¥³ı²ÎÊı, DefaultBrowser_name
 		Useful_FullPath:=SkSub_process_exist_and_useful(DefaultBrowser_name)
 		If (  Useful_FullPath!= 0  And FileExist(DefaultBrowser_È¥³ı²ÎÊı))
 		{
@@ -681,16 +692,16 @@ SkSub_WebSearch(Win_Full_Path,Http)
 			Browser := Browser " " Browser_Args
 		}
 		Run,% Browser . " """ . Http . """"
-		IfInString Browser,firefox.exe
-			WinActivate,Mozilla Firefox Ahk_Class MozillaWindowClass
+		IfInString Browser, firefox.exe
+			WinActivate, Mozilla Firefox Ahk_Class MozillaWindowClass
 		Else
 			WinActivate Ahk_PID %ErrorLevel%
 	}
 	Else ;Ã»ÓĞä¯ÀÀÆ÷Ã´
 	{  ;¿´×¢²á±í ÊÇ·ñÓĞÄ¬ÈÏµÄä¯ÀÀÆ÷
 		RegRead, RegDefaultBrowser, HKEY_CLASSES_ROOT, http\shell\open\command
-		StringReplace, RegDefaultBrowser, RegDefaultBrowser,"
-		SplitPath, RegDefaultBrowser,,RDB_Dir,,RDB_NameNoExt,
+		StringReplace, RegDefaultBrowser, RegDefaultBrowser, "
+		SplitPath, RegDefaultBrowser,, RDB_Dir,, RDB_NameNoExt,
 		Run,% RDB_Dir . "\" . RDB_NameNoExt . ".exe" . " """ . Http . """",,UseErrorLevel
 		If errorlevel
 		{
@@ -701,9 +712,9 @@ SkSub_WebSearch(Win_Full_Path,Http)
 ;============================================================================================================
 SkSub_process_exist_and_useful(Process_name)        ;ÅĞ¶ÏÄ³¸ö½ø³ÌÊÇ·ñ´æÔÚÇÒÄÜÓĞĞ§ÔËĞĞ£¬Èç¹û²»ÓÃdesktops£¬Õâ¶Î´úÂë¿ÉÒÔÇå³ıµô¡£
 {
-	Process,exist,%Process_name%
-	WinGet, Process_Fullpath,ProcessPath,Ahk_PID %ErrorLevel%
-	If (ErrorLevel!=0 And  Process_Fullpath!="")
+	Process, exist, %Process_name%
+	WinGet, Process_Fullpath, ProcessPath, Ahk_PID %ErrorLevel%
+	If (ErrorLevel!=0 And Process_Fullpath!="")
 		Return %Process_Fullpath%
 	Else if ErrorLevel=0
 		Return 1
@@ -714,57 +725,57 @@ SkSub_process_exist_and_useful(Process_name)        ;ÅĞ¶ÏÄ³¸ö½ø³ÌÊÇ·ñ´æÔÚÇÒÄÜÓĞĞ
 HDrop(fnames,x=0,y=0)    ;http://www.autohotkey.com/board/topic/41467-make-ahk-drop-files-into-other-applications/page-2
 {
 	characterSize := A_IsUnicode ? 2 : 1
-	fns:=RegExReplace(fnames,"\n$")
-	fns:=RegExReplace(fns,"^\n")
-	hDrop:=DllCall("GlobalAlloc","UInt",0x42,"UInt",20+(StrLen(fns)*characterSize)+characterSize*2)
-	p:=DllCall("GlobalLock","UInt",hDrop)
+	fns := RegExReplace(fnames,"\n$")
+	fns := RegExReplace(fns,"^\n")
+	hDrop := DllCall("GlobalAlloc", "UInt", 0x42, "UInt", 20+(StrLen(fns)*characterSize)+characterSize*2)
+	p:=DllCall("GlobalLock", "UInt", hDrop)
 	NumPut(20, p+0)  ;offset
 	NumPut(x,  p+4)  ;pt.x
 	NumPut(y,  p+8)  ;pt.y
 	NumPut(0,  p+12) ;fNC
 	NumPut(A_IsUnicode ? 1 : 0,  p+16) ;fWide
 	p2:=p+20
-	Loop,Parse,fns,`n,`r
+	Loop, Parse, fns, `n, `r
 	{
-		DllCall("RtlMoveMemory","UInt",p2,"Str",A_LoopField,"UInt",StrLen(A_LoopField)*characterSize)
+		DllCall("RtlMoveMemory", "UInt", p2, "Str", A_LoopField, "UInt", StrLen(A_LoopField)*characterSize)
 		p2+=StrLen(A_LoopField)*characterSize + characterSize
 	}
-	DllCall("GlobalUnlock","UInt",hDrop)
+	DllCall("GlobalUnlock", "UInt", hDrop)
 	Return hDrop
 }
 
-SkSub_EditConfig(inifile,regex="") ;±à¼­ÅäÖÃÎÄ¼ş£¡
+SkSub_EditConfig(inifile, regex="") ; ±à¼­ÅäÖÃÎÄ¼ş£¡
 {
-	if not fileExist(inifile)      ;¶¯Ì¬²Ëµ¥Î´±ØÓĞiniÎÄ¼ş´æÔÚ
+	if not fileExist(inifile)      ; ¶¯Ì¬²Ëµ¥Î´±ØÓĞiniÎÄ¼ş´æÔÚ
 		return
-	if (regex<>"")  ;Èç¹ûËÍÁËÕıÔò±í´ïÊ½½øÀ´
+	if (regex<>"")  ; Èç¹ûËÍÁËÕıÔò±í´ïÊ½½øÀ´
 	{
 		Loop
 		{
 			FileReadLine, L, %inifile%, %A_Index%
 			if ErrorLevel
 				break
-			if regexmatch(L,regex)
+			if regexmatch(L, regex)
 			{
-				LineNo:=a_index
+				LineNo := a_index
 				break
 			}
 		}
 	}
-Default_TextEditor := CF_IniRead(Candy_ProFile_Ini, "General_Settings", "Default_TextEditor")
-	Default_TextEditor:=SkSub_EnvTrans(Default_TextEditor)  ;Ä¬ÈÏÎÄ±¾±à¼­Æ÷
-	TextEditor:=FileExist(Default_TextEditor) ? Default_TextEditor:"notepad.exe"       ;ÎÄ±¾±à¼­Æ÷
-	SplitPath,TextEditor,,,,namenoext
-	LineJumpArgs:=CF_IniRead(Candy_ProFile_Ini, "TextEditor's_CommandLine", namenoext)
-	if  (LineJumpArgs="Error" or LineNo="" )
+	Default_TextEditor := CF_IniRead(Candy_ProFile_Ini, "General_Settings", "Default_TextEditor")
+	Default_TextEditor:=SkSub_EnvTrans(Default_TextEditor)  ; Ä¬ÈÏÎÄ±¾±à¼­Æ÷
+	TextEditor:=FileExist(Default_TextEditor) ? Default_TextEditor : "notepad.exe"       ; ÎÄ±¾±à¼­Æ÷
+	SplitPath, TextEditor,,,, namenoext
+	LineJumpArgs :=CF_IniRead(Candy_ProFile_Ini, "TextEditor's_CommandLine", namenoext)
+	if  (LineJumpArgs = "Error" or LineNo = "" )
 		cmd :=TextEditor " " inifile
 	else
 	{
-		cmd :=TextEditor " " LineJumpArgs
-		StringReplace,cmd,cmd,$(FILEPATH),%inifile%
-		StringReplace,cmd,cmd,$(LINENUM),%LineNo%
+		cmd := TextEditor " " LineJumpArgs
+		StringReplace, cmd, cmd, $(FILEPATH), %inifile%
+		StringReplace, cmd, cmd, $(LINENUM), %LineNo%
 	}
-	Run,%cmd%,,UseErrorLevel,TextEditor_PID
+	Run, %cmd%,, UseErrorLevel, TextEditor_PID
 	WinActivate ahk_pid %TextEditor_PID%
 	return
 }
@@ -772,6 +783,6 @@ Default_TextEditor := CF_IniRead(Candy_ProFile_Ini, "General_Settings", "Default
 SkSub_Clear_CandyVar()
 {
 	Global
-    CandySel:= CandySel_LinkTarget:= CandySel_Ext:=CandySel_FileNamenoExt:=CandySel_ParentPath:=CandySel_ParentName:=CandySel_Drive:=Config_files:=""
+	CandySel:= CandySel_LinkTarget:= CandySel_Ext:=CandySel_FileNamenoExt := CandySel_ParentPath := CandySel_ParentName := CandySel_Drive := Config_files := ""
 	CandyError_From_Menu:=0
 }

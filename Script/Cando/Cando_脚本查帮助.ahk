@@ -89,7 +89,6 @@ Cando_查新版帮助:
 		IfWinExist,%Ahk帮助标题%
 		{
 			WinActivate,%Ahk帮助标题%
-			WinWaitActive,%Ahk帮助标题%
 			send !N
 			gosub monishuru
 		}
@@ -104,26 +103,26 @@ Cando_查新版帮助:
 			WinWait,%Ahk帮助标题%,,5
 		}
 		WinActivate,%Ahk帮助标题%
-		WinWaitActive,%Ahk帮助标题%
 		send !s
 		gosub monishuru2
 	}
 Return
 
 monishuru:
+sleep,1000
 WinActivate,%Ahk帮助标题%
 wb := WBGet("ahk_class HH Parent")
+
 sleep,100
 wb.document.getElementsByTagName("input")[0].value := CandySel
 wb.document.getElementsByTagName("input")[0].focus()
 
 sleep,100
 ControlSend,Internet Explorer_Server1,{enter},%Ahk帮助标题%
-sleep,100
-ControlSend,Internet Explorer_Server1,{enter},%Ahk帮助标题%
 return
 
 monishuru2:
+sleep,3000
 WinActivate,%Ahk帮助标题%
 wb := WBGet("ahk_class HH Parent")
 sleep,100

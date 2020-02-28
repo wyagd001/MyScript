@@ -36,7 +36,7 @@ SaveDesktopIconsPositions:
 	coords := DeskIcons()
 	if (coords = "")
 	{
-		MsgBox, 无法保存桌面图标，请重试！
+		;MsgBox, 无法保存桌面图标，请重试！
 	Return
 	}
 	FileRead, read_coords, %SaveDeskIcons_inifile%
