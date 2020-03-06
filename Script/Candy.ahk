@@ -354,7 +354,7 @@ Label_Candy_RunCommand:
 			Config_files .= v "`n"
 		Sort, Config_files, U
 		Loop ,parse, Config_files,`n
-			SkSub_EditConfig(Candy_Profile_Dir. "\" A_LoopField ".ini","")
+			SkSub_EditConfig(Candy_Profile_Dir . "\" A_LoopField ".ini", "")
 		Candy_Ctrl_Regex:="i)(^\s*|\|)" CandySel_Ext "(\||\s*)[^=]*="
 		SkSub_EditConfig(Candy_Profile_ini, Candy_Ctrl_Regex)
 	}

@@ -14,7 +14,7 @@ Class Interception {
 		; win7 系统下没有使用，主要用于 win10 关机, 结束任务页面
 		if SubStr(A_OSVersion,1,3) != "10."
 		return
-		this.Ensure_Admin()
+		;this.Ensure_Admin()   ; 脚本需要管理员权限，但主脚本会自动获取，这里就注释掉了
 
 		this.dll := (A_PtrSize = 8) ? A_ScriptDir "\interception_x64.dll" : A_ScriptDir "\interception_x32.dll"
 		this.hModule := DllCall("LoadLibrary", "Str", this.dll, "Ptr")

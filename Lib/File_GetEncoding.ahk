@@ -12,7 +12,6 @@
 	返回值:
 		字符串
 		0      - 错误, 文件不存在
-		1      - 编译的二进制文件
 		CP936  - ANSI (CP936), 必须带有中文字符串, 才能和 UTF-8 无签名 区分开.
 		UTF-16 - text Utf-16 LE File
 		CP1201 - text Utf-16 BE File
@@ -21,7 +20,7 @@
 		UTF-8  - text Utf-8 File (UTF-8 + BOM)
 		UTF-8-RAW  - UTF-8 无签名. 
 		对于 UTF-8-RAW 的说明：
-		1.文件小于100k 读取整个文件, 必须带有中文字符串(文件中存在乱码时可能得到错误的结果), 才能和 CP936 区分开.
+		1.文件小于100k 读取整个文件, 必须带有中文字符串(文件中存在乱码（特殊字符）时可能得到错误的结果), 才能和 CP936 区分开.
 		2.文件大于100k 读取文件前9个字节，前3个字符为中文时才有较大可能取得正确的结果, 才能和 CP936 区分开。
 */
 
@@ -169,6 +168,7 @@ File_GetEncoding(aFile, aNumBytes = 0, aMinimum = 4)
 
 	; 如果通过以上判断没有获取到文件编码
 	; 通过检测文件是否含有不可见字符来简单判断是否为exe类型的二进制文件
+/*
 	loop, %_nBytes%
 	{
 		if ((_bytesArr[(A_Index - 1)] > 0) && (_bytesArr[(A_Index - 1)] < 9))
@@ -177,6 +177,7 @@ File_GetEncoding(aFile, aNumBytes = 0, aMinimum = 4)
 			return 1
 		}
 	}
+*/
 	; 未符合上面条件的返回系统默认 ansi 内码
 	; 简体中文系统默认返回的是 CP936
 	return "CP" DllCall("GetACP")  

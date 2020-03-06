@@ -17,7 +17,7 @@ GetClipboardFormat(type=1)  ;Thanks nnnik
 		return x
 }
 
-; returnnum = 0 不还原剪贴板，返回新剪贴板
+; returnnum = 0 不还原剪贴板，返回复制的内容（新剪贴板）
 ; returnnum = 1 还原剪贴板(剪贴板内容不变)，清空 _isFile _ClipAll，返回复制的内容
 ; returnnum = 2/3/4.. 还原剪贴板，赋值 _isFile _ClipAll，返回复制的内容
 GetSelText(returnnum:=1, ByRef _isFile:="", ByRef _ClipAll:="",waittime:=2)

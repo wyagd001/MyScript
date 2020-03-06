@@ -312,24 +312,25 @@ Gui,Add,Text,x26 y290,系统注册表中已注册的命令对本程序同样有效
 Gui,Add,Button,x490 y285 g自定义运行命令_click,查看修改
 
 Gui,Tab,其他
-Gui,Add,CheckBox,x26 y30 w210 h20 vvAuto_DisplayMainWindow Checked%Auto_DisplayMainWindow%,启动时显示主窗口
-Gui,Add,CheckBox,x26 y50 w210 h20 vvAuto_Trayicon Checked%Auto_Trayicon%,启动时检测托盘图标
+Gui,Add,CheckBox,x26 y30 w120 h20 vvAuto_DisplayMainWindow Checked%Auto_DisplayMainWindow%,启动时显示主窗口
+Gui,Add,CheckBox,x280 y30 w130 h20 vvAuto_7plusMenu Checked%Auto_7plusMenu%,资源管理器7plus菜单
+Gui,Add,CheckBox,x26 y50 w140 h20 vvAuto_Trayicon Checked%Auto_Trayicon%,启动时检测托盘图标
 Gui,Add,CheckBox,x44 y70 w200 h20 vvAuto_Trayicon_showmsgbox Checked%Auto_Trayicon_showmsgbox%,没有托盘图标显示重启脚本对话框
-Gui,Add,CheckBox,x26 y90 w210 h20 vvAuto_ShutdownMonitor Checked%Auto_ShutdownMonitor%,监视关机使用传统关机对话框
-Gui,Add,CheckBox,x26 y110 w210 h20 vvAuto_PasteAndOpen Checked%Auto_PasteAndOpen%,粘贴并打开
-Gui,Add,CheckBox,x26 y130 w210 h20 vvAuto_Clip Checked%Auto_Clip%,三重剪贴板(复制文字时生效)
-Gui,Add,CheckBox,x44 y150 w130 h20 vvAuto_Cliphistory Checked%Auto_Cliphistory%,剪贴板历史(文字)
+Gui,Add,CheckBox,x26 y90 w180 h20 vvAuto_ShutdownMonitor Checked%Auto_ShutdownMonitor%,监视关机使用传统关机对话框
+Gui,Add,CheckBox,x26 y110 w80 h20 vvAuto_PasteAndOpen Checked%Auto_PasteAndOpen%,粘贴并打开
+Gui,Add,CheckBox,x26 y130 w180 h20 vvAuto_Clip Checked%Auto_Clip%,三重剪贴板(复制文字时生效)
+Gui,Add,CheckBox,x44 y150 w120 h20 vvAuto_Cliphistory Checked%Auto_Cliphistory%,剪贴板历史(文字)
 Gui,Font,cgreen
-Gui,Add,text,x190 y154 w60 h20 ggui_clipHistory,查看
+Gui,Add,text,x190 y154 w40 h20 ggui_clipHistory,查看
 Gui,Font
-Gui,Add,CheckBox,x44 y170 w230 h20 vvAuto_ClipPlugin Checked%Auto_ClipPlugin%,根据剪贴板内容自动运行标签
-Gui,Add,CheckBox,x62 y190 w130 h20 vvClipPlugin_git Checked%ClipPlugin_git%,git
-Gui,Add,CheckBox,x26 y210 w210 h20 vvAuto_Capslock Checked%Auto_Capslock%, 按住 Capslock 改变窗口大小位置
-Gui,Add,CheckBox,x26 y230 w210 h20 vvAuto_mouseclick Checked%Auto_mouseclick%, 鼠标左键增强(热键)
-Gui,Add,CheckBox,x26 y250 w210 h20 vvAuto_midmouse Checked%Auto_midmouse%, 鼠标中键增强(热键)
-Gui,Add,CheckBox,x26 y270 w210 h20 vvAuto_Spacepreview Checked%Auto_Spacepreview%, Space 预览文件(热键)
-Gui,Add,CheckBox,x26 y290 w210 h20 vvAuto_AhkServer Checked%Auto_AhkServer%, ahk 网页控制
-Gui,Add,CheckBox,x46 y310 w210 h20 vvLoginPass Checked%LoginPass%, 启动默认已登录状态
+Gui,Add,CheckBox,x44 y170 w180 h20 vvAuto_ClipPlugin Checked%Auto_ClipPlugin%,根据剪贴板内容自动运行标签
+Gui,Add,CheckBox,x62 y190 w40 h20 vvClipPlugin_git Checked%ClipPlugin_git%,git
+Gui,Add,CheckBox,x26 y210 w200 h20 vvAuto_Capslock Checked%Auto_Capslock%, 按住 Capslock 改变窗口大小位置
+Gui,Add,CheckBox,x26 y230 w125 h20 vvAuto_mouseclick Checked%Auto_mouseclick%, 鼠标左键增强(热键)
+Gui,Add,CheckBox,x26 y250 w125 h20 vvAuto_midmouse Checked%Auto_midmouse%, 鼠标中键增强(热键)
+Gui,Add,CheckBox,x26 y270 w140 h20 vvAuto_Spacepreview Checked%Auto_Spacepreview%, Space 预览文件(热键)
+Gui,Add,CheckBox,x26 y290 w90 h20 vvAuto_AhkServer Checked%Auto_AhkServer%, ahk 网页控制
+Gui,Add,CheckBox,x46 y310 w130 h20 vvLoginPass Checked%LoginPass%, 启动默认已登录状态
 
 Gui,Tab,关于
 Gui,Add,Text,x26 y30,名称：运行 - Ahk
@@ -965,6 +966,7 @@ IniWrite,% vAuto_ClipPlugin,%run_iniFile%,功能开关,Auto_ClipPlugin
 IniWrite,% vClipPlugin_git,%run_iniFile%,功能开关,ClipPlugin_git
 IniWrite,% vAuto_Capslock,%run_iniFile%,功能开关,Auto_Capslock
 IniWrite,% vAuto_mouseclick,%run_iniFile%,功能开关,Auto_mouseclick
+IniWrite,% vAuto_7plusMenu,%run_iniFile%,功能开关,Auto_7plusMenu
 IniWrite,% vAuto_midmouse,%run_iniFile%,功能开关,Auto_midmouse
 IniWrite,% vAuto_Spacepreview,%run_iniFile%,功能开关,Auto_Spacepreview
 IniWrite,% vAuto_AhkServer,%run_iniFile%,功能开关,Auto_AhkServer

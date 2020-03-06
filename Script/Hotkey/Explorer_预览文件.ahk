@@ -65,11 +65,17 @@ return
 
 ; 详情  https://github.com/mozilla/pdf.js
 Cando_pdf_prew:
-gosub,IE_Open
-WB.Navigate("https://mozilla.github.io/pdf.js/es5/web/viewer.html")  ; 老版浏览器
-sleep,6000
-settimer,autoopenpdf,-2000 
-wb.document.getElementById("openFile").click()
+	gosub,IE_Open
+	WB.Navigate("https://mozilla.github.io/pdf.js/es5/web/viewer.html?file=blank.pdf")  ; 老版浏览器
+	WBStartTime := A_TickCount
+	loop 
+	{
+		WBElapsedTime := A_TickCount - WBStartTime
+		Sleep, 500
+	}
+	Until (wb.Document.Readystate = "Complete") or WBElapsedTime>5000
+	wb.document.getElementById("openFile").click()
+	settimer,autoopenpdf,-200
 return
 
 Cando_html_prew:
@@ -323,12 +329,6 @@ return
 
 Cando_text_prew:
 File_Encode := File_GetEncoding(files)
-if (File_Encode = 0) or (File_Encode = 1)
-{
-msgbox 不支持的文件类型或编码。
-return
-}
-
 FileGetSize, File_Size, % files
 FileEncoding, % File_Encode
 	if (File_Size > 102400) && ((File_Encode = "CP936") or (File_Encode = "UTF-8-RAW"))
