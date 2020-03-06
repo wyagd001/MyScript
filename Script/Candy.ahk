@@ -8,7 +8,11 @@ Candy:
 	WinGetTitle, Candy_Title, Ahk_ID %Candy_CurWin_id%    ; 当前进程的标题
 	CandySel := GetSelText(2, Candy_isFile, CandySel_Rich)
 	if !CandySel
+	{
+		if NoSelectGotoWindy
+			gosub Windy
 	Return
+	}
 	Transform, Candy_ProFile_Ini, Deref, %Candy_ProFile_Ini%
 
 	IfNotExist %Candy_ProFile_Ini%         ; 如果配置文件不存在，则发出警告，且终止
