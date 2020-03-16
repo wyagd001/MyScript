@@ -1,100 +1,137 @@
 gui_clipHistory:
-gui_History()
+	gui_History()
 return
 
 $^V::
-if tempid   ; 图片，文件等非文字剪贴板 直接粘贴
-{
-Send, ^{vk56}
-return
-}
-if !ClipSaved1   ; 脚本启动时的剪贴板 直接粘贴
-{
-Send, ^{vk56}
-return
-}
-if (Clipboard!=ClipSaved%clipid%)   ; 脚本未记录的剪贴板 直接粘贴
-{
-Send, ^{vk56}
-return
-}
-monitor=0
-first+=1
-if first=4
-first=1
-if first=1
-clipnum:=clipid
-else if first=2
-{
-clipnum:=clipid-1
-if clipnum=0
-clipnum = 3
-}
-else if first=3
-{
-clipnum:=clipid+1
-if clipnum=4
-clipnum = 1
-}
+	if tempid   ; 图片，文件等非文字剪贴板 直接粘贴
+	{
+		Send, ^{vk56}
+	return
+	}
+	if !ClipSaved1   ; 脚本启动时的剪贴板 直接粘贴
+	{
+		Send, ^{vk56}
+	return
+	}
+	if (Clipboard!=ClipSaved%clipid%)   ; 脚本未记录的剪贴板 直接粘贴
+	{
+		Send, ^{vk56}
+	return
+	}
+	if GetKeyState("CapsLock", "T")    ; CapsLock 打开时直接复制  连续复制相同的内容时打开
+	{
+		Send, ^{vk56}
+	return
+	}
 
-st1:=A_TickCount
-SetTimer, ctrlCheck, 50
+	monitor=0
+	first+=1
+
+	if first=1
+		clipnum:=clipid
+	else if first=2
+	{
+		clipnum:=clipid-1
+		if clipnum=0
+		clipnum = 3
+	}
+	else if first=3
+	{
+		clipnum:=clipid+1
+		if clipnum=4
+			clipnum = 1
+	}
+	else if first=4
+	{
+		clipnum:=4
+	}
+	else   ;  first=5
+	{
+		first=1
+		f_repeat:=1
+		clipnum:=clipid
+	}
+
+	st1:=A_TickCount
+	SetTimer, ctrlCheck, 50
+return
+
+ctrlCheck:
+	lt1:=A_TickCount
+	if lt1-st1>300
+		cliptip(clipnum)
+
+	if !GetKeyState("Ctrl")  ; 松开 Ctrl 键
+	{
+		first=0
+		SetTimer, ctrlCheck, Off
+		tooltip
+		if (clipnum=clipid) & !f_repeat
+		{
+			Send, ^{vk56}
+			monitor=1
+		return
+		}
+		else
+		{
+			Old_Clipboard := ClipboardAll
+			
+			if clipnum!=4
+				Clipboard := ClipSaved%clipnum%
+			else
+			{
+				Clipboard := ClipSaved%clipid% "`r`n"
+				Clipboard .= ((tmp_v:=clipid-1) != 0 ? ClipSaved%tmp_v% : ClipSaved3) . "`r`n"
+				Clipboard .= (tmp_v:=clipid+1) != 4 ? ClipSaved%tmp_v% : ClipSaved1
+			}
+			sleep,200
+			Send, ^{vk56}
+			sleep,500
+			Clipboard := Old_Clipboard
+			sleep,200
+			monitor=1
+			Old_Clipboard := f_repeat := ""
+		}
+	}
 return
 
 cliptip(num)
 {
-sleep,100
-Outputtooltip=
-if StrLen(ClipSaved%num%)>300
-{
-StringLeft, Outputtooltip1, ClipSaved%num%, 150
-StringRight, Outputtooltip2, ClipSaved%num%, 150
-Outputtooltip:=Outputtooltip1 "`n`n★☆★☆★☆★☆中间部分省略★☆★☆★☆★☆`n`n" Outputtooltip2
-}
-tooltip % "文字剪贴板之" num "`n"(Outputtooltip ? Outputtooltip : ClipSaved%num%)
+	sleep,100
+	Outputtooltip=
+	if num != 4
+	{
+		if StrLen(ClipSaved%num%)>300
+		{
+			StringLeft, Outputtooltip1, ClipSaved%num%, 150
+			StringRight, Outputtooltip2, ClipSaved%num%, 150
+			Outputtooltip:=Outputtooltip1 "`n`n★☆★☆★☆★☆中间部分省略★☆★☆★☆★☆`n`n" Outputtooltip2
+		}
+		tooltip % "文字剪贴板之" num "`n"(Outputtooltip ? Outputtooltip : ClipSaved%num%)
+	}
+	else
+		tooltip % "一次性复制三个剪贴板的内容，以回车换行符分割。"
 return
 }
-
-ctrlCheck:
-lt1:=A_TickCount
-if lt1-st1>400
-cliptip(clipnum)
-if !GetKeyState("Ctrl")
-{
-first=0
-SetTimer, ctrlCheck, Off
-tooltip
-Old_Clipboard := ClipboardAll
-Clipboard := ClipSaved%clipnum%
-sleep,200
-Send, ^{vk56}
-sleep,1500
-if (Clipboard != Old_Clipboard)
-	Clipboard := Old_Clipboard
-sleep,200
-monitor=1
-Old_Clipboard := ""
-}
-return
 
 ; 脚本启动后8秒后 monitor=1
 shijianCheck:
-lt:=A_TickCount
-if (lt-st>8000)
-{
-SetTimer, shijianCheck,off
-monitor=1
-if Auto_mousetip
-	CF_ToolTip("三重剪贴板已开始工作。", 3000)
-}
+	lt:=A_TickCount
+	if (lt-st>8000)
+	{
+		SetTimer, shijianCheck,off
+		monitor=1
+		if Auto_mousetip
+			CF_ToolTip("三重剪贴板已开始工作。", 3000)
+	}
 return
 
 ClipSaved0Check:
-if ClipSaved1
-{
-ClipSaved0:=""
-SetTimer, ClipSaved0Check,off
-}
+	if ClipSaved1
+	{
+		ClipSaved0:=""
+		SetTimer, ClipSaved0Check,off
+	}
 return
 
 migrateHistory(){

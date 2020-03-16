@@ -743,9 +743,7 @@ translist:=IniObj(A_ScriptDir "\settings\translist.ini").·­Òë
 ;3¡ú2¡ú1¡ú3
 if Auto_Clip
 {
-	first=0
-	clipid=0
-	monitor=0
+	first := f_repeat := clipid := monitor := 0
 	if (GetClipboardFormat(1)=1)
 	{
 		ClipSaved0 := Clipboard

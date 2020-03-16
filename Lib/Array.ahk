@@ -10,6 +10,28 @@ Array_removeDuplicates(InputArray)
 	}
 }
 
+/*
+Array_removeDuplicates(arr) { ; Hash O(n) 
+    hash := {}, newArr := []
+
+    for e, v in arr
+        if (!hash.Haskey(v))
+            hash[(v)] := 1, newArr.push(v)
+    return newArr
+}
+
+Array_removeEmpty(arr) {
+     newArr := []
+        newArr.SetCapacity(arr.GetCapacity())
+        for k, v in arr {
+            if (v) {
+                newArr.Push(v)
+            }
+        }
+        return newArr
+    }
+*/
+
 ;String Things by tidbit
 ;https://autohotkey.com/boards/viewtopic.php?f=6&t=53&sid=5c401643235e7a2e73d769f1e5deac0f
 Array_ToString(array, depth=5, indentLevel="")

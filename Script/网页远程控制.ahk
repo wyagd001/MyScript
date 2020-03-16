@@ -432,8 +432,9 @@ loginpass:=0
 
 serverReload(ByRef req, ByRef res){
 	Index(req, res)
-if loginpass
-Reload
+	Global loginpass
+	if loginpass
+		Reload
 }
 
 ; ¿Õ¸ñ»á±ä+ºÅ
