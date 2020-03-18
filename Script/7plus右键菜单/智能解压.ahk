@@ -8,7 +8,7 @@ Return
 ;2).压缩包内有只有1个文件（夹）时“解压”文件到压缩包所在目录的“与压缩包内的文件（夹）同名的文件（夹内）”
 ;A.rar--------File→File/Fold→Fold
 smartunrar:
-sleep,2000
+sleep,200
 Critical,On
 Files := GetSelectedFiles()
 If !Files

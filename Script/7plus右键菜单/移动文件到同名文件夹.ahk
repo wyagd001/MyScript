@@ -9,7 +9,7 @@ Return
 ;按快捷键为结果为 G:\Users\lyh\Desktop\QQ  实际为QQ.lnk
 ;#G::
 移动文件到同名文件夹:
-sleep,2000
+sleep,200
 Critical,On
 Files := GetSelectedFiles()
 If !Files

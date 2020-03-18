@@ -4,7 +4,7 @@ Return
 
 ;复制文件夹结构而不复制文件夹中的文件
 copyfolderStructure:
-sleep,2000
+sleep,200
 Critical,On
 Files := GetSelectedFiles()
 If !Files

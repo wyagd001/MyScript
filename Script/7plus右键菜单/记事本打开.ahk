@@ -3,7 +3,7 @@
 Return
 
 notepadopen:
-sleep,2000
+sleep,200
 Critical,On
 Files := GetSelectedFiles()
 If !Files

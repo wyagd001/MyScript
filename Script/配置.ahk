@@ -718,10 +718,10 @@ Gui,98:Default
 Gui,98:+Owner99
 Gui,99:+Disabled
 Gui,Add,Text,x42 y30 w50 h20 ,ID号：
-Gui,Add,CheckBox,x42 y180 w250 h20 vDirectory,选中文件夹右键弹出菜单中显示
-Gui,Add,CheckBox,x42 y200 w250 h20 vDirectoryBackground,文件夹目录右键菜单中显示
-Gui,Add,CheckBox,x42 y220 w250 h20 vDesktop,在桌面菜单里显示
-Gui,Add,CheckBox,x42 y240 w250 h20 vSingleFileOnly,选中多个文件时对第一个文件生效
+Gui,Add,CheckBox,x42 y180 w250 h20 vSingleFileOnly,仅在选中单文件时显示(选中多文件不显示)
+Gui,Add,CheckBox,x42 y200 w250 h20 vDirectory,选中文件夹时显示
+Gui,Add,CheckBox,x42 y220 w250 h20 vDirectoryBackground,文件夹空白处右键菜单中显示
+Gui,Add,CheckBox,x42 y240 w250 h20 vDesktop,桌面空白处菜单中显示
 Gui,Add,Text,x42 y60 w60 h20 ,菜单名：
 Gui,Add,Text,x42 y90 w60 h20 ,描述：
 Gui,Add,Text,x42 y120 w60 h20 ,子菜单于：

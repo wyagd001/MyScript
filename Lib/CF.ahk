@@ -36,6 +36,7 @@ CF_StringReplace(InputVar, SearchText, ReplaceText = "", All = "") {
 
 CF_ToolTip(tipText, delay := 1000)
 {
+	ToolTip
 	ToolTip, % tipText
 	SetTimer, RemoveToolTip, % "-" delay
 return

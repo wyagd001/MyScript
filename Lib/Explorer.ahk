@@ -90,7 +90,9 @@ ShellFolder(hWnd=0,returntype=0,onlyname=0)
 		{
 			hpath := base "\" A_LoopField
 			IfExist %hpath% ; ignore special icons like Computer (at least for now)
-				ret .= hpath "`n"
+				ret .= !onlyname?hpath:A_LoopField "`n"
+			else IfExist  %hpath%.lnk
+				ret .= !onlyname?hpath:A_LoopField ".lnk" "`n"
 		}
 	Return Trim(ret,"`n")
 	}
@@ -240,18 +242,7 @@ SelectFiles(Select,Clear=1,Deselect=0,MakeVisible=1,focus=1, hWnd=0)
 GetSelectedFiles(FullName=1, hwnd=0)
 {
 	global MuteClipboardList,Vista7
-	If(WinActive("ahk_group ExplorerGroup"))
-	{
-		If(!hwnd)
-			hWnd:=WinExist("A")
-		If FullName
-		{
-			Return ShellFolder(hwnd,3)
-			}
-		Else
-			Return ShellFolder(hwnd,3,1)
-	}
-	Else If(Vista7 && x:=IsDialog())
+	If(Vista7 && x:=IsDialog())
 	{
 		If(x=1)
 		{
@@ -265,43 +256,15 @@ GetSelectedFiles(FullName=1, hwnd=0)
 		MuteClipboardList:=false
 		Return result
 	}
-	Else If(WinActive("ahk_group DesktopGroup"))
+	else
 	{
-		; If(A_PtrSize = 8) ;64bit doesn't support listview method below yet
-		; {
-			; MuteClipboardList := true
-			; clipboardbackup := clipboardall
-			; outputdebug clearing clipboard
-			; clipboard := ""
-			; ClipWait, 0.15, 1
-			; outputdebug copying files to clipboard
-			; Send ^c
-			; ClipWait, 0.15, 1
-			; result := clipboard
-			; clipboard := clipboardbackup
-			; OutputDebug, Selected Files: %result%
-			; MuteClipboardList:=false
-			; Return result
-		; }
-		; Else
-		; {
-			ControlGet, result, List, Selected Col1, SysListView321, A ;This line causes explorer to crash on 64 bit systems when used in a 32 bit AHK build
-			If(result)
-			{
-				Loop, Parse, result, `n ; Rows are delimited by linefeeds (`n).
-				{
-					hpath := A_Desktop "\" A_LoopField
-					IfExist %hpath%
-					   result2 .= "`n" A_Desktop "\" A_LoopField
-					IfExist  %hpath%.lnk
-					   result2 .= "`n" A_Desktop "\" A_LoopField ".lnk"
-					}
-				Return SubStr(result2,2)
-			}
-			Else
-				Return ""
+		If(!hwnd)
+			hWnd:=WinExist("A")
+		If FullName
+			Return ShellFolder(hwnd,3)
+		Else
+			Return ShellFolder(hwnd,3,1)
 	}
-	; }
 }
 
 IsDialog(window=0)
