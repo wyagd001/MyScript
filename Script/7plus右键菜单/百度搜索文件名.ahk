@@ -32,3 +32,23 @@ searchthefile:
 	Loop, Parse, files, `n, `r
 		run, http://www.baidu.com/s?wd=%A_LoopField%
 Return
+
+7PlusMenu_百度搜索文件名()
+{
+	section = 百度搜索文件名
+	defaultSet=
+	( LTrim
+ID = 1004
+Name = 百度搜索文件名
+Description = 百度搜索该文件(支持多文件)
+SubMenu = 7plus
+FileTypes = *
+SingleFileOnly = 0
+Directory =1
+DirectoryBackground = 0
+Desktop = 0
+showmenu = 1
+	)
+IniWrite, % defaultSet, % 7PlusMenu_ProFile_Ini, % section
+return
+}

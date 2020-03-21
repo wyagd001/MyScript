@@ -60,6 +60,7 @@ global Candy_ProFile_Ini := A_ScriptDir . "\settings\candy\[candy].ini"
 SplitPath, Candy_ProFile_Ini,, Candy_Profile_Dir,, Candy_ProFile_Ini_NameNoext
 global Windy_Profile_Ini := A_ScriptDir . "\settings\Windy\Windy.ini"
 SplitPath, Windy_Profile_Ini,, Windy_Profile_Dir,, Windy_Profile_Ini_NameNoext
+global 7PlusMenu_ProFile_Ini := A_ScriptDir . "\settings\7PlusMenu.ini"
 
 ;---------Alt+滚轮调节音量随机颜色---------
 Random, ColorNum, 0, 6
@@ -1093,12 +1094,15 @@ onClipboardChange:
 		tempid=0
 		If ClipPlugin_git
 		{
-			If RegExMatch(Clipboard, "^(\\?|/?)docs(\\?|/?).+\.htm$")
+			If RegExMatch(Clipboard, "^(\\|/)?(zh-cn|v1|v2)?(\\|/)?docs(\\?|/?).+\.htm$")
 			{
-				SelectedPath := Clipboard
-				gosub git
-				Clipboard := ClipSaved%clipid%
-			return
+				if IsLabel("git")
+				{
+					SelectedPath := Clipboard
+					gosub git
+					Clipboard := ClipSaved%clipid%
+				return
+				}
 			}
 		}
 	}

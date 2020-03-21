@@ -88,7 +88,7 @@ Cando_查新版帮助:
 		}
 		IfWinExist,%Ahk帮助标题%
 		{
-			WinActivate,%Ahk帮助标题%
+			WinActivate, %Ahk帮助标题%
 			send !N
 			gosub monishuru
 		}
@@ -102,18 +102,22 @@ Cando_查新版帮助:
 			Run, %Ahkl新版帮助路径%
 			WinWait,%Ahk帮助标题%,,5
 		}
-		WinActivate,%Ahk帮助标题%
+		WinActivate, %Ahk帮助标题%
 		send !S
 		gosub monishuru2
 	}
 Return
 
 monishuru:
+Thread, NoTimers
 sleep,1000
 WinActivate, %Ahk帮助标题%
+WinGetPos, X, Y,,,%Ahk帮助标题%
+mousemove, % X+200, % Y+200
+send !n
 ControlSend, Internet Explorer_Server1, !N, %Ahk帮助标题% ahk_class HH Parent
-wb := WBGet("ahk_class HH Parent")
 
+wb := WBGet("ahk_class HH Parent")
 sleep,100
 wb.document.getElementsByTagName("input")[0].value := CandySel
 wb.document.getElementsByTagName("input")[0].focus()
@@ -124,19 +128,21 @@ ControlSend,Internet Explorer_Server1,{enter},%Ahk帮助标题%
 return
 
 monishuru2:
+Thread, NoTimers
 sleep,2500
 WinActivate,%Ahk帮助标题%
+WinGetPos, X, Y,,,%Ahk帮助标题%
+mousemove, % X+200, % Y+200
+send !s
 ControlSend, Internet Explorer_Server1, !S, %Ahk帮助标题% ahk_class HH Parent
 
 wb := WBGet("ahk_class HH Parent")
 sleep,100
 wb.document.getElementsByTagName("input")[1].value := CandySel
 wb.document.getElementsByTagName("input")[1].focus()
-
-sleep,100
-ControlSend,Internet Explorer_Server1,{enter},%Ahk帮助标题%
-sleep,100
-ControlSend,Internet Explorer_Server1,{enter},%Ahk帮助标题%
+send,{enter}
+sleep,1000
+Send,{enter}
 return
 
 ;-----------------------------------------------------------------------------------------------------------------

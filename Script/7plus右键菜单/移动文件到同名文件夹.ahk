@@ -58,3 +58,23 @@ Loop, Parse, files, `n,`r
 	}
 }
 Return
+
+7PlusMenu_移动文件到同名文件夹()
+{
+	section = 移动文件到同名文件夹
+	defaultSet=
+	( LTrim
+ID = 1003
+Name = File(s)2Folder(s)
+Description = 移动文件到同名文件夹(支持多文件)
+SubMenu = 7plus
+FileTypes = *
+SingleFileOnly = 0
+Directory = 0
+DirectoryBackground = 0
+Desktop = 0
+showmenu = 1
+	)
+IniWrite, % defaultSet, % 7PlusMenu_ProFile_Ini, % section
+return
+}

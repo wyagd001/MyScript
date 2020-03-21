@@ -9,7 +9,7 @@ Critical,On
 Files := GetSelectedFiles()
 If !Files
 {
-	MsgBox,,,获取文件路径失败3。,3
+	MsgBox,,,获取文件路径失败。,3
 Return
 }
 Critical,Off
@@ -54,4 +54,24 @@ CopyDirStructure(_inpath,_outpath,_i=true) {
          _problem = 1
    }
    Return _problem
+}
+
+7PlusMenu_复制文件夹结构()
+{
+	section = 复制文件夹结构
+	defaultSet=
+	( LTrim
+ID = 1005
+Name = 复制文件夹结构到桌面
+Description = 复制文件夹结构到桌面
+SubMenu = 7plus
+FileTypes =
+SingleFileOnly = 1
+Directory = 1
+DirectoryBackground = 0
+Desktop = 0
+showmenu = 1
+	)
+IniWrite, % defaultSet, % 7PlusMenu_ProFile_Ini, % section
+return
 }

@@ -18,36 +18,34 @@ unregsvr32dll:
 Return
 
 savetoreg:
+	; 首先删除所有菜单在注册表中的条目
 	RegDelete, HKCU, Software\7plus\ContextMenuEntries
 
-	LV_Delete()
-
-	IniRead,num,%run_iniFile%,ContextMenu,num
-	loop,%num%
+	Loop, %A_ScriptDir%\Script\7plus右键菜单\*.ahk
 	{
-		ContextMenuId:= A_Index+1000
-		IniRead,showmenu_%A_Index%,%run_iniFile%,%ContextMenuId%,showmenu
-		LV_Add(showmenu_%A_Index% = 1 ? "Check" : "","", ContextMenuId,name_%A_Index%)
-		If (showmenu_%A_Index% = 1)
+		StringTrimRight, FileName, A_LoopFileName, 4
+		IniRead,showmenu,%7PlusMenu_ProFile_Ini%,%FileName%,showmenu
+		IniRead,7Plus_id,%7PlusMenu_ProFile_Ini%,%FileName%,id
+		If (showmenu = 1) && 7Plus_id/7Plus_id
 		{
-			IniRead,name_%A_Index%,%run_iniFile%,%ContextMenuId%,name
-			IniRead,Directory_%A_Index%,%run_iniFile%,%ContextMenuId%,Directory
-			IniRead,Description_%A_Index%,%run_iniFile%,%ContextMenuId%,Description
-			IniRead,Submenu_%A_Index%,%run_iniFile%,%ContextMenuId%,Submenu
-			IniRead,Extensions_%A_Index%,%run_iniFile%,%ContextMenuId%,FileTypes
-			IniRead,DirectoryBackground_%A_Index%,%run_iniFile%,%ContextMenuId%,DirectoryBackground
-			IniRead,Desktop_%A_Index%,%run_iniFile%,%ContextMenuId%,Desktop
-			IniRead,SingleFileOnly_%A_Index%,%run_iniFile%,%ContextMenuId%,SingleFileOnly
+			IniRead,name,%7PlusMenu_ProFile_Ini%,%FileName%,name
+			IniRead,Description,%7PlusMenu_ProFile_Ini%,%FileName%,Description
+			IniRead,Submenu,%7PlusMenu_ProFile_Ini%,%FileName%,Submenu
+			IniRead,Extensions,%7PlusMenu_ProFile_Ini%,%FileName%,FileTypes
+			IniRead,SingleFileOnly,%7PlusMenu_ProFile_Ini%,%FileName%,SingleFileOnly
+			IniRead,Directory,%7PlusMenu_ProFile_Ini%,%FileName%,Directory
+			IniRead,DirectoryBackground,%7PlusMenu_ProFile_Ini%,%FileName%,DirectoryBackground
+			IniRead,Desktop,%7PlusMenu_ProFile_Ini%,%FileName%,Desktop
 
-			RegWrite, REG_DWORD, HKCU, Software\7plus\ContextMenuEntries\%ContextMenuId%, ID, %ContextMenuId%
-			RegWrite, REG_SZ, HKCU, Software\7plus\ContextMenuEntries\%ContextMenuId%, Name,% name_%A_Index%
-			RegWrite, REG_SZ, HKCU, Software\7plus\ContextMenuEntries\%ContextMenuId%, Description, % Description_%A_Index%
-			RegWrite, REG_SZ, HKCU, Software\7plus\ContextMenuEntries\%ContextMenuId%, Submenu, % Submenu_%A_Index%
-			RegWrite, REG_SZ, HKCU, Software\7plus\ContextMenuEntries\%ContextMenuId%, Extensions, % Extensions_%A_Index%
-			RegWrite, REG_DWORD, HKCU, Software\7plus\ContextMenuEntries\%ContextMenuId%, Directory, % Directory_%A_Index%
-			RegWrite, REG_DWORD, HKCU, Software\7plus\ContextMenuEntries\%ContextMenuId%, DirectoryBackground, % DirectoryBackground_%A_Index%
-			RegWrite, REG_DWORD, HKCU, Software\7plus\ContextMenuEntries\%ContextMenuId%, Desktop, % Desktop_%A_Index%
-			RegWrite, REG_DWORD, HKCU, Software\7plus\ContextMenuEntries\%ContextMenuId%, SingleFileOnly, % SingleFileOnly_%A_Index%
+			RegWrite, REG_DWORD, HKCU, Software\7plus\ContextMenuEntries\%7Plus_id%, ID, %7Plus_id%
+			RegWrite, REG_SZ, HKCU, Software\7plus\ContextMenuEntries\%7Plus_id%, Name,% name
+			RegWrite, REG_SZ, HKCU, Software\7plus\ContextMenuEntries\%7Plus_id%, Description, % Description
+			RegWrite, REG_SZ, HKCU, Software\7plus\ContextMenuEntries\%7Plus_id%, Submenu, % Submenu
+			RegWrite, REG_SZ, HKCU, Software\7plus\ContextMenuEntries\%7Plus_id%, Extensions, % Extensions
+			RegWrite, REG_DWORD, HKCU, Software\7plus\ContextMenuEntries\%7Plus_id%, SingleFileOnly, % SingleFileOnly
+			RegWrite, REG_DWORD, HKCU, Software\7plus\ContextMenuEntries\%7Plus_id%, Directory, % Directory
+			RegWrite, REG_DWORD, HKCU, Software\7plus\ContextMenuEntries\%7Plus_id%, DirectoryBackground, % DirectoryBackground
+			RegWrite, REG_DWORD, HKCU, Software\7plus\ContextMenuEntries\%7Plus_id%, Desktop, % Desktop
 		}
 	}
 Return

@@ -3,11 +3,6 @@
 	SetTimer,创建目录联接,-200
 Return
 
-1009:
-	sPara=/DES
-	SetTimer,创建目录联接,-200
-Return
-
 创建目录联接:
 	Critical,On
 	If(sPara="/SRC")
@@ -132,3 +127,23 @@ VL_Cancel:
 9GuiEscape:
 	Gui,9:Destroy
 Return
+
+7PlusMenu_创建选中目录的联接到其他目录()
+{
+	section = 创建选中目录的联接到其他目录
+	defaultSet=
+	( LTrim
+ID = 1008
+Name = 创建文件夹的目录联接(镜像)
+Description = 在指定文件夹中创建选中文件夹的目录联接(镜像)
+SubMenu = 7plus
+FileTypes =
+SingleFileOnly = 0
+Directory = 1
+DirectoryBackground = 0
+Desktop = 0
+showmenu = 1
+	)
+IniWrite, % defaultSet, % 7PlusMenu_ProFile_Ini, % section
+return
+}

@@ -13,10 +13,30 @@ Critical,On
 Files := GetSelectedFiles()
 If !Files
 {
-	MsgBox,,,获取文件路径失败6。,3
+	MsgBox,,,获取文件路径失败。,3
 Return
 }
 
 Loop Parse, Files, `n, `r ;从 Files 中逐个获取压缩包路径。换行作分隔符，忽略头尾回车。
 	7z_smart_Unarchiver(A_LoopField)
 Return
+
+7PlusMenu_智能解压()
+{
+	section = 智能解压
+	defaultSet=
+	( LTrim
+ID = 1006
+Name = 智能解压到当前文件夹
+Description = 智能解压到当前文件夹(支持多文件)
+SubMenu = 7plus
+FileTypes = rar,zip,7z
+SingleFileOnly = 0
+Directory = 0
+DirectoryBackground = 0
+Desktop = 0
+showmenu = 1
+	)
+IniWrite, % defaultSet, % 7PlusMenu_ProFile_Ini, % section
+return
+}

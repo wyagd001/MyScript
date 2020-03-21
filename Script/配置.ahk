@@ -28,7 +28,7 @@ Gui,Add,Tab,x-4 y1 w640 h330 ,快捷键|Plugins|常规|自动激活|7Plus菜单|整点报时|播
 Gui,Tab,快捷键
 Gui,Add,text,x10 y30 w550,注意:#表示Win,!表示Alt,+表示Shift,^表示Ctrl,Space表示空格键,Up表示向上箭头,~表示按键原功能不会被屏蔽，*表示有其它键同时按下时快捷键仍然生效
 
-Gui,Add,ListView,x10 y60 w570 h245 vhotkeysListview ghotkeysListview checked Grid -Multi +NoSortHdr -LV0x10 +LV0x4000 +AltSubmit,快捷键标签|快捷键|适用窗口|序号
+Gui,Add,ListView,x10 y60 w570 h245 vhotkeysListview ghotkeysListview checked Grid -Multi +NoSortHdr -LV0x10 -LV0x10 +LV0x4000 +AltSubmit,快捷键标签|快捷键|适用窗口|序号
 Gui,listview,hotkeysListview 
 LV_Delete()
 for k,v in myhotkey
@@ -171,11 +171,12 @@ If(Auto_Raise=1){
 }
 
 Gui,Tab,7Plus菜单
-Gui,Add,ListView,x10 y30 r12 w570 h245 v7pluslistview Grid -Multi +NoSortHdr Checked AltSubmit -LV0x10 g7plusListView,激活|ID  |菜单名称
+Gui,Add,ListView,x10 y30 r12 w570 h245 v7pluslistview Grid -Multi Checked -LV0x10 AltSubmit g7plusListView,激活|ID  |菜单名称|文件名
+LV_ModifyCol(2, "Integer")
 ;如果窗口含有多个 ListView 控件,默认情况下函数操作于最近添加的那个. 要改变这种情况,请指定 Gui,ListView,ListViewName
-Gosub, Load_List
+Gosub, Load_7PlusMenusList
 Gui,Add,Button,x10 y280 w80 h30 gButtun_Edit,编辑菜单(&E)
-Gui,Add,Button,x90 y280 w80 h30 gLoad_List,刷新菜单(&R)
+Gui,Add,Button,x90 y280 w80 h30 gLoad_7PlusMenusList,刷新菜单(&R)
 Gui,Add,Button,x170 y280 w120 h30 gsavetoreg,应用菜单到系统(&S)
 Gui,Add,Button,x370 y280 w70 h30 gregsvr32dll,注册Dll
 Gui,Add,Button,x450 y280 w70 h30 gunregsvr32dll,卸载Dll
@@ -695,18 +696,18 @@ If(A_GuiEvent = "I")
 {
 	If (ErrorLevel == "C")
 	{
-		LV_GetText(ContextMenuId,A_EventInfo,2)
-		IniWrite,1,%run_iniFile%,%ContextMenuId%,showmenu
+		LV_GetText(ContextMenuFileName,A_EventInfo,4)
+		IniWrite,1,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,showmenu
 	}
 	If (ErrorLevel == "c")
 	{
-		LV_GetText(ContextMenuId,A_EventInfo,2)
-		IniWrite,0,%run_iniFile%,%ContextMenuId%,showmenu
+		LV_GetText(ContextMenuFileName,A_EventInfo,4)
+		IniWrite,0,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,showmenu
 	}
 }
 Else If(A_GuiEvent="DoubleClick")
 {
-	LV_GetText(ContextMenuId,A_EventInfo,2)
+	LV_GetText(ContextMenuFileName,A_EventInfo,4)
 	gosub ReadContextMenuIni
 	gosub GUI_EventsList_Edit
 }
@@ -726,7 +727,7 @@ Gui,Add,Text,x42 y60 w60 h20 ,菜单名：
 Gui,Add,Text,x42 y90 w60 h20 ,描述：
 Gui,Add,Text,x42 y120 w60 h20 ,子菜单于：
 Gui,Add,Text,x42 y150 w60 h20 ,扩展名：
-Gui,Add,Edit,x122 y30 w230 h20 readonly vContextMenuId,%ContextMenuId%
+Gui,Add,Edit,x122 y30 w230 h20 readonly,%7Plus_id%
 Gui,Add,Edit,x122 y60 w230 h20 vName,%Name%
 Gui,Add,Edit,x122 y90 w230 h20 vDescription,%Description%
 Gui,Add,Edit,x122 y120 w230 h20 vSubMenu,%SubMenu%
@@ -872,48 +873,70 @@ If not FocusedRowNumber
 	Return
 }
 Else
-	LV_GetText(ContextMenuId,FocusedRowNumber,2)
+	LV_GetText(ContextMenuFileName,FocusedRowNumber,4)
 gosub ReadContextMenuIni
 gosub GUI_EventsList_Edit
 Return
 
 ReadContextMenuIni:
-IniRead,Description,%run_iniFile%,%ContextMenuId%,Description
-IniRead,Name,%run_iniFile%,%ContextMenuId%,Name
-IniRead,Directory,%run_iniFile%,%ContextMenuId%,Directory
-IniRead,DirectoryBackground,%run_iniFile%,%ContextMenuId%,DirectoryBackground
-IniRead,Desktop,%run_iniFile%,%ContextMenuId%,Desktop
-IniRead,SubMenu,%run_iniFile%,%ContextMenuId%,SubMenu
-IniRead,SingleFileOnly,%run_iniFile%,%ContextMenuId%,SingleFileOnly
-IniRead,FileTypes,%run_iniFile%,%ContextMenuId%,FileTypes
+IniRead,7Plus_id,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,id
+IniRead,Name,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,Name
+IniRead,Description,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,Description
+IniRead,SubMenu,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,SubMenu
+IniRead,FileTypes,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,FileTypes
+IniRead,SingleFileOnly,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,SingleFileOnly
+IniRead,Directory,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,Directory
+IniRead,DirectoryBackground,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,DirectoryBackground
+IniRead,Desktop,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,Desktop
 Return
 
 ContextMenuok:
 gui,98:Submit,NoHide
-IniWrite,%Description%,%run_iniFile%,%ContextMenuId%,Description
-IniWrite,%Name%,%run_iniFile%,%ContextMenuId%,Name
-IniWrite,%Directory%,%run_iniFile%,%ContextMenuId%,Directory
-IniWrite,%DirectoryBackground%,%run_iniFile%,%ContextMenuId%,DirectoryBackground
-IniWrite,%Desktop%,%run_iniFile%,%ContextMenuId%,Desktop
-IniWrite,%SubMenu%,%run_iniFile%,%ContextMenuId%,SubMenu
-IniWrite,%SingleFileOnly%,%run_iniFile%,%ContextMenuId%,SingleFileOnly
-IniWrite,%FileTypes%,%run_iniFile%,%ContextMenuId%,FileTypes
+IniWrite,%Name%,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,Name
+IniWrite,%Description%,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,Description
+IniWrite,%SubMenu%,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,SubMenu
+IniWrite,%FileTypes%,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,FileTypes
+IniWrite,%SingleFileOnly%,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,SingleFileOnly
+IniWrite,%Directory%,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,Directory
+IniWrite,%DirectoryBackground%,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,DirectoryBackground
+IniWrite,%Desktop%,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,Desktop
+
 Gui,98:Destroy
 Gui,99:-Disabled 
 WinActivate,选项 ahk_class AutoHotkeyGUI
 send,!R
 Return
 
-Load_List:
+Load_7PlusMenusList:
 Gui,99:ListView,7pluslistview
 LV_Delete()
-loop,%num%
+Loop, %A_ScriptDir%\Script\7plus右键菜单\*.ahk
 {
-	ContextMenuId:= A_Index+1000
-	IniRead,name_%A_Index%,%run_iniFile%,%ContextMenuId%,name
-	IniRead,showmenu_%A_Index%,%run_iniFile%,%ContextMenuId%,showmenu
-	LV_Add(showmenu_%A_Index% = 1 ? "Check" : "","",ContextMenuId,name_%A_Index%)
+StringTrimRight, FileName, A_LoopFileName, 4
+IniRead,7Plus_id,%7PlusMenu_ProFile_Ini%,%FileName%,id
+
+if (7Plus_id = "ERROR") or !Islabel(7Plus_id)
+{
+if IsFunc("7PlusMenu_" FileName)
+{
+	7PlusMenu_%FileName%()
 }
+else
+continue
+	IniRead,7Plus_id,%7PlusMenu_ProFile_Ini%,%FileName%,id
+if 7Plus_id = ERROR
+continue
+	}
+
+IniRead,name,%7PlusMenu_ProFile_Ini%,%FileName%,name
+IniRead,showmenu,%7PlusMenu_ProFile_Ini%,%FileName%,showmenu
+	LV_Add(showmenu = 1 ? "Check" : "","",7Plus_id,name,FileName)
+}
+
+LV_ModifyCol()
+LV_ModifyCol(1, 40)
+LV_ModifyCol(2, "Sort")
+
 Return
 
 daps:
