@@ -72,7 +72,7 @@ Cando_查新版帮助:
 			VarSetCapacity(ak, ak_size := 8+5*A_PtrSize+4, 0) ; HH_AKLINK struct
 			NumPut(ak_size, ak, 0, "UInt")
 			NumPut(&CandySel, ak, 8)
-			if !DllCall("HHCtrl.ocx\HtmlHelp", "Ptr", hAHK, "str", Ahkl新版帮助路径, "UInt", 0x000D, "ptr", &ak)
+			if !DllCall("HHCtrl.ocx\HtmlHelp", "Ptr", hGui, "str", Ahkl新版帮助路径, "UInt", 0x000D, "ptr", &ak)
 			{
 				Run, %Ahkl新版帮助路径%
 				WinWait,%Ahk帮助标题%,,5
@@ -89,7 +89,6 @@ Cando_查新版帮助:
 		IfWinExist,%Ahk帮助标题%
 		{
 			WinActivate, %Ahk帮助标题%
-			send !N
 			gosub monishuru
 		}
 	}
@@ -103,7 +102,6 @@ Cando_查新版帮助:
 			WinWait,%Ahk帮助标题%,,5
 		}
 		WinActivate, %Ahk帮助标题%
-		send !S
 		gosub monishuru2
 	}
 Return
@@ -111,38 +109,39 @@ Return
 monishuru:
 Thread, NoTimers
 sleep,1000
-WinActivate, %Ahk帮助标题%
+;send !N
 WinGetPos, X, Y,,,%Ahk帮助标题%
-mousemove, % X+200, % Y+200
-send !n
-ControlSend, Internet Explorer_Server1, !N, %Ahk帮助标题% ahk_class HH Parent
+mousemove, % X+150, % Y+77
+;click
 
 wb := WBGet("ahk_class HH Parent")
 sleep,100
 wb.document.getElementsByTagName("input")[0].value := CandySel
 wb.document.getElementsByTagName("input")[0].focus()
-
+click
 sleep,100
 ControlSend,Internet Explorer_Server1,{enter},%Ahk帮助标题%
 ControlSend,Internet Explorer_Server1,{enter},%Ahk帮助标题%
+
 return
 
 monishuru2:
 Thread, NoTimers
 sleep,2500
-WinActivate,%Ahk帮助标题%
+;send !S
 WinGetPos, X, Y,,,%Ahk帮助标题%
-mousemove, % X+200, % Y+200
-send !s
-ControlSend, Internet Explorer_Server1, !S, %Ahk帮助标题% ahk_class HH Parent
+mousemove, % X+250, % Y+77
+;click
 
 wb := WBGet("ahk_class HH Parent")
 sleep,100
 wb.document.getElementsByTagName("input")[1].value := CandySel
 wb.document.getElementsByTagName("input")[1].focus()
+click
 send,{enter}
 sleep,1000
 Send,{enter}
+
 return
 
 ;-----------------------------------------------------------------------------------------------------------------

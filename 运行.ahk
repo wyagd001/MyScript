@@ -526,6 +526,12 @@ if Auto_Trayicon
 }
 else  ; 直接显示图标, 而不监控图标是否显示出来
 	Menu, Tray, Icon
+
+if Auto_FuncsIcon
+{
+	TrayIcon_Add(hGui, "OnTrayIcon", "shell32.dll:134", "最近的剪贴板")
+	TrayIcon_Add(hGui, "OnTrayIcon", "shell32.dll:3", "文件收藏夹")
+}
 ;----------不显示托盘图标则重启脚本----------
 
 ;=========窗口分组=========
@@ -576,13 +582,11 @@ If md5type=1
 ;----------计算文件MD5模式选择----------
 
 ;----------7plus右键菜单----------
-Gui +LastFound
-hAHK := WinExist()
 if Auto_7plusMenu
 {
 	FileCreateDir %A_Temp%\7plus
 	FileDelete, %A_Temp%\7plus\hwnd.txt
-	FileAppend, %hAHK%, %A_Temp%\7plus\hwnd.txt
+	FileAppend, %hGui%, %A_Temp%\7plus\hwnd.txt
 }
 ;----------7plus右键菜单----------
 
@@ -590,7 +594,7 @@ if Auto_7plusMenu
 IniRead,CloseWindowList_showmenu,%run_iniFile%,1007,showmenu
 if CloseWindowList_showmenu
 {
-	DllCall("RegisterShellHookWindow","uint",hAHK)
+	DllCall("RegisterShellHookWindow","uint",hGui)
 	OnMessage(DllCall("RegisterWindowMessageW","str","SHELLHOOK"),"ShellWM")
 }
 ;----------监视窗口创建关闭消息：7plus右键菜单之重新打开关闭的窗口 Windo菜单----------
@@ -624,7 +628,7 @@ If Auto_ShutdownMonitor
 	; AutoEndTasks 值为 0, Vista+ 关机时提示是否结束进程
 	RegWrite, REG_SZ,HKEY_CURRENT_USER, Control Panel\Desktop, AutoEndTasks, 0
 	; 调用阻止系统关机的API
-	Temp_Value:=DllCall("User32.dll\ShutdownBlockReasonCreate", "uint", hAHK, "wstr", A_ScriptFullPath " 正在运行, 是否确定关机？")
+	Temp_Value:=DllCall("User32.dll\ShutdownBlockReasonCreate", "uint", hGui, "wstr", A_ScriptFullPath " 正在运行, 是否确定关机？")
 	if !Temp_Value
 		CF_ToolTip("ShutdownBlockReasonCreate 创建失败！错误码： " A_LastError,3000)
 	; 关机时第一个响应，若要使脚本成为最后一个要终止的进程，将 "0x4FF" 改为 "0x0FF".
@@ -1338,20 +1342,24 @@ Return
 ExitSub:
 	if Auto_7plusMenu
 		FileDelete, %A_Temp%\7plus\hwnd.txt
+
+	TrayIcon_Remove(hGui, 101)
+	TrayIcon_Remove(hGui, 102)
+
 	; ComBoBox 条目图标
 	UnhookWinEvent(hWinEventHook3, HookProcAdr3)
 
 ; 释放监视关机的资源
 	if Auto_ShutdownMonitor
 	{
-		DllCall("ShutdownBlockReasonDestroy", UInt, hAHK)
+		DllCall("ShutdownBlockReasonDestroy", UInt, hGui)
 		UnhookWinEvent(hWinEventHook2, HookProcAdr2)
 		;msgbox,0
 	}
 
 	if CloseWindowList_showmenu
 	{
-		DllCall("DeregisterShellHookWindow","uint",hAHK)
+		DllCall("DeregisterShellHookWindow","uint",hGui)
 		;msgbox,1
 }
 
@@ -1438,7 +1446,7 @@ ExitSub:
 		WinShow,ahk_class Shell_TrayWnd
 		WinShow,开始 ahk_class Button
 		WinActivate,ahk_class Shell_TrayWnd
-		;msgbox,6   ;退出有时出现异常(概率非常高，直接退出，托盘图标残留)
+		;msgbox,6
 		UnhookWinEvent(hWinEventHook, HookProcAdr)
 		;msgbox,9
 	}
@@ -1671,6 +1679,7 @@ return
 #Include %A_ScriptDir%\Lib\进制转换.ahk
 #Include %A_ScriptDir%\Lib\string.ahk
 #include %A_ScriptDir%\lib\AHKhttp.ahk
+#include %A_ScriptDir%\Script\TrayIcon_FuncsIcon.ahk
 #include <AHKsock>
 #include <URL>
 #include *i %A_ScriptDir%\Script\AutoInclude.ahk

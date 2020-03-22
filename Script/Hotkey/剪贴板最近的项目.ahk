@@ -18,7 +18,7 @@ cliphistoryPI:
 	{
 		button_y:=(A_index + CHPIFNo - 1)*40 + 5
 		button_y2:= button_y + 15
-		If (StrLen(cliphistoryPI[A_index]) < 80)
+		If (StrLen(cliphistoryPI[A_index]) < 30)
 			tempV := cliphistoryPI[A_index]
 		else
 		{
@@ -26,10 +26,9 @@ cliphistoryPI:
 			tempV := LTrim(cliphistoryPI[A_index], "`r`n")
 			tempV := StrReplace(tempV, "`r`n", "`n", n_Count)
 			if (n_Count>=1)
-			{
-				n_pos := InStr(cliphistoryPI[A_index], "`n", 0, 1)
-				tempV := SubStr(tempV, 1, n_pos) "........"
-			}
+				tempV := SubStr(tempV, 1, 30) " (多行文本)"
+			else
+				tempV := SubStr(tempV, 1, 30) "......"
 		}
 		Gui, Add, Button, x5 y%button_y% w400 h40 vCHPI_%A_index% gcopycliphistoryPI, % tempV
 		Gui, Add, Text, x410 y%button_y2% w20 h20 vSCHPIF_%A_index% gSCHPIF, ☆

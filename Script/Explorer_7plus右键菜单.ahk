@@ -32,10 +32,10 @@ savetoreg:
 			IniRead,Description,%7PlusMenu_ProFile_Ini%,%FileName%,Description
 			IniRead,Submenu,%7PlusMenu_ProFile_Ini%,%FileName%,Submenu
 			IniRead,Extensions,%7PlusMenu_ProFile_Ini%,%FileName%,FileTypes
-			IniRead,SingleFileOnly,%7PlusMenu_ProFile_Ini%,%FileName%,SingleFileOnly
-			IniRead,Directory,%7PlusMenu_ProFile_Ini%,%FileName%,Directory
-			IniRead,DirectoryBackground,%7PlusMenu_ProFile_Ini%,%FileName%,DirectoryBackground
-			IniRead,Desktop,%7PlusMenu_ProFile_Ini%,%FileName%,Desktop
+			IniRead,SingleFileOnly,%7PlusMenu_ProFile_Ini%,%FileName%,SingleFileOnly,0
+			IniRead,Directory,%7PlusMenu_ProFile_Ini%,%FileName%,Directory,0
+			IniRead,DirectoryBackground,%7PlusMenu_ProFile_Ini%,%FileName%,DirectoryBackground,0
+			IniRead,Desktop,%7PlusMenu_ProFile_Ini%,%FileName%,Desktop,0
 
 			RegWrite, REG_DWORD, HKCU, Software\7plus\ContextMenuEntries\%7Plus_id%, ID, %7Plus_id%
 			RegWrite, REG_SZ, HKCU, Software\7plus\ContextMenuEntries\%7Plus_id%, Name,% name

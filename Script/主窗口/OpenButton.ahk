@@ -98,7 +98,7 @@ openbutton:
 				If OpenButton_Cmd_Str3
 				{
 					q:=% UrlDecode(OpenButton_Cmd_Str3)          ;默认使用UTF-8编码转换
-					settimer,sendq,-2000
+					settimer,sendq,-1000
 				Return
 				}
 				Else
@@ -106,7 +106,7 @@ openbutton:
 					If Clipboard
 					{
 						q:=% UrlDecode(Clipboard,CP936)
-						settimer,sendq,-2000
+						settimer,sendq,-1000
 					Return
 					}
 					Return
@@ -117,7 +117,7 @@ openbutton:
 				If OpenButton_Cmd_Str3
 				{
 					q:=% UrlEncode(OpenButton_Cmd_Str3)      ;默认使用UTF-8编码转换
-					settimer,sendq,-2000
+					settimer,sendq,-1000
 				Return
 				}
 				Else
@@ -125,7 +125,7 @@ openbutton:
 					If Clipboard
 					{
 						q:=% UrlEncode(Clipboard,CP936)
-						settimer,sendq,-2000
+						settimer,sendq,-1000
 					Return
 					}
 					Return
@@ -134,7 +134,7 @@ openbutton:
 			Else If (OpenButton_Cmd_Str2="10→16")
 			{
 				q:=% dec2hex(OpenButton_Cmd_Str3)
-				settimer,sendq,-2000
+				settimer,sendq,-1000
 			Return
 			}
 			Else If (OpenButton_Cmd_Str2="16→10")
@@ -146,25 +146,25 @@ openbutton:
 			Else If (OpenButton_Cmd_Str2="农历→公历")
 			{
 				q:=% Date_GetDate(OpenButton_Cmd_Str3)
-				settimer,sendq,-2000
+				settimer,sendq,-1000
 			Return
 			}
 			Else If (OpenButton_Cmd_Str2="公历→农历")
 			{
 				q:=% Date_GetLunarDate(OpenButton_Cmd_Str3?OpenButton_Cmd_Str3:A_YYYY A_MM A_DD)
-				settimer,sendq,-2000
+				settimer,sendq,-1000
 			Return
 			}
 			Else If (OpenButton_Cmd_Str2="简→繁")
 			{
 				q:=% jzf(OpenButton_Cmd_Str3)
-				settimer,sendq,-2000
+				settimer,sendq,-1000
 			Return
 			}
 			Else If (OpenButton_Cmd_Str2="繁→简")
 			{
 				q:=% fzj(OpenButton_Cmd_Str3)
-				settimer,sendq,-2000
+				settimer,sendq,-1000
 			Return
 			}
 		}

@@ -1,5 +1,5 @@
-;来源网址：https://autohotkey.com/boards/viewtopic.php?p=9186#p9186
-;作用是操控右下角 系统托盘区 的图标，可右键点击调出菜单等
+; 来源网址：https://autohotkey.com/boards/viewtopic.php?p=9186#p9186
+; 作用是操控右下角 系统托盘区 的图标，可右键点击调出菜单等
 
 ; ----------------------------------------------------------------------------------------------------------------------
 ; Name ..........: TrayIcon library
@@ -9,7 +9,7 @@
 ; Update Author .: Cyruz (http://ciroprincipe.info) (http://ahkscript.org/boards/viewtopic.php?f=6&t=1229)
 ; Mod Author ....: Fanatic Guru
 ; License .......: WTFPL - http://www.wtfpl.net/txt/copying/
-; Version Date...: 2019 - 04 - 04
+; Version Date...: 2020 - 03 - 22
 ; Note ..........: Many people have updated Sean's original work including me but Cyruz's version seemed the most straight
 ; ...............: forward update for 64 bit so I adapted it with some of the features from my Fanatic Guru version.
 ; Update 20160120: Went through all the data types in the DLL and NumGet and matched them up to MSDN which fixed IDcmd.
@@ -17,6 +17,7 @@
 ; Update 20180313: Fix problem with "VirtualFreeEx" pointed out by nnnik
 ; Update 20180313: Additional fix for previous Windows 10 NotifyIconOverflowWindow fix breaking non-hidden icons
 ; Update 20190404: Added TrayIcon_Set by Cyruz
+; Update 20200322: Added TrayIcon_Add from majkinetor by wyagd0001
 ; ----------------------------------------------------------------------------------------------------------------------
 
 ; ----------------------------------------------------------------------------------------------------------------------
@@ -53,7 +54,7 @@ TrayIcon_GetInfo(sExeName := "")
 		hProc := DllCall("OpenProcess", UInt, 0x38, Int, 0, UInt, pidTaskbar)
 		pRB   := DllCall("VirtualAllocEx", Ptr, hProc, Ptr, 0, UPtr, 20, UInt, 0x1000, UInt, 0x4)
 
-			SendMessage, 0x418, 0, 0, ToolbarWindow32%idxTB%, ahk_class %sTray%   ; TB_BUTTONCOUNT
+			SendMessage, 0x418, 0, 0, ToolbarWindow32%idxTB%, ahk_class %sTray%   ; TB_BUTTONCOUNT = 0x418
 		
 		szBtn := VarSetCapacity(btn, (A_Is64bitOS ? 32 : 20), 0)
 		szNfo := VarSetCapacity(nfo, (A_Is64bitOS ? 32 : 24), 0)
@@ -81,7 +82,7 @@ TrayIcon_GetInfo(sExeName := "")
 			WinGet, sProcess, ProcessName, ahk_id %hWnd%
 			WinGetClass, sClass, ahk_id %hWnd%
 
-			If !sExeName || (sExeName = sProcess) || (sExeName = pID)
+			If !sExeName || (sExeName = sProcess) || (sExeName = pID) || (sExeName = hWnd)
 			{
 				DllCall("ReadProcessMemory", Ptr, hProc, Ptr, iString, Ptr, &tip, UPtr, szTip, UPtr, 0)
 				Index := (oTrayIcon_GetInfo.MaxIndex()>0 ? oTrayIcon_GetInfo.MaxIndex()+1 : 1)
@@ -115,9 +116,10 @@ TrayIcon_GetInfo(sExeName := "")
 ; ----------------------------------------------------------------------------------------------------------------------
 TrayIcon_Hide(IDcmd, sTray := "Shell_TrayWnd", bHide:=True)
 {
-	(sTray == 0 ? sTray := "NotifyIconOverflowWindow" : sTray == 1 ? sTray := "Shell_TrayWnd" : )
+	sTray == 0 ? sTray := "NotifyIconOverflowWindow" : sTray == 1 ? sTray := "Shell_TrayWnd" : 
 	DetectHiddenWindows, % (Setting_A_DetectHiddenWindows := A_DetectHiddenWindows) ? "On" :
 	idxTB := TrayIcon_GetTrayBar()
+  ;idxTB := sTray = "NotifyIconOverflowWindow" ? 1 : idxTB  ; 需不需要该语句
 	SendMessage, 0x404, IDcmd, bHide, ToolbarWindow32%idxTB%, ahk_class %sTray% ; TB_HIDEBUTTON
 	SendMessage, 0x1A, 0, 0, , ahk_class %sTray%
 	DetectHiddenWindows, %Setting_A_DetectHiddenWindows%
@@ -132,7 +134,7 @@ TrayIcon_Hide(IDcmd, sTray := "Shell_TrayWnd", bHide:=True)
 ; ----------------------------------------------------------------------------------------------------------------------
 TrayIcon_Delete(idx, sTray := "Shell_TrayWnd")
 {
-	(sTray == 0 ? sTray := "NotifyIconOverflowWindow" : sTray == 1 ? sTray := "Shell_TrayWnd" : )
+	sTray == 0 ? sTray := "NotifyIconOverflowWindow" : sTray == 1 ? sTray := "Shell_TrayWnd" : 
 	DetectHiddenWindows, % (Setting_A_DetectHiddenWindows := A_DetectHiddenWindows) ? "On" :
 	idxTB := TrayIcon_GetTrayBar()
 	SendMessage, 0x416, idx, 0, ToolbarWindow32%idxTB%, ahk_class %sTray% ; TB_DELETEBUTTON
@@ -148,8 +150,8 @@ TrayIcon_Delete(idx, sTray := "Shell_TrayWnd")
 TrayIcon_Remove(hWnd, uID)
 {
 		NumPut(VarSetCapacity(NID,(A_IsUnicode ? 2 : 1) * 384 + A_PtrSize * 5 + 40,0), NID)
-		NumPut(hWnd , NID, (A_PtrSize == 4 ? 4 : 8 ))
-		NumPut(uID  , NID, (A_PtrSize == 4 ? 8  : 16 ))
+		NumPut(hWnd , NID, A_PtrSize   )
+		NumPut(uID  , NID, 2*A_PtrSize )
 		Return DllCall("shell32\Shell_NotifyIcon", "Uint", 0x2, "Uint", &NID)
 }
 
@@ -163,7 +165,7 @@ TrayIcon_Remove(hWnd, uID)
 ; ----------------------------------------------------------------------------------------------------------------------
 TrayIcon_Move(idxOld, idxNew, sTray := "Shell_TrayWnd")
 {
-	(sTray == 0 ? sTray := "NotifyIconOverflowWindow" : sTray == 1 ? sTray := "Shell_TrayWnd" : )
+	sTray == 0 ? sTray := "NotifyIconOverflowWindow" : sTray == 1 ? sTray := "Shell_TrayWnd" : 
 	DetectHiddenWindows, % (Setting_A_DetectHiddenWindows := A_DetectHiddenWindows) ? "On" :
 	idxTB := TrayIcon_GetTrayBar()
 	SendMessage, 0x452, idxOld, idxNew, ToolbarWindow32%idxTB%, ahk_class %sTray% ; TB_MOVEBUTTON
@@ -182,7 +184,7 @@ TrayIcon_Move(idxOld, idxNew, sTray := "Shell_TrayWnd")
 ; Info .........: NOTIFYICONDATA structure  - https://goo.gl/1Xuw5r
 ; ..............: Shell_NotifyIcon function - https://goo.gl/tTSSBM
 ; ----------------------------------------------------------------------------------------------------------------------
-TrayIcon_Set(hWnd, uId, hIcon, hIconSmall:=0, hIconBig:=0)
+TrayIcon_Set(hWnd, uId, hIcon, hIconSmall:=0, hIconBig:=0,hTooltip:="")
 {
     d := A_DetectHiddenWindows
     DetectHiddenWindows, On
@@ -194,12 +196,13 @@ TrayIcon_Set(hWnd, uId, hIcon, hIconSmall:=0, hIconBig:=0)
     DetectHiddenWindows, %d%
 
     VarSetCapacity(NID, szNID := ((A_IsUnicode ? 2 : 1) * 384 + A_PtrSize*5 + 40),0)
-    NumPut( szNID, NID, 0                           )
-    NumPut( hWnd,  NID, (A_PtrSize == 4) ? 4   : 8  )
-    NumPut( uId,   NID, (A_PtrSize == 4) ? 8   : 16 )
-    NumPut( 2,     NID, (A_PtrSize == 4) ? 12  : 20 )
-    NumPut( hIcon, NID, (A_PtrSize == 4) ? 20  : 32 )
-    
+    NumPut( szNID, NID, 0             )
+    NumPut( hWnd,  NID, A_PtrSize     )
+    NumPut( uId,   NID, 2*A_PtrSize   )
+    NumPut( 2,     NID, 2*A_PtrSize+4 )
+    NumPut( hIcon, NID, 3*A_PtrSize+8 )
+    StrPut(hTooltip, &NID+4*A_PtrSize+8, 128,0)
+
     ; NIM_MODIFY := 0x1
     Return DllCall("Shell32.dll\Shell_NotifyIcon", UInt,0x1, Ptr,&NID)
 }
@@ -251,14 +254,14 @@ TrayIcon_Button(sExeName, sButton := "L", bDouble := false, index := 1)
 {
 	DetectHiddenWindows, % (Setting_A_DetectHiddenWindows := A_DetectHiddenWindows) ? "On" :
 	WM_MOUSEMOVE	  = 0x0200
-	WM_LBUTTONDOWN	  = 0x0201
-	WM_LBUTTONUP	  = 0x0202
-	WM_LBUTTONDBLCLK = 0x0203
-	WM_RBUTTONDOWN	  = 0x0204
+	WM_LBUTTONDOWN	  = 0x0201   ; 513
+	WM_LBUTTONUP	  = 0x0202     ; 514
+	WM_LBUTTONDBLCLK = 0x0203    ; 515
+	WM_RBUTTONDOWN	  = 0x0204   ; 516
 	WM_RBUTTONUP	  = 0x0205
-	WM_RBUTTONDBLCLK = 0x0206
+	WM_RBUTTONDBLCLK = 0x0206    ; 520
 	WM_MBUTTONDOWN	  = 0x0207
-	WM_MBUTTONUP	  = 0x0208
+	WM_MBUTTONUP	  = 0x0208     ;
 	WM_MBUTTONDBLCLK = 0x0209
 	sButton := "WM_" sButton "BUTTON"
 	oIcons := {}
@@ -275,4 +278,211 @@ TrayIcon_Button(sExeName, sButton := "L", bDouble := false, index := 1)
 	}
 	DetectHiddenWindows, %Setting_A_DetectHiddenWindows%
 	return
+}
+
+;___________________________________________________________________
+;;;; Tray.ahk v2.1 TrayIcon_Add 例子
+/*
+#singleinstance, force
+		OnExit, OnExit
+		Gui,  +LastFound +AlwaysOnTop Toolwindow
+		hGui := WinExist()
+
+		TrayIcon_Add(hGui, "OnTrayIcon", "shell32.dll:25", "a测试d信息1")
+	return
+ 
+	OnTrayIcon(Hwnd, Event){
+	  	if (Event != "R")		;return if event is not right click
+			return
+ 
+		MsgBox, ,Icon %Hwnd%, %EVENT% Button clicked.
+		;Tray_Focus(hGui, Hwnd)
+	}
+
+q:: TrayIcon_Remove(hGui, 101)
+
+OnExit:
+TrayIcon_Remove(hGui, 101)
+ExitApp
+return
+*/
+;___________________________________________________________________
+
+;___________________________________________________________________
+; 新添加 来自 majkinetor - Tray.ahk v2.1 中的一些函数(代码已被修改)
+; 论坛帖子: https://autohotkey.com/board/topic/23741-module-tray-21/
+; 原代码  : https://github.com/majkinetor/mm-autohotkey/tree/master/Tray
+; 参考消息: https://docs.microsoft.com/zh-cn/windows/win32/shell/notification-area?redirectedfrom=MSDN
+
+/*
+https://docs.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-notifyicondataa
+typedef struct _NOTIFYICONDATAA {
+  DWORD cbSize;             #4  A_PtrSize
+  HWND  hWnd;               #A_PtrSize
+  UINT  uID;                #4
+  UINT  uFlags;             #4
+  UINT  uCallbackMessage;   #4  A_PtrSize
+  HICON hIcon;              #A_PtrSize
+#if ...
+  CHAR  szTip[64];          #64*2
+#else
+  CHAR  szTip[128];         
+#endif
+  DWORD dwState;            #4
+  DWORD dwStateMask;        #4
+  CHAR  szInfo[256];        #256*2
+  union {                   #4
+    UINT uTimeout;          
+    UINT uVersion;          
+  } DUMMYUNIONNAME;
+  CHAR  szInfoTitle[64];    #64*2
+  DWORD dwInfoFlags;        #4
+
+
+  GUID  guidItem;           #16
+  HICON hBalloonIcon;       #A_PtrSize
+} NOTIFYICONDATAA, *PNOTIFYICONDATAA;
+
+typedef struct _NOTIFYICONDATA {
+  DWORD cbSize;
+  HWND  hWnd;
+  UINT  uID;
+  UINT  uFlags;
+  UINT  uCallbackMessage;
+  HICON hIcon;
+  TCHAR szTip[64];
+  DWORD dwState;
+  DWORD dwStateMask;
+  TCHAR szInfo[256];
+  union {
+    UINT uTimeout;
+    UINT uVersion;
+  };
+  TCHAR szInfoTitle[64];
+  DWORD dwInfoFlags;
+  GUID  guidItem;
+  HICON hBalloonIcon;
+} NOTIFYICONDATA, *PNOTIFYICONDATA;
+
+4+4+4+4+4+4+64+4+4+256+4+64+4+16+4=444
+4+4+4+4+4+4+64*2+4+4+256*2+4+64*2+4+16+4=828
+
+uFlags
+NIF_MESSAGE  (0x00000001)  uCallbackMessage
+NIF_ICON     (0x00000002)  hIcon
+NIF_TIP      (0x00000004)  szTip
+NIF_STATE    (0x00000008)  dwState and dwStateMask 
+NIF_INFO     (0x00000010)  szInfo, szInfoTitle, dwInfoFlags, and uTimeout
+NIF_GUID     (0x00000020)  guidItem
+NIF_REALTIME (0x00000040)  
+NIF_SHOWTIP  (0x00000080)
+
+dwInfoFlags
+NIIF_NONE (0x00000000)
+NIIF_INFO (0x00000001)
+NIIF_WARNING (0x00000002)
+NIIF_ERROR (0x00000003)
+NIIF_USER (0x00000004)
+NIIF_NOSOUND (0x00000010)
+NIIF_LARGE_ICON (0x00000020)
+NIIF_RESPECT_QUIET_TIME (0x00000080)
+NIIF_ICON_MASK (0x0000000F)
+*/
+
+/*
+https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shell_notifyicona
+Shell_NotifyIcon
+NIM_ADD (0x00000000)
+NIM_MODIFY (0x00000001)
+NIM_DELETE (0x00000002)
+NIM_SETFOCUS (0x00000003)
+NIM_SETVERSION (0x00000004)
+*/
+
+; ----------------------------------------------------------------------------------------------------------------------
+/*Function:		Add
+ 				Add icon in the system tray.
+ 
+  Parameters:
+ 				hGui	- Handle of the parent window.
+ 				Handler	- Notification handler.
+ 				Icon	- Icon path or handle. Icons allocated by module will be automatically destroyed when <Remove> function
+ 						  returns. If you pass icon handle, <Remove> will not destroy it. If path is an icon resource, you can 
+						  use "path:idx" notation to get the handle of the desired icon by its resource index (0 based).
+ 				Tooltip	- Tooltip text.
+ 
+  Notifications:
+ >				Handler(Hwnd, Event)
+ 
+ 				Hwnd	- Handle of the tray icon.
+ 				Event	- L (Left click), R(Right click), M (Middle click), P (Position - mouse move).
+		 				  Additionally, "u" or "d" can follow event name meaning "up" and "doubleclick".
+ 						  For example, you will be notified on "Lu" when user releases the left mouse button.
+ 				
+  Returns:
+ 				0 on failure, handle on success.
+ */
+; ----------------------------------------------------------------------------------------------------------------------
+TrayIcon_Add( hGui, Handler, Icon, Tooltip="") {
+	static NIF_ICON=2, NIF_MESSAGE=1, NIF_TIP=4, MM_SHELLICON := 0x500
+	static uid=100, hFlags
+
+	if !hFlags
+		OnMessage( MM_SHELLICON, "TrayIcon_onShellIcon" ), hFlags := NIF_ICON | NIF_TIP | NIF_MESSAGE 
+
+	if !IsFunc(Handler)
+		return A_ThisFunc "> Invalid handler: " Handler
+
+	hIcon := Icon/Icon ? Icon : TrayIcon_loadIcon(Icon, 32)
+
+	VarSetCapacity( NID, (A_IsUnicode ? 2 : 1) * 384 + A_PtrSize * 5 + 40, 0) 
+	 ,NumPut((A_IsUnicode ? 2 : 1) * 384 + A_PtrSize * 5 + 40,	NID)
+	 ,NumPut(hGui,	NID, A_PtrSize)
+	 ,NumPut(++uid,	NID, 2*A_PtrSize)
+	 ,NumPut(hFlags, NID, 2*A_PtrSize+4)
+	 ,NumPut(MM_SHELLICON, NID, 2*A_PtrSize+8)
+	 ,NumPut(hIcon, NID, 3*A_PtrSize+8)
+	 ,StrPut(Tooltip, &NID+4*A_PtrSize+8, 128,0)
+
+	if !DllCall("shell32.dll\Shell_NotifyIcon", "uint", 0, "uint", &NID)
+		return 0
+
+	TrayIcon_staticValue( uid "handler", Handler)
+	;Icon/Icon ? "" : TrayIcon_staticValue( uid "hIcon", hIcon) ; save icon handle allocated by Tray module so icon can be destroyed.
+	return uid
+}
+
+TrayIcon_loadIcon(pPath, pSize=32){
+	j := InStr(pPath, ":", 0, 0), idx := 0
+	if j > 2
+		idx := Substr( pPath, j+1), pPath := SubStr( pPath, 1, j-1)
+
+	DllCall("PrivateExtractIcons"
+            ,"str",pPath,"int",idx,"int",pSize,"int", pSize
+            ,"uint*",hIcon,"uint*",0,"uint",1,"uint",0,"int")
+
+	return hIcon
+}
+
+TrayIcon_onShellIcon(Wparam, Lparam) {
+	static EVENT_512="P", EVENT_513="L", EVENT_514="Lu", EVENT_515="Ld", EVENT_516="R", EVENT_517="Ru", EVENT_518="Rd", EVENT_519="M", EVENT_520="Mu", EVENT_521="Md"
+
+	;wparam = uid, ; msg = lparam loword
+	handler := TrayIcon_staticValue(Wparam "handler")  ,event := (Lparam & 0xFFFF)
+	return %handler%(Wparam, EVENT_%event%)
+}
+
+TrayIcon_staticValue(var="", value="☆") { 
+	static
+	_ := %var%
+	ifNotEqual, value,☆, SetEnv, %var%, %value%
+	return _
+}
+
+TrayIcon_Focus(hGui="", huid="") {
+	VarSetCapacity(NID, szNID := ((A_IsUnicode ? 2 : 1) * 384 + A_PtrSize*5 + 40),0)
+	NumPut( szNID, NID, 0             )
+	NumPut( hWnd,  NID, A_PtrSize     )
+	NumPut( uId,   NID, 2*A_PtrSize   )
+	DllCall("shell32.dll\Shell_NotifyIconA", "uint", 0x3, "uint", &NID)
 }

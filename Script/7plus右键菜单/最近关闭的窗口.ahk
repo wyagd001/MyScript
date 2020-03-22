@@ -26,15 +26,15 @@ Return
 	defaultSet=
 	( LTrim
 ID = 1007
-Name =重新打开关闭的窗口
-Description =重新打开关闭的窗口
+Name = 重新打开关闭的窗口
+Description = 重新打开关闭的窗口
 SubMenu =
 FileTypes =
-SingleFileOnly =0
-Directory =0
-DirectoryBackground =1
-Desktop =1
-showmenu =1
+SingleFileOnly = 0
+Directory = 0
+DirectoryBackground = 1
+Desktop = 1
+showmenu = 1
 	)
 IniWrite, % defaultSet, % 7PlusMenu_ProFile_Ini, % section
 return

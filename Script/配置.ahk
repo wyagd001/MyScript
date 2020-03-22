@@ -171,7 +171,7 @@ If(Auto_Raise=1){
 }
 
 Gui,Tab,7Plus菜单
-Gui,Add,ListView,x10 y30 r12 w570 h245 v7pluslistview Grid -Multi Checked -LV0x10 AltSubmit g7plusListView,激活|ID  |菜单名称|文件名
+Gui,Add,ListView,x10 y30 r12 w570 h245 v7pluslistview Grid -Multi -LV0x10 g7plusListView,激活|ID  |菜单名称|文件名
 LV_ModifyCol(2, "Integer")
 ;如果窗口含有多个 ListView 控件,默认情况下函数操作于最近添加的那个. 要改变这种情况,请指定 Gui,ListView,ListViewName
 Gosub, Load_7PlusMenusList
@@ -316,6 +316,7 @@ Gui,Tab,其他
 Gui,Add,CheckBox,x26 y30 w120 h20 vvAuto_DisplayMainWindow Checked%Auto_DisplayMainWindow%,启动时显示主窗口
 Gui,Add,CheckBox,x280 y30 w130 h20 vvAuto_7plusMenu Checked%Auto_7plusMenu%,资源管理器7plus菜单
 Gui,Add,CheckBox,x26 y50 w140 h20 vvAuto_Trayicon Checked%Auto_Trayicon%,启动时检测托盘图标
+Gui,Add,CheckBox,x280 y50 w150 h20 vvAuto_FuncsIcon Checked%Auto_FuncsIcon%,启动时显示其他功能图标
 Gui,Add,CheckBox,x44 y70 w200 h20 vvAuto_Trayicon_showmsgbox Checked%Auto_Trayicon_showmsgbox%,没有托盘图标显示重启脚本对话框
 Gui,Add,CheckBox,x26 y90 w180 h20 vvAuto_ShutdownMonitor Checked%Auto_ShutdownMonitor%,监视关机使用传统关机对话框
 Gui,Add,CheckBox,x26 y110 w80 h20 vvAuto_PasteAndOpen Checked%Auto_PasteAndOpen%,粘贴并打开
@@ -692,20 +693,7 @@ Return
 
 7plusListView:
 Gui,99:ListView,7pluslistview
-If(A_GuiEvent = "I")
-{
-	If (ErrorLevel == "C")
-	{
-		LV_GetText(ContextMenuFileName,A_EventInfo,4)
-		IniWrite,1,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,showmenu
-	}
-	If (ErrorLevel == "c")
-	{
-		LV_GetText(ContextMenuFileName,A_EventInfo,4)
-		IniWrite,0,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,showmenu
-	}
-}
-Else If(A_GuiEvent="DoubleClick")
+If(A_GuiEvent="DoubleClick")
 {
 	LV_GetText(ContextMenuFileName,A_EventInfo,4)
 	gosub ReadContextMenuIni
@@ -719,10 +707,11 @@ Gui,98:Default
 Gui,98:+Owner99
 Gui,99:+Disabled
 Gui,Add,Text,x42 y30 w50 h20 ,ID号：
-Gui,Add,CheckBox,x42 y180 w250 h20 vSingleFileOnly,仅在选中单文件时显示(选中多文件不显示)
-Gui,Add,CheckBox,x42 y200 w250 h20 vDirectory,选中文件夹时显示
-Gui,Add,CheckBox,x42 y220 w250 h20 vDirectoryBackground,文件夹空白处右键菜单中显示
-Gui,Add,CheckBox,x42 y240 w250 h20 vDesktop,桌面空白处菜单中显示
+Gui,Add,CheckBox,x42 y180 w250 h20 vSingleFileOnly Checked%SingleFileOnly%,仅在选中单文件时显示(选中多文件不显示)
+Gui,Add,CheckBox,x42 y200 w250 h20 vDirectory Checked%Directory%,选中文件夹时显示
+Gui,Add,CheckBox,x42 y220 w250 h20 vDirectoryBackground Checked%DirectoryBackground%,文件夹空白处右键菜单中显示
+Gui,Add,CheckBox,x42 y240 w250 h20 vDesktop Checked%Desktop%,桌面空白处菜单中显示
+Gui,Add,CheckBox,x42 y260 w250 h20 vshowmenu Checked%showmenu%,启用菜单
 Gui,Add,Text,x42 y60 w60 h20 ,菜单名：
 Gui,Add,Text,x42 y90 w60 h20 ,描述：
 Gui,Add,Text,x42 y120 w60 h20 ,子菜单于：
@@ -734,10 +723,6 @@ Gui,Add,Edit,x122 y120 w230 h20 vSubMenu,%SubMenu%
 Gui,Add,Edit,x122 y150 w230 h20 vFileTypes,%FileTypes%
 Gui,Add,Button,x272 y280 w70 h30 gContextMenuok,确定
 Gui,Add,Button,x352 y280 w70 h30 g98GuiEscape Default,取消
-GuiControl,,Directory,%Directory%
-GuiControl,,DirectoryBackground,%DirectoryBackground%
-GuiControl,,Desktop,%Desktop%
-GuiControl,,SingleFileOnly,%SingleFileOnly%
 Gui,Show,,系统右键菜单之7Plus菜单编辑
 Return
 
@@ -884,10 +869,12 @@ IniRead,Name,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,Name
 IniRead,Description,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,Description
 IniRead,SubMenu,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,SubMenu
 IniRead,FileTypes,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,FileTypes
-IniRead,SingleFileOnly,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,SingleFileOnly
-IniRead,Directory,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,Directory
-IniRead,DirectoryBackground,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,DirectoryBackground
-IniRead,Desktop,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,Desktop
+IniRead,SingleFileOnly,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,SingleFileOnly,0
+IniRead,Directory,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,Directory,0
+IniRead,DirectoryBackground,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,DirectoryBackground,0
+IniRead,Desktop,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,Desktop,0
+IniRead,showmenu,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,showmenu,0
+SingleFileOnly:=SingleFileOnly=1?1:0,Directory:=Directory=1?1:0,DirectoryBackground:=DirectoryBackground=1?1:0,Desktop:=Desktop=1?1:0,showmenu:=showmenu=1?1:0
 Return
 
 ContextMenuok:
@@ -900,15 +887,18 @@ IniWrite,%SingleFileOnly%,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,SingleFi
 IniWrite,%Directory%,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,Directory
 IniWrite,%DirectoryBackground%,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,DirectoryBackground
 IniWrite,%Desktop%,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,Desktop
+IniWrite,%showmenu%,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,showmenu
 
 Gui,98:Destroy
-Gui,99:-Disabled 
 WinActivate,选项 ahk_class AutoHotkeyGUI
-send,!R
+Gui,99:Default
+Gosub Load_7PlusMenusList
+Gui,99:-Disabled
 Return
 
 Load_7PlusMenusList:
 Gui,99:ListView,7pluslistview
+GuiControl,-redraw,7pluslistview
 LV_Delete()
 Loop, %A_ScriptDir%\Script\7plus右键菜单\*.ahk
 {
@@ -930,13 +920,13 @@ continue
 
 IniRead,name,%7PlusMenu_ProFile_Ini%,%FileName%,name
 IniRead,showmenu,%7PlusMenu_ProFile_Ini%,%FileName%,showmenu
-	LV_Add(showmenu = 1 ? "Check" : "","",7Plus_id,name,FileName)
+	LV_Add(,showmenu = 1 ? "√":"×",7Plus_id,name,FileName)
 }
 
 LV_ModifyCol()
 LV_ModifyCol(1, 40)
 LV_ModifyCol(2, "Sort")
-
+GuiControl,+redraw,7pluslistview
 Return
 
 daps:
@@ -990,6 +980,7 @@ IniWrite,% vClipPlugin_git,%run_iniFile%,功能开关,ClipPlugin_git
 IniWrite,% vAuto_Capslock,%run_iniFile%,功能开关,Auto_Capslock
 IniWrite,% vAuto_mouseclick,%run_iniFile%,功能开关,Auto_mouseclick
 IniWrite,% vAuto_7plusMenu,%run_iniFile%,功能开关,Auto_7plusMenu
+IniWrite,% vAuto_FuncsIcon,%run_iniFile%,功能开关,Auto_FuncsIcon
 IniWrite,% vAuto_midmouse,%run_iniFile%,功能开关,Auto_midmouse
 IniWrite,% vAuto_Spacepreview,%run_iniFile%,功能开关,Auto_Spacepreview
 IniWrite,% vAuto_AhkServer,%run_iniFile%,功能开关,Auto_AhkServer
