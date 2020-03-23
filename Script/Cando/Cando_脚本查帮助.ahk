@@ -109,16 +109,19 @@ Return
 monishuru:
 Thread, NoTimers
 sleep,1000
-;send !N
 WinGetPos, X, Y,,,%Ahk帮助标题%
 mousemove, % X+150, % Y+77
+
+;send !N
+
 ;click
 
 wb := WBGet("ahk_class HH Parent")
 sleep,100
+wb.document.querySelector("#head > div > div.h-tabs > ul > li:nth-child(2)").click()
 wb.document.getElementsByTagName("input")[0].value := CandySel
 wb.document.getElementsByTagName("input")[0].focus()
-click
+;click
 sleep,100
 ControlSend,Internet Explorer_Server1,{enter},%Ahk帮助标题%
 ControlSend,Internet Explorer_Server1,{enter},%Ahk帮助标题%
@@ -135,12 +138,13 @@ mousemove, % X+250, % Y+77
 
 wb := WBGet("ahk_class HH Parent")
 sleep,100
+wb.document.querySelector("#head > div > div.h-tabs > ul > li:nth-child(3)").click()
 wb.document.getElementsByTagName("input")[1].value := CandySel
 wb.document.getElementsByTagName("input")[1].focus()
-click
-send,{enter}
-sleep,1000
-Send,{enter}
+;click
+sleep 200
+ControlSend,Internet Explorer_Server1,{enter},%Ahk帮助标题%
+ControlSend,Internet Explorer_Server1,{enter},%Ahk帮助标题%
 
 return
 

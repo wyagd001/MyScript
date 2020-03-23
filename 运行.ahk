@@ -786,12 +786,14 @@ else
 ;;;;;;;;;; 剪贴板  ;;;;;;;;;;;;
 
 ;快捷键打开C,D,E,F盘...设置其快捷键，loop 15循环15次，到达字母Q
-if islabel("ExploreDrive")
+if islabel("ExploreDrive") && !InStr(myhotkey.前缀_快速打开磁盘,"@")
 {
 	Loop 15
 		HotKey % myhotkey.前缀_快速打开磁盘 Chr(A_Index+66), ExploreDrive
 }
 
+if !InStr(myhotkey.前缀_小键盘移动窗口,"@")
+{
 ;----------Winpad----------
 WindowPadInit:
 ; Exclusion examples:
@@ -862,7 +864,9 @@ EasyKey = Insert    ; Insert is near Numpad on my keyboard...
 ;移除EasyKey
 */
 ;----------Winpad----------
+}
 
+if !InStr(myhotkey.前缀_数字虚拟桌面切换,"@")
 ;----------虚拟桌面----------
 Loop, 4
 {

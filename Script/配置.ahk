@@ -29,6 +29,8 @@ Gui,Tab,¿ì½Ý¼ü
 Gui,Add,text,x10 y30 w550,×¢Òâ:#±íÊ¾Win,!±íÊ¾Alt,+±íÊ¾Shift,^±íÊ¾Ctrl,Space±íÊ¾¿Õ¸ñ¼ü,Up±íÊ¾ÏòÉÏ¼ýÍ·,~±íÊ¾°´¼üÔ­¹¦ÄÜ²»»á±»ÆÁ±Î£¬*±íÊ¾ÓÐÆäËü¼üÍ¬Ê±°´ÏÂÊ±¿ì½Ý¼üÈÔÈ»ÉúÐ§
 
 Gui,Add,ListView,x10 y60 w570 h245 vhotkeysListview ghotkeysListview checked Grid -Multi +NoSortHdr -LV0x10 -LV0x10 +LV0x4000 +AltSubmit,¿ì½Ý¼ü±êÇ©|¿ì½Ý¼ü|ÊÊÓÃ´°¿Ú|ÐòºÅ
+LoadLV_dis_Label := 1
+sleep 100
 Gui,listview,hotkeysListview 
 LV_Delete()
 for k,v in myhotkey
@@ -40,6 +42,7 @@ for k,v in myhotkey
 		col3_tmp:=";" k
 	LV_Add(InStr(v,"@")?"" : "check",k,v,col3_tmp?col3_tmp:";",A_index)
 }
+
 LV_ModifyCol()
 LV_ModifyCol(4,40)
 LV_Modify(1,"Select")
@@ -47,6 +50,7 @@ LV_Modify(1,"Focus")
 LV_Modify(1,"Vis")
 
 LV_ColorInitiate(99)
+LoadLV_dis_Label := 0
 sleep,500
 Gui,Tab,Plugins
 Gui,Add,ListView,x10 y30 w570 h245 vPluginsListview ghotkeysListview Grid -Multi -LV0x10 +LV0x4000 +AltSubmit,Ãû³Æ|¿ì½Ý¼ü|ÆäËûµ÷ÓÃ·½·¨|ÐòºÅ
@@ -171,15 +175,16 @@ If(Auto_Raise=1){
 }
 
 Gui,Tab,7Plus²Ëµ¥
-Gui,Add,ListView,x10 y30 r12 w570 h245 v7pluslistview Grid -Multi -LV0x10 g7plusListView,¼¤»î|ID  |²Ëµ¥Ãû³Æ|ÎÄ¼þÃû
+Gui,Add,ListView,x10 y30 r12 w570 h245 v7pluslistview Grid -Multi -LV0x10 Checked AltSubmit g7plusListView,¼¤»î|ID  |²Ëµ¥Ãû³Æ|ÎÄ¼þÃû
 LV_ModifyCol(2, "Integer")
 ;Èç¹û´°¿Úº¬ÓÐ¶à¸ö ListView ¿Ø¼þ,Ä¬ÈÏÇé¿öÏÂº¯Êý²Ù×÷ÓÚ×î½üÌí¼ÓµÄÄÇ¸ö. Òª¸Ä±äÕâÖÖÇé¿ö,ÇëÖ¸¶¨ Gui,ListView,ListViewName
 Gosub, Load_7PlusMenusList
-Gui,Add,Button,x10 y280 w80 h30 gButtun_Edit,±à¼­²Ëµ¥(&E)
-Gui,Add,Button,x90 y280 w80 h30 gLoad_7PlusMenusList,Ë¢ÐÂ²Ëµ¥(&R)
-Gui,Add,Button,x170 y280 w120 h30 gsavetoreg,Ó¦ÓÃ²Ëµ¥µ½ÏµÍ³(&S)
+Gui,Add,Button,x10 y280 w120 h30 gButtun_Edit,±à¼­²Ëµ¥(&E)
+;Gui,Add,Button,x90 y280 w80 h30 gLoad_7PlusMenusList,Ë¢ÐÂ²Ëµ¥(&R)
+;Gui,Add,Button,x170 y280 w120 h30 gsavetoreg,Ó¦ÓÃ²Ëµ¥µ½ÏµÍ³(&S)
 Gui,Add,Button,x370 y280 w70 h30 gregsvr32dll,×¢²áDll
 Gui,Add,Button,x450 y280 w70 h30 gunregsvr32dll,Ð¶ÔØDll
+Gui,Add,Button,x10 y335 w120 h30 gsavetoreg,²Ëµ¥Ð´Èë×¢²á±í(&S)
 
 Gui,Tab,Õûµã±¨Ê±
 Gui, Add, GroupBox, x20 y30 w200 h90 vgbbs,Õûµã±¨Ê±(ÒÑ¿ªÆô)
@@ -600,34 +605,37 @@ Else
 Return
 
 hotkeysListview:
+if LoadLV_dis_Label   ; ÔØÈëÁÐ±íÊ±½ûÓÃÁÐ±íµÄ±êÇ©£¬Ö±½Ó·µ»Ø
+return
 If(A_GuiControl="hotkeysListview")
 {
-tmpstr=hotkeys
-Gui,99:ListView,hotkeysListview
+	tmpstr=hotkeys
+	Gui,99:ListView,hotkeysListview
 }
 If(A_GuiControl="PluginsListview")
 {
-tmpstr=Plugins
-Gui,99:ListView,PluginsListview
+	tmpstr=Plugins
+	Gui,99:ListView,PluginsListview
 }
 If(A_GuiEvent = "I")
 {
 	If (ErrorLevel == "C")
 	{
-LV_GetText(tmphotkey,A_EventInfo,2)
-if instr(tmphotkey,"@")
-{
-StringReplace, tmphotkey, tmphotkey,@
-LV_Modify(A_EventInfo, , , tmphotkey)
-}
+		LV_GetText(tmphotkey,A_EventInfo,2)
+		if instr(tmphotkey,"@")
+		{
+			StringReplace, tmphotkey, tmphotkey,@
+			LV_Modify(A_EventInfo, , , tmphotkey)
+		}
+		;fileappend % A_Now ": " tmphotkey "`n", %A_Desktop%\log.txt   ; µ÷ÊÔ
 	}
 	If (ErrorLevel == "c")
 	{
-LV_GetText(tmphotkey,A_EventInfo,2)
-if (!tmphotkey or InStr(tmphotkey,"ahk"))
-return
-tmphotkey:="@" tmphotkey
-LV_Modify(A_EventInfo, , , tmphotkey)
+		LV_GetText(tmphotkey,A_EventInfo,2)
+		if (!tmphotkey or InStr(tmphotkey,"ahk"))
+		return
+		tmphotkey:="@" tmphotkey
+		LV_Modify(A_EventInfo, , , tmphotkey)
 	}
 }
 If A_GuiEvent = DoubleClick     ;Double-clicking a row opens the Edit Row dialogue window.
@@ -692,10 +700,27 @@ LV_Modify(FocusedRowNumber,"",Col1Text,EditRowEditCol2)
 Return
 
 7plusListView:
+if LoadLV_dis_Label
+return
 Gui,99:ListView,7pluslistview
+If(A_GuiEvent = "I")
+{
+	If (ErrorLevel == "C")
+	{
+		LV_GetText(ContextMenuFileName,A_EventInfo,4)
+		IniWrite,1,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,showmenu
+		;fileappend % A_Now " ini: " LoadLV_dis_Label " " ContextMenuFileName "`n",%A_Desktop%\log.txt ; µ÷ÊÔ
+	}
+	If (ErrorLevel == "c")
+	{
+		LV_GetText(ContextMenuFileName,A_EventInfo,4)
+		IniWrite,0,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,showmenu
+	}
+}
 If(A_GuiEvent="DoubleClick")
 {
 	LV_GetText(ContextMenuFileName,A_EventInfo,4)
+	FocusedRowNumber := A_EventInfo
 	gosub ReadContextMenuIni
 	gosub GUI_EventsList_Edit
 }
@@ -711,7 +736,7 @@ Gui,Add,CheckBox,x42 y180 w250 h20 vSingleFileOnly Checked%SingleFileOnly%,½öÔÚÑ
 Gui,Add,CheckBox,x42 y200 w250 h20 vDirectory Checked%Directory%,Ñ¡ÖÐÎÄ¼þ¼ÐÊ±ÏÔÊ¾
 Gui,Add,CheckBox,x42 y220 w250 h20 vDirectoryBackground Checked%DirectoryBackground%,ÎÄ¼þ¼Ð¿Õ°×´¦ÓÒ¼ü²Ëµ¥ÖÐÏÔÊ¾
 Gui,Add,CheckBox,x42 y240 w250 h20 vDesktop Checked%Desktop%,×ÀÃæ¿Õ°×´¦²Ëµ¥ÖÐÏÔÊ¾
-Gui,Add,CheckBox,x42 y260 w250 h20 vshowmenu Checked%showmenu%,ÆôÓÃ²Ëµ¥
+;Gui,Add,CheckBox,x42 y260 w250 h20 vshowmenu Checked%showmenu%,ÆôÓÃ²Ëµ¥
 Gui,Add,Text,x42 y60 w60 h20 ,²Ëµ¥Ãû£º
 Gui,Add,Text,x42 y90 w60 h20 ,ÃèÊö£º
 Gui,Add,Text,x42 y120 w60 h20 ,×Ó²Ëµ¥ÓÚ£º
@@ -851,7 +876,6 @@ Return
 Buttun_Edit:
 Gui,99:ListView,7pluslistview
 FocusedRowNumber := LV_GetNext(0,"F")
-;MsgBox % FocusedRowNumber
 If not FocusedRowNumber
 {
 	CF_ToolTip("Î´Ñ¡ÖÐ!",3000)
@@ -873,8 +897,8 @@ IniRead,SingleFileOnly,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,SingleFileO
 IniRead,Directory,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,Directory,0
 IniRead,DirectoryBackground,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,DirectoryBackground,0
 IniRead,Desktop,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,Desktop,0
-IniRead,showmenu,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,showmenu,0
-SingleFileOnly:=SingleFileOnly=1?1:0,Directory:=Directory=1?1:0,DirectoryBackground:=DirectoryBackground=1?1:0,Desktop:=Desktop=1?1:0,showmenu:=showmenu=1?1:0
+;IniRead,showmenu,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,showmenu,0
+SingleFileOnly:=SingleFileOnly=1?1:0,Directory:=Directory=1?1:0,DirectoryBackground:=DirectoryBackground=1?1:0,Desktop:=Desktop=1?1:0   ; ,showmenu:=showmenu=1?1:0
 Return
 
 ContextMenuok:
@@ -887,46 +911,53 @@ IniWrite,%SingleFileOnly%,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,SingleFi
 IniWrite,%Directory%,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,Directory
 IniWrite,%DirectoryBackground%,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,DirectoryBackground
 IniWrite,%Desktop%,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,Desktop
-IniWrite,%showmenu%,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,showmenu
+;IniWrite,%showmenu%,%7PlusMenu_ProFile_Ini%,%ContextMenuFileName%,showmenu
 
 Gui,98:Destroy
 WinActivate,Ñ¡Ïî ahk_class AutoHotkeyGUI
 Gui,99:Default
-Gosub Load_7PlusMenusList
+Gui,99:ListView,7pluslistview
+LV_Modify(FocusedRowNumber,,,,Name)
+;LV_Modify(FocusedRowNumber, showmenu=1?"Check":"-Check")
 Gui,99:-Disabled
 Return
 
 Load_7PlusMenusList:
+LoadLV_dis_Label:=1
+sleep 100
 Gui,99:ListView,7pluslistview
 GuiControl,-redraw,7pluslistview
 LV_Delete()
 Loop, %A_ScriptDir%\Script\7plusÓÒ¼ü²Ëµ¥\*.ahk
 {
-StringTrimRight, FileName, A_LoopFileName, 4
-IniRead,7Plus_id,%7PlusMenu_ProFile_Ini%,%FileName%,id
-
-if (7Plus_id = "ERROR") or !Islabel(7Plus_id)
-{
-if IsFunc("7PlusMenu_" FileName)
-{
-	7PlusMenu_%FileName%()
-}
-else
-continue
+	StringTrimRight, FileName, A_LoopFileName, 4
 	IniRead,7Plus_id,%7PlusMenu_ProFile_Ini%,%FileName%,id
-if 7Plus_id = ERROR
-continue
+
+	if (7Plus_id = "ERROR") or !Islabel(7Plus_id)
+	{
+		if IsFunc("7PlusMenu_" FileName)
+		{
+			7PlusMenu_%FileName%()
+		}
+		else
+			continue
+		IniRead,7Plus_id,%7PlusMenu_ProFile_Ini%,%FileName%,id
+		if 7Plus_id = ERROR
+			continue
 	}
 
-IniRead,name,%7PlusMenu_ProFile_Ini%,%FileName%,name
-IniRead,showmenu,%7PlusMenu_ProFile_Ini%,%FileName%,showmenu
-	LV_Add(,showmenu = 1 ? "¡Ì":"¡Á",7Plus_id,name,FileName)
+	IniRead,name,%7PlusMenu_ProFile_Ini%,%FileName%,name
+	IniRead,showmenu,%7PlusMenu_ProFile_Ini%,%FileName%,showmenu
+	LV_Add(showmenu = 1 ? "Check" : "","",7Plus_id,name,FileName)
+	;fileappend % A_Now " Loop: " LoadLV_dis_Label " " FileName "`n",%A_Desktop%\log.txt   ; µ÷ÊÔ
 }
 
 LV_ModifyCol()
 LV_ModifyCol(1, 40)
 LV_ModifyCol(2, "Sort")
 GuiControl,+redraw,7pluslistview
+sleep 400
+LoadLV_dis_Label := 0 ; ÁÐ±íÔØÈëÍê³É£¬±äÁ¿ÉèÖÃÎª 1
 Return
 
 daps:
@@ -944,6 +975,7 @@ Else If dWinamp=1
 Else If dAhkPlayer=1
 	DefaultPlayer=AhkPlayer
 Return
+
 
 wk:
 Gui,Submit,NoHide
@@ -1033,7 +1065,6 @@ IniWrite,%DefaultPlayer%,%run_iniFile%,³£¹æ,DefaultPlayer
 IniWrite,%sp%,%run_iniFile%,¹Ì¶¨µÄ³ÌÐò,stableProgram
 
 IniDelete,%run_iniFile%,otherProgram
-;FileAppend, `n`r, %run_iniFile%
 Loop,Parse,op,`n`r
 {
 	otp2:=A_LoopField
