@@ -792,7 +792,7 @@ if islabel("ExploreDrive") && !InStr(myhotkey.前缀_快速打开磁盘,"@")
 		HotKey % myhotkey.前缀_快速打开磁盘 Chr(A_Index+66), ExploreDrive
 }
 
-if !InStr(myhotkey.前缀_小键盘移动窗口,"@")
+if !InStr(myhotkey.前缀_小键盘移动窗口,"@") || !InStr(myhotkey.前缀_小键盘移动前一个窗口,"@")
 {
 ;----------Winpad----------
 WindowPadInit:
@@ -866,7 +866,7 @@ EasyKey = Insert    ; Insert is near Numpad on my keyboard...
 ;----------Winpad----------
 }
 
-if !InStr(myhotkey.前缀_数字虚拟桌面切换,"@")
+if !InStr(myhotkey.前缀_数字虚拟桌面切换,"@") || !InStr(myhotkey.前缀_功能键发送到虚拟桌面,"@")
 ;----------虚拟桌面----------
 Loop, 4
 {

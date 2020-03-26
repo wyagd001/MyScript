@@ -364,7 +364,7 @@ Return buf
 IsRenaming()
 {
 	If(Vista7)
-	 ControlGetFocus focussed, A
+	 ControlGetFocus focussed, A ; 获取到的控件为 Edit1
   Else
     focussed:=XPGetFocussed()
 	If(WinActive("ahk_group ExplorerGroup")) ;Explorer
@@ -372,7 +372,12 @@ IsRenaming()
 		If(strStartsWith(focussed,"Edit"))
 		{
 			If(Vista7)
-				ControlGetPos , X, Y, Width, Height, DirectUIHWND3, A
+			{
+				; Win 10 中有可能是 DirectUIHWND2 或 DirectUIHWND3
+				ControlGetPos , X, Y, Width, Height,DirectUIHWND3, A
+				if !X
+				ControlGetPos , X, Y, Width, Height,DirectUIHWND2, A
+			}
 			Else
 				ControlGetPos , X, Y, Width, Height, SysListView321, A
 			ControlGetPos , X1, Y1, Width1, Height1, %focussed%, A

@@ -750,23 +750,23 @@ Msg(title="ÍøÒ³¿ØÖÆ", body="", loc="bl", fixedwidth=0, time=0) {
 	global msgtransp, hwndmsg, MonBottom, MonRight
 	SetTimer, MsgStay, Off
 	SetTimer, MsgFadeOut, Off
-	Gui,77:Destroy
-	Gui,77:+AlwaysOnTop +ToolWindow -SysMenu -Caption +LastFound
+	Gui,78:Destroy
+	Gui,78:+AlwaysOnTop +ToolWindow -SysMenu -Caption +LastFound
 	hwndmsg := WinExist()
 	WinSet, ExStyle, +0x20 ; WS_EX_TRANSPARENT make the window transparent-to-mouse
 	WinSet, Transparent, 250
 	msgtransp := 250
-	Gui,77:Color, 000000 ;background color
-	Gui,77:Font, c5C5CF0 s17 wbold, Arial
-	Gui,77:Add, Text, x20 y12, %title%
+	Gui,78:Color, 000000 ;background color
+	Gui,78:Font, c5C5CF0 s17 wbold, Arial
+	Gui,78:Add, Text, x20 y12, %title%
 	If(body) {
-		Gui,77:Font, cFF0000 s15 wnorm
-		Gui,77:Add, Text, x20 y56, %body%
+		Gui,78:Font, cFF0000 s15 wnorm
+		Gui,78:Add, Text, x20 y56, %body%
 	}
 	If(fixedwidth) {
-		Gui,77:Show, NA W700
+		Gui,78:Show, NA W700
 	} else {
-		Gui,77:Show, NA
+		Gui,78:Show, NA
 	}
 	WinGetPos,ix,iy,w,h, ahk_id %hwndmsg%
 	; SysGet, Mon, MonitorWorkArea ; already called
@@ -797,7 +797,7 @@ MsgFadeOut:
 		WinSet, Transparent, %msgtransp%, ahk_id %hwndmsg%
 	} Else {
 		SetTimer, MsgFadeOut, Off
-		Gui,77:Destroy
+		Gui,78:Destroy
 	}
 Return
 
