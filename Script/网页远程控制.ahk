@@ -19,16 +19,12 @@ p {
 button {
   font-family: sans-serif;
   font-size: %buttonSize%;
-  height: 48px;
+  height: 50px;
   vertical-align:middle;
 }
 
 h1 {
 	padding: %pagePadding%; width: auto; font-family: Sans-Serif; font-size: 22pt;
-}
-
-input{
-width: 700px ; height: 48px;
 }
 
 body {
@@ -98,22 +94,21 @@ window.location.href="/";
 </p>
 <p> &nbsp; </p>
 
-<p>文件上传(尚未实现)</p>
-  <form action="/upload" method="POST" enctype="multipart/form-data">  
-    <!--input style="color:#c2c2c2; background-color: white; vertical-align:middle;" type="file" name="file" /--!>  
+<p>文件上传</p>
+<form action="/upload" method="POST" enctype="multipart/form-data">  
+ <input type="file" name="file" style="width:700px; height:55px; color:#c2c2c2; background-color: white; vertical-align:middle;" />  
 <span>
-    <!--input style="width: 0px; height: 0px; vertical-align:middle;" type="hidden" value="上传" / --!>  
-</sapn>
-  </form>  
+ <input type="submit" style="width:80px; height:58px; vertical-align:middle;" value="上传" />
+</span>
+</form>  
 <p> &nbsp; </p>
 
 <p>发送文本</p>
 <form action="/submit" method="get">
-<input style="vertical-align:middle;" type="text" id="1234" name="mytext" value="%mytext%" />
+<input type="text" id="1234" name="mytext" style="width:694px; height:50px; vertical-align:middle;" value="%mytext%" />
 <span>
-<input type=submit style="width: 80px; height: 55px; vertical-align:middle;" value="保存文字" />  
-</sapn>
-<!-- <a href="/submit"> <button> 提交 </button> </a> --!>
+<input type="submit" style="width:80px; height:55px; vertical-align:middle;" value="保存文字" />  
+</span>
 </form>
 <p> &nbsp; </p>
 
@@ -121,8 +116,8 @@ window.location.href="/";
 <!--select标签和input外面的span标签的格式是为了使两个位置在同一位置，控制位置-->
 <!--有name属性都会提交-->
 <form action="/runcom" method="get">
-<span style="position:absolute;border:1pt solid #c1c1c1;overflow:hidden;width:740px;height:54px;">
-<select name="aabb" id="aabb" style="width:742px;height:55px;" 
+<span style="position:absolute;border:1pt solid #c1c1c1;overflow:hidden;width:699px;height:55px;">
+<select name="aabb" id="aabb" style="width:699px;height:55px;" 
 onChange="javascript:document.getElementById('ccdd').value=document.getElementById('aabb').options[document.getElementById('aabb').selectedIndex].value;">
 <!--下面的option的样式是为了使字体为灰色，只是视觉问题，看起来像是注释一样-->
 <option value="" style="color:#c2c2c2;">---请选择---</option>
@@ -133,12 +128,8 @@ onChange="javascript:document.getElementById('ccdd').value=document.getElementBy
 <option value="%stableitem5%">项目五</option>
 </select> 
 </span> 
-<span style="position:absolute;border-top:1pt solid #c1c1c1;border-left:1pt solid #c1c1c1;border-bottom:1pt solid #c1c1c1;width:700px;height:50px;"> 
-<input type="text" name="ccdd" id="ccdd" placeholder="请输入要运行的内容, 回车提交" />
-</span>
-<span> 
-<input type="submit" style="width: 80px; height: 50px;" value="提交" />
-</span> 
+<span style="position:absolute;border-top:1pt solid #c1c1c1;border-left:1pt solid #c1c1c1;border-bottom:1pt solid #c1c1c1;width:665px;height:50px;"><input type="text" name="ccdd" id="ccdd" style="width:665px; height:50px;" placeholder="请输入要运行的内容, 回车提交" /></span>
+<span><input type="submit" style="width:80px; height:55px; vertical-align:middle;" value="提交" /></span>
 </form>
 
 </body>
@@ -153,7 +144,6 @@ SiteContents =
 			<meta charset="UTF-8">
 			<meta name="viewport" content="width=device-width">
 			<title>网页控制</title>
-			<link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
 			<style>
 				html {
 					font-family: Ubuntu;
@@ -240,7 +230,7 @@ server.LoadMimes(A_ScriptDir . "/lib/mime.types")
 server.SetPaths(paths)
 server.Serve(serverPort)
 global clientWebServerUrl := "http://192.168.1.214:10000"
-global urlUtil := new URL()
+global urlUtil := new URI()
 return
 
 Logo(ByRef req, ByRef res, ByRef server) {
@@ -440,10 +430,11 @@ serverReload(ByRef req, ByRef res){
 ; 空格会变+号
 submit(ByRef req, ByRef res){
 Global run_iniFile
-pp:=req.queries["mytext"]
-qq:=StringToHex(pp)
-MCode(varchinese, qq)
-mytext := StrGet(&varchinese, "cp65001")
+mytext:=req.queries["mytext"]
+;fileappend,% A_now "`r`n" Array_ToString(req),%A_ScriptDir%\bbbb.txt,UTF-8
+;qq:=StringToHex(pp)
+;MCode(varchinese, qq)
+;mytext := StrGet(&varchinese, "cp65001")
 mytext := StrReplace(mytext, "+", " ") ;不支持文字中有符号“+”
 iniwrite, % mytext, %run_iniFile%, serverConfig, mytext
 ;req.headers["Referer"]:="http://192.168.1.100:2525"
@@ -451,6 +442,7 @@ iniwrite, % mytext, %run_iniFile%, serverConfig, mytext
 ;for k,v in req
 ;msgbox % k "`n" v
 	Index(req, res)
+res.status := 200
 return
 }
 
@@ -516,10 +508,10 @@ Func_getchromeUrl(ByRef req, ByRef res) {
 ; 空格会变+号 使用★代替+号
 runcom(ByRef req, ByRef res){
 	Global
-	pp:=req.queries["ccdd"]
-	qq:=StringToHex(pp)
-	MCode(varchinese, qq)
-	command:=StrGet(&varchinese,"cp65001")
+	command:=req.queries["ccdd"]
+	;qq:=StringToHex(pp)
+	;MCode(varchinese, qq)
+	;command:=StrGet(&varchinese,"cp65001")
 	command := StrReplace(command, "+", " ")
 	command := StrReplace(command, "★", "+")
 	if loginpass
@@ -539,6 +531,7 @@ runcom(ByRef req, ByRef res){
 			Msg(, "命令 %command% 运行失败")
 	}
 	Index(req, res)
+	res.status := 200
 return
 }
 
@@ -659,11 +652,50 @@ res.headers["content-disposition"] := "attachment; filename=" txtFileName
 
 
 upload(ByRef req, ByRef res) {
-				fileappend,% Array_ToString(req),%A_ScriptDir%\bbbb.txt
+				;if req.body
+;Index(req, res)
+;fileappend,% A_now "`r`n" Array_ToString(req),%A_ScriptDir%\bbbb.txt,UTF-8
+SiteContents =
+(LTrim
+	<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset="UTF-8">
+			<meta name="viewport" content="width=device-width">
+			<title>网页控制</title>
+		</head>
+		<body>
+			[BodyTagContents]
+		</body>
+	</html>
+)
+	
 res.status := 200
-tooltip 处理完毕！
+tooltip % req.filepath "`r`n" req.filesize
+if fileexist(req.filepath)
+{
+FileGetSize, OutputVar, % req.filepath
+if (OutputVar=req.filesize)
+{
+Msg(, "文件上传成功。")
+StringReplace, Serve, SiteContents, [BodyTagContents], 文件上传成功。, All
+res.SetBodyText(Serve)
 }
-
+else
+{
+Msg(, "文件上传完毕，但字节不对！")
+StringReplace, Serve, SiteContents, [BodyTagContents], % "文件上传完毕，但字节不对。`r`n原文件大小为: " req.filesize "`r`n接收到的字节: " OutputVar, All
+res.SetBodyText(Serve)
+}
+}
+else
+{
+Msg(, "文件上传失败！")
+StringReplace, Serve, SiteContents, [BodyTagContents], 文件上传失败！请重试或检查磁盘容量是否足够。, All
+res.SetBodyText(Serve)
+;tooltip 处理完毕！
+}
+}
 
 Func_downFile(ByRef req, ByRef res) {
     if (!HttpServer_File) {

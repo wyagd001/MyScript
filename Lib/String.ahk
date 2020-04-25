@@ -129,6 +129,7 @@ Return, StrPut(Str, &Var, Enc),VarSetCapacity(var,-1)
 }
 
 ; http://ahkcn.net/thread-1927.html
+; a := "\u8001\u5E0852AB\u8001\u5E08"
 UnicodeDecode(text)
 {
     while pos := RegExMatch(text, "\\u\w{4}")

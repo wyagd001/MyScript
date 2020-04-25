@@ -114,19 +114,17 @@ TrayIcon_GetInfo(sExeName := "")
 ; ..............: sTray - 1 or Shell_TrayWnd || 0 or NotifyIconOverflowWindow.
 ; Info .........: TB_HIDEBUTTON message - http://goo.gl/oelsAa
 ; ----------------------------------------------------------------------------------------------------------------------
-^q::
-TrayIcon_Hide(1,0,1)
-return
 
 TrayIcon_Hide(IDcmd, sTray := "Shell_TrayWnd", bHide:=True)
 {
 	sTray := sTray = 0 ?  "NotifyIconOverflowWindow" : "Shell_TrayWnd"
 	DetectHiddenWindows, % (Setting_A_DetectHiddenWindows := A_DetectHiddenWindows) ? "On" :
 	idxTB := TrayIcon_GetTrayBar()
-	; win 10 隐藏托盘时 idxTB 返回 3, NotifyIconOverflowWindow  中的图标所在区域为 ToolbarWindow321，未隐藏的为ToolbarWindow323
-	; 未隐藏时为 ToolbarWindow323，系统版本不同可能有出入
+	; win10 v2004 64bit 隐藏托盘时 idxTB 返回 3, 
+	; NotifyIconOverflowWindow 中隐藏的图标所在区域为 ToolbarWindow321，未隐藏的图标在ToolbarWindow323
+	; 未隐藏时为 ToolbarWindow323，系统版本不同可能会有不同
 	; Win7 隐藏图标与否都是 ToolbarWindow321
-	idxTB := sTray = "NotifyIconOverflowWindow" ? 1 : idxTB
+	idxTB := sTray = "NotifyIconOverflowWindow" ? 1 : idxTB  ; 适用于 win10 v2004 64bit 隐藏托盘图标
 	SendMessage, 0x404, IDcmd, bHide, ToolbarWindow32%idxTB%, ahk_class %sTray% ; TB_HIDEBUTTON
 	SendMessage, 0x1A, 0, 0, , ahk_class %sTray%
 	DetectHiddenWindows, %Setting_A_DetectHiddenWindows%
@@ -144,6 +142,7 @@ TrayIcon_Delete(idx, sTray := "Shell_TrayWnd")
 	sTray := sTray = 0 ?  "NotifyIconOverflowWindow" : "Shell_TrayWnd"
 	DetectHiddenWindows, % (Setting_A_DetectHiddenWindows := A_DetectHiddenWindows) ? "On" :
 	idxTB := TrayIcon_GetTrayBar()
+	idxTB := sTray = "NotifyIconOverflowWindow" ? 1 : idxTB
 	SendMessage, 0x416, idx, 0, ToolbarWindow32%idxTB%, ahk_class %sTray% ; TB_DELETEBUTTON
 	SendMessage, 0x1A, 0, 0, , ahk_class %sTray%
 	DetectHiddenWindows, %Setting_A_DetectHiddenWindows%
@@ -175,6 +174,7 @@ TrayIcon_Move(idxOld, idxNew, sTray := "Shell_TrayWnd")
 	sTray := sTray = 0 ?  "NotifyIconOverflowWindow" : "Shell_TrayWnd"
 	DetectHiddenWindows, % (Setting_A_DetectHiddenWindows := A_DetectHiddenWindows) ? "On" :
 	idxTB := TrayIcon_GetTrayBar()
+	idxTB := sTray = "NotifyIconOverflowWindow" ? 1 : idxTB
 	SendMessage, 0x452, idxOld, idxNew, ToolbarWindow32%idxTB%, ahk_class %sTray% ; TB_MOVEBUTTON
 	DetectHiddenWindows, %Setting_A_DetectHiddenWindows%
 }

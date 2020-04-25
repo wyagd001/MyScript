@@ -14,10 +14,6 @@ SetTitleMatchMode 2
 ; 设置鼠标的坐标模式为相对于整个屏幕的坐标模式
 CoordMode, Mouse, Screen
 
-; 开机时脚本启动后等待至60s
-;Stime := A_TickCount
-if (A_TickCount < 60000)
-	sleep, % (60000 - A_TickCount)
 global run_iniFile := A_ScriptDir "\settings\setting.ini"
 IfNotExist, %run_iniFile%
 	FileCopy, %A_ScriptDir%\Backups\setting.ini, %run_iniFile%
@@ -46,6 +42,11 @@ If(!A_IsAdmin)
 ; 退出脚本时，执行ExitSub，关闭自动启动的脚本、恢复窗口等等操作。
 OnExit, ExitSub
 
+; 开机时脚本启动后等待至60s
+;Stime := A_TickCount
+if (A_TickCount < 60000)
+	sleep, % (60000 - A_TickCount)
+
 ;========变量设置开始========
 FileReadLine, AppVersion, %A_ScriptDir%\version.txt, 1
 AppVersion := Trim(AppVersion)
@@ -55,6 +56,7 @@ FloderMenu_iniFile = %A_ScriptDir%\settings\FloderMenu.ini
 SaveDeskIcons_inifile = %A_ScriptDir%\settings\SaveDeskIcons.ini
 update_txtFile = %A_ScriptDir%\settings\tmp\CurrentVersion.txt
 ScriptManager_Path = %A_ScriptDir%\脚本管理器
+FuncsIcon_inifile = %A_ScriptDir%\settings\FuncsIcon.ini
 
 global Candy_ProFile_Ini := A_ScriptDir . "\settings\candy\[candy].ini"
 SplitPath, Candy_ProFile_Ini,, Candy_Profile_Dir,, Candy_ProFile_Ini_NameNoext
@@ -529,6 +531,8 @@ else  ; 直接显示图标, 而不监控图标是否显示出来
 
 if Auto_FuncsIcon
 {
+	IniRead, content, %FuncsIcon_inifile%, 101
+	Gosub, GetAllKeys
 	TrayIcon_Add(hGui, "OnTrayIcon", "shell32.dll:134", "最近的剪贴板")
 	TrayIcon_Add(hGui, "OnTrayIcon", "shell32.dll:3", "文件收藏夹")
 }
@@ -749,13 +753,10 @@ translist:=IniObj(A_ScriptDir "\settings\translist.ini").翻译
 if Auto_Clip
 {
 	first := f_repeat := clipid := monitor := 0
-	if (GetClipboardFormat(1)=1)
-	{
-		ClipSaved0 := Clipboard
-		SetTimer, ClipSaved0Check, 500
-	}
-	SetTimer, shijianCheck, 50
+	writecliphistory := 1
+	Array_Cliphistory:=[]
 	st:=A_TickCount
+	SetTimer, shijianCheck, 50
 	if Auto_Cliphistory
 	{
 		global DB := new SQLiteDB
@@ -1117,13 +1118,9 @@ onClipboardChange:
 	if GetClipboardFormat(1)=1  ; 剪贴板中的内容是文本
 	{
 		tempid=0
-		lastclipid := clipid
-		clipid+=1
-		if(ClipSaved%lastclipid%=Clipboard)
-		{
-			clipid:=lastclipid
+		if(ClipSaved%clipid%=Clipboard)
 		return
-		}
+		clipid+=1
 		if clipid>3
 			clipid=1
 		ClipSaved%clipid% := Clipboard
@@ -1132,9 +1129,19 @@ onClipboardChange:
 		{
 			if (writecliphistory=1) 
 			{
-				if(ClipSaved1 = ClipSaved2) or (ClipSaved2 = ClipSaved3) or (ClipSaved1 = ClipSaved3)
-				return
-				addHistoryText(ClipSaved%clipid%, A_Now)
+				if StrLen(Clipboard)<1000
+				{
+					for k,v in Array_Cliphistory
+						if (v=Clipboard)
+							return
+					Array_Cliphistory.Push(Clipboard)
+					if Array_Cliphistory.Length() > 15
+						Array_Cliphistory.RemoveAt(1)
+				}
+				;if(ClipSaved1 = ClipSaved2) or (ClipSaved2 = ClipSaved3) or (ClipSaved1 = ClipSaved3)
+				;return
+				addHistoryText(Clipboard, A_Now)
+				;CF_ToolTip("剪贴板" clipid " 以写入数据库.",700)
 			return
 			}
 			else
@@ -1685,5 +1692,4 @@ return
 #include %A_ScriptDir%\lib\AHKhttp.ahk
 #include %A_ScriptDir%\Script\TrayIcon_FuncsIcon.ahk
 #include <AHKsock>
-#include <URL>
 #include *i %A_ScriptDir%\Script\AutoInclude.ahk

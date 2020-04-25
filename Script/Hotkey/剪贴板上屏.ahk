@@ -12,7 +12,7 @@
 	{
 		temp_V := ""
 		tpos:=InStr(temp_Va := getFromTable("history", "data", "id=" CHPIFArray[A_index])[1], "`n")
-		temp_V := SubStr(temp_Va, 1, tpos=0?40:tpos<40?tpos-2:40) . (tpos=0?"":" ... (多行)")
+		temp_V := SubStr(temp_Va, 1, tpos=0?40:tpos<40?tpos-2:40) . (tpos=0?StrLen(temp_Va)<40?"":" ... ":" ... (多行)")
 		cliphistoryPIList .= A_index "." temp_V "`n"
 	}
 	Num := 9 - CHPIFNo
@@ -21,7 +21,7 @@
 	{
 		temp_V := ""
 		tpos:=InStr(temp_Va := cliphistoryPI[A_index], "`n")
-		temp_V := SubStr(temp_Va, 1, tpos=0?40:tpos<40?tpos-2:40) . (tpos=0?"":" ... (多行)")
+		temp_V := SubStr(temp_Va, 1, tpos=0?40:tpos<40?tpos-2:40) . (tpos=0?StrLen(temp_Va)<40?"":" ... ":" ... (多行)")
 		cliphistoryPIList .= A_index + CHPIFNo "." temp_V "`n"
 	}
 	ToolTip, % cliphistoryPIList, A_CaretX + 10, A_CaretY + 20

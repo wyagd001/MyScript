@@ -66,7 +66,7 @@ ctrlCheck:
 		first=0
 		SetTimer, ctrlCheck, Off
 		tooltip
-		if (clipnum=clipid) & !f_repeat
+		if (clipnum=clipid) & !f_repeat  ; 第一次循环中的第一项带格式复制
 		{
 			Send, ^{vk56}
 			monitor=1
@@ -123,14 +123,6 @@ shijianCheck:
 		monitor=1
 		if Auto_mousetip
 			CF_ToolTip("三重剪贴板已开始工作。", 3000)
-	}
-return
-
-ClipSaved0Check:
-	if ClipSaved1
-	{
-		ClipSaved0:=""
-		SetTimer, ClipSaved0Check,off
 	}
 return
 

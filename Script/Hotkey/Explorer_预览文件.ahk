@@ -5,7 +5,7 @@ return
 
 #ifWinActive ahk_Group ccc
 $Space::
-
+;tooltip % A_Cursor " - " IsRenaming()
 ;重命名时，直接发送空格
 if(A_Cursor="IBeam") or IsRenaming()
 {
@@ -74,8 +74,8 @@ Cando_pdf_prew:
 		Sleep, 500
 	}
 	Until (wb.Document.Readystate = "Complete") or WBElapsedTime>5000
+	settimer,autoopenpdf,-1500
 	wb.document.getElementById("openFile").click()
-	settimer,autoopenpdf,-200
 return
 
 Cando_html_prew:
@@ -100,8 +100,8 @@ Gui, PreWWin:Show ,,% Files " - 文件预览"
 return
 
 autoopenpdf:
-WinWaitActive,ahk_class #32770,,6000
-ControlSetText , edit1, %Files%, ahk_class #32770
+WinWaitActive,ahk_class #32770,,1000
+ControlSetText, edit1, %Files%, ahk_class #32770
 sleep,100
 send {enter}
 return

@@ -1,31 +1,40 @@
-; https://www.autohotkey.com/boards/viewtopic.php?f=6&t=4890&start=40
-; https://www.autohotkey.com/boards/viewtopic.php?p=277982#p277982
-class Uri
-{
-    Decode(str) {
-        Loop
-            If RegExMatch(str, "i)(?<=%)[\da-f]{1,2}", hex)
-                StringReplace, str, str, `%%hex%, % Chr("0x" . hex), All
-            Else Break
-        Return, str
-    }
+; https://www.autohotkey.com/boards/viewtopic.php?f=6&t=4890
+; https://www.autohotkey.com/boards/viewtopic.php?p=277982
+; https://github.com/zhamlin/AHKhttp
 
-    Encode(str) {
-        f = %A_FormatInteger%
-        SetFormat, Integer, Hex
-        If RegExMatch(str, "^\w+:/{0,2}", pr)
-            StringTrimLeft, str, str, StrLen(pr)
-        StringReplace, str, str, `%, `%25, All
-        Loop
-            If RegExMatch(str, "i)[^\w\.~%]", char)
-                StringReplace, str, str, %char%, % "%" . Asc(char), All
-            Else Break
-        SetFormat, Integer, %f%
-        Return, pr . str
-    }
+; Modified by GeekDude from http://goo.gl/0a0iJq
+Class Uri
+{
+	Encode(Url) { ; keep ":/;?@,&=+$#."
+		return this.UriEncode(Url, "[0-9a-zA-Z:/;?@,&=+$#.]")
+	}
+	Decode(url) {
+		return this.UriDecode(url)
+	}
+	
+	UriEncode(Uri, RE="[0-9A-Za-z]") {
+		VarSetCapacity(Var, StrPut(Uri, "UTF-8"), 0), StrPut(Uri, &Var, "UTF-8")
+		While Code := NumGet(Var, A_Index - 1, "UChar")
+			Res .= (Chr:=Chr(Code)) ~= RE ? Chr : Format("%{:02X}", Code)
+		Return, Res
+	}
+
+	UriDecode(Uri) {
+		Pos := 1
+		While Pos := RegExMatch(Uri, "i)(%[\da-f]{2})+", Code, Pos)
+		{
+			VarSetCapacity(Var, StrLen(Code) // 3, 0), Code := SubStr(Code,2)
+			Loop, Parse, Code, `%
+				NumPut("0x" A_LoopField, Var, A_Index-1, "UChar")
+			Decoded := StrGet(&Var, "UTF-8")
+			Uri := SubStr(Uri, 1, Pos-1) . Decoded . SubStr(Uri, Pos+StrLen(Code)+1)
+			Pos += StrLen(Decoded)+1
+		}
+		Return, Uri
+	}
 }
 
-class HttpServer
+Class HttpServer
 {
     static servers := {}
 
@@ -98,6 +107,7 @@ class HttpServer
 
 HttpHandler(sEvent, iSocket = 0, sName = 0, sAddr = 0, sPort = 0, ByRef bData = 0, bDataLength = 0) {
     static sockets := {}
+    static Stime,Discard_data
 
     if (!sockets[iSocket]) {
         sockets[iSocket] := new Socket(iSocket)
@@ -115,16 +125,98 @@ HttpHandler(sEvent, iSocket = 0, sName = 0, sAddr = 0, sPort = 0, ByRef bData = 
 
     } else if (sEvent == "RECEIVED") {
         server := HttpServer.servers[sPort]
-
+;Static bindex:=1
         text := StrGet(&bData, "UTF-8")
 
         ; New request or old?
         if (socket.request) {
-            ; Get data and append it to the existing request body
-            socket.request.bytesLeft -= StrLen(text)
-            socket.request.body := socket.request.body . text
-            request := socket.request
-        } else {
+            if (A_TickCount-Stime)/1000>socket.request.timeout {
+                socket.request.done := true
+                Discard_data:=0
+                socket.request.filename:=socket.request.timeout:=Stime:=""
+                request := socket.request
+            }
+
+            RegExMatch(text, "m)filename=""(.*)""", SubPat) 
+            hpos:=InStr(text, "`r`n",,,4)
+
+            if SubPat1 {
+                DriveSpaceFree, OutputVar, % A_ScriptDir
+                if (socket.request.headers["Content-Length"]>OutputVar*1024*1024) {
+                    SubPat1:=""
+                    socket.request.revsize := bDataLength
+                    Discard_data:=1
+                }
+                else {
+;hcap:=VarSetCapacity(bData)
+;file := FileOpen(fileexist(A_ScriptDir "\1.txt")?(fileexist(A_ScriptDir "\2.txt")?(fileexist(A_ScriptDir "\3.txt")?A_ScriptDir "\4.txt":A_ScriptDir "\3.txt"):A_ScriptDir "\2.txt"):A_ScriptDir "\1.txt", 3)
+                    nSize := DllCall("WideCharToMultiByte", "Uint", 65001, "Uint", 0, "Uint", &SubPat1, "int", -1, "Uint", 0, "int",  0, "Uint", 0, "Uint", 0)
+                    socket.request.filename := SubPat1
+                    socket.request.filepath := A_ScriptDir "\upload\" SubPat1
+                    socket.request.filesize := socket.request.headers["Content-Length"]-hpos+strlen(SubPat1)-nSize+1-1-46
+                    socket.request.timeout := socket.request.filesize / 1000000
+                    socket.request.revsize := bDataLength
+                    Stime := A_TickCount
+                    request := socket.request
+                    file := FileOpen(A_ScriptDir "\upload\" SubPat1, 3)
+                    if bDataLength-hpos+strlen(SubPat1)-nSize-46>=socket.request.filesize {
+                        File.RawWrite(&bData+hpos-strlen(SubPat1)+nSize-1+1, bDataLength-hpos-nSize+strlen(SubPat1)-46)
+                        File.Close()
+                        socket.request.done := true
+                        socket.request.filename:=""
+                        request := socket.request
+                    }
+                    else {
+                        File.RawWrite(&bData+hpos-strlen(SubPat1)+nSize-1+1, bDataLength-hpos-nSize+strlen(SubPat1))
+                        File.Close()
+;fileappend,% A_now "`r`nrevsize: " socket.request.revsize "`r`n",%A_ScriptDir%\aaaa.txt
+;fileappend,% A_now "`r`nnSize: " nSize  "`r`nContent-Length: " socket.request.headers["Content-Length"] "`r`nbDataLength: " bDataLength "`r`nfilename: " socket.request.filename "`r`nfilesize: " socket.request.filesize "`r`n",%A_ScriptDir%\aaaa.txt
+                    }
+                }
+            }
+            else if socket.request.filename {
+;file := FileOpen(A_ScriptDir "\upload\" bindex,3)
+                file := FileOpen(socket.request.filepath,3)
+                File.Seek(File.Length)
+;fileappend,% A_now "`r`nfileLength+bDataLength: " bDataLength+File.Length-46 "`r`n",%A_ScriptDir%\aaaa.txt
+                if (bDataLength+File.Length-46>=socket.request.filesize) {
+                    File.RawWrite(&bData, bDataLength-46)
+;fileappend,% A_now "`r`nafterwritefileLength: " File.Length "`r`n",%A_ScriptDir%\aaaa.txt
+                    File.Close()
+;socket.request.revsize += bDataLength
+;fileappend,% A_now "`r`nrevsize: " socket.request.revsize "`r`n",%A_ScriptDir%\aaaa.txt
+                    socket.request.done := true
+                    socket.request.filename:=socket.request.timeout:=Stime:=""
+                    request := socket.request
+                }
+                else {
+                    File.RawWrite(&bData, bDataLength)
+                    File.Close()
+;socket.request.revsize += bDataLength
+;fileappend,% A_now "`r`nrevsize: " socket.request.revsize "`r`n",%A_ScriptDir%\aaaa.txt
+                }
+
+;fileappend,% A_now "`r`nfilename: " socket.request.filename "`r`nbDataLength: " bDataLength "`r`n",%A_ScriptDir%\aaaa.txt
+            }
+            else {
+                if Discard_data {
+                    socket.request.revsize += bDataLength
+;fileappend,% A_now "`r`nrevsize: " socket.request.revsize "`r`n",%A_ScriptDir%\aaaa.txt
+                    if (socket.request.revsize>=socket.request.headers["Content-Length"]) {
+                        socket.request.done := true
+                        Discard_data:=0
+                        request := socket.request
+                    }
+                }
+                else {
+                    ; Get data and append it to the existing request body
+                    socket.request.bytesLeft -= StrLen(text)
+                    socket.request.body := socket.request.body . text
+                    request := socket.request
+                }
+            }
+        }
+        else {
             ; Parse new request
             request := new HttpRequest(text)
 
@@ -142,7 +234,8 @@ HttpHandler(sEvent, iSocket = 0, sName = 0, sAddr = 0, sPort = 0, ByRef bData = 
             socket.request := request
         }
 
-        if (request.done || request.IsMultipart()) {
+        if (request.done) {
+;        if (request.done || request.IsMultipart()) {
             response := server.Handle(request)
             if (response.status) {
                 socket.SetData(response.Generate())
@@ -152,8 +245,7 @@ HttpHandler(sEvent, iSocket = 0, sName = 0, sAddr = 0, sPort = 0, ByRef bData = 
             if (!request.IsMultipart() || request.done) {
                 socket.Close()
             }
-        }    
-        
+        }
     }
 }
 
@@ -204,16 +296,17 @@ class HttpRequest
             pos := InStr(line, ":")
             key := SubStr(line, 1, pos - 1)
             val := Trim(SubStr(line, pos + 1), "`n`r ")
-
             this.headers[key] := val
         }
     }
 
     IsMultipart() {
         length := this.headers["Content-Length"]
-        expect := this.headers["Expect"]
-
-        if (expect = "100-continue" && length > 0)
+        ;expect := this.headers["Expect"]
+        
+        ;if (expect = "100-continue" && length > 0)
+				ContentType := this.headers["Content-Type"]
+        if ContentType  && (length > 0)  
             return true
         return false
     }
@@ -262,8 +355,6 @@ class HttpResponse
         this.body := Buffer.FromString(text)
         this.headers["Content-Length"] := this.body.length
     }
-
-
 }
 
 class Socket

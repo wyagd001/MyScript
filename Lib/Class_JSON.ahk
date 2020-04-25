@@ -2,7 +2,7 @@
  * Lib: JSON.ahk
  *     JSON lib for AutoHotkey.
  * Version:
- *     v2.1.2 [updated 04/07/2016 (MM/DD/YYYY)]
+ *     v2.1.3 [updated 04/18/2016 (MM/DD/YYYY)]
  * License:
  *     WTFPL [http://wtfpl.net/]
  * Requirements:
@@ -35,13 +35,13 @@ class JSON
 	 *     value := JSON.Load( text [, reviver ] )
 	 * Parameter(s):
 	 *     value      [retval] - parsed value
-	 *     text      [in, opt] - JSON formatted string
+	 *     text    [in, ByRef] - JSON formatted string
 	 *     reviver   [in, opt] - function object, similar to JavaScript's
 	 *                           JSON.parse() 'reviver' parameter
 	 */
 	class Load extends JSON.Functor
 	{
-		Call(self, text, reviver:="")
+		Call(self, ByRef text, reviver:="")
 		{
 			this.rev := IsObject(reviver) ? reviver : false
 		; Object keys(and array indices) are temporarily stored in arrays so that
@@ -49,10 +49,10 @@ class JSON
 		; of alphabetically. Skip if no reviver function is specified.
 			this.keys := this.rev ? {} : false
 
-			static q := Chr(34)
-			     , json_value := q . "{[01234567890-tfn"
-			     , json_value_or_array_closing := q . "{[]01234567890-tfn"
-			     , object_key_or_object_closing := q . "}"
+			static quot := Chr(34), bashq := "\" . quot
+			     , json_value := quot . "{[01234567890-tfn"
+			     , json_value_or_array_closing := quot . "{[]01234567890-tfn"
+			     , object_key_or_object_closing := quot . "}"
 
 			key := ""
 			is_key := false
@@ -71,7 +71,7 @@ class JSON
 				is_array := holder.IsArray
 
 				if InStr(",:", ch) {
-					next := (is_key := !is_array && ch == ",") ? q : json_value
+					next := (is_key := !is_array && ch == ",") ? quot : json_value
 
 				} else if InStr("}]", ch) {
 					ObjRemoveAt(stack, 1)
@@ -83,7 +83,7 @@ class JSON
 					; the 'IsArray' property. If so, Array() will be called normally,
 					; otherwise, use a custom base object for arrays
 						static json_array := Func("Array").IsBuiltIn || ![].IsArray ? {IsArray: true} : 0
-					
+
 					; sacrifice readability for minor(actually negligible) performance gain
 						(ch == "{")
 							? ( is_key := true
@@ -92,36 +92,36 @@ class JSON
 						; ch == "["
 							: ( value := json_array ? new json_array : []
 							  , next := json_value_or_array_closing )
-						
+
 						ObjInsertAt(stack, 1, value)
 
 						if (this.keys)
 							this.keys[value] := []
-					
+
 					} else {
-						if (ch == q) {
+						if (ch == quot) {
 							i := pos
-							while (i := InStr(text, q,, i+1)) {
+							while (i := InStr(text, quot,, i+1)) {
 								value := StrReplace(SubStr(text, pos+1, i-pos-1), "\\", "\u005c")
 
-								static ss_end := A_AhkVersion<"2" ? 0 : -1
-								if (SubStr(value, ss_end) != "\")
+								static tail := A_AhkVersion<"2" ? 0 : -1
+								if (SubStr(value, tail) != "\")
 									break
 							}
 
 							if (!i)
 								this.ParseError("'", text, pos)
 
-							  value := StrReplace(value,    "\/",  "/")
-							, value := StrReplace(value, "\" . q,    q)
-							, value := StrReplace(value,    "\b", "`b")
-							, value := StrReplace(value,    "\f", "`f")
-							, value := StrReplace(value,    "\n", "`n")
-							, value := StrReplace(value,    "\r", "`r")
-							, value := StrReplace(value,    "\t", "`t")
+							  value := StrReplace(value,  "\/",  "/")
+							, value := StrReplace(value, bashq, quot)
+							, value := StrReplace(value,  "\b", "`b")
+							, value := StrReplace(value,  "\f", "`f")
+							, value := StrReplace(value,  "\n", "`n")
+							, value := StrReplace(value,  "\r", "`r")
+							, value := StrReplace(value,  "\t", "`t")
 
 							pos := i ; update pos
-							
+
 							i := 0
 							while (i := InStr(value, "\",, i+1)) {
 								if !(SubStr(value, i+1, 1) == "u")
@@ -136,7 +136,7 @@ class JSON
 								key := value, next := ":"
 								continue
 							}
-						
+
 						} else {
 							value := SubStr(text, pos, i := RegExMatch(text, "[\]\},\s]|$",, pos)-pos)
 
@@ -166,29 +166,29 @@ class JSON
 					if (this.keys && this.keys.HasKey(holder))
 						this.keys[holder].Push(key)
 				}
-			
+
 			} ; while ( ... )
 
 			return this.rev ? this.Walk(root, "") : root[""]
 		}
 
-		ParseError(expect, text, pos, len:=1)
+		ParseError(expect, ByRef text, pos, len:=1)
 		{
-			static q := Chr(34)
-			
+			static quot := Chr(34), qurly := quot . "}"
+
 			line := StrSplit(SubStr(text, 1, pos), "`n", "`r").Length()
 			col := pos - InStr(text, "`n",, -(StrLen(text)-pos+1))
 			msg := Format("{1}`n`nLine:`t{2}`nCol:`t{3}`nChar:`t{4}"
-			,     (expect == "")      ? "Extra data"
-			    : (expect == "'")     ? "Unterminated string starting at"
-			    : (expect == "\")     ? "Invalid \escape"
-			    : (expect == ":")     ? "Expecting ':' delimiter"
-			    : (expect == q)       ? "Expecting object key enclosed in double quotes"
-			    : (expect == q . "}") ? "Expecting object key enclosed in double quotes or object closing '}'"
-			    : (expect == ",}")    ? "Expecting ',' delimiter or object closing '}'"
-			    : (expect == ",]")    ? "Expecting ',' delimiter or array closing ']'"
-			    : InStr(expect, "]")  ? "Expecting JSON value or array closing ']'"
-			    :                       "Expecting JSON value(string, number, true, false, null, object or array)"
+			,     (expect == "")     ? "Extra data"
+			    : (expect == "'")    ? "Unterminated string starting at"
+			    : (expect == "\")    ? "Invalid \escape"
+			    : (expect == ":")    ? "Expecting ':' delimiter"
+			    : (expect == quot)   ? "Expecting object key enclosed in double quotes"
+			    : (expect == qurly)  ? "Expecting object key enclosed in double quotes or object closing '}'"
+			    : (expect == ",}")   ? "Expecting ',' delimiter or object closing '}'"
+			    : (expect == ",]")   ? "Expecting ',' delimiter or array closing ']'"
+			    : InStr(expect, "]") ? "Expecting JSON value or array closing ']'"
+			    :                      "Expecting JSON value(string, number, true, false, null, object or array)"
 			, line, col, pos)
 
 			static offset := A_AhkVersion<"2" ? -3 : -4
@@ -201,14 +201,14 @@ class JSON
 			if IsObject(value) {
 				for i, k in this.keys[value] {
 					; check if ObjHasKey(value, k) ??
-					v := this.Walk.Call(this, value, k) ; bypass __Call
+					v := this.Walk(value, k)
 					if (v != JSON.Undefined)
 						value[k] := v
 					else
 						ObjDelete(value, k)
 				}
 			}
-			
+
 			return this.rev.Call(holder, key, value)
 		}
 	}
@@ -267,7 +267,7 @@ class JSON
 					is_array := value.IsArray
 				; Array() is not overridden, rollback to old method of
 				; identifying array-like objects. Due to the use of a for-loop
-				; sparse arrays such as '[1,,3]' are detected as objects({}). 
+				; sparse arrays such as '[1,,3]' are detected as objects({}).
 					if (!is_array) {
 						for i in value
 							is_array := i == A_Index
@@ -279,7 +279,7 @@ class JSON
 						Loop, % value.Length() {
 							if (this.gap)
 								str .= this.indent
-							
+
 							v := this.Str(value, A_Index)
 							str .= (v != "") ? v . "," : "null,"
 						}
@@ -307,31 +307,31 @@ class JSON
 
 					return is_array ? "[" . str . "]" : "{" . str . "}"
 				}
-			
+
 			} else ; is_number ? value : "value"
 				return ObjGetCapacity([value], 1)=="" ? value : this.Quote(value)
 		}
 
 		Quote(string)
 		{
-			static q := Chr(34)
+			static quot := Chr(34), bashq := "\" . quot
 
 			if (string != "") {
-				  string := StrReplace(string,  "\",    "\\")
-				; , string := StrReplace(string,  "/",    "\/") ; optional in ECMAScript
-				, string := StrReplace(string,    q, "\" . q)
-				, string := StrReplace(string, "`b",    "\b")
-				, string := StrReplace(string, "`f",    "\f")
-				, string := StrReplace(string, "`n",    "\n")
-				, string := StrReplace(string, "`r",    "\r")
-				, string := StrReplace(string, "`t",    "\t")
+				  string := StrReplace(string,  "\",  "\\")
+				; , string := StrReplace(string,  "/",  "\/") ; optional in ECMAScript
+				, string := StrReplace(string, quot, bashq)
+				, string := StrReplace(string, "`b",  "\b")
+				, string := StrReplace(string, "`f",  "\f")
+				, string := StrReplace(string, "`n",  "\n")
+				, string := StrReplace(string, "`r",  "\r")
+				, string := StrReplace(string, "`t",  "\t")
 
 				static rx_escapable := A_AhkVersion<"2" ? "O)[^\x20-\x7e]" : "[^\x20-\x7e]"
 				while RegExMatch(string, rx_escapable, m)
 					string := StrReplace(string, m.Value, Format("\u{1:04x}", Ord(m.Value)))
 			}
 
-			return q . string . q
+			return quot . string . quot
 		}
 	}
 
@@ -360,15 +360,15 @@ class JSON
 
 	class Functor
 	{
-		__Call(method, args*)
+		__Call(method, ByRef arg, args*)
 		{
 		; When casting to Call(), use a new instance of the "function object"
 		; so as to avoid directly storing the properties(used across sub-methods)
 		; into the "function object" itself.
 			if IsObject(method)
-				return (new this).Call(method, args*)
+				return (new this).Call(method, arg, args*)
 			else if (method == "")
-				return (new this).Call(args*)
+				return (new this).Call(arg, args*)
 		}
 	}
 }

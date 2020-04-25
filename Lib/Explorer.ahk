@@ -334,7 +334,13 @@ SetFocusToFileView()
 	If (WinActive,ahk_group ExplorerGroup)
 	{
 		If(Vista7)
-			ControlFocus DirectUIHWND3, A
+		{
+			ControlGetFocus focussed, A
+			if (focussed="DirectUIHWND2")
+				ControlFocus DirectUIHWND2, A
+			else
+				ControlFocus DirectUIHWND3, A
+		}
 		Else ;XP, Vista
 		 	ControlFocus SysListView321, A
 	}
@@ -376,7 +382,7 @@ IsRenaming()
 				; Win 10 中有可能是 DirectUIHWND2 或 DirectUIHWND3
 				ControlGetPos , X, Y, Width, Height,DirectUIHWND3, A
 				if !X
-				ControlGetPos , X, Y, Width, Height,DirectUIHWND2, A
+					ControlGetPos , X, Y, Width, Height,DirectUIHWND2, A
 			}
 			Else
 				ControlGetPos , X, Y, Width, Height, SysListView321, A
@@ -444,12 +450,6 @@ GetFocusedControl()
    focusedHwnd := NumGet(guiThreadInfo,8+A_PtrSize, "Ptr") ;focusedHwnd := *(addr + 12) + (*(addr + 13) << 8) +  (*(addr + 14) << 16) + (*(addr + 15) << 24)
    Return focusedHwnd
 }
-
-;WinGetClass(window=0)
-;{
-;WinGetClass, class, window
-;Return class
-;}
 
 RefreshExplorer()
 {
@@ -635,7 +635,11 @@ IsMouseOverFileList()
 	WinGetClass, winclass , ahk_id %Window%
 	If(Vista7 && (winclass="CabinetWClass" || winclass="ExploreWClass")) ;Win7 Explorer
 	{
-		ControlGetPos , cX, cY, Width, Height, DirectUIHWND3, A
+		ControlGetFocus focussed, A
+		if (focussed="DirectUIHWND2")
+			ControlGetPos , cX, cY, Width, Height, DirectUIHWND2, A
+		else
+			ControlGetPos , cX, cY, Width, Height, DirectUIHWND3, A
 		If(IsInArea(MouseX,MouseY,cX,cY,Width,Height))
 			Return true
 	}
@@ -752,7 +756,7 @@ InFileList()
 
 	If(WinActive("ahk_group ExplorerGroup"))
 	{
-		If((Vista7 && focussed="DirectUIHWND3") || (A_OSVersion ="XP" && focussed="SysListView321"))
+		If((Vista7 && (focussed="DirectUIHWND2" || focussed="DirectUIHWND3" )) || (A_OSVersion ="XP" && focussed="SysListView321"))
 			Return true
 	}
 		If(WinActive("ahk_group DesktopGroup"))
