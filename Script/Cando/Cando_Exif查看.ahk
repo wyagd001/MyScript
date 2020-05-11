@@ -1,6 +1,6 @@
 Cando_Exif²é¿´:
 	Gui 66: Destroy
-	;RunWait,regsvr32.exe `/s %SImageUtil%
+	RunWait,regsvr32.exe `/s %SImageUtil%
 	Image := ComObjCreate("SImageUtil.Image")
 	Image.OpenImageFile(Candysel)
 

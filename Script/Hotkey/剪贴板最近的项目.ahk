@@ -5,6 +5,7 @@ cliphistoryPI:
 		Gui,66:Destroy
 		return
 	}
+refreshcliphistoryPI:
 	Gui,66:Destroy
 	Gui,66:Default
 	IniRead, CHPIF, %run_iniFile%, 常规, CHPIF   ; 剪贴板收藏夹(最多5个)
@@ -82,7 +83,7 @@ DCHPIF:  ; 删除剪贴板收藏夹中的条目
 		i .= v ","
 	CHPIF :=  Trim(i, ",")
 	IniWrite, % CHPIF, %run_iniFile%, 常规, CHPIF
-	Gosub cliphistoryPI
+	Gosub refreshcliphistoryPI
 return
 
 SCHPIF:  ; 添加到剪贴板收藏夹
@@ -102,7 +103,7 @@ SCHPIF:  ; 添加到剪贴板收藏夹
 	if (CHPIFArray.Length() > 5)
 		CHPIF := CHPIFArray[1] "," CHPIFArray[2] "," CHPIFArray[3] "," CHPIFArray[4] "," CHPIFArray[5] 
 	IniWrite, % CHPIF, %run_iniFile%, 常规, CHPIF
-	Gosub cliphistoryPI
+	Gosub refreshcliphistoryPI
 return
 
 DCHPI1:
@@ -114,7 +115,7 @@ DCHPI1:
 		i .= v ","
 	CHPIF :=  Trim(i, ",")
 	IniWrite, % CHPIF, %run_iniFile%, 常规, CHPIF
-	Gosub cliphistoryPI
+	Gosub refreshcliphistoryPI
 return
 
 DCHPI2:
@@ -137,5 +138,5 @@ DCHPI2:
 		CHPIF :=  Trim(i, ",")
 		IniWrite, % CHPIF, %run_iniFile%, 常规, CHPIF
 	}
-	Gosub cliphistoryPI
+	Gosub refreshcliphistoryPI
 return
