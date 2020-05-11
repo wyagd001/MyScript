@@ -129,8 +129,18 @@ Label_Candy_DrawMenu:
 	; 加第一行菜单，缩略显示选中的内容，该菜单让你拷贝其内容
 	CandyMenu_FirstItem := Strlen(CdSel_NoSpace := Trim(CandySel)) > 20 ? SubStr0(CdSel_NoSpace, 1, 10) . "..." . SubStr0(CdSel_NoSpace, -10) : CdSel_NoSpace
 	Menu CandyTopLevelMenu, Add, %CandyMenu_FirstItem%, Label_Candy_CopyFullpath
-	Candy_Firstline_Icon := SkSub_Get_Firstline_Icon(CandySel_Ext, CandySel, CandyMenu_IconDir "\Extension")
-	Menu CandyTopLevelMenu, icon, %CandyMenu_FirstItem%, %Candy_Firstline_Icon%,, %CandyMenu_IconSize%
+	if InStr(CandyMenu_FirstItem, "托盘图标")
+	{
+		Candy_Firstline_Icon := CF_IniRead(run_iniFile,uid:=SubStr(CandyMenu_FirstItem,6), "Ti_" uid "_icon")
+		if ipos:=InStr(Candy_Firstline_Icon,":")
+		{
+			icon_idx := SubStr(Candy_Firstline_Icon,ipos+1)+1
+			Candy_Firstline_Icon := SubStr(Candy_Firstline_Icon,1,ipos-1)
+		}
+	}
+	else
+		Candy_Firstline_Icon := SkSub_Get_Firstline_Icon(CandySel_Ext, CandySel, CandyMenu_IconDir "\Extension")
+	Menu CandyTopLevelMenu, icon, %CandyMenu_FirstItem%, %Candy_Firstline_Icon%, %icon_idx%, %CandyMenu_IconSize%
 	Menu CandyTopLevelMenu, Add
 
 	arrCandyMenuFrom := StrSplit(Candy_Cmd, "|")
@@ -369,8 +379,15 @@ Label_Candy_RunCommand:
 	Else If (Candy_Cmd_Str1 = "Cando")  ; 如果是以Cando|开头，则是运行一些内部程序，方便与你的其它脚本进行挂接
 	{
 		CandySelected := CandySel    ; 兼容以前的cando变量写法
+		if (Candy_Cmd_Str2 = "ctimer") && IsLabel(Candy_Cmd_Str3)
+		{
+			settimer, % Candy_Cmd_Str3, -300
+		return
+		}
 		If IsLabel("Cando_" . Candy_Cmd_Str2)                       ; 程序内置的别名
 			Goto % "Cando_" . Candy_Cmd_Str2
+		else If IsLabel(Candy_Cmd_Str2)                       ;  标签
+			Goto % Candy_Cmd_Str2
 		Else
 			Goto Label_Candy_ErrorHandle
 	}

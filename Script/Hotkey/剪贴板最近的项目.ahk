@@ -1,5 +1,10 @@
 cliphistoryPI:
 !`::
+	IfWinExist, 剪贴板最近的项目 ahk_class AutoHotkeyGUI
+	{
+		Gui,66:Destroy
+		return
+	}
 	Gui,66:Destroy
 	Gui,66:Default
 	IniRead, CHPIF, %run_iniFile%, 常规, CHPIF   ; 剪贴板收藏夹(最多5个)

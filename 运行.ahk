@@ -27,6 +27,11 @@ Gosub, GetAllKeys
 If Auto_Include
 	Gosub, _AutoInclude
 
+; 开机时脚本启动后等待至60s
+;Stime := A_TickCount
+if (A_TickCount < 60000)
+	sleep, % (60000 - A_TickCount)
+
 ; 管理员权限
 If(!A_IsAdmin)
 {
@@ -42,11 +47,6 @@ If(!A_IsAdmin)
 ; 退出脚本时，执行ExitSub，关闭自动启动的脚本、恢复窗口等等操作。
 OnExit, ExitSub
 
-; 开机时脚本启动后等待至60s
-;Stime := A_TickCount
-if (A_TickCount < 60000)
-	sleep, % (60000 - A_TickCount)
-
 ;========变量设置开始========
 FileReadLine, AppVersion, %A_ScriptDir%\version.txt, 1
 AppVersion := Trim(AppVersion)
@@ -56,7 +56,6 @@ FloderMenu_iniFile = %A_ScriptDir%\settings\FloderMenu.ini
 SaveDeskIcons_inifile = %A_ScriptDir%\settings\SaveDeskIcons.ini
 update_txtFile = %A_ScriptDir%\settings\tmp\CurrentVersion.txt
 ScriptManager_Path = %A_ScriptDir%\脚本管理器
-FuncsIcon_inifile = %A_ScriptDir%\settings\FuncsIcon.ini
 
 global Candy_ProFile_Ini := A_ScriptDir . "\settings\candy\[candy].ini"
 SplitPath, Candy_ProFile_Ini,, Candy_Profile_Dir,, Candy_ProFile_Ini_NameNoext
@@ -531,10 +530,12 @@ else  ; 直接显示图标, 而不监控图标是否显示出来
 
 if Auto_FuncsIcon
 {
-	IniRead, content, %FuncsIcon_inifile%, 101
+	IniRead, content, %run_iniFile%, 101
 	Gosub, GetAllKeys
-	TrayIcon_Add(hGui, "OnTrayIcon", "shell32.dll:134", "最近的剪贴板")
-	TrayIcon_Add(hGui, "OnTrayIcon", "shell32.dll:3", "文件收藏夹")
+	TrayIcon_Add(hGui, "OnTrayIcon", Ti_101_icon, Ti_101_tooltip)
+	IniRead, content, %run_iniFile%, 102
+	Gosub, GetAllKeys
+	TrayIcon_Add(hGui, "OnTrayIcon", Ti_102_icon, Ti_102_tooltip)
 }
 ;----------不显示托盘图标则重启脚本----------
 
@@ -1354,8 +1355,11 @@ ExitSub:
 	if Auto_7plusMenu
 		FileDelete, %A_Temp%\7plus\hwnd.txt
 
-	TrayIcon_Remove(hGui, 101)
-	TrayIcon_Remove(hGui, 102)
+	if Auto_FuncsIcon
+	{
+		TrayIcon_Remove(hGui, 101)
+		TrayIcon_Remove(hGui, 102)
+	}
 
 	; ComBoBox 条目图标
 	UnhookWinEvent(hWinEventHook3, HookProcAdr3)
