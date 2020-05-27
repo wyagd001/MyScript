@@ -45,7 +45,7 @@ Loop, Parse, files, `n,`r
 				}
 				else
 				{
-					Run, %comspec% /c move "%FileFullPath%" "%TargetFile%"
+					Run, %comspec% /c move "%FileFullPath%" "%TargetFile%",,hide
 					break
 				}
 			}
@@ -53,7 +53,7 @@ Loop, Parse, files, `n,`r
 		; 无同名文件时，复制文件
 		else
 		{
-			Run, %comspec% /c move "%FileFullPath%" "%TargetFile%"
+			Run, %comspec% /c move "%FileFullPath%" "%TargetFile%",,hide
 		}
 	}
 }

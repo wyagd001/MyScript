@@ -2,7 +2,16 @@
 - RHCP - https://autohotkey.com/board/topic/41467-make-ahk-drop-files-into-other-applications/page-2
 
 Example:
-DropFiles( "C:\SomeName.txt", "ahk_class Notepad" ) 
+DropFiles( "C:\SomeName.txt", "ahk_class Notepad" )
+
+; Definition
+struct DROPFILES
+{
+    DWORD pFiles;    // offset of file list
+    POINT pt;        // drop point (client coords)
+    BOOL fNC;        // is it on NonClient area and pt is in screen coords
+    BOOL fWide;      // wide character flag
+};
 */
 
 DropFiles( FileList, wTitle="", Ctrl="", X=0, Y=0, NCA=0 ) 
@@ -25,4 +34,26 @@ DropFiles( FileList, wTitle="", Ctrl="", X=0, Y=0, NCA=0 )
  DllCall( "RtlMoveMemory", UInt,pData, UInt,pDP, UInt, nSize )
  DllCall( "GlobalUnlock", UInt,hDrop )
  PostMessage, 0x233, hDrop, 0, %Ctrl%, %wTitle% ; WM_DROPFILES := 0x233
+}
+
+HDrop(fnames,x=0,y=0)    
+{
+	characterSize := A_IsUnicode ? 2 : 1
+	fns := RegExReplace(fnames,"\n$")
+	fns := RegExReplace(fns,"^\n")
+	hDrop := DllCall("GlobalAlloc", "UInt", 0x42, "UInt", 20+(StrLen(fns)*characterSize)+characterSize*2)
+	p:=DllCall("GlobalLock", "UInt", hDrop)
+	NumPut(20, p+0)  ;offset
+	NumPut(x,  p+4)  ;pt.x
+	NumPut(y,  p+8)  ;pt.y
+	NumPut(0,  p+12) ;fNC
+	NumPut(A_IsUnicode ? 1 : 0,  p+16) ;fWide
+	p2:=p+20
+	Loop, Parse, fns, `n, `r
+	{
+		DllCall("RtlMoveMemory", "UInt", p2, "Str", A_LoopField, "UInt", StrLen(A_LoopField)*characterSize)
+		p2+=StrLen(A_LoopField)*characterSize + characterSize
+	}
+	DllCall("GlobalUnlock", "UInt", hDrop)
+	Return hDrop
 }

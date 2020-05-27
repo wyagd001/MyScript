@@ -157,3 +157,8 @@ SHL_OK:
 	}
 	errFlag:=tempStr:=SHLTG_Path:=SHL_Name:=SHL_Path:=""
 return
+
+cando_放入同名文件夹:
+  FileCreateDir,%CandySel_ParentPath%\%CandySel_FileNamenoExt%
+  FileMove,%CandySel%,%CandySel_ParentPath%\%CandySel_FileNamenoExt%
+Return
