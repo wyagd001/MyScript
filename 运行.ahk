@@ -530,12 +530,21 @@ else  ; 直接显示图标, 而不监控图标是否显示出来
 
 if Auto_FuncsIcon
 {
-	IniRead, content, %run_iniFile%, 101
-	Gosub, GetAllKeys
-	TrayIcon_Add(hGui, "OnTrayIcon", Ti_101_icon, Ti_101_tooltip)
-	IniRead, content, %run_iniFile%, 102
-	Gosub, GetAllKeys
-	TrayIcon_Add(hGui, "OnTrayIcon", Ti_102_icon, Ti_102_tooltip)
+	if (FuncsIcon_Num=2)
+	{
+		IniRead, content, %run_iniFile%, 101
+		Gosub, GetAllKeys
+		TrayIcon_Add(hGui, "OnTrayIcon", Ti_101_icon, Ti_101_tooltip)
+		IniRead, content, %run_iniFile%, 102
+		Gosub, GetAllKeys
+		TrayIcon_Add(hGui, "OnTrayIcon", Ti_102_icon, Ti_102_tooltip)
+	}
+	else
+	{
+		IniRead, content, %run_iniFile%, 101
+		Gosub, GetAllKeys
+		TrayIcon_Add(hGui, "OnTrayIcon", Ti_101_icon, Ti_101_tooltip)
+	}
 }
 ;----------不显示托盘图标则重启脚本----------
 

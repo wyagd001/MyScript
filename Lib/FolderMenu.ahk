@@ -144,11 +144,11 @@ FolderMenu(FolderPath, SpecifyExt:="*", MenuName:="",ShowIcon:=1, ShowOpenFolder
 				if FileAttrib contains H,R,S  ; 跳过具有 H(隐藏), R(只读) 或 S(系统) 属性的任何文件. 注意: 在 "H,R,S" 中不含空格.
 				continue  ; 跳过这个文件并前进到下一个.
 			}
-			SplitPath, A_LoopField, FileName, ParentFolderDirectory, FlieExt, FileNameNoExt
+			SplitPath, A_LoopField, FileName, ParentFolderDirectory, fileExt, FileNameNoExt
 			ParentFolderDirectory := (ParentFolderDirectory=FolderPath) ? MenuName : ParentFolderDirectory
 			;msgbox %  pos "`n" A_LoopFileLongPath "`n" ParentFolderDirectory "`n" A_LoopFileName
 			BoundRun := Func("Run").Bind(A_LoopField)
-			FileMenuName := (FlieExt!="lnk")?FileName:FileNameNoExt
+			FileMenuName := (FileExt!="lnk")?FileName:FileNameNoExt
 			Menu, %ParentFolderDirectory%, add, %FileMenuName%, %BoundRun%
 			if ShowIcon
 				FolderMenu_AddIcon(ParentFolderDirectory, FileMenuName)

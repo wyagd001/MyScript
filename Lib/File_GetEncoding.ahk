@@ -12,12 +12,11 @@
 	返回值:
 		字符串
 		0      - 错误, 文件不存在
-		CP936  - ANSI (CP936), 必须带有中文字符串, 才能和 UTF-8 无签名 区分开.
+		CPnnn  - ANSI (CPnnn), 必须带有中文字符串, 才能和 UTF-8 无签名 区分开.
 		UTF-16 - text Utf-16 LE File
 		CP1201 - text Utf-16 BE File
 		UTF-32 - text Utf-32 BE/LE File
-		UTF-8  - 检验的文件太小, 不足以检查. 默认返回 UTF-8.
-		UTF-8  - text Utf-8 File (UTF-8 + BOM)
+		UTF-8  - text Utf-8 File (UTF-8 + BOM). 检验的文件太小, 不足以检查时, 默认返回 UTF-8.
 		UTF-8-RAW  - UTF-8 无签名. 
 		对于 UTF-8-RAW 的说明：
 		1.文件小于100k 读取整个文件, 必须带有中文字符串(文件中存在乱码（特殊字符）时可能得到错误的结果), 才能和 CP936 区分开.

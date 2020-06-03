@@ -224,6 +224,8 @@ UpdateMediaLib:
 	Count -= 1
 	IniWrite, %Count%, %run_iniFile%, AhkPlayer, Count
 	CF_ToolTip("更新媒体库完毕!		",2500)
+	if (PlayListdefalut="f")
+		gosub PTLib
 Return
 
 HuifuPlay:
@@ -894,9 +896,9 @@ Run,% "explorer.exe /select," mp3_loop
 
 ; 菜单从列表中删除(可多选)
 MenuRemove:
-FlieLineCount :=TF_CountLines(AhkMediaListFile)
+FileLineCount :=TF_CountLines(AhkMediaListFile)
 LVLineCount :=LV_GetCount()
-if(FlieLineCount - LVLineCount >2)
+if(FileLineCount - LVLineCount >2)
 {
 msgbox,错误！不是播放列表，当前菜单不可用。
 return
@@ -1256,9 +1258,9 @@ MsgBox,,清空列表失败,列表已经为空或文件不可读写
 }
 else If (A_ThisMenuItem = "从列表中删除(可多选)")
 {
-FlieLineCount :=TF_CountLines(AhkMediaListFile)
+FileLineCount :=TF_CountLines(AhkMediaListFile)
 LVLineCount :=LV_GetCount()
-if(FlieLineCount - LVLineCount >2)
+if(FileLineCount - LVLineCount >2)
 {
 msgbox,错误！不是播放列表，当前菜单不可用。
 return

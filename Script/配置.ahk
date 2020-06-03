@@ -317,15 +317,20 @@ Gui,Add,Edit,x26 y155 w530 r8 vop,%otherProgram%
 Gui,Add,Text,x26 y290,系统注册表中已注册的命令对本程序同样有效
 Gui,Add,Button,x490 y285 g自定义运行命令_click,查看修改
 
+1FuncsIcon := FuncsIcon_Num=1 ? 1 : 0
+2FuncsIcon := FuncsIcon_Num=2 ? 1 : 0
+
 Gui,Tab,其他
 Gui,Add,CheckBox,x26 y30 w120 h20 vvAuto_DisplayMainWindow Checked%Auto_DisplayMainWindow%,启动时显示主窗口
 Gui,Add,CheckBox,x280 y30 w130 h20 vvAuto_7plusMenu Checked%Auto_7plusMenu%,资源管理器7plus菜单
 Gui,Add,CheckBox,x26 y50 w140 h20 vvAuto_Trayicon Checked%Auto_Trayicon%,启动时检测托盘图标
-Gui,Add,CheckBox,x280 y50 w150 h20 vvAuto_FuncsIcon Checked%Auto_FuncsIcon%,启动时显示其他功能图标
+Gui,Add,CheckBox,x280 y50 w160 h20 vvAuto_FuncsIcon Checked%Auto_FuncsIcon%,启动时显示额外的托盘图标
 Gui,Add,CheckBox,x44 y70 w200 h20 vvAuto_Trayicon_showmsgbox Checked%Auto_Trayicon_showmsgbox%,没有托盘图标显示重启脚本对话框
+Gui,Add,Radio,x300 y70 w40 h20 Group Checked%1FuncsIcon% vvFuncsIcon_Num,一个
+Gui,Add,Radio,x350 y70 w40 h20  Checked%2FuncsIcon%,二个
 Gui,Add,CheckBox,x26 y90 w180 h20 vvAuto_ShutdownMonitor Checked%Auto_ShutdownMonitor%,监视关机使用传统关机对话框
 Gui,Add,CheckBox,x26 y110 w80 h20 vvAuto_PasteAndOpen Checked%Auto_PasteAndOpen%,粘贴并打开
-Gui,Add,CheckBox,x26 y130 w180 h20 vvAuto_Clip Checked%Auto_Clip%,三重剪贴板(复制文字时生效)
+Gui,Add,CheckBox,x26 y130 w180 h20 vvAuto_Clip Checked%Auto_Clip%,三重剪贴板(文本复制时记录)
 Gui,Add,CheckBox,x44 y150 w120 h20 vvAuto_Cliphistory Checked%Auto_Cliphistory%,剪贴板历史(文字)
 Gui,Font,cgreen
 Gui,Add,text,x190 y154 w40 h20 ggui_clipHistory,查看
@@ -1003,6 +1008,7 @@ IniWrite,%mtp%,%run_iniFile%,功能开关,Auto_mousetip
 IniWrite,% vAuto_DisplayMainWindow,%run_iniFile%,功能模式选择,Auto_DisplayMainWindow
 IniWrite,% vAuto_Trayicon,%run_iniFile%,功能开关,Auto_Trayicon
 IniWrite,% vAuto_Trayicon_showmsgbox,%run_iniFile%,功能模式选择,Auto_Trayicon_showmsgbox
+IniWrite,% vFuncsIcon_Num,%run_iniFile%,功能模式选择,FuncsIcon_Num
 IniWrite,% vAuto_ShutdownMonitor,%run_iniFile%,功能开关,Auto_ShutdownMonitor
 IniWrite,% vAuto_PasteAndOpen,%run_iniFile%,功能开关,Auto_PasteAndOpen
 IniWrite,% vAuto_Clip,%run_iniFile%,功能开关,Auto_Clip
