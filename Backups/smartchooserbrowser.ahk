@@ -1,4 +1,4 @@
-#NoTrayIcon
+ï»¿#NoTrayIcon
 IniRead, DefaultBrowser, %A_ScriptDir%\smartchooserbrowser.ini, DefaultBrowser, DefaultBrowser
 IfNotExist,%DefaultBrowser%
 {
@@ -64,7 +64,7 @@ GetModuleFileNameEx( p_pid )
 {
    if A_OSVersion in WIN_95,WIN_98,WIN_ME,WIN_XP
    {
-      MsgBox, Windows °æ±¾ (%A_OSVersion%) ²»Ö§³Ö¡£Win 7 ¼°ÒÔÉÏÏµÍ³²ÅÄÜÕı³£Ê¹ÓÃ¡£
+      MsgBox, Windows ç‰ˆæœ¬ (%A_OSVersion%) ä¸æ”¯æŒã€‚Win 7 åŠä»¥ä¸Šç³»ç»Ÿæ‰èƒ½æ­£å¸¸ä½¿ç”¨ã€‚
       return
    }
 

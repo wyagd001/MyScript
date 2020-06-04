@@ -1,4 +1,4 @@
-#include Gdip.ahk
+﻿#include Gdip.ahk
 #include Control_AniGif.ahk
 
 CropLineColor := "FF0000"

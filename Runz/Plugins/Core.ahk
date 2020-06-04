@@ -1,26 +1,26 @@
-; RunZ:Core
-; ºËĞÄ¹¦ÄÜ
+ï»¿; RunZ:Core
+; æ ¸å¿ƒåŠŸèƒ½
 
 Core:
-    @("Help", "°ïÖúĞÅÏ¢")
-    @("KeyHelp", "ÖÃ¶¥µÄ°´¼ü°ïÖúĞÅÏ¢")
-    @("AhkRun", "Ê¹ÓÃ Ahk µÄ Run ÃüÁî")
-    @("CmdRun", "Ê¹ÓÃ cmd ÔËĞĞ : command")
-    @("CmdRunOnly", "Ö»Ê¹ÓÃ cmd ÔËĞĞ")
-    @("WinRRun", "Ê¹ÓÃ win + r ÔËĞĞ")
-    @("RunAndDisplay", "Ê¹ÓÃ cmd ÔËĞĞ£¬²¢ÏÔÊ¾½á¹û")
-    @("ReindexFiles", "ÖØĞÂË÷Òı´ıËÑË÷ÎÄ¼ş")
-    @("EditConfig", "±à¼­ÅäÖÃÎÄ¼ş")
-    @("RunClipboard", "Ê¹ÓÃ ahk µÄ Run ÔËĞĞ¼ôÇĞ°åÄÚÈİ")
-    @("CleanupRank", "ÇåÀíÃüÁîÈ¨ÖØÖĞµÄÎŞĞ§ÃüÁî")
-    @("ShowArg", "ÏÔÊ¾²ÎÊı£ºShowArg arg1 arg2 ...")
-    @("AhkTest", "ÔËĞĞ²ÎÊı»òÕß¼ôÇĞ°åÖĞµÄ AHK ´úÂë")
-    @("InstallPlugin", "°²×°²å¼ş")
-    @("RemovePlugin", "Ğ¶ÔØ²å¼ş")
-    @("ListPlugin", "ÁĞ³ö²å¼ş")
-    @("CleanupPlugin", "ÇåÀí²å¼ş")
-    @("CountNumber", "¼ÆËãÊıÁ¿ wc")
-    @("Open", "´ò¿ª")
+    @("Help", "å¸®åŠ©ä¿¡æ¯")
+    @("KeyHelp", "ç½®é¡¶çš„æŒ‰é”®å¸®åŠ©ä¿¡æ¯")
+    @("AhkRun", "ä½¿ç”¨ Ahk çš„ Run å‘½ä»¤")
+    @("CmdRun", "ä½¿ç”¨ cmd è¿è¡Œ : command")
+    @("CmdRunOnly", "åªä½¿ç”¨ cmd è¿è¡Œ")
+    @("WinRRun", "ä½¿ç”¨ win + r è¿è¡Œ")
+    @("RunAndDisplay", "ä½¿ç”¨ cmd è¿è¡Œï¼Œå¹¶æ˜¾ç¤ºç»“æœ")
+    @("ReindexFiles", "é‡æ–°ç´¢å¼•å¾…æœç´¢æ–‡ä»¶")
+    @("EditConfig", "ç¼–è¾‘é…ç½®æ–‡ä»¶")
+    @("RunClipboard", "ä½¿ç”¨ ahk çš„ Run è¿è¡Œå‰ªåˆ‡æ¿å†…å®¹")
+    @("CleanupRank", "æ¸…ç†å‘½ä»¤æƒé‡ä¸­çš„æ— æ•ˆå‘½ä»¤")
+    @("ShowArg", "æ˜¾ç¤ºå‚æ•°ï¼šShowArg arg1 arg2 ...")
+    @("AhkTest", "è¿è¡Œå‚æ•°æˆ–è€…å‰ªåˆ‡æ¿ä¸­çš„ AHK ä»£ç ")
+    @("InstallPlugin", "å®‰è£…æ’ä»¶")
+    @("RemovePlugin", "å¸è½½æ’ä»¶")
+    @("ListPlugin", "åˆ—å‡ºæ’ä»¶")
+    @("CleanupPlugin", "æ¸…ç†æ’ä»¶")
+    @("CountNumber", "è®¡ç®—æ•°é‡ wc")
+    @("Open", "æ‰“å¼€")
 return
 
 CmdRun:
@@ -40,7 +40,7 @@ AhkRun:
         }
         catch e
         {
-            MsgBox, ÔËĞĞÃüÁî %Arg% Ê§°Ü`nÉèÖÃÅäÖÃÎÄ¼şÖĞ DebugMode Îª 1 ¿É²é¿´´íÎóÏêÇé
+            MsgBox, è¿è¡Œå‘½ä»¤ %Arg% å¤±è´¥`nè®¾ç½®é…ç½®æ–‡ä»¶ä¸­ DebugMode ä¸º 1 å¯æŸ¥çœ‹é”™è¯¯è¯¦æƒ…
         }
     }
     else
@@ -51,11 +51,11 @@ return
 
 ShowArg:
     args := StrSplit(Arg, " ")
-    result := "¹²ÓĞ " . args.Length() . " ¸ö²ÎÊı¡£`n`n"
+    result := "å…±æœ‰ " . args.Length() . " ä¸ªå‚æ•°ã€‚`n`n"
 
     for index, argument in args
     {
-        result .= "µÚ " . index . " ¸ö²ÎÊı£º" . argument . "`n"
+        result .= "ç¬¬ " . index . " ä¸ªå‚æ•°ï¼š" . argument . "`n"
     }
 
     DisplayResult(result)
@@ -88,7 +88,7 @@ InstallPlugin:
 
     if (InStr(pluginPath, "http") == 1)
     {
-        DisplayResult("ÏÂÔØÖĞ£¬ÇëÉÔºó...")
+        DisplayResult("ä¸‹è½½ä¸­ï¼Œè¯·ç¨å...")
         UrlDownloadToFile, %pluginPath%, %A_Temp%\RunZ.Plugin.txt
         pluginPath := A_Temp "\RunZ.Plugin.txt"
     }
@@ -98,14 +98,14 @@ InstallPlugin:
         FileReadLine, firstLine, %pluginPath%, 1
         if (!InStr(firstLine, "; RunZ:"))
         {
-            DisplayResult(pluginPath " ²¢²»ÊÇÓĞĞ§µÄ RunZ ²å¼ş")
+            DisplayResult(pluginPath " å¹¶ä¸æ˜¯æœ‰æ•ˆçš„ RunZ æ’ä»¶")
             return
         }
 
         pluginName := StrSplit(firstLine, "; RunZ:")[2]
         if (FileExist(A_ScriptDir "\Runz\Plugins\" pluginName ".ahk"))
         {
-            DisplayResult("¸Ã²å¼şÒÑ´æÔÚ")
+            DisplayResult("è¯¥æ’ä»¶å·²å­˜åœ¨")
             return
         }
 
@@ -113,13 +113,13 @@ InstallPlugin:
         FileAppend, #include *i `%A_ScriptDir`%\Runz\Plugins\%pluginName%.ahk`n
             , %A_ScriptDir%\Runz\Core\Plugins.ahk
 
-        DisplayResult(pluginName " ²å¼ş°²×°³É¹¦£¬RunZ ½«ÖØÆô²¢ÆôÓÃ¸Ã²å¼ş")
+        DisplayResult(pluginName " æ’ä»¶å®‰è£…æˆåŠŸï¼ŒRunZ å°†é‡å¯å¹¶å¯ç”¨è¯¥æ’ä»¶")
         Sleep, 1000
         GoSub, RestartRunZ
     }
     else
     {
-        DisplayResult(pluginPath " ÎÄ¼ş²»´æÔÚ")
+        DisplayResult(pluginPath " æ–‡ä»¶ä¸å­˜åœ¨")
     }
 return
 
@@ -127,7 +127,7 @@ RemovePlugin:
     pluginName := Arg
     if (!FileExist(A_ScriptDir "\Runz\Plugins\" pluginName ".ahk"))
     {
-        DisplayResult("Î´°²×°¸Ã²å¼ş")
+        DisplayResult("æœªå®‰è£…è¯¥æ’ä»¶")
         return
     }
 
@@ -138,7 +138,7 @@ RemovePlugin:
     FileAppend, %currentPlugins%, %A_ScriptDir%\Runz\Core\Plugins.ahk
     FileDelete, %A_ScriptDir%\Runz\Plugins\%pluginName%.ahk
 
-    DisplayResult(pluginName " ²å¼şÉ¾³ı³É¹¦£¬RunZ ½«ÖØÆôÒÔÉúĞ§")
+    DisplayResult(pluginName " æ’ä»¶åˆ é™¤æˆåŠŸï¼ŒRunZ å°†é‡å¯ä»¥ç”Ÿæ•ˆ")
     Sleep, 1000
     GoSub, RestartRunZ
 return
@@ -151,11 +151,11 @@ ListPlugin:
         FileReadLine, secondLine, %A_LoopFileLongPath%, 2
         if (g_Conf.GetValue("Plugins", pluginName) == 0)
         {
-            result .= "* | ²å¼ş | " pluginName " | ÒÑ½ûÓÃ  ÃèÊö£º" SubStr(secondLine, 3) "`n"
+            result .= "* | æ’ä»¶ | " pluginName " | å·²ç¦ç”¨  æè¿°ï¼š" SubStr(secondLine, 3) "`n"
         }
         else
         {
-            result .= "* | ²å¼ş | " pluginName " | ÒÑÆôÓÃ  ÃèÊö£º" SubStr(secondLine, 3) "`n"
+            result .= "* | æ’ä»¶ | " pluginName " | å·²å¯ç”¨  æè¿°ï¼š" SubStr(secondLine, 3) "`n"
         }
     }
 
@@ -172,7 +172,7 @@ CleanupPlugin:
         SplitPath, A_LoopField , , , , pluginName,
         if (g_Conf.GetValue("Plugins", pluginName) == 0)
         {
-            result .= pluginName " ²å¼şÒÑ±»ÇåÀí£¬ÏÂ´ÎÔËĞĞ RunZ ½«²»ÔÙÒıÈë`n"
+            result .= pluginName " æ’ä»¶å·²è¢«æ¸…ç†ï¼Œä¸‹æ¬¡è¿è¡Œ RunZ å°†ä¸å†å¼•å…¥`n"
             StringReplace, currentPlugins, currentPlugins
                 , #include *i `%A_ScriptDir`%\Runz\Plugins\%pluginName%.ahk`r`n
         }
@@ -186,19 +186,19 @@ CleanupPlugin:
     }
     else
     {
-        DisplayResult("ÎŞ¿ÉÇåÀí²å¼ş")
+        DisplayResult("æ— å¯æ¸…ç†æ’ä»¶")
     }
 return
 
 CountNumber:
-    result := "* | ÊıÁ¿ | " StrSplit(Arg, " ").Length() " | ÒÔ¿Õ¸ñÎª·Ö¸ô·û`n"
+    result := "* | æ•°é‡ | " StrSplit(Arg, " ").Length() " | ä»¥ç©ºæ ¼ä¸ºåˆ†éš”ç¬¦`n"
     if (SubStr(FullPipeArg, 0, -1) = "`n")
     {
-        result .= "* | ÊıÁ¿ | " StrSplit(FullPipeArg, "`n").Length()  - 1 " | ÒÔ»»ĞĞÎª·Ö¸ô·û`n"
+        result .= "* | æ•°é‡ | " StrSplit(FullPipeArg, "`n").Length()  - 1 " | ä»¥æ¢è¡Œä¸ºåˆ†éš”ç¬¦`n"
     }
     else
     {
-        result .= "* | ÊıÁ¿ | " StrSplit(FullPipeArg, "`n").Length() " | ÒÔ»»ĞĞÎª·Ö¸ô·û`n"
+        result .= "* | æ•°é‡ | " StrSplit(FullPipeArg, "`n").Length() " | ä»¥æ¢è¡Œä¸ºåˆ†éš”ç¬¦`n"
     }
 
     DisplayResult(AlignText(result))

@@ -1,11 +1,11 @@
-#NoEnv
+ï»¿#NoEnv
 #NoTrayIcon
 SendMode Input
 SetWorkingDir %A_ScriptDir%
 
 ;FileEncoding, utf-8
 
-; Èç¹û¸ÃÎÄ¼ş±¨´í£¬ËµÃ÷ UserFunctionsAuto.txt ÎÄ¼şÀïÓĞÖØ¸´±êÇ©£¬ĞèÒªÊÖ¶¯ĞŞ¸Ä»òÉ¾³ı
+; å¦‚æœè¯¥æ–‡ä»¶æŠ¥é”™ï¼Œè¯´æ˜ UserFunctionsAuto.txt æ–‡ä»¶é‡Œæœ‰é‡å¤æ ‡ç­¾ï¼Œéœ€è¦æ‰‹åŠ¨ä¿®æ”¹æˆ–åˆ é™¤
 
 global g_ConfFile := A_ScriptDir . "\..\..\Settings\Runz\RunZ.ini"
 global g_Conf := class_EasyINI(g_ConfFile)
@@ -34,13 +34,13 @@ Loop, %0%
             pluginName := StrSplit(firstLine, "; RunZ:")[2]
             if (FileExist(A_ScriptDir "\Plugins\" pluginName ".ahk"))
             {
-                CF_ToolTip(pluginName "²å¼şÒÑ´æÔÚ",1500)
+                CF_ToolTip(pluginName "æ’ä»¶å·²å­˜åœ¨",1500)
                 ExitApp
             }
             FileMove, %inputFileName%, %A_ScriptDir%\Plugins\%pluginName%.ahk
             FileAppend, #include *i `%A_ScriptDir`%\RunZ\Plugins\%pluginName%.ahk`n
                 , %A_ScriptDir%\Plugins.ahk
-            CF_ToolTip(pluginName, "²å¼ş°²×°³É¹¦£¬ÇëÊÖ¶¯ÖØÆô RunZ ÒÔÉúĞ§¡£", 1500)
+            CF_ToolTip(pluginName, "æ’ä»¶å®‰è£…æˆåŠŸï¼Œè¯·æ‰‹åŠ¨é‡å¯ RunZ ä»¥ç”Ÿæ•ˆã€‚", 1500)
             ExitApp
         }
     }
@@ -86,7 +86,7 @@ Loop, %0%
 
     uniqueLabelName := labelName
 
-    ; Èç¹ûºÍÒÑÓĞ±êÇ©ÖØÃû£¬Ìí¼ÓÊ±¼ä
+    ; å¦‚æœå’Œå·²æœ‰æ ‡ç­¾é‡åï¼Œæ·»åŠ æ—¶é—´
     if (IsLabel(uniqueLabelName) || allLabels.HasKey(uniqueLabelName))
     {
         uniqueLabelName .= "_" A_Now "_" index
@@ -99,14 +99,14 @@ Loop, %0%
 
 if (g_Conf.Config.SendToMenuSimpleMode)
 {
-    CF_ToolTip("ÎÄ¼şÌí¼ÓÍê±Ï£¬3 ÃëÄÚÉúĞ§", 1500)
+    CF_ToolTip("æ–‡ä»¶æ·»åŠ å®Œæ¯•ï¼Œ3 ç§’å†…ç”Ÿæ•ˆ", 1500)
     ExitApp
 }
 
 FileMove, %g_UserFunctionsAutoFileName%, %g_UserFunctionsAutoFileName%.bak, 1
 FileAppend, %g_FileContent%, %g_UserFunctionsAutoFileName%
 
-; ´ò¿ªÎÄ¼şÀ´±à¼­
+; æ‰“å¼€æ–‡ä»¶æ¥ç¼–è¾‘
 if (g_Conf.Config.Editor != "")
 {
     Run, % g_Conf.Config.Editor " """ g_UserFunctionsAutoFileName """"
@@ -119,11 +119,11 @@ else
 
 return
 
-; Ìí¼ÓÒ»¸öĞèÒªÔËĞĞµÄÎÄ¼ş
+; æ·»åŠ ä¸€ä¸ªéœ€è¦è¿è¡Œçš„æ–‡ä»¶
 AddFile(name, comment, path, dir)
 {
     addFunctionsText = @("%name%", "%comment%")
-    addLabelsText = %name%:`r`n    `; ÓÃ·¨£º  Run, "ÎÄ¼şÃû" "²ÎÊı..", ¹¤×÷Ä¿Â¼, Max|Min|Hide`r`n
+    addLabelsText = %name%:`r`n    `; ç”¨æ³•ï¼š  Run, "æ–‡ä»¶å" "å‚æ•°..", å·¥ä½œç›®å½•, Max|Min|Hide`r`n
     addLabelsText = %addLabelsText%    Run, "%path%", "%dir%"`r`nreturn`r`n
 
     g_FileContent := StrReplace(g_FileContent
@@ -147,11 +147,11 @@ SafeFilename(label)
     return label
 }
 
-; Î± @ º¯Êı£¬ÓÃÓÚ±ÜÃâÔËĞĞ³ö´í
+; ä¼ª @ å‡½æ•°ï¼Œç”¨äºé¿å…è¿è¡Œå‡ºé”™
 @(a = "", b = "", c = "", d = "", e = "", f = "")
 {
 }
 
 #include %A_ScriptDir%\..\Lib\EasyIni.ahk
-; ÓÃÓÚÅĞ¶ÏÊÇ·ñÓĞÖØ¸´±êÇ©
+; ç”¨äºåˆ¤æ–­æ˜¯å¦æœ‰é‡å¤æ ‡ç­¾
 #include *i %A_ScriptDir%\..\Settings\Runz\UserFunctionsAuto.txt

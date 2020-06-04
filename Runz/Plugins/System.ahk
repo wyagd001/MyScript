@@ -1,34 +1,34 @@
-; RunZ:System
-; ²Ù×÷ÏµÍ³Ïà¹Ø¹¦ÄÜ
+ï»¿; RunZ:System
+; æ“ä½œç³»ç»Ÿç›¸å…³åŠŸèƒ½
 
 System:
-    @("Clip", "ÏÔÊ¾¼ôÇĞ°åÄÚÈİ")
-    @("ClearClipboardFormat", "Çå³ı¼ôÇĞ°åÖĞÎÄ×ÖµÄ¸ñÊ½")
-    @("EmptyRecycle", "Çå¿Õ»ØÊÕÕ¾")
-    @("Logoff", "×¢Ïú µÇ³ö")
-    @("RestartMachine", "ÖØÆô")
-    @("ShutdownMachine", "¹Ø»ú")
-    @("SuspendMachine", "¹ÒÆğ Ë¯Ãß ´ı»ú")
-    @("HibernateMachine", "ĞİÃß")
-    @("TurnMonitorOff", "¹Ø±ÕÏÔÊ¾Æ÷")
-    @("ListProcess", "ÁĞ³ö½ø³Ì ps")
-    @("DiskSpace", "²é¿´´ÅÅÌ¿Õ¼ä df")
-    @("IncreaseVolume", "Ìá¸ßÒôÁ¿")
-    @("DecreaseVolume", "½µµÍÒôÁ¿")
-    @("SystemState", "ÏµÍ³×´Ì¬ top")
-    @("KillProcess", "É±ËÀ½ø³Ì")
-    @("SendToClip", "·¢ËÍµ½¼ôÇĞ°å")
-    @("ListWindow", "´°¿ÚÁĞ±í")
-    @("ActivateWindow", "¼¤»î´°¿Ú")
-    @("ListRunningService", "ÁĞ³öÔËĞĞµÄ·şÎñ")
-    @("ListAllService", "ÁĞ³öËùÓĞµÄ·şÎñ")
-    @("ShowService", "ÏÔÊ¾·şÎñÏêÇé")
-    @("ShowProcess", "ÏÔÊ¾½ø³ÌÏêÇé")
+    @("Clip", "æ˜¾ç¤ºå‰ªåˆ‡æ¿å†…å®¹")
+    @("ClearClipboardFormat", "æ¸…é™¤å‰ªåˆ‡æ¿ä¸­æ–‡å­—çš„æ ¼å¼")
+    @("EmptyRecycle", "æ¸…ç©ºå›æ”¶ç«™")
+    @("Logoff", "æ³¨é”€ ç™»å‡º")
+    @("RestartMachine", "é‡å¯")
+    @("ShutdownMachine", "å…³æœº")
+    @("SuspendMachine", "æŒ‚èµ· ç¡çœ  å¾…æœº")
+    @("HibernateMachine", "ä¼‘çœ ")
+    @("TurnMonitorOff", "å…³é—­æ˜¾ç¤ºå™¨")
+    @("ListProcess", "åˆ—å‡ºè¿›ç¨‹ ps")
+    @("DiskSpace", "æŸ¥çœ‹ç£ç›˜ç©ºé—´ df")
+    @("IncreaseVolume", "æé«˜éŸ³é‡")
+    @("DecreaseVolume", "é™ä½éŸ³é‡")
+    @("SystemState", "ç³»ç»ŸçŠ¶æ€ top")
+    @("KillProcess", "æ€æ­»è¿›ç¨‹")
+    @("SendToClip", "å‘é€åˆ°å‰ªåˆ‡æ¿")
+    @("ListWindow", "çª—å£åˆ—è¡¨")
+    @("ActivateWindow", "æ¿€æ´»çª—å£")
+    @("ListRunningService", "åˆ—å‡ºè¿è¡Œçš„æœåŠ¡")
+    @("ListAllService", "åˆ—å‡ºæ‰€æœ‰çš„æœåŠ¡")
+    @("ShowService", "æ˜¾ç¤ºæœåŠ¡è¯¦æƒ…")
+    @("ShowProcess", "æ˜¾ç¤ºè¿›ç¨‹è¯¦æƒ…")
 return
 
 Clip:
     GoSub, ActivateRunZ
-    DisplayResult("¼ôÇĞ°åÄÚÈİ³¤¶È " . StrLen(clipboard) . " £º`n`n" . clipboard)
+    DisplayResult("å‰ªåˆ‡æ¿å†…å®¹é•¿åº¦ " . StrLen(clipboard) . " ï¼š`n`n" . clipboard)
 return
 
 ClearClipboardFormat:
@@ -36,7 +36,7 @@ ClearClipboardFormat:
 return
 
 Logoff:
-    MsgBox, 4, , ½«Òª×¢Ïú£¬ÊÇ·ñÖ´ĞĞ£¿
+    MsgBox, 4, , å°†è¦æ³¨é”€ï¼Œæ˜¯å¦æ‰§è¡Œï¼Ÿ
     IfMsgBox Yes
     {
         Shutdown, 0
@@ -44,7 +44,7 @@ Logoff:
 return
 
 ShutdownMachine:
-    MsgBox, 4, , ½«Òª¹Ø»ú£¬ÊÇ·ñÖ´ĞĞ£¿
+    MsgBox, 4, , å°†è¦å…³æœºï¼Œæ˜¯å¦æ‰§è¡Œï¼Ÿ
     IfMsgBox Yes
     {
         Shutdown, 1
@@ -52,7 +52,7 @@ ShutdownMachine:
 return
 
 RestartMachine:
-    MsgBox, 4, , ½«ÒªÖØÆô»úÆ÷£¬ÊÇ·ñÖ´ĞĞ£¿
+    MsgBox, 4, , å°†è¦é‡å¯æœºå™¨ï¼Œæ˜¯å¦æ‰§è¡Œï¼Ÿ
     IfMsgBox Yes
     {
         Shutdown, 2
@@ -60,18 +60,18 @@ RestartMachine:
 return
 
 HibernateMachine:
-    MsgBox, 4, , ½«ÒªĞİÃß£¬ÊÇ·ñÖ´ĞĞ£¿
+    MsgBox, 4, , å°†è¦ä¼‘çœ ï¼Œæ˜¯å¦æ‰§è¡Œï¼Ÿ
     IfMsgBox Yes
     {
-        ; ²ÎÊı #1: Ê¹ÓÃ 1 ´úÌæ 0 À´½øĞĞĞİÃß¶ø²»ÊÇ¹ÒÆğ¡£
-        ; ²ÎÊı #2: Ê¹ÓÃ 1 ´úÌæ 0 À´Á¢¼´¹ÒÆğ¶ø²»Ñ¯ÎÊÃ¿¸öÓ¦ÓÃ³ÌĞòÒÔ»ñµÃĞí¿É¡£
-        ; ²ÎÊı #3: Ê¹ÓÃ 1 ¶ø²»ÊÇ 0 À´½ûÖ¹ËùÓĞµÄ»½ĞÑÊÂ¼ş¡£
+        ; å‚æ•° #1: ä½¿ç”¨ 1 ä»£æ›¿ 0 æ¥è¿›è¡Œä¼‘çœ è€Œä¸æ˜¯æŒ‚èµ·ã€‚
+        ; å‚æ•° #2: ä½¿ç”¨ 1 ä»£æ›¿ 0 æ¥ç«‹å³æŒ‚èµ·è€Œä¸è¯¢é—®æ¯ä¸ªåº”ç”¨ç¨‹åºä»¥è·å¾—è®¸å¯ã€‚
+        ; å‚æ•° #3: ä½¿ç”¨ 1 è€Œä¸æ˜¯ 0 æ¥ç¦æ­¢æ‰€æœ‰çš„å”¤é†’äº‹ä»¶ã€‚
         DllCall("PowrProf\SetSuspendState", "int", 1, "int", 0, "int", 0)
     }
 return
 
 SuspendMachine:
-    MsgBox, 4, , ½«Òª´ı»ú£¬ÊÇ·ñÖ´ĞĞ£¿
+    MsgBox, 4, , å°†è¦å¾…æœºï¼Œæ˜¯å¦æ‰§è¡Œï¼Ÿ
     IfMsgBox Yes
     {
         DllCall("PowrProf\SetSuspendState", "int", 0, "int", 0, "int", 0)
@@ -79,15 +79,15 @@ SuspendMachine:
 return
 
 TurnMonitorOff:
-    ; ¹Ø±ÕÏÔÊ¾Æ÷:
+    ; å…³é—­æ˜¾ç¤ºå™¨:
     SendMessage, 0x112, 0xF170, 2,, Program Manager
     ; 0x112 is WM_SYSCOMMAND, 0xF170 is SC_MONITORPOWER.
-    ; ¶ÔÉÏÃæÃüÁîµÄ×¢ÊÍ: Ê¹ÓÃ -1 ´úÌæ 2 À´´ò¿ªÏÔÊ¾Æ÷.
-    ; Ê¹ÓÃ 1 ´úÌæ 2 À´¼¤»îÏÔÊ¾Æ÷µÄ½ÚÄÜÄ£Ê½.
+    ; å¯¹ä¸Šé¢å‘½ä»¤çš„æ³¨é‡Š: ä½¿ç”¨ -1 ä»£æ›¿ 2 æ¥æ‰“å¼€æ˜¾ç¤ºå™¨.
+    ; ä½¿ç”¨ 1 ä»£æ›¿ 2 æ¥æ¿€æ´»æ˜¾ç¤ºå™¨çš„èŠ‚èƒ½æ¨¡å¼.
 return
 
 EmptyRecycle:
-    MsgBox, 4, , ½«ÒªÇå¿Õ»ØÊÕÕ¾£¬ÊÇ·ñÖ´ĞĞ£¿
+    MsgBox, 4, , å°†è¦æ¸…ç©ºå›æ”¶ç«™ï¼Œæ˜¯å¦æ‰§è¡Œï¼Ÿ
     IfMsgBox Yes
     {
         FileRecycleEmpty,
@@ -99,7 +99,7 @@ ListProcess:
 
     for process in ComObjGet("winmgmts:").ExecQuery("select * from Win32_Process")
     {
-        result .= "* | ½ø³Ì | " process.Name " | " process.CommandLine "`n"
+        result .= "* | è¿›ç¨‹ | " process.Name " | " process.CommandLine "`n"
     }
     Sort, result
 
@@ -123,7 +123,7 @@ DiskSpace:
         SetFormat, float, 6.2
         cap /= 1024.0
         free /= 1024.0
-        result = %result%* | %drive% | ×Ü¹²: %cap% G  ¿ÉÓÃ: %free% G | ÒÑÊ¹ÓÃ£º%percent%`%  ¾í±ê: %label%`n
+        result = %result%* | %drive% | æ€»å…±: %cap% G  å¯ç”¨: %free% G | å·²ä½¿ç”¨ï¼š%percent%`%  å·æ ‡: %label%`n
     }
 
     DisplayResult(AlignText(result))
@@ -144,12 +144,12 @@ SystemState:
     }
 
     GMSEx := GlobalMemoryStatusEx()
-    result := "* | ×´Ì¬ | ÔËĞĞÊ±¼ä | " Round(A_TickCount / 1000 / 3600, 3) " Ğ¡Ê±`n"
-    result .= "* | ×´Ì¬ | CPU Õ¼ÓÃ | " CPULoad() "% `n"
-    result .= "* | ×´Ì¬ | ÄÚ´æÕ¼ÓÃ | " Round(100 * (GMSEx[2] - GMSEx[3]) / GMSEx[2], 2) "% `n"
-    result .= "* | ×´Ì¬ | ½ø³Ì×ÜÊı | " GetProcessCount() "`n"
-    result .= "* | ×´Ì¬ | ÄÚ´æ×ÜÁ¿ | " Round(GMSEx[2] / 1024**2, 2) "MB `n"
-    result .= "* | ×´Ì¬ | ¿ÉÓÃÄÚ´æ | " Round(GMSEx[3] / 1024**2, 2) "MB `n"
+    result := "* | çŠ¶æ€ | è¿è¡Œæ—¶é—´ | " Round(A_TickCount / 1000 / 3600, 3) " å°æ—¶`n"
+    result .= "* | çŠ¶æ€ | CPU å ç”¨ | " CPULoad() "% `n"
+    result .= "* | çŠ¶æ€ | å†…å­˜å ç”¨ | " Round(100 * (GMSEx[2] - GMSEx[3]) / GMSEx[2], 2) "% `n"
+    result .= "* | çŠ¶æ€ | è¿›ç¨‹æ€»æ•° | " GetProcessCount() "`n"
+    result .= "* | çŠ¶æ€ | å†…å­˜æ€»é‡ | " Round(GMSEx[2] / 1024**2, 2) "MB `n"
+    result .= "* | çŠ¶æ€ | å¯ç”¨å†…å­˜ | " Round(GMSEx[3] / 1024**2, 2) "MB `n"
     DisplayResult(AlignText(result))
 return
 
@@ -160,7 +160,7 @@ KillProcess:
         Process, Close, %argument%
     }
 
-    DisplayResult("ÒÑ³¢ÊÔÉ±ËÀ " Arg " ½ø³Ì")
+    DisplayResult("å·²å°è¯•æ€æ­» " Arg " è¿›ç¨‹")
 return
 
 SendToClip:
@@ -181,7 +181,7 @@ ListWindow:
         {
             continue
         }
-        result .= "* | ´°¿Ú | " name " | " title "`n"
+        result .= "* | çª—å£ | " name " | " title "`n"
     }
 
     SetCommandFilter("ActivateWindow|KillProcess")
@@ -218,7 +218,7 @@ ListAllService:
     result :=
     for service in ComObjGet("winmgmts:").ExecQuery("select * from Win32_Service")
     {
-        result .= "* | ·şÎñ | " service.Name " | " service.DisplayName "`n"
+        result .= "* | æœåŠ¡ | " service.Name " | " service.DisplayName "`n"
     }
     Sort, result
 
@@ -233,7 +233,7 @@ ListRunningService:
     {
         if (service.Started != 0)
         {
-            result .= "* | ·şÎñ | " service.Name " | " service.DisplayName "`n"
+            result .= "* | æœåŠ¡ | " service.Name " | " service.DisplayName "`n"
         }
     }
     Sort, result
@@ -245,17 +245,17 @@ return
 
 ShowService:
     result :=
-    ; ÔİÊ±Ö»Ö§³ÖÒ»¸ö£¬Ñ¡µÃ¶àÁË²éÆğÀ´Ì«Âı
+    ; æš‚æ—¶åªæ”¯æŒä¸€ä¸ªï¼Œé€‰å¾—å¤šäº†æŸ¥èµ·æ¥å¤ªæ…¢
     for service in ComObjGet("winmgmts:")
         .ExecQuery("select * from Win32_Service where Name = '" StrSplit(Arg, " ")[1] "'")
     {
         ; https://msdn.microsoft.com/en-us/library/windows/desktop/aa394418%28v=vs.85%29.aspx
-        result .= "* | ·şÎñ | Ãû³Æ | " service.Name "`n"
-        result .= "* | ·şÎñ | ÃèÊö | " service.Description "`n"
-        result .= "* | ·şÎñ | ÊÇ·ñÔÚÔËĞĞ | " service.Started "`n"
-        result .= "* | ·şÎñ | Â·¾¶ | " service.PathName "`n"
-        result .= "* | ·şÎñ | ½ø³Ì ID | " service.ProcessId "`n"
-        result .= "* | ·şÎñ | ÀàĞÍ | " service.ServiceType "`n"
+        result .= "* | æœåŠ¡ | åç§° | " service.Name "`n"
+        result .= "* | æœåŠ¡ | æè¿° | " service.Description "`n"
+        result .= "* | æœåŠ¡ | æ˜¯å¦åœ¨è¿è¡Œ | " service.Started "`n"
+        result .= "* | æœåŠ¡ | è·¯å¾„ | " service.PathName "`n"
+        result .= "* | æœåŠ¡ | è¿›ç¨‹ ID | " service.ProcessId "`n"
+        result .= "* | æœåŠ¡ | ç±»å‹ | " service.ServiceType "`n"
         break
     }
 
@@ -264,16 +264,16 @@ return
 
 ShowProcess:
     result :=
-    ; ÔİÊ±Ö»Ö§³ÖÒ»¸ö£¬Ñ¡µÃ¶àÁË²éÆğÀ´Ì«Âı
+    ; æš‚æ—¶åªæ”¯æŒä¸€ä¸ªï¼Œé€‰å¾—å¤šäº†æŸ¥èµ·æ¥å¤ªæ…¢
     for process in ComObjGet("winmgmts:")
         .ExecQuery("select * from Win32_Process where Name = '" StrSplit(Arg, " ")[1] "'")
     {
         ; https://msdn.microsoft.com/en-us/library/windows/desktop/aa394372%28v=vs.85%29.aspx
-        result .= "* | ·şÎñ | Ãû³Æ | " process.Name "`n"
-        result .= "* | ·şÎñ | ÃèÊö | " process.Description "`n"
-        result .= "* | ·şÎñ | ÃüÁîĞĞ | " process.CommandLine "`n"
-        result .= "* | ·şÎñ | Æô¶¯Ê±¼ä | " process.CreationDate "`n"
-        result .= "* | ·şÎñ | ID | " process.ProcessId "`n"
+        result .= "* | æœåŠ¡ | åç§° | " process.Name "`n"
+        result .= "* | æœåŠ¡ | æè¿° | " process.Description "`n"
+        result .= "* | æœåŠ¡ | å‘½ä»¤è¡Œ | " process.CommandLine "`n"
+        result .= "* | æœåŠ¡ | å¯åŠ¨æ—¶é—´ | " process.CreationDate "`n"
+        result .= "* | æœåŠ¡ | ID | " process.ProcessId "`n"
         break
     }
 

@@ -44,9 +44,9 @@ SaveDesktopIconsPositions:
 	if (read_coords != coords)
 	{
 		if 每隔几小时结果为真(12)
-			FileAppend, %read_coords%,*%A_ScriptDir%\settings\tmp\SaveDeskIcons_%A_Now%.ini
+			FileAppend, %read_coords%, *%A_ScriptDir%\settings\tmp\SaveDeskIcons_%A_Now%.ini, UTF-16
 		FileDelete, %SaveDeskIcons_inifile%
-		FileAppend, %coords%, *%SaveDeskIcons_inifile%
+		FileAppend, %coords%, *%SaveDeskIcons_inifile%, UTF-16
 	}
 
 	read_coords := coords := ""

@@ -50,7 +50,7 @@ PasteToPath(path)
             try {
                 FileDelete, %fullname%
                 if (paste_type == _("type.text")) {
-                    FileAppend, %clip%, %fullname%
+                    FileAppend, %clip%, %fullname%, UTF-8
                 } else {
                     SaveImage(clip, fullname)
                 }
@@ -64,7 +64,7 @@ PasteToPath(path)
         } else {
             try {
                 if (paste_type == _("type.text")) {
-                    FileAppend, %clip%, %fullname%
+                    FileAppend, %clip%, %fullname%, UTF-8
                 } else {
                     SaveImage(clip, fullname)
                 }

@@ -1,20 +1,20 @@
-; RunZ:Misc
-; ÊµÓÃ¹¤¾ß¼¯ºÏ
+ï»¿; RunZ:Misc
+; å®ç”¨å·¥å…·é›†åˆ
 
 Misc:
-    @("Dictionary", "ÓĞµÀ´ÊµäÔÚÏß·­Òë")
-    @("Calc", "¼ÆËãÆ÷")
-    @("SearchOnBaidu", "Ê¹ÓÃ °Ù¶È ËÑË÷¼ôÇĞ°å»òÊäÈëÄÚÈİ")
-    @("SearchOnGoogle", "Ê¹ÓÃ ¹È¸è ËÑË÷¼ôÇĞ°å»òÊäÈëÄÚÈİ")
-    @("SearchOnBing", "Ê¹ÓÃ ±ØÓ¦ ËÑË÷¼ôÇĞ°å»òÊäÈëÄÚÈİ")
-    @("SearchOnTaobao", "Ê¹ÓÃ ÌÔ±¦ ËÑË÷¼ôÇĞ°å»òÊäÈëÄÚÈİ")
-    @("SearchOnJD", "Ê¹ÓÃ ¾©¶« ËÑË÷¼ôÇĞ°å»òÊäÈëÄÚÈİ")
-    @("ShowIp", "ÏÔÊ¾ IP")
-    @("Calendar", "ÓÃä¯ÀÀÆ÷´ò¿ªÍòÄêÀú")
-    ;@("CurrencyRate", "»ãÂÊ Ê¹ÓÃÊ¾Àı£º hl JPY EUR 2")  ; API Ê§Ğ§£¬Ô­Òò²»Ã÷
-    ;@("CNY2USD", "»ãÂÊ ÈËÃñ±Ò¶Ò»»ÃÀÔª")
-    ;@("USD2CNY", "»ãÂÊ ÃÀÔª¶Ò»»ÈËÃñ±Ò")
-    @("UrlEncode", "URL ±àÂë")
+    @("Dictionary", "æœ‰é“è¯å…¸åœ¨çº¿ç¿»è¯‘")
+    @("Calc", "è®¡ç®—å™¨")
+    @("SearchOnBaidu", "ä½¿ç”¨ ç™¾åº¦ æœç´¢å‰ªåˆ‡æ¿æˆ–è¾“å…¥å†…å®¹")
+    @("SearchOnGoogle", "ä½¿ç”¨ è°·æ­Œ æœç´¢å‰ªåˆ‡æ¿æˆ–è¾“å…¥å†…å®¹")
+    @("SearchOnBing", "ä½¿ç”¨ å¿…åº” æœç´¢å‰ªåˆ‡æ¿æˆ–è¾“å…¥å†…å®¹")
+    @("SearchOnTaobao", "ä½¿ç”¨ æ·˜å® æœç´¢å‰ªåˆ‡æ¿æˆ–è¾“å…¥å†…å®¹")
+    @("SearchOnJD", "ä½¿ç”¨ äº¬ä¸œ æœç´¢å‰ªåˆ‡æ¿æˆ–è¾“å…¥å†…å®¹")
+    @("ShowIp", "æ˜¾ç¤º IP")
+    @("Calendar", "ç”¨æµè§ˆå™¨æ‰“å¼€ä¸‡å¹´å†")
+    ;@("CurrencyRate", "æ±‡ç‡ ä½¿ç”¨ç¤ºä¾‹ï¼š hl JPY EUR 2")  ; API å¤±æ•ˆï¼ŒåŸå› ä¸æ˜
+    ;@("CNY2USD", "æ±‡ç‡ äººæ°‘å¸å…‘æ¢ç¾å…ƒ")
+    ;@("USD2CNY", "æ±‡ç‡ ç¾å…ƒå…‘æ¢äººæ°‘å¸")
+    @("UrlEncode", "URL ç¼–ç ")
 return
 
 ShowIp:
@@ -34,7 +34,7 @@ Dictionary:
 
     if (jsonText == "no query")
     {
-        DisplayResult("Î´²éµ½½á¹û")
+        DisplayResult("æœªæŸ¥åˆ°ç»“æœ")
         return
     }
 
@@ -136,7 +136,6 @@ UrlEncode:
     clipboard := UrlEncode(text)
     DisplayResult(clipboard)
 return
-
 
 #include %A_ScriptDir%\Lib\Eval.ahk
 #include %A_ScriptDir%\Lib\class_JSON.ahk

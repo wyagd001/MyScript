@@ -1,62 +1,62 @@
-file | control | ¿ØÖÆÃæ°å
-file | control sysdm.cpl | ÏµÍ³ÊôĞÔ
-file | control Access.cpl | ¸¨Öú¹¦ÄÜÑ¡Ïî
-file | control Appwiz.cpl | ³ÌĞòºÍ¹¦ÄÜ
-file | control Desk.cpl | ÏÔÊ¾
-file | control Fax.cpl | ´«ÕæÏòµ¼
-file | control Hdwwiz.cpl | Ìí¼ÓÉ¾³ıÓ²¼ş
-file | control Intl.cpl | ÇøÓòÓïÑÔÑ¡Ïî
-file | control Joy.cpl | ÓÎÏ·¿ØÖÆÆ÷
-file | control Liccpa.cpl | Ğí¿É
-file | control Main.cpl | Êó±êÊôĞÔ
-file | control Mmsys.cpl | ÉùÒôºÍÒôÆµÉè±¸
-file | control Modem.cpl | µç»°ºÍµ÷ÖÆ½âµ÷Æ÷Ñ¡Ïî
-file | control Ncpa.cpl | ÍøÂçÁ¬½Ó
-file | control Netcpl.cpl | ÍøÂçºÍ²¦ºÅÁ¬½Ó
-file | control Nwc.cpl | Netware¿Í»§¶ËÁ¬½Ó
-file | control Odbccp32.cpl | ODBCÊı¾İÔ´
-file | control Powercfg.cpl | µçÔ´¹ÜÀí µçÔ´Ñ¡Ïî
-file | control Sticpl.cpl | É¨ÃèÒÇºÍÕÕÏà»ú
-file | control Sysdm.cpl | ÏµÍ³
-file | control Telephon.cpl | ²¦ºÅ¹æÔòºÍµ÷ÖÆ½âµ÷Æ÷
-file | control Timedate.cpl | ÈÕÆÚºÍÊ±¼ä
-file | control admintools | ¹ÜÀí¹¤¾ß
-file | control desktop | ÏÔÊ¾ÊôĞÔ
-file | control firewall.cpl | ·À»ğÇ½ÅäÖÃ
-file | control folders | ÎÄ¼ş¼ĞÑ¡Ïî
-file | control fonts | ×ÖÌå
-file | control inetcpl.cpl,,4 | Internet ÊôĞÔ
-file | control printers | ´òÓ¡»úºÍ´«Õæ
-file | control sysdm.cpl | ¸ß¼¶ÏµÍ³ÅäÖÃ
-file | control userpasswords | ÓÃ»§ÕË»§
-file | control schedtasks | ¼Æ»®ÈÎÎñ
-file | rundll32.exe shell32.dll,Control_RunDLL desk.cpl,,0 | ×ÀÃæÍ¼±ê
-file | rundll32.exe shell32.dll,Control_RunDLL desk.cpl,,1 | ÆÁÄ»±£»¤
-file | rundll32.exe shell32.dll,Control_RunDLL desk.cpl,,2 | Íâ¹ÛºÍ¸öĞÔ»¯
-file | rundll32.exe shell32.dll,Control_RunDLL desk.cpl,,3 | ÏµÍ³ÉèÖÃ
-file | rundll32.exe shell32.dll,Control_RunDLL main.cpl @1 | ¼üÅÌÊôĞÔ
-file | rundll32.exe shell32.dll,Options_RunDLL 1 | ÈÎÎñÀ¸ºÍ¿ªÊ¼²Ëµ¥
-file | rundll32.exe sysdm.cpl,EditEnvironmentVariables | »·¾³±äÁ¿
-file | devmgmt.msc | Éè±¸¹ÜÀíÆ÷
-file | eventvwr.msc | ÊÂ¼ş²é¿´Æ÷
-file | compmgmt.msc | ¼ÆËã»ú¹ÜÀí
-file | taskmgr.exe | ÈÎÎñ¹ÜÀíÆ÷
-file | calc.exe | ¼ÆËãÆ÷ calc.exe
-file | mspaint.exe | »­Í¼
-file | cmd.exe | ÃüÁîÌáÊ¾·û DOS£¨cmd.exe£©
-file | C:\Program Files\Internet Explorer\iexplore.exe | IEä¯ÀÀÆ÷
-file | regedit.exe | ×¢²á±í
-file | write.exe | Ğ´×Ö°å
-file | cleanmgr.exe | ´ÅÅÌÇåÀí
-file | gpedit.msc | ×é²ßÂÔ
-file | comexp.msc | ×é¼ş·şÎñ
-file | diskmgmt.msc | ´ÅÅÌ¹ÜÀí
-file | dxdiag.exe | DirectX Õï¶Ï¹¤¾ß
-file | WF.msc | ·À»ğÇ½
-file | lusrmgr.msc | ±¾µØÓÃ»§ºÍ×é
-file | msconfig.exe | ÏµÍ³ÅäÖÃ¹¤¾ß
-file | perfmon.exe /res | ×ÊÔ´¼àÊÓÆ÷
-file | perfmon.exe | ĞÔÄÜ¼àÊÓÆ÷
-file | winver.exe | ¹ØÓÚ Windows
-file | services.msc | ·şÎñ
-file | netplwiz | ÓÃ»§ÕÊ»§
+ï»¿file | control | æ§åˆ¶é¢æ¿
+file | control sysdm.cpl | ç³»ç»Ÿå±æ€§
+file | control Access.cpl | è¾…åŠ©åŠŸèƒ½é€‰é¡¹
+file | control Appwiz.cpl | ç¨‹åºå’ŒåŠŸèƒ½
+file | control Desk.cpl | æ˜¾ç¤º
+file | control Fax.cpl | ä¼ çœŸå‘å¯¼
+file | control Hdwwiz.cpl | æ·»åŠ åˆ é™¤ç¡¬ä»¶
+file | control Intl.cpl | åŒºåŸŸè¯­è¨€é€‰é¡¹
+file | control Joy.cpl | æ¸¸æˆæ§åˆ¶å™¨
+file | control Liccpa.cpl | è®¸å¯
+file | control Main.cpl | é¼ æ ‡å±æ€§
+file | control Mmsys.cpl | å£°éŸ³å’ŒéŸ³é¢‘è®¾å¤‡
+file | control Modem.cpl | ç”µè¯å’Œè°ƒåˆ¶è§£è°ƒå™¨é€‰é¡¹
+file | control Ncpa.cpl | ç½‘ç»œè¿æ¥
+file | control Netcpl.cpl | ç½‘ç»œå’Œæ‹¨å·è¿æ¥
+file | control Nwc.cpl | Netwareå®¢æˆ·ç«¯è¿æ¥
+file | control Odbccp32.cpl | ODBCæ•°æ®æº
+file | control Powercfg.cpl | ç”µæºç®¡ç† ç”µæºé€‰é¡¹
+file | control Sticpl.cpl | æ‰«æä»ªå’Œç…§ç›¸æœº
+file | control Sysdm.cpl | ç³»ç»Ÿ
+file | control Telephon.cpl | æ‹¨å·è§„åˆ™å’Œè°ƒåˆ¶è§£è°ƒå™¨
+file | control Timedate.cpl | æ—¥æœŸå’Œæ—¶é—´
+file | control admintools | ç®¡ç†å·¥å…·
+file | control desktop | æ˜¾ç¤ºå±æ€§
+file | control firewall.cpl | é˜²ç«å¢™é…ç½®
+file | control folders | æ–‡ä»¶å¤¹é€‰é¡¹
+file | control fonts | å­—ä½“
+file | control inetcpl.cpl,,4 | Internet å±æ€§
+file | control printers | æ‰“å°æœºå’Œä¼ çœŸ
+file | control sysdm.cpl | é«˜çº§ç³»ç»Ÿé…ç½®
+file | control userpasswords | ç”¨æˆ·è´¦æˆ·
+file | control schedtasks | è®¡åˆ’ä»»åŠ¡
+file | rundll32.exe shell32.dll,Control_RunDLL desk.cpl,,0 | æ¡Œé¢å›¾æ ‡
+file | rundll32.exe shell32.dll,Control_RunDLL desk.cpl,,1 | å±å¹•ä¿æŠ¤
+file | rundll32.exe shell32.dll,Control_RunDLL desk.cpl,,2 | å¤–è§‚å’Œä¸ªæ€§åŒ–
+file | rundll32.exe shell32.dll,Control_RunDLL desk.cpl,,3 | ç³»ç»Ÿè®¾ç½®
+file | rundll32.exe shell32.dll,Control_RunDLL main.cpl @1 | é”®ç›˜å±æ€§
+file | rundll32.exe shell32.dll,Options_RunDLL 1 | ä»»åŠ¡æ å’Œå¼€å§‹èœå•
+file | rundll32.exe sysdm.cpl,EditEnvironmentVariables | ç¯å¢ƒå˜é‡
+file | devmgmt.msc | è®¾å¤‡ç®¡ç†å™¨
+file | eventvwr.msc | äº‹ä»¶æŸ¥çœ‹å™¨
+file | compmgmt.msc | è®¡ç®—æœºç®¡ç†
+file | taskmgr.exe | ä»»åŠ¡ç®¡ç†å™¨
+file | calc.exe | è®¡ç®—å™¨ calc.exe
+file | mspaint.exe | ç”»å›¾
+file | cmd.exe | å‘½ä»¤æç¤ºç¬¦ DOSï¼ˆcmd.exeï¼‰
+file | C:\Program Files\Internet Explorer\iexplore.exe | IEæµè§ˆå™¨
+file | regedit.exe | æ³¨å†Œè¡¨
+file | write.exe | å†™å­—æ¿
+file | cleanmgr.exe | ç£ç›˜æ¸…ç†
+file | gpedit.msc | ç»„ç­–ç•¥
+file | comexp.msc | ç»„ä»¶æœåŠ¡
+file | diskmgmt.msc | ç£ç›˜ç®¡ç†
+file | dxdiag.exe | DirectX è¯Šæ–­å·¥å…·
+file | WF.msc | é˜²ç«å¢™
+file | lusrmgr.msc | æœ¬åœ°ç”¨æˆ·å’Œç»„
+file | msconfig.exe | ç³»ç»Ÿé…ç½®å·¥å…·
+file | perfmon.exe /res | èµ„æºç›‘è§†å™¨
+file | perfmon.exe | æ€§èƒ½ç›‘è§†å™¨
+file | winver.exe | å…³äº Windows
+file | services.msc | æœåŠ¡
+file | netplwiz | ç”¨æˆ·å¸æˆ·

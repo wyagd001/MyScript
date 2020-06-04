@@ -1,9 +1,9 @@
-; RunZ:Kanji
-; ¼òÌå·±Ìå»¥Ïà×ª»»
+ï»¿; RunZ:Kanji
+; ç®€ä½“ç¹ä½“äº’ç›¸è½¬æ¢
 
 Kanji:
-    @("T2S", "½«¼ôÇÐ°å»òÊäÈëÄÚÈÝÖÐµÄ·±Ìå×ª³É¼òÌå")
-    @("S2T", "½«¼ôÇÐ°å»òÊäÈëÄÚÈÝÖÐµÄ¼òÌå×ª³É·±Ìå")
+    @("T2S", "å°†å‰ªåˆ‡æ¿æˆ–è¾“å…¥å†…å®¹ä¸­çš„ç¹ä½“è½¬æˆç®€ä½“")
+    @("S2T", "å°†å‰ªåˆ‡æ¿æˆ–è¾“å…¥å†…å®¹ä¸­çš„ç®€ä½“è½¬æˆç¹ä½“")
 return
 
 T2S:
@@ -35,7 +35,7 @@ Kanji_t2s(text)
 ; https://autohotkey.com/boards/viewtopic.php?t=9133
 Kanji(s, r := "")
 {
-    ; r = 1-¼ò·± ""-·±¼ò
+    ; r = 1-ç®€ç¹ ""-ç¹ç®€
     static f := __Kanji()
     n := r ? f.1 : f.2
     Loop, Parse, s
