@@ -11,11 +11,10 @@ GuiDropFiles_End:
 		If hwnd in %hComBoBox%,%hComBoBoxEdit%
 			Gosub ShowFileFullPath
 		Else
-{
-
-msgbox % Array_ToString(DroppedFiles)
-}
-			;Gosub movedropfile
+		{
+			for hindex,hfile in DroppedFiles
+				Gosub movedropfile
+		}
 	}
 Return
 
@@ -47,21 +46,13 @@ ShowFileFullPath:
 	{
 		TargetFolder := GuiDropFiles_FileFullPath
 		IniWrite, %TargetFolder%, %run_iniFile%, 路径设置, TargetFolder
+		MsgBox, , , 目标文件夹已设置为 %TargetFolder% 。, 3
 	Return
 	}
 Return
 
 movedropfile:
-	; 首先将目标文件夹拖拽到窗口
-	; 判断拖拽的是否是文件夹
-	If InStr(FileExist(GuiDropFiles_FileFullPath), "D")
-	{
-		TargetFolder := GuiDropFiles_FileFullPath
-		IniWrite, %TargetFolder%, %run_iniFile%, 路径设置, TargetFolder
-		MsgBox, , , 目标文件夹设置为 %TargetFolder% 。, 3
-	Return
-	}
-	FileFullPath:=GuiDropFiles_FileFullPath
+	FileFullPath:=hfile
 	;分割文件路径
 	SplitPath, FileFullPath, FileName, , FileExtension, FileNameNoExt
 	; 特定文件名 含有 foo_ 的文件
@@ -88,6 +79,11 @@ movedropfile:
 	If InStr(FileExist(TargetFolder), "D")
 	{
 		; 有同名文件时，自动重命名文件
+		If InStr(FileExist(FileFullPath), "D")
+		{
+			FileMoveDir, % FileFullPath, %TargetFolder%\%FileNameNoExt%, 1
+		return
+		}
 		TargetFile = %TargetFolder%\%FileName%
 		ifExist, %TargetFile%
 		{
