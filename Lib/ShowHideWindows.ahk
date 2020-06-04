@@ -1,4 +1,4 @@
-; if show=true then shows windows of desktop %index%, otherwise hides them
+﻿; if show=true then shows windows of desktop %index%, otherwise hides them
 ShowHideWindows(index, show)
 {
    global

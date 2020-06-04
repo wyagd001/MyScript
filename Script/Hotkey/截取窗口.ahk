@@ -1,4 +1,4 @@
-#include %A_ScriptDir%\Lib\Gdip.ahk
+ï»¿#include %A_ScriptDir%\Lib\Gdip.ahk
 
 /*
 PrintScreen::
@@ -8,21 +8,21 @@ Return
 */
 
 ;~!PrintScreen::
-´°¿Ú½ØÍ¼¶ş:
+çª—å£æˆªå›¾äºŒ:
 SsFileName:=SaveScreen(1.00,"Window",screenshot_path,"",filetp)
 IfExist, %A_ScriptDir%\Sound\shutter.wav
 SoundPlay, %A_ScriptDir%\Sound\shutter.wav, wait
 sleep,100
-if(Ñ¯ÎÊ=1)
+if(è¯¢é—®=1)
 {
- msgbox,3,½ØÍ¼,µ±Ç°´°¿ÚÒÑ¾­½ØÈ¡±£´æ,µã»÷¡°ÊÇ¡±·µ»Ø,`nµã»÷¡°·ñ¡±´ò¿ª»­Í¼£¬±à¼­Í¼Æ¬,µã»÷¡°È¡Ïû¡±É¾³ı¡£
+ msgbox,3,æˆªå›¾,å½“å‰çª—å£å·²ç»æˆªå–ä¿å­˜,ç‚¹å‡»â€œæ˜¯â€è¿”å›,`nç‚¹å‡»â€œå¦â€æ‰“å¼€ç”»å›¾ï¼Œç¼–è¾‘å›¾ç‰‡,ç‚¹å‡»â€œå–æ¶ˆâ€åˆ é™¤ã€‚
     IfMsgBox Yes
     Return
     IfMsgBox No
       {
         FileDelete,%screenshot_path%\%SsFileName%.%FileTp%
         Run, mspaint.exe
-        WinWaitActive,ÎŞ±êÌâ - »­Í¼,,3
+        WinWaitActive,æ— æ ‡é¢˜ - ç”»å›¾,,3
         if ErrorLevel
         return
         Send,^v

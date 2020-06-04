@@ -1,15 +1,15 @@
-1002:
+ï»¿1002:
 	f_ToggleFileExt(1)
 Return
 
-7PlusMenu_ÏÔÊ¾À©Õ¹Ãû()
+7PlusMenu_æ˜¾ç¤ºæ‰©å±•å()
 {
-	section = ÏÔÊ¾À©Õ¹Ãû
+	section = æ˜¾ç¤ºæ‰©å±•å
 	defaultSet=
 	( LTrim
 ID = 1002
-Name = ÇĞ»»"ÏÔÊ¾/Òş²Ø"ÎÄ¼şÀ©Õ¹Ãû
-Description = ÏÔÊ¾(Òş²Ø)ÎÄ¼şÀ©Õ¹Ãû
+Name = åˆ‡æ¢"æ˜¾ç¤º/éšè—"æ–‡ä»¶æ‰©å±•å
+Description = æ˜¾ç¤º(éšè—)æ–‡ä»¶æ‰©å±•å
 SubMenu = 7plus
 FileTypes =
 SingleFileOnly = 0

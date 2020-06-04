@@ -1,4 +1,4 @@
-;msgbox % DllListExports("D:\Program Files\‘À––\win 7\MD5Lib.dll")
+Ôªø;msgbox % DllListExports("D:\Program Files\ËøêË°å\win 7\MD5Lib.dll")
 
 /*
  _      _    _                 __ __      _      _                       _         _

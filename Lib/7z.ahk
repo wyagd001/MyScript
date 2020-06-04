@@ -1,74 +1,74 @@
-; ÖÇÄÜ½âÑ¹
-; 1).Ñ¹Ëõ°üÄÚÓĞ¶à¸öÎÄ¼ş£¨»òÎÄ¼ş¼Ğ£©Ê±¡°½âÑ¹¡±ÎÄ¼şµ½Ñ¹Ëõ°üËùÔÚÄ¿Â¼µÄ¡°ÓëÑ¹Ëõ°üÍ¬ÃûµÄÎÄ¼ş¼Ğ¡±ÄÚ
-; A.rar-------- Files / Folds / File+Fold / File+Folds / Files+Fold / Files+Folds  ¡ú Fold(name:A)
-; 2).Ñ¹Ëõ°üÄÚÓĞÖ»ÓĞ1¸öÎÄ¼ş£¨¼Ğ£©Ê±¡°½âÑ¹¡±ÎÄ¼şµ½Ñ¹Ëõ°üµ½ËùÔÚÄ¿Â¼
-; A.rar-------- File¡úFile / Fold¡úFold
+ï»¿; æ™ºèƒ½è§£å‹
+; 1).å‹ç¼©åŒ…å†…æœ‰å¤šä¸ªæ–‡ä»¶ï¼ˆæˆ–æ–‡ä»¶å¤¹ï¼‰æ—¶â€œè§£å‹â€æ–‡ä»¶åˆ°å‹ç¼©åŒ…æ‰€åœ¨ç›®å½•çš„â€œä¸å‹ç¼©åŒ…åŒåçš„æ–‡ä»¶å¤¹â€å†…
+; A.rar-------- Files / Folds / File+Fold / File+Folds / Files+Fold / Files+Folds  â†’ Fold(name:A)
+; 2).å‹ç¼©åŒ…å†…æœ‰åªæœ‰1ä¸ªæ–‡ä»¶ï¼ˆå¤¹ï¼‰æ—¶â€œè§£å‹â€æ–‡ä»¶åˆ°å‹ç¼©åŒ…åˆ°æ‰€åœ¨ç›®å½•
+; A.rar-------- Fileâ†’File / Foldâ†’Fold
 7z_smart_Unarchiver(S_File:="", S_tooltip:= 0)
 {
 	global 7Z, 7ZG
 	if !7z
 	{
-		msgbox, Î´ÉèÖÃ±äÁ¿7z£¬7zg£¬ÎŞ·¨½âÑ¹¡£
+		msgbox, æœªè®¾ç½®å˜é‡7zï¼Œ7zgï¼Œæ— æ³•è§£å‹ã€‚
 	return
 	}
-	SmartUnZip_Ê×²ã¶à¸öÎÄ¼ş±êÖ¾ := SmartUnZip_Ê×²ãÓĞÎÄ¼ş¼Ğ±êÖ¾ := SmartUnZip_ÊÇ·ñ´æÔÚÎÄ¼ş := 0
-	SmartUnZip_Ê×²ãÎÄ¼ş¼ĞÃû:= SmartUnZip_ÎÄ¼ş¼ĞÃûA := SmartUnZip_ÎÄ¼ş¼ĞÃûB := ""
-	°ü_ÁĞ±í=%A_Temp%\wannianshuyaozhinengjieya_%A_Now%.txt
+	SmartUnZip_é¦–å±‚å¤šä¸ªæ–‡ä»¶æ ‡å¿— := SmartUnZip_é¦–å±‚æœ‰æ–‡ä»¶å¤¹æ ‡å¿— := SmartUnZip_æ˜¯å¦å­˜åœ¨æ–‡ä»¶ := 0
+	SmartUnZip_é¦–å±‚æ–‡ä»¶å¤¹å:= SmartUnZip_æ–‡ä»¶å¤¹åA := SmartUnZip_æ–‡ä»¶å¤¹åB := ""
+	åŒ…_åˆ—è¡¨=%A_Temp%\wannianshuyaozhinengjieya_%A_Now%.txt
 
-	; ½«Ñ¹Ëõ°üÂ·¾¶·Ö¸îÎªËüµÄËùÔÚÄ¿Â¼ºÍ²»º¬À©Õ¹ÃûµÄÎÄ¼şÃû
-	SplitPath S_File, °ü_ÍêÕûÎÄ¼şÃû, °ü_Ä¿Â¼, , °ü_ÎÄ¼şÃû, °ü_´ÅÅÌ
-	DriveSpaceFree, IntUnZip_FreeSpace, %°ü_´ÅÅÌ%
+	; å°†å‹ç¼©åŒ…è·¯å¾„åˆ†å‰²ä¸ºå®ƒçš„æ‰€åœ¨ç›®å½•å’Œä¸å«æ‰©å±•åçš„æ–‡ä»¶å
+	SplitPath S_File, åŒ…_å®Œæ•´æ–‡ä»¶å, åŒ…_ç›®å½•, , åŒ…_æ–‡ä»¶å, åŒ…_ç£ç›˜
+	DriveSpaceFree, IntUnZip_FreeSpace, %åŒ…_ç£ç›˜%
 	FileGetSize, IntUnZip_FileSize, %S_File%, M
 	If (IntUnZip_FileSize > IntUnZip_FreeSpace)
 	{
-		MsgBox ´ÅÅÌ¿Õ¼ä²»×ã,ÎŞ·¨½âÑ¹ÎÄ¼ş¡£`n------------`nÑ¹Ëõ°ü£º%IntUnZip_FileSize%M`nÊ£Óà £º%IntUnZip_FreeSpace%M
+		MsgBox ç£ç›˜ç©ºé—´ä¸è¶³,æ— æ³•è§£å‹æ–‡ä»¶ã€‚`n------------`nå‹ç¼©åŒ…ï¼š%IntUnZip_FileSize%M`nå‰©ä½™ ï¼š%IntUnZip_FreeSpace%M
 	Return
 	}
-	RunWait, %comspec% /c ""%7Z%" l "%S_File%"`>"%°ü_ÁĞ±í%"",,hide
-	loop, read, %°ü_ÁĞ±í%
+	RunWait, %comspec% /c ""%7Z%" l "%S_File%"`>"%åŒ…_åˆ—è¡¨%"",,hide
+	loop, read, %åŒ…_åˆ—è¡¨%
 	{
 		If(RegExMatch(A_LoopReadLine, "^(\d\d\d\d-\d\d-\d\d)"))
 		{
-			SmartUnZip_ÊÇ·ñ´æÔÚÎÄ¼ş := 1
-			If( InStr(A_loopreadline, "D") = 21 Or InStr(A_loopreadline, "\"))  ;±¾ĞĞÈç¹û°üº¬\»òÕßÓĞD±êÖ¾£¬ÔòÅĞ¶¨ÎªÎÄ¼ş¼Ğ
+			SmartUnZip_æ˜¯å¦å­˜åœ¨æ–‡ä»¶ := 1
+			If( InStr(A_loopreadline, "D") = 21 Or InStr(A_loopreadline, "\"))  ;æœ¬è¡Œå¦‚æœåŒ…å«\æˆ–è€…æœ‰Dæ ‡å¿—ï¼Œåˆ™åˆ¤å®šä¸ºæ–‡ä»¶å¤¹
 			{
-				SmartUnZip_Ê×²ãÓĞÎÄ¼ş¼Ğ±êÖ¾ = 1
+				SmartUnZip_é¦–å±‚æœ‰æ–‡ä»¶å¤¹æ ‡å¿— = 1
 			}
 
 			If InStr(A_loopreadline, "\")
-				StringMid, SmartUnZip_ÎÄ¼ş¼ĞÃûA, A_LoopReadLine, 54, InStr(A_loopreadline, "\")-54
+				StringMid, SmartUnZip_æ–‡ä»¶å¤¹åA, A_LoopReadLine, 54, InStr(A_loopreadline, "\")-54
 			Else
-				StringTrimLeft, SmartUnZip_ÎÄ¼ş¼ĞÃûA, A_LoopReadLine, 53
+				StringTrimLeft, SmartUnZip_æ–‡ä»¶å¤¹åA, A_LoopReadLine, 53
 
-			If((SmartUnZip_ÎÄ¼ş¼ĞÃûB != SmartUnZip_ÎÄ¼ş¼ĞÃûA) And (SmartUnZip_ÎÄ¼ş¼ĞÃûB!=""))
+			If((SmartUnZip_æ–‡ä»¶å¤¹åB != SmartUnZip_æ–‡ä»¶å¤¹åA) And (SmartUnZip_æ–‡ä»¶å¤¹åB!=""))
 			{
-				SmartUnZip_Ê×²ã¶à¸öÎÄ¼ş±êÖ¾ = 1
+				SmartUnZip_é¦–å±‚å¤šä¸ªæ–‡ä»¶æ ‡å¿— = 1
 				Break
 			}
-			SmartUnZip_ÎÄ¼ş¼ĞÃûB := SmartUnZip_ÎÄ¼ş¼ĞÃûA
+			SmartUnZip_æ–‡ä»¶å¤¹åB := SmartUnZip_æ–‡ä»¶å¤¹åA
 		}
 	}
-	;FileDelete, %°ü_ÁĞ±í%
-	if !SmartUnZip_ÊÇ·ñ´æÔÚÎÄ¼ş
+	;FileDelete, %åŒ…_åˆ—è¡¨%
+	if !SmartUnZip_æ˜¯å¦å­˜åœ¨æ–‡ä»¶
 	{
-		msgbox ¿ÕÑ¹Ëõ°ü»òÎŞ·¨¶ÁÈ¡Ñ¹Ëõ°ü¡£
+		msgbox ç©ºå‹ç¼©åŒ…æˆ–æ— æ³•è¯»å–å‹ç¼©åŒ…ã€‚
 	return
 	}
 
-	; ©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥©¥
-; -o²ÎÊıºó²»ÄÜÓĞ¿Õ¸ñ
-	If(SmartUnZip_Ê×²ã¶à¸öÎÄ¼ş±êÖ¾=0 && SmartUnZip_Ê×²ãÓĞÎÄ¼ş¼Ğ±êÖ¾ = 0)   ; Ñ¹ËõÎÄ¼şÄÚ£¬Ê×²ãÓĞÇÒ½öÓĞÒ»¸öÎÄ¼ş
+	; â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”â”
+; -oå‚æ•°åä¸èƒ½æœ‰ç©ºæ ¼
+	If(SmartUnZip_é¦–å±‚å¤šä¸ªæ–‡ä»¶æ ‡å¿—=0 && SmartUnZip_é¦–å±‚æœ‰æ–‡ä»¶å¤¹æ ‡å¿— = 0)   ; å‹ç¼©æ–‡ä»¶å†…ï¼Œé¦–å±‚æœ‰ä¸”ä»…æœ‰ä¸€ä¸ªæ–‡ä»¶
 	{
-		Run, %7ZG% x "%S_File%" -o"%°ü_Ä¿Â¼%"    ; ÓĞÇÒ½öÓĞÒ»¸öÎÄ¼şÖ±½Ó½âÑ¹£¬¸²¸Ç»¹ÊÇ¸ÄÃû£¬½»¸ø7z
+		Run, %7ZG% x "%S_File%" -o"%åŒ…_ç›®å½•%"    ; æœ‰ä¸”ä»…æœ‰ä¸€ä¸ªæ–‡ä»¶ç›´æ¥è§£å‹ï¼Œè¦†ç›–è¿˜æ˜¯æ”¹åï¼Œäº¤ç»™7z
 	}
 
-	Else If(SmartUnZip_Ê×²ã¶à¸öÎÄ¼ş±êÖ¾=0 && SmartUnZip_Ê×²ãÓĞÎÄ¼ş¼Ğ±êÖ¾ = 1)   ; Ñ¹ËõÎÄ¼şÄÚ£¬Ê×²ãÓĞÇÒ½öÓĞÒ»¸öÎÄ¼ş¼Ğ
+	Else If(SmartUnZip_é¦–å±‚å¤šä¸ªæ–‡ä»¶æ ‡å¿—=0 && SmartUnZip_é¦–å±‚æœ‰æ–‡ä»¶å¤¹æ ‡å¿— = 1)   ; å‹ç¼©æ–‡ä»¶å†…ï¼Œé¦–å±‚æœ‰ä¸”ä»…æœ‰ä¸€ä¸ªæ–‡ä»¶å¤¹
 	{
-		IfExist, %°ü_Ä¿Â¼%\%SmartUnZip_ÎÄ¼ş¼ĞÃûA%   ;ÒÑ¾­´æÔÚÁËÒÔ¡°Ê×²ãÎÄ¼ş¼ĞÃüÃû¡±µÄÎÄ¼ş¼Ğ£¬ÔõÃ´°ì£¿
+		IfExist, %åŒ…_ç›®å½•%\%SmartUnZip_æ–‡ä»¶å¤¹åA%   ;å·²ç»å­˜åœ¨äº†ä»¥â€œé¦–å±‚æ–‡ä»¶å¤¹å‘½åâ€çš„æ–‡ä»¶å¤¹ï¼Œæ€ä¹ˆåŠï¼Ÿ
 		{
 			Loop
 			{
-				SmartUnZip_NewFolderName = %°ü_Ä¿Â¼%\%SmartUnZip_ÎÄ¼ş¼ĞÃûA%(%A_Index%)
+				SmartUnZip_NewFolderName = %åŒ…_ç›®å½•%\%SmartUnZip_æ–‡ä»¶å¤¹åA%(%A_Index%)
 				If !FileExist(SmartUnZip_NewFolderName)
 				{
 					Run, %7ZG% x "%S_File%" -o"%SmartUnZip_NewFolderName%"
@@ -76,18 +76,18 @@
 				}
 			}
 		}
-		Else  ;Ã»ÓĞ¡°Ê×²ãÎÄ¼ş¼ĞÃüÃû¡±µÄÎÄ¼ş¼Ğ£¬ÄÇ¾ÍÌ«ºÃÁË
+		Else  ;æ²¡æœ‰â€œé¦–å±‚æ–‡ä»¶å¤¹å‘½åâ€çš„æ–‡ä»¶å¤¹ï¼Œé‚£å°±å¤ªå¥½äº†
 		{
-			Run, %7ZG% x "%S_File%" -o"%°ü_Ä¿Â¼%"
+			Run, %7ZG% x "%S_File%" -o"%åŒ…_ç›®å½•%"
 		}
 	}
-	Else  ;Ñ¹ËõÎÄ¼şÄÚ£¬Ê×²ãÓĞ¶à¸öÎÄ¼ş¼Ğ
+	Else  ;å‹ç¼©æ–‡ä»¶å†…ï¼Œé¦–å±‚æœ‰å¤šä¸ªæ–‡ä»¶å¤¹
 	{
-		IfExist %°ü_Ä¿Â¼%\%°ü_ÎÄ¼şÃû%  ;ÒÑ¾­´æÔÚÁËÒÔ¡°°üÎÄ¼şÃû¡±µÄÎÄ¼ş¼Ğ£¬ÔõÃ´°ì£¿
+		IfExist %åŒ…_ç›®å½•%\%åŒ…_æ–‡ä»¶å%  ;å·²ç»å­˜åœ¨äº†ä»¥â€œåŒ…æ–‡ä»¶åâ€çš„æ–‡ä»¶å¤¹ï¼Œæ€ä¹ˆåŠï¼Ÿ
 		{
 			Loop
 			{
-				SmartUnZip_NewFolderName = %°ü_Ä¿Â¼%\%°ü_ÎÄ¼şÃû%(%A_Index%)
+				SmartUnZip_NewFolderName = %åŒ…_ç›®å½•%\%åŒ…_æ–‡ä»¶å%(%A_Index%)
 				If !FileExist(SmartUnZip_NewFolderName)
 				{
 					Run, %7ZG% x "%S_File%" -o"%SmartUnZip_NewFolderName%"
@@ -95,12 +95,12 @@
 				}
 			}
 		}
-		Else ;Ã»ÓĞ£¬ÄÇ¾ÍÌ«ºÃÁË
+		Else ;æ²¡æœ‰ï¼Œé‚£å°±å¤ªå¥½äº†
 		{
-			Run, %7ZG% x "%S_File%" -o"%°ü_Ä¿Â¼%\%°ü_ÎÄ¼şÃû%"
+			Run, %7ZG% x "%S_File%" -o"%åŒ…_ç›®å½•%\%åŒ…_æ–‡ä»¶å%"
 		}
 	}
 	if S_tooltip
-		CF_ToolTip("ÎÄ¼ş%°ü_ÍêÕûÎÄ¼şÃû%½âÑ¹Íê³É£¡", 2000)
+		CF_ToolTip("æ–‡ä»¶%åŒ…_å®Œæ•´æ–‡ä»¶å%è§£å‹å®Œæˆï¼", 2000)
 Return
 }

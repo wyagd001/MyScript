@@ -1,4 +1,4 @@
-SaveScreen(Size,Type,filepath,filename,FileType)
+ï»¿SaveScreen(Size,Type,filepath,filename,FileType)
 {
 	global ffw ,fh
 	pToken:=Gdip_Startup()
@@ -34,7 +34,7 @@ SaveScreen(Size,Type,filepath,filename,FileType)
 Return (FileName)
 }
 
-;ÀûÓÃPrintWindow½ØÍ¼
+;åˆ©ç”¨PrintWindowæˆªå›¾
 SaveScreen2(hwnd,filepath,filename,FileType)
 {
 	global ffw ,fh

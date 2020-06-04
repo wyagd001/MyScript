@@ -1,4 +1,4 @@
-;Checks if a context menu is active and has focus
+ï»¿;Checks if a context menu is active and has focus
 IsContextMenuActive()
 {
 	GuiThreadInfoSize := A_PtrSize ? 4+4+A_PtrSize*6+16 : 48
@@ -6,7 +6,7 @@ IsContextMenuActive()
 	NumPut(GuiThreadInfoSize, GuiThreadInfo, 0)
 	if not DllCall("GetGUIThreadInfo", uint, 0, "ptr", &GuiThreadInfo)
 	{
-	  MsgBox GetGUIThreadInfo() µ÷ÓÃÊ§°Ü.
+	  MsgBox GetGUIThreadInfo() è°ƒç”¨å¤±è´¥.
 	  return
 	}
 	; GuiThreadInfo contains a DWORD flags at byte 4

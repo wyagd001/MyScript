@@ -1,4 +1,4 @@
-¼ì²â:
+ï»¿æ£€æµ‹:
 activeplayer:=activeplayer(DefaultPlayer)
 If activeplayer
 {
@@ -42,7 +42,7 @@ Oldvolimage := volimage
 Return
 
 OpenAudioPlayer:
-;±à¼­½Å±¾Ê±£¬ÅÐ¶Ï»á³ö´í
+;ç¼–è¾‘è„šæœ¬æ—¶ï¼Œåˆ¤æ–­ä¼šå‡ºé”™
 DetectHiddenWindows On
 SetTitleMatchMode 2
 If (DefaultPlayer="AhkPlayer")
@@ -52,7 +52,7 @@ If (DefaultPlayer="AhkPlayer")
  Else Run,% %DefaultPlayer%
 }
 Else Run,% %DefaultPlayer%  ;,,UseErrorLevel
-;gosub ¼ì²â
+;gosub æ£€æµ‹
 Return
 
 foo_httpcontrol_click:
@@ -158,7 +158,7 @@ If (activeplayer="ttplayer")
 postMessage 0x0010,0 ,,,ahk_class TTPlayer_PlayerWnd
 If (activeplayer="itunes")
 Process,Close,itunes.exe
-gosub ¼ì²â
+gosub æ£€æµ‹
 Return
 
 VolumeC:
@@ -168,7 +168,7 @@ Return
 
 mute:
 Send {Volume_Mute}
-gosub ¼ì²â
+gosub æ£€æµ‹
 Return
 
 DPlayer:
@@ -181,6 +181,6 @@ menu,audioplayer,Check,%A_ThisMenuItem%
 menu,audioplayer,unCheck,%DefaultPlayer%
 DefaultPlayer := A_ThisMenuItem
 Gosub,OpenAudioPlayer
-Gosub,¼ì²â
-IniWrite,%A_ThisMenuItem%, %run_iniFile%,³£¹æ, DefaultPlayer
+Gosub,æ£€æµ‹
+IniWrite,%A_ThisMenuItem%, %run_iniFile%,å¸¸è§„, DefaultPlayer
 Return

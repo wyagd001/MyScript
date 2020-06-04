@@ -1,10 +1,10 @@
-; Explorer Windows Manipulations - Sean
+ï»¿; Explorer Windows Manipulations - Sean
 ; http://www.autohotkey.com/forum/topic20701.html
 ; 7plus - fragman
 ; http://code.google.com/p/7plus/
 ; https://github.com/7plus/7plus
 
-ÐÂ½¨ÎÄ¼þ¼Ð:
+æ–°å»ºæ–‡ä»¶å¤¹:
 IfWinActive,ahk_group ccc
 {
 	If(A_OSVersion="Win_XP" && !IsRenaming())
@@ -14,7 +14,7 @@ IfWinActive,ahk_group ccc
 }
 Return
 
-ÐÂ½¨ÎÄ±¾ÎÄµµ:
+æ–°å»ºæ–‡æœ¬æ–‡æ¡£:
 IfWinActive,ahk_group ccc
 {
 	if !IsRenaming()

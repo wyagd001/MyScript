@@ -1,17 +1,17 @@
-;×ÀÃælnkÎÄ¼şÎŞĞ§(ËùÓĞlnkÎÄ¼ş¶¼ÎŞĞ§)
+ï»¿;æ¡Œé¢lnkæ–‡ä»¶æ— æ•ˆ(æ‰€æœ‰lnkæ–‡ä»¶éƒ½æ— æ•ˆ)
 1004:
 	SetTimer,searchthefile,-200
 Return
 
-; ×ÀÃælnkÎÄ¼şÎŞĞ§  Why
-; °Ù¶ÈËÑË÷ÎÄ¼şÃû
+; æ¡Œé¢lnkæ–‡ä»¶æ— æ•ˆ  Why
+; ç™¾åº¦æœç´¢æ–‡ä»¶å
 searchthefile:
 	sleep, 200
 	Critical, On
 	Files := GetSelectedFiles(0)
 	If !Files
 	{
-		MsgBox,,,»ñÈ¡ÎÄ¼şÂ·¾¶Ê§°Ü1¡£,3
+		MsgBox,,,è·å–æ–‡ä»¶è·¯å¾„å¤±è´¥1ã€‚,3
 	Return
 	}
 	Critical, Off
@@ -19,7 +19,7 @@ searchthefile:
 	StrReplace(files, "`n", "`n", tmp_v)
 	if tmp_v > 5
 	{
-		msgbox, 4, ËÑË÷ÎÄ¼şÃû, ½«ËÑË÷5¸öÒÔÉÏµÄÎÄ¼şÃû£¬ÊÇ·ñ¼ÌĞø£¿
+		msgbox, 4, æœç´¢æ–‡ä»¶å, å°†æœç´¢5ä¸ªä»¥ä¸Šçš„æ–‡ä»¶åï¼Œæ˜¯å¦ç»§ç»­ï¼Ÿ
 		IfMsgBox Yes
 		{
 			Loop, Parse, files, `n, `r
@@ -33,14 +33,14 @@ searchthefile:
 		run, http://www.baidu.com/s?wd=%A_LoopField%
 Return
 
-7PlusMenu_°Ù¶ÈËÑË÷ÎÄ¼şÃû()
+7PlusMenu_ç™¾åº¦æœç´¢æ–‡ä»¶å()
 {
-	section = °Ù¶ÈËÑË÷ÎÄ¼şÃû
+	section = ç™¾åº¦æœç´¢æ–‡ä»¶å
 	defaultSet=
 	( LTrim
 ID = 1004
-Name = °Ù¶ÈËÑË÷ÎÄ¼şÃû
-Description = °Ù¶ÈËÑË÷¸ÃÎÄ¼ş(Ö§³Ö¶àÎÄ¼ş)
+Name = ç™¾åº¦æœç´¢æ–‡ä»¶å
+Description = ç™¾åº¦æœç´¢è¯¥æ–‡ä»¶(æ”¯æŒå¤šæ–‡ä»¶)
 SubMenu = 7plus
 FileTypes = *
 SingleFileOnly = 0

@@ -1,20 +1,20 @@
-Cando_Ê®½øÖÆÊ®Áù½øÖÆ×ª»»:
+ï»¿Cando_åè¿›åˆ¶åå…­è¿›åˆ¶è½¬æ¢:
 	Gui,66:Default
 	Gui,Destroy
 	Gosub,NumCon
-	Gui, add, text,x5 y5,Êı×Ö:
+	Gui, add, text,x5 y5,æ•°å­—:
 	Gui,add,Edit,x70 y5 w300 h20 vNumSel,%CandySel%
-	Gui,add,button,x380 y5 w60 h20  gNumSwap,Êı×Ö½»»»
+	Gui,add,button,x380 y5 w60 h20  gNumSwap,æ•°å­—äº¤æ¢
 
-	Gui, add, text,x5 y35 ,Ê®½øÖÆ:
+	Gui, add, text,x5 y35 ,åè¿›åˆ¶:
 	Gui,add,Edit,x70  y35 w300 h20 vNumDec,% Trim(NumDec)
-	Gui,add,button,x380 y35 w60 h20  gNumDectoHex,16 ½øÖÆ
+	Gui,add,button,x380 y35 w60 h20  gNumDectoHex,16 è¿›åˆ¶
 
-	Gui, add, text,x5 y65 ,Ê®Áù½øÖÆ:
+	Gui, add, text,x5 y65 ,åå…­è¿›åˆ¶:
 	Gui,add,Edit,x70 y65 w300 h20 vNumHex,% Trim(NumHex)
-	Gui,add,button,x380 y65 w60 h20  gNumHextoDec,10 ½øÖÆ
+	Gui,add,button,x380 y65 w60 h20  gNumHextoDec,10 è¿›åˆ¶
 
-	Gui,show,,Ê®½øÖÆÊ®Áù½øÖÆ×ª»»
+	Gui,show,,åè¿›åˆ¶åå…­è¿›åˆ¶è½¬æ¢
 Return
 
 NumCon:

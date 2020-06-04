@@ -1,21 +1,21 @@
-Cando_ÓĞµÀÍøÂç·­Òë:
+ï»¿Cando_æœ‰é“ç½‘ç»œç¿»è¯‘:
 	Gui,66:Default
 	Gui,Destroy
 	Youdao_keyword=%CandySel%
-	Youdao_ÒëÎÄ:=YouDaoApi(Youdao_keyword)
-	Youdao_»ù±¾ÊÍÒå:= json(Youdao_ÒëÎÄ, "basic.explains")
-	Youdao_ÍøÂçÊÍÒå:= json(Youdao_ÒëÎÄ, "web.value")
-	If Youdao_»ù±¾ÊÍÒå<>
+	Youdao_è¯‘æ–‡:=YouDaoApi(Youdao_keyword)
+	Youdao_åŸºæœ¬é‡Šä¹‰:= json(Youdao_è¯‘æ–‡, "basic.explains")
+	Youdao_ç½‘ç»œé‡Šä¹‰:= json(Youdao_è¯‘æ–‡, "web.value")
+	If Youdao_åŸºæœ¬é‡Šä¹‰<>
 	{
 		Gui,add,Edit,x10 y10 w260 h80 readonly,%Youdao_keyword%
-		Gui,add,button,x270 y10 w40 h80 gsoundpaly,²¥·Å
-		Gui,add,Edit,x10 y100 w300 h80,%Youdao_»ù±¾ÊÍÒå%
-		Gui,add,Edit,x10 y190 w300 h80,%Youdao_ÍøÂçÊÍÒå%
-		Gui,show,,ÓĞµÀÍøÂç·­Òë
-		Youdao_ÒëÎÄ := Youdao_»ù±¾ÊÍÒå := Youdao_ÍøÂçÊÍÒå:= Youdao_keyword := ""
+		Gui,add,button,x270 y10 w40 h80 gsoundpaly,æ’­æ”¾
+		Gui,add,Edit,x10 y100 w300 h80,%Youdao_åŸºæœ¬é‡Šä¹‰%
+		Gui,add,Edit,x10 y190 w300 h80,%Youdao_ç½‘ç»œé‡Šä¹‰%
+		Gui,show,,æœ‰é“ç½‘ç»œç¿»è¯‘
+		Youdao_è¯‘æ–‡ := Youdao_åŸºæœ¬é‡Šä¹‰ := Youdao_ç½‘ç»œé‡Šä¹‰:= Youdao_keyword := ""
 	}
 	else
-		MsgBox,,ÓĞµÀÍøÂç·­Òë,ÍøÂç´íÎó»ò²éÑ¯²»µ½¸Ãµ¥´ÊµÄ·­Òë¡£
+		MsgBox,,æœ‰é“ç½‘ç»œç¿»è¯‘,ç½‘ç»œé”™è¯¯æˆ–æŸ¥è¯¢ä¸åˆ°è¯¥å•è¯çš„ç¿»è¯‘ã€‚
 Return
 
 soundpaly:

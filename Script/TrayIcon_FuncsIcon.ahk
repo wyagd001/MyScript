@@ -1,4 +1,4 @@
-OnTrayIcon(uid, Event)
+锘縊nTrayIcon(uid, Event)
 {
 	if event not in R,L
 	return
@@ -37,10 +37,10 @@ global Candy_Cmd,candysel
 ClickRun:=(Event="l")?"leftClick":(Event="r")?"rightClick":""
 IniRead, Candy_Cmd, %run_iniFile%, % uid, Ti_%uid%_%ClickRun%
 
-candysel:="托盘图标*" uid
+candysel:="鎵樼洏鍥炬爣*" uid
 	If !(RegExMatch(Candy_Cmd,"i)^Menu\|"))
 	{
-		Gosub Label_Candy_RunCommand            ; 如果不是menu指令，直接跳转到运行应用程序
+		Gosub Label_Candy_RunCommand            ; 濡傛灉涓嶆槸menu鎸囦护锛岀洿鎺ヨ烦杞埌杩愯搴旂敤绋嬪簭
 	}
 	else
 		Gosub Label_Candy_DrawMenu

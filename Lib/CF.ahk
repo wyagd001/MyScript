@@ -1,4 +1,4 @@
-; ÃüÁîº¯Êı»¯
+ï»¿; å‘½ä»¤å‡½æ•°åŒ–
 CF_FileRead(filename){
 	fileread, hfile, %filename%
 Return hfile
@@ -57,7 +57,7 @@ RemoveTraytip:
 	if SubStr(A_OSVersion,1,3) = "10."
 	{
 		Menu Tray, NoIcon
-		Sleep 200  ; ¿ÉÄÜÓĞ±ØÒªµ÷Õû sleep µÄÊ±¼ä.
+		Sleep 200  ; å¯èƒ½æœ‰å¿…è¦è°ƒæ•´ sleep çš„æ—¶é—´.
 		Menu Tray, Icon
 	}
 return

@@ -1,4 +1,4 @@
-Cando_±ä´óĞ´:
+ï»¿Cando_å˜å¤§å†™:
 	monitor := 0
 	Clipboard =
 	StringUpper Clipboard, CandySel
@@ -7,7 +7,7 @@ Cando_±ä´óĞ´:
 	monitor := 1
 Return
 
-Cando_±äĞ¡Ğ´:
+Cando_å˜å°å†™:
 	monitor := 0
 	Clipboard =
 	StringLower Clipboard, CandySel
@@ -16,15 +16,15 @@ Cando_±äĞ¡Ğ´:
 	monitor := 1
 Return
 
-Cando_Ê××Ö´óĞ´:
+Cando_é¦–å­—å¤§å†™:
 	monitor := 0
 	;StringUpper Clipboard, CandySel, T
 	Clipboard =
-	Loop, Parse, CandySel, %A_Space%_`,|;-£¡`.  
+	Loop, Parse, CandySel, %A_Space%_`,|;-ï¼`.  
 	{  
-		; ¼ÆËã·Ö¸ô·ûµÄÎ»ÖÃ.  
+		; è®¡ç®—åˆ†éš”ç¬¦çš„ä½ç½®.  
 		Position += StrLen(A_LoopField) + 1
-		; »ñÈ¡½âÎöÑ­»·ÖĞÕÒµ½µÄ·Ö¸ô·û.  
+		; è·å–è§£æå¾ªç¯ä¸­æ‰¾åˆ°çš„åˆ†éš”ç¬¦.  
 		Delimiter := SubStr(CandySel, Position, 1)
 		str1 := Format("{:T}", A_LoopField)
 		out := out . str1 . Delimiter 
@@ -36,7 +36,7 @@ Cando_Ê××Ö´óĞ´:
 	monitor := 1
 Return
 
-Cando_À¨ÆğÀ´:
+Cando_æ‹¬èµ·æ¥:
 	monitor := 0
 	StringSplit, kql_Arr, A_ThisMenuItem, %A_Space%
 	Clipboard := CandySel
@@ -47,22 +47,22 @@ Cando_À¨ÆğÀ´:
 	monitor := 1
 Return
 
-Cando_µÈºÅ¶ÔÆë:
+Cando_ç­‰å·å¯¹é½:
 	monitor := 0
-	LimitMax:=30     ;×ó²à³¬¹ı¸Ã³¤¶ÈÊ±£¬¸ÃĞĞ²»²ÎÓë¶ÔÆë£¬¸ÃÊı×Ö¿É×ÔĞĞĞŞ¸Ä
+	LimitMax:=30     ;å·¦ä¾§è¶…è¿‡è¯¥é•¿åº¦æ—¶ï¼Œè¯¥è¡Œä¸å‚ä¸å¯¹é½ï¼Œè¯¥æ•°å­—å¯è‡ªè¡Œä¿®æ”¹
 	MaxLen:=0
 	StrSpace:=" "
 	Loop,% LimitMax+1
 		StrSpace .=" "
 	Aligned:=
-	loop, parse, CandySel, `n,`r                   ;Ê×ÏÈÇóµÃ×ó±ß×î³¤µÄ³¤¶È£¬ÒÔ±ãÏòËü¿´Æë
+	loop, parse, CandySel, `n,`r                   ;é¦–å…ˆæ±‚å¾—å·¦è¾¹æœ€é•¿çš„é•¿åº¦ï¼Œä»¥ä¾¿å‘å®ƒçœ‹é½
 	{
-		IfNotInString,A_loopfield,=              ;±¾ĞĞÃ»ÓĞµÈºÅ£¬¹ı
+		IfNotInString,A_loopfield,=              ;æœ¬è¡Œæ²¡æœ‰ç­‰å·ï¼Œè¿‡
 			Continue
-		ItemLeft :=RegExReplace(A_LoopField,"\s*(.*?)\s*=.*$","$1")        ;±¾ÌõÄ¿µÄ µÈºÅ ×ó²à²¿·Ö
-		;ThisLen:=StrLen(regexreplace(ItemLeft,"[^\x00-\xff]","11"))       ;±¾Ìõ×ó²àµÄ³¤¶È
-		ThisLen:=DllCall("MSVCRT.DLL\strlen", "AStr", ItemLeft)       ;±¾Ìõ×ó²àµÄ³¤¶È
-		MaxLen:=( ThisLen > MaxLen And ThisLen <= LimitMax) ? ThisLen : MaxLen       ;µÃµ½Ğ¡ÓÚLimitMaxÄÚµÄ×î´óµÄ³¤¶È£¬Õâ¸öÊÇ×îÖÕ³¤¶È
+		ItemLeft :=RegExReplace(A_LoopField,"\s*(.*?)\s*=.*$","$1")        ;æœ¬æ¡ç›®çš„ ç­‰å· å·¦ä¾§éƒ¨åˆ†
+		;ThisLen:=StrLen(regexreplace(ItemLeft,"[^\x00-\xff]","11"))       ;æœ¬æ¡å·¦ä¾§çš„é•¿åº¦
+		ThisLen:=DllCall("MSVCRT.DLL\strlen", "AStr", ItemLeft)       ;æœ¬æ¡å·¦ä¾§çš„é•¿åº¦
+		MaxLen:=( ThisLen > MaxLen And ThisLen <= LimitMax) ? ThisLen : MaxLen       ;å¾—åˆ°å°äºLimitMaxå†…çš„æœ€å¤§çš„é•¿åº¦ï¼Œè¿™ä¸ªæ˜¯æœ€ç»ˆé•¿åº¦
 	}
 	loop, parse, CandySel, `n,`r
 	{
@@ -71,20 +71,20 @@ Cando_µÈºÅ¶ÔÆë:
 			Aligned .= A_loopfield "`r`n"
 			Continue
 		}
-		ItemLeft:=trim(RegExReplace(A_LoopField,"\s*=.*?$") )        ;±¾ÌõÄ¿µÄ µÈºÅ ×ó²à²¿·Ö
-		Itemright:=trim(RegExReplace(A_LoopField,"^.*?=")  )          ;±¾ÌõÄ¿µÄ µÈºÅ ÓÒ²à²¿·Ö
-		ThisLen:=StrLen(regexreplace(ItemLeft,"[^\x00-\xff]","11"))   ;±¾Ìõ×ó²àµÄ³¤¶È
-		if ( ThisLen> MaxLen )       ;Èç¹û±¾Ìõ×ó²à´óÓÚ×î´ó³¤¶È£¬×¢ÒâÊÇ×î´ó³¤¶È£¬¶ø²»ÊÇLimitMax£¬Ôò²»²ÎÓë¶ÔÆë
+		ItemLeft:=trim(RegExReplace(A_LoopField,"\s*=.*?$") )        ;æœ¬æ¡ç›®çš„ ç­‰å· å·¦ä¾§éƒ¨åˆ†
+		Itemright:=trim(RegExReplace(A_LoopField,"^.*?=")  )          ;æœ¬æ¡ç›®çš„ ç­‰å· å³ä¾§éƒ¨åˆ†
+		ThisLen:=StrLen(regexreplace(ItemLeft,"[^\x00-\xff]","11"))   ;æœ¬æ¡å·¦ä¾§çš„é•¿åº¦
+		if ( ThisLen> MaxLen )       ;å¦‚æœæœ¬æ¡å·¦ä¾§å¤§äºæœ€å¤§é•¿åº¦ï¼Œæ³¨æ„æ˜¯æœ€å¤§é•¿åº¦ï¼Œè€Œä¸æ˜¯LimitMaxï¼Œåˆ™ä¸å‚ä¸å¯¹é½
 		{
 			Aligned .= ItemLeft  "= " Itemright "`r`n"
 			Continue
 		}
 		Else
 		{
-			Aligned .= ItemLeft . SubStr( StrSpace, 1, MaxLen+2-ThisLen ) "= " Itemright "`r`n"        ;¸Ã´¦¸øÓÒ²àµÈºÅºóÌí¼ÓÁËÒ»¸ö¿Õ¸ñ£¬¸ù¾İĞèÇó¿ÉÉ¾
+			Aligned .= ItemLeft . SubStr( StrSpace, 1, MaxLen+2-ThisLen ) "= " Itemright "`r`n"        ;è¯¥å¤„ç»™å³ä¾§ç­‰å·åæ·»åŠ äº†ä¸€ä¸ªç©ºæ ¼ï¼Œæ ¹æ®éœ€æ±‚å¯åˆ 
 		}
 	}
-	Aligned:=RegExReplace(Aligned,"\s*$","")   ;Ë³±ãÉ¾³ı×îºóµÄ¿Õ°×ĞĞ£¬¿É¸ù¾İĞèÇó×¢ÊÍµô
+	Aligned:=RegExReplace(Aligned,"\s*$","")   ;é¡ºä¾¿åˆ é™¤æœ€åçš„ç©ºç™½è¡Œï¼Œå¯æ ¹æ®éœ€æ±‚æ³¨é‡Šæ‰
 	clipboard := Aligned
 	Send ^v
 	Aligned:=""

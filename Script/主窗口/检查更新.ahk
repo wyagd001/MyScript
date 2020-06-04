@@ -1,4 +1,4 @@
-Update:
+ï»¿Update:
 /*
 0x40 INTERNET_CONNECTION_CONFIGURED - Local system has a valid connection to the Internet, but not be currently connected.
 0x02 INTERNET_CONNECTION_LAN - Local system uses a local area network to connect to the Internet.
@@ -16,13 +16,13 @@ If InternetCheckConnection(URL)
 	WinHttp.URLGet("https://raw.githubusercontent.com/wyagd001/MyScript/master/version.txt",,, update_txtFile)
 	IfNotExist,%update_txtFile%
 	{
-		msgbox,,Éı¼¶Í¨Öª,ÎŞ·¨ÏÂÔØ¸üĞÂÎÄ¼ş£¬Çë¼ì²éÄúµÄÍøÂçÁ¬½Ó¡£
+		msgbox,,å‡çº§é€šçŸ¥,æ— æ³•ä¸‹è½½æ›´æ–°æ–‡ä»¶ï¼Œè¯·æ£€æŸ¥æ‚¨çš„ç½‘ç»œè¿æ¥ã€‚
 	return
 	}
 	FileGetSize, sizeq,%update_txtFile%
 	if(sizeq>20) or (sizeq=0)
 	{
-		msgbox,,Éı¼¶Í¨Öª,ÏÂÔØµÄ¸üĞÂÎÄ¼ş´óĞ¡²»·û£¬ÍøÂçÁ¬½Ó³¬Ê±»ò×ÊÔ´·ÃÎÊ³ö´í¡£
+		msgbox,,å‡çº§é€šçŸ¥,ä¸‹è½½çš„æ›´æ–°æ–‡ä»¶å¤§å°ä¸ç¬¦ï¼Œç½‘ç»œè¿æ¥è¶…æ—¶æˆ–èµ„æºè®¿é—®å‡ºé”™ã€‚
 		FileDelete, %update_txtFile%
 	return
 	}
@@ -32,20 +32,20 @@ If InternetCheckConnection(URL)
 		FileDelete, %update_txtFile%
 		if(Trim(CurVer)!=AppVersion)
 		{
-			msgbox,262148,Éı¼¶Í¨Öª,µ±Ç°°æ±¾Îª:%AppVersion%`n×îĞÂ°æ±¾Îª:%CurVer%`nÊÇ·ñÇ°ÍùÖ÷Ò³ÏÂÔØ£¿
+			msgbox,262148,å‡çº§é€šçŸ¥,å½“å‰ç‰ˆæœ¬ä¸º:%AppVersion%`næœ€æ–°ç‰ˆæœ¬ä¸º:%CurVer%`næ˜¯å¦å‰å¾€ä¸»é¡µä¸‹è½½ï¼Ÿ
 			IfMsgBox Yes
 				Run,https://github.com/wyagd001/MyScript
 		return
 		}
 		else
 		{
-			msgbox,262144,Éı¼¶Í¨Öª,¸Ã°æ±¾ÒÑÊÇ×îĞÂ°æ±¾:%AppVersion%¡£
+			msgbox,262144,å‡çº§é€šçŸ¥,è¯¥ç‰ˆæœ¬å·²æ˜¯æœ€æ–°ç‰ˆæœ¬:%AppVersion%ã€‚
 		return
 		}
 	}
 }
 else
-	msgbox,,Éı¼¶Í¨Öª,ÎŞ·¨Á¬½ÓÍøÂç£¬Çë¼ì²éÄúµÄÍøÂçÁ¬½Ó¡£
+	msgbox,,å‡çº§é€šçŸ¥,æ— æ³•è¿æ¥ç½‘ç»œï¼Œè¯·æ£€æŸ¥æ‚¨çš„ç½‘ç»œè¿æ¥ã€‚
 return
 
 InternetCheckConnection(Url="",FIFC=1) {

@@ -1,4 +1,4 @@
-;À´Ô´ÍøÖ·: https://autohotkey.com/boards/viewtopic.php?f=6&t=56542
+ï»¿;æ¥æºç½‘å€: https://autohotkey.com/boards/viewtopic.php?f=6&t=56542
 List_Func(hwnd)
 {
 	CbAutoComplete()
@@ -16,7 +16,7 @@ ComboDel(hwnd)
 	x:=NumGet(POINT,0,"Int")
 
 	GuiControlGet, Pos, Pos, %hwnd%
-; »ñÈ¡ĞĞÎÄ±¾
+; è·å–è¡Œæ–‡æœ¬
 	GuiControlGet, item_,,	%hwnd%
 	SendMessage,0x0146,0,0, ,% "ahk_id " hwnd ;CB_GETCOUNT:= 0x0146
 	len:=ErrorLevel
@@ -29,7 +29,7 @@ ComboDel(hwnd)
 		Return
 		}
 		;GuiControl, +AltSubmit, %hwnd%
-;   »ñÈ¡ĞĞºÅ
+;   è·å–è¡Œå·
 		;GuiControlGet, line_,, %hwnd%
 		;Control, Delete, %line_%,, ahk_id %hwnd%
 		;GuiControl, -AltSubmit, %hwnd%  
@@ -45,7 +45,7 @@ ComboDel(hwnd)
 		GuiControl, , Dir, |%ComboBoxShowItems%
 		sLength := StrLen(stableProgram)
 		StringTrimLeft, historyData, ComboBoxShowItems, %sLength%
-		IniWrite,%historyData%,%run_iniFile%,¹Ì¶¨µÄ³ÌĞò,historyData
+		IniWrite,%historyData%,%run_iniFile%,å›ºå®šçš„ç¨‹åº,historyData
 	return
 	}
 return
@@ -86,7 +86,7 @@ del_icons(CB_ListID,del_ico:=0)
 }
 
 textOnWin(hwnd, len, row_h, text_:="X")
-{  ;% Chr(215) ¡Á "X"
+{  ;% Chr(215) Ã— "X"
 	hDC := DllCall("User32.dll\GetDC", "Ptr", hwnd)
 	WinGetPos, x, y, W, H, ahk_id %hwnd%
 	x:=len<24?W-12:W-30

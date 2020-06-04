@@ -1,4 +1,4 @@
-;[WBGet function for AHK v1.1]
+﻿;[WBGet function for AHK v1.1]
 ;WBGet function - AutoHotkey Community
 ;https://autohotkey.com/boards/viewtopic.php?f=6&t=39869
 

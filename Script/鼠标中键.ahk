@@ -1,20 +1,20 @@
-;Êó±êÖĞ¼üÔöÇ¿
+ï»¿;é¼ æ ‡ä¸­é”®å¢å¼º
 $MButton::
 	;MouseGetPos, lastx, lasty
-	MouseGetPos,,,UID,ClassNN ; »ñÈ¡Ö¸ÕëÏÂ´°¿ÚµÄ UID ºÍ ClassNN
-	WinGetClass,´°¿ÚClass,ahk_id %UID% ; ¸ù¾İ UID »ñµÃ´°¿ÚÀàÃû
+	MouseGetPos,,,UID,ClassNN ; è·å–æŒ‡é’ˆä¸‹çª—å£çš„ UID å’Œ ClassNN
+	WinGetClass,çª—å£Class,ahk_id %UID% ; æ ¹æ® UID è·å¾—çª—å£ç±»å
 	CoordMode, Mouse, Relative
 
-	; Ä§ÊŞÕù°Ô×Ô¶¯¼ÓÑª
+	; é­”å…½äº‰éœ¸è‡ªåŠ¨åŠ è¡€
 	IfWinActive,Warcraft III
 	{
 		MouseGetPos, xpos, ypos
-		Send, {F1}{Numpad8}{Click 400, 760}
+		Send, {F1}{Numpad7}  ;{Click 400, 760}
 		MouseMove %xpos%, %ypos%
 	return
 	}
 
-	; Ö÷´°¿Ú×Ô¶¯Òş²Ø
+	; ä¸»çª—å£è‡ªåŠ¨éšè—
 	IfWinActive, %AppTitle%
 	{
 		WinGetPos,,oldy,,,%AppTitle%
@@ -36,7 +36,7 @@ $MButton::
 	return
 	}
 
-; ×ÊÔ´¹ÜÀíÆ÷ĞÂ´°¿Ú´ò¿ªÎÄ¼ş¼Ğ
+; èµ„æºç®¡ç†å™¨æ–°çª—å£æ‰“å¼€æ–‡ä»¶å¤¹
 	if(WinActive("ahk_group ExplorerGroup") && IsMouseOverFileList())
 	{
 		selected:=GetSelectedFiles(0)
@@ -51,8 +51,8 @@ $MButton::
 	return
 	}
 
-	; ÈÎÎñÀ¸×Ô¶¯¹Ø±Õ´°¿Ú
-	If (´°¿ÚClass = "Shell_TrayWnd") ;Ö¸ÕëÊÇ·ñÔÚÈÎÎñÀ¸ÉÏ
+	; ä»»åŠ¡æ è‡ªåŠ¨å…³é—­çª—å£
+	If (çª—å£Class = "Shell_TrayWnd") ;æŒ‡é’ˆæ˜¯å¦åœ¨ä»»åŠ¡æ ä¸Š
 	{
 		KeyIsDown := GetKeyState("Capslock" , "T")
 		if KeyIsDown
@@ -62,18 +62,18 @@ $MButton::
 		}
 		else
 		{
-			If (ClassNN = "ToolbarWindow321") ; Ö¸ÕëÊÇ·ñÔÚÍĞÅÌÍ¼±êÉÏ
+			If (ClassNN = "ToolbarWindow321") ; æŒ‡é’ˆæ˜¯å¦åœ¨æ‰˜ç›˜å›¾æ ‡ä¸Š
 			{
 				SendEvent,{click,Right}
-				SendEvent,{Up}{enter} ; Èç¹ûÊÇÔÚÍĞÅÌÇøÉÏ£¬Îª¹Ø±ÕÑ¡ÔñµÄ³ÌĞò
+				SendEvent,{Up}{enter} ; å¦‚æœæ˜¯åœ¨æ‰˜ç›˜åŒºä¸Šï¼Œä¸ºå…³é—­é€‰æ‹©çš„ç¨‹åº
 			return
 			}
-			Else ; Ö¸ÕëÔÚÈÎÎñÀ¸´°¿Ú°´Å¥ÉÏ
+			Else ; æŒ‡é’ˆåœ¨ä»»åŠ¡æ çª—å£æŒ‰é’®ä¸Š
 			{
 				;SendEvent,{Click,Right}
 				;WinWait,ahk_class DV2ControlHost
-				;Sleep,200 ;ÖĞÎÄÊäÈë·¨×´Ì¬ÏÂ£¬ÓĞÑÓ³Ù²ÅÄÜ³É¹¦
-				;SendEvent,{Up}{enter};Èç¹ûÊÇÈÎÎñÀ¸ÉÏ£¬Îª¹Ø±ÕÑ¡ÔñµÄ³ÌĞò
+				;Sleep,200 ;ä¸­æ–‡è¾“å…¥æ³•çŠ¶æ€ä¸‹ï¼Œæœ‰å»¶è¿Ÿæ‰èƒ½æˆåŠŸ
+				;SendEvent,{Up}{enter};å¦‚æœæ˜¯ä»»åŠ¡æ ä¸Šï¼Œä¸ºå…³é—­é€‰æ‹©çš„ç¨‹åº
 				Send {Shift down}
 				click right
 				If(!IsContextMenuActive())
@@ -87,10 +87,10 @@ $MButton::
 		}
 	}
 
-	; Òş²Ø×ÀÃæÍ¼±ê
-	; Ò»ĞĞ½Å±¾ÊµÏÖÇĞ»»
+	; éšè—æ¡Œé¢å›¾æ ‡
+	; ä¸€è¡Œè„šæœ¬å®ç°åˆ‡æ¢
 	; PostMessage, 0x111, 29698, , SHELLDLL_DefView1, ahk_class Progman
-	If (´°¿ÚClass = "Progman" || ´°¿ÚClass = "WorkerW")
+	If (çª—å£Class = "Progman" || çª—å£Class = "WorkerW")
 	{
 		/*  1
 		var := (flag=0) ? "Show" : "Hide"
@@ -142,52 +142,52 @@ $MButton::
 		*/
 	}
 
-	; ä¯ÀÀÆ÷´°¿Ú
-	If (´°¿ÚClass = "OperaWindowClass" || ´°¿ÚClass = "MozillaWindowClass" || ´°¿ÚClass = "MozillaUIWindowClass"|| ´°¿ÚClass = "Chrome_WidgetWin_1" || ´°¿ÚClass = "360se6_Frame")
+	; æµè§ˆå™¨çª—å£
+	If (çª—å£Class = "OperaWindowClass" || çª—å£Class = "MozillaWindowClass" || çª—å£Class = "MozillaUIWindowClass"|| çª—å£Class = "Chrome_WidgetWin_1" || çª—å£Class = "360se6_Frame")
 	{
 		WinGetPos , , , Width,,A
-		MouseGetPos, ´°¿Úx×ø±ê, ´°¿Úy×ø±ê
-		; Ö¸ÕëÊÇ·ñÔÚ´°¿Ú±êÌâÀ¸°´×ø±êÀ´ÅĞ¶Ï
-		If (´°¿Úy×ø±ê <= 28) && (´°¿Úy×ø±ê >= -1) && (´°¿Úx×ø±ê >= -1) && (´°¿Úx×ø±ê <= Width)
+		MouseGetPos, çª—å£xåæ ‡, çª—å£yåæ ‡
+		; æŒ‡é’ˆæ˜¯å¦åœ¨çª—å£æ ‡é¢˜æ æŒ‰åæ ‡æ¥åˆ¤æ–­
+		If (çª—å£yåæ ‡ <= 28) && (çª—å£yåæ ‡ >= -1) && (çª—å£xåæ ‡ >= -1) && (çª—å£xåæ ‡ <= Width)
 		{
-			; Chromeä¯ÀÀÆ÷´°¿Úµã»÷
-			if(´°¿ÚClass = "Chrome_WidgetWin_1")
+			; Chromeæµè§ˆå™¨çª—å£ç‚¹å‡»
+			if(çª—å£Class = "Chrome_WidgetWin_1")
 			{
 				Acc := Acc_ObjectFromPoint(ChildId)
 				AccRole :=Acc_GetRoleText(Acc.accRole(ChildId))
-				if(AccRole != "Ñ¡Ïî¿¨ÁĞ±í")
+				if(AccRole != "é€‰é¡¹å¡åˆ—è¡¨")
 				{
-					Send, {MButton}  ; ¹Ø±Õ±ãÇ©Ò³
+					Send, {MButton}  ; å…³é—­ä¾¿ç­¾é¡µ
 				return
 				}
 				else
 				{
-					PostMessage,0x112,0xF060,,,A ; ¹Ø±Õ´°¿Ú
+					PostMessage,0x112,0xF060,,,A ; å…³é—­çª—å£
 				return
 				}
 			}
-			if(´°¿ÚClass = "OperaWindowClass")
+			if(çª—å£Class = "OperaWindowClass")
 			{
 				Send, {MButton}
 			Return
 			}
-			PostMessage,0x112,0xF060,,,A ; ÆäËûä¯ÀÀÆ÷´°¿Ú£¬Îª¹Ø±Õ´°¿Ú£¬²»¹ÜÕâ¸ö´°¿ÚÊÇÔÚ¶¥²ã»¹ÊÇµ×²ã
+			PostMessage,0x112,0xF060,,,A ; å…¶ä»–æµè§ˆå™¨çª—å£ï¼Œä¸ºå…³é—­çª—å£ï¼Œä¸ç®¡è¿™ä¸ªçª—å£æ˜¯åœ¨é¡¶å±‚è¿˜æ˜¯åº•å±‚
 		return
 		}
 		else
-			Send, {MButton}  ; ä¯ÀÀÆ÷´°¿ÚÆäËûÎ»ÖÃ·¢ËÍÖĞ¼ü
+			Send, {MButton}  ; æµè§ˆå™¨çª—å£å…¶ä»–ä½ç½®å‘é€ä¸­é”®
 	Return
 	}
 
 
-	; Î´¼¤»î´°¿ÚÏÈµã»÷¼¤»î
+	; æœªæ¿€æ´»çª—å£å…ˆç‚¹å‡»æ¿€æ´»
 	send {click}
 	WinGetPos , , , Width,, A
-	MouseGetPos, ´°¿Úx×ø±ê, ´°¿Úy×ø±ê
-	If (´°¿Úy×ø±ê <= 28) && (´°¿Úy×ø±ê >= -1) && (´°¿Úx×ø±ê >= -1) && (´°¿Úx×ø±ê <= Width) ; Ö¸ÕëÊÇ·ñÔÚ´°¿Ú±êÌâÀ¸
+	MouseGetPos, çª—å£xåæ ‡, çª—å£yåæ ‡
+	If (çª—å£yåæ ‡ <= 28) && (çª—å£yåæ ‡ >= -1) && (çª—å£xåæ ‡ >= -1) && (çª—å£xåæ ‡ <= Width) ; æŒ‡é’ˆæ˜¯å¦åœ¨çª—å£æ ‡é¢˜æ 
 	{
 		; 0x112 = WM_SYSCOMMAND, 0xF060 = SC_CLOSE
-		PostMessage,0x112,0xF060,,,A ; Èç¹ûÊÇÔÚ´°¿Ú±êÌâÀ¸ÉÏ£¬Îª¹Ø±Õ´°¿Ú£¬²»¹ÜÕâ¸ö´°¿ÚÊÇÔÚ¶¥²ã»¹ÊÇµ×²ã
+		PostMessage,0x112,0xF060,,,A ; å¦‚æœæ˜¯åœ¨çª—å£æ ‡é¢˜æ ä¸Šï¼Œä¸ºå…³é—­çª—å£ï¼Œä¸ç®¡è¿™ä¸ªçª—å£æ˜¯åœ¨é¡¶å±‚è¿˜æ˜¯åº•å±‚
 	return
 	}
 	else
@@ -197,7 +197,7 @@ return
 
 WatchCursor2:
 	;ToolTip,%winlist%
-	CoordMode, Mouse , Screen ; ¼ÓÉÏÕâÒ»¾äÎª¼ì²âÊó±êÔÚÆÁÄ»µÄÎ»ÖÃ£¬²»¼ÓÎª¼ì²âÊó±êÔÚ¸÷¸ö´°¿ÚµÄÎ»ÖÃ
+	CoordMode, Mouse , Screen ; åŠ ä¸Šè¿™ä¸€å¥ä¸ºæ£€æµ‹é¼ æ ‡åœ¨å±å¹•çš„ä½ç½®ï¼Œä¸åŠ ä¸ºæ£€æµ‹é¼ æ ‡åœ¨å„ä¸ªçª—å£çš„ä½ç½®
 	MouseGetPos,xpos,ypos
 	If (ypos < oldy-5) or (ypos > oldy+125)
 	{
@@ -452,12 +452,12 @@ vol_ShowBars:
 	if vol_Master = 0
 	{
 		vol_Colour = Red
-		vol_Text = ÒôÁ¿ (ÒÑ¾²Òô)
+		vol_Text = éŸ³é‡ (å·²é™éŸ³)
 	}
 	else
 	{
 		vol_Colour := BarColor
-		vol_Text = ÒôÁ¿
+		vol_Text = éŸ³é‡
 	}
 	; To prevent the "flashing" effect, only create the bar window if it doesn't already exist:
 	IfWinNotExist, VolumeOSDxyz
@@ -486,7 +486,7 @@ _CheckWinIDs:
 			}
 Return
 
-»Ö¸´´°¿Ú:
+æ¢å¤çª—å£:
 _TransparencyAllOff:
 	Gosub, _CheckWinIDs
 	Loop, Parse, _WinIDs, |

@@ -1,4 +1,4 @@
-GuiDropFiles_Begin:
+ï»¿GuiDropFiles_Begin:
 	CoverControl(hComBoBox)
 Return
 
@@ -11,7 +11,11 @@ GuiDropFiles_End:
 		If hwnd in %hComBoBox%,%hComBoBoxEdit%
 			Gosub ShowFileFullPath
 		Else
-			Gosub movedropfile
+{
+
+msgbox % Array_ToString(DroppedFiles)
+}
+			;Gosub movedropfile
 	}
 Return
 
@@ -36,34 +40,34 @@ CoverControl(hwnd_CsvList = ""){
 }
 
 ShowFileFullPath:
-	; ¿É½«ÓÃ»§Ñ¡ÔñµÄÑ¡Ïî´¢´æÎª¸ÃÏîÄ¿µÄÎ»ÖÃ¶ø²»ÊÇ¸ÃÑ¡ÏîµÄÃû³Æ¡£Èç¹ûÃ»ÓĞÑ¡ÔñÏîÄ¿£¬¶ÔÓÚ ComboBox ½«´¢´æ±à¼­¿òÖĞµÄÎÄ×Ö
+	; å¯å°†ç”¨æˆ·é€‰æ‹©çš„é€‰é¡¹å‚¨å­˜ä¸ºè¯¥é¡¹ç›®çš„ä½ç½®è€Œä¸æ˜¯è¯¥é€‰é¡¹çš„åç§°ã€‚å¦‚æœæ²¡æœ‰é€‰æ‹©é¡¹ç›®ï¼Œå¯¹äº ComboBox å°†å‚¨å­˜ç¼–è¾‘æ¡†ä¸­çš„æ–‡å­—
 	GuiControl, , Dir, %GuiDropFiles_FileFullPath%
 	GuiControl, Choose, Dir, %GuiDropFiles_FileFullPath%
 	If InStr(FileExist(GuiDropFiles_FileFullPath), "D")
 	{
 		TargetFolder := GuiDropFiles_FileFullPath
-		IniWrite, %TargetFolder%, %run_iniFile%, Â·¾¶ÉèÖÃ, TargetFolder
+		IniWrite, %TargetFolder%, %run_iniFile%, è·¯å¾„è®¾ç½®, TargetFolder
 	Return
 	}
 Return
 
 movedropfile:
-	; Ê×ÏÈ½«Ä¿±êÎÄ¼ş¼ĞÍÏ×§µ½´°¿Ú
-	; ÅĞ¶ÏÍÏ×§µÄÊÇ·ñÊÇÎÄ¼ş¼Ğ
+	; é¦–å…ˆå°†ç›®æ ‡æ–‡ä»¶å¤¹æ‹–æ‹½åˆ°çª—å£
+	; åˆ¤æ–­æ‹–æ‹½çš„æ˜¯å¦æ˜¯æ–‡ä»¶å¤¹
 	If InStr(FileExist(GuiDropFiles_FileFullPath), "D")
 	{
 		TargetFolder := GuiDropFiles_FileFullPath
-		IniWrite, %TargetFolder%, %run_iniFile%, Â·¾¶ÉèÖÃ, TargetFolder
-		MsgBox, , , Ä¿±êÎÄ¼ş¼ĞÉèÖÃÎª %TargetFolder% ¡£, 3
+		IniWrite, %TargetFolder%, %run_iniFile%, è·¯å¾„è®¾ç½®, TargetFolder
+		MsgBox, , , ç›®æ ‡æ–‡ä»¶å¤¹è®¾ç½®ä¸º %TargetFolder% ã€‚, 3
 	Return
 	}
 	FileFullPath:=GuiDropFiles_FileFullPath
-	;·Ö¸îÎÄ¼şÂ·¾¶
+	;åˆ†å‰²æ–‡ä»¶è·¯å¾„
 	SplitPath, FileFullPath, FileName, , FileExtension, FileNameNoExt
-	; ÌØ¶¨ÎÄ¼şÃû º¬ÓĞ foo_ µÄÎÄ¼ş
+	; ç‰¹å®šæ–‡ä»¶å å«æœ‰ foo_ çš„æ–‡ä»¶
 	IfInString, FileNameNoExt, foo_
 	{
-		;ÎÄ¼şÃûÀàËÆ foo_lick_1.0.3.zip  µÄÒÆ¶¯µ½ H:\foobar2000 v1.1.x\foo_lick
+		;æ–‡ä»¶åç±»ä¼¼ foo_lick_1.0.3.zip  çš„ç§»åŠ¨åˆ° H:\foobar2000 v1.1.x\foo_lick
 		StringGetPos, v_pos, FileNameNoExt, _, 1
 		StringLeft, FileNameNoExt, FileNameNoExt, %v_pos%
 
@@ -72,7 +76,7 @@ movedropfile:
 			FileCreateDir, H:\foobar2000 v1.1.x\%FileNameNoExt%
 		ifExist, %TargetFile%
 		{
-			MsgBox, Ö¸¶¨ÎÄ¼ş¼ĞÖĞÒÑ´æÔÚÍ¬ÃûÎÄ¼ş!
+			MsgBox, æŒ‡å®šæ–‡ä»¶å¤¹ä¸­å·²å­˜åœ¨åŒåæ–‡ä»¶!
 			Return
 		}
 		Else
@@ -83,7 +87,7 @@ movedropfile:
 	}
 	If InStr(FileExist(TargetFolder), "D")
 	{
-		; ÓĞÍ¬ÃûÎÄ¼şÊ±£¬×Ô¶¯ÖØÃüÃûÎÄ¼ş
+		; æœ‰åŒåæ–‡ä»¶æ—¶ï¼Œè‡ªåŠ¨é‡å‘½åæ–‡ä»¶
 		TargetFile = %TargetFolder%\%FileName%
 		ifExist, %TargetFile%
 		{
@@ -99,21 +103,21 @@ movedropfile:
 				Else
 				{
 					FileMove, %FileFullPath%, %TargetFile%
-					TrayTip, ÒÆ¶¯ÎÄ¼ş, ÎÄ¼ş %FileFullPath% ÒÑÖØÃüÃû²¢ÒÆ¶¯µ½ÎÄ¼ş¼Ğ %TargetFolder% ¡£, 2
+					TrayTip, ç§»åŠ¨æ–‡ä»¶, æ–‡ä»¶ %FileFullPath% å·²é‡å‘½åå¹¶ç§»åŠ¨åˆ°æ–‡ä»¶å¤¹ %TargetFolder% ã€‚, 2
 				break
 				}
 			}
 			return
 		}
-		; ÎŞÍ¬ÃûÎÄ¼şÊ±£¬¸´ÖÆÎÄ¼ş
+		; æ— åŒåæ–‡ä»¶æ—¶ï¼Œå¤åˆ¶æ–‡ä»¶
 		Else
 		{
 			FileMove, %FileFullPath%, %TargetFolder%
-			TrayTip, ÒÆ¶¯ÎÄ¼ş, ÎÄ¼ş %FileFullPath% ÒÑÒÆ¶¯µ½ÎÄ¼ş¼Ğ %TargetFolder% ¡£, 2
+			TrayTip, ç§»åŠ¨æ–‡ä»¶, æ–‡ä»¶ %FileFullPath% å·²ç§»åŠ¨åˆ°æ–‡ä»¶å¤¹ %TargetFolder% ã€‚, 2
 		}
 	}
 	Else
 	{
-		TrayTip, ÒÆ¶¯ÎÄ¼ş, Ä¿±êÎÄ¼ş¼ĞÃ»ÓĞÉèÖÃ£¬ÎÄ¼ş²»»áÒÆ¶¯£¬`nÈç¹ûÒªÒÆ¶¯ÎÄ¼ş£¬ÇëÏÈÍÏ×§ÎÄ¼ş¼Ğµ½´°¿Ú»òÑ¡ÔñÒ»¸öÎÄ¼ş¼Ğ¡£, 5
+		TrayTip, ç§»åŠ¨æ–‡ä»¶, ç›®æ ‡æ–‡ä»¶å¤¹æ²¡æœ‰è®¾ç½®ï¼Œæ–‡ä»¶ä¸ä¼šç§»åŠ¨ï¼Œ`nå¦‚æœè¦ç§»åŠ¨æ–‡ä»¶ï¼Œè¯·å…ˆæ‹–æ‹½æ–‡ä»¶å¤¹åˆ°çª—å£æˆ–é€‰æ‹©ä¸€ä¸ªæ–‡ä»¶å¤¹ã€‚, 5
 	}
 Return

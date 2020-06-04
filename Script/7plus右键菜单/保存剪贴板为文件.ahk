@@ -1,21 +1,21 @@
-1014:
-SetTimer,±£´æ¼ôÌù°åÎªÎÄ¼ş,-200
+ï»¿1014:
+SetTimer,ä¿å­˜å‰ªè´´æ¿ä¸ºæ–‡ä»¶,-200
 return
 
-±£´æ¼ôÌù°åÎªÎÄ¼ş:
+ä¿å­˜å‰ªè´´æ¿ä¸ºæ–‡ä»¶:
 CurrentFolder:=GetCurrentFolder()
 if CurrentFolder
 PasteToPath(CurrentFolder)
 return
 
-7PlusMenu_±£´æ¼ôÌù°åÎªÎÄ¼ş()
+7PlusMenu_ä¿å­˜å‰ªè´´æ¿ä¸ºæ–‡ä»¶()
 {
-	section = ±£´æ¼ôÌù°åÎªÎÄ¼ş
+	section = ä¿å­˜å‰ªè´´æ¿ä¸ºæ–‡ä»¶
 	defaultSet=
 	( LTrim
 ID = 1014
-Name = ±£´æ¼ôÌù°åÎªÎÄ¼ş
-Description = ±£´æ¼ôÌù°åÎªÎÄ¼ş
+Name = ä¿å­˜å‰ªè´´æ¿ä¸ºæ–‡ä»¶
+Description = ä¿å­˜å‰ªè´´æ¿ä¸ºæ–‡ä»¶
 SubMenu =
 FileTypes =
 SingleFileOnly = 0

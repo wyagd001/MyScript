@@ -1,9 +1,9 @@
-_TrayEvent:
+ï»¿_TrayEvent:
   XWN_FocusFollowsMouse := !XWN_FocusFollowsMouse
-IniRead,Auto_Raise,%run_iniFile%,¹¦ÄÜ¿ª¹Ø,Auto_Raise
-IniRead,hover_any_window,%run_iniFile%,×Ô¶¯¼¤»î,hover_any_window
+IniRead,Auto_Raise,%run_iniFile%,åŠŸèƒ½å¼€å…³,Auto_Raise
+IniRead,hover_any_window,%run_iniFile%,è‡ªåŠ¨æ¿€æ´»,hover_any_window
   If(Auto_Raise=1 && hover_any_window=1)
-    Msgbox,,ÌáÊ¾,ÒÑÔÚ¡°Ñ¡Ïî¡ú×Ô¶¯¼¤»î¡ú´°¿Ú×Ô¶¯¼¤»î¡±ÖĞ×Ô¶¯ÆôÓÃ¸Ã¹¦ÄÜ¡£,5
+    Msgbox,,æç¤º,å·²åœ¨â€œé€‰é¡¹â†’è‡ªåŠ¨æ¿€æ´»â†’çª—å£è‡ªåŠ¨æ¿€æ´»â€ä¸­è‡ªåŠ¨å¯ç”¨è¯¥åŠŸèƒ½ã€‚,5
   Else
   {
     Gosub, _ApplySettings
@@ -13,9 +13,9 @@ Return
 
 _MenuUpdate:
 	If ( XWN_FocusFollowsMouse )
-		Menu, addf, Check, ×Ô¶¯¼¤»î´°¿Ú(ÁÙÊ±)
+		Menu, addf, Check, è‡ªåŠ¨æ¿€æ´»çª—å£(ä¸´æ—¶)
 	Else
-		Menu, addf, UnCheck, ×Ô¶¯¼¤»î´°¿Ú(ÁÙÊ±)
+		Menu, addf, UnCheck, è‡ªåŠ¨æ¿€æ´»çª—å£(ä¸´æ—¶)
 Return
 
 _ApplySettings:
@@ -59,49 +59,49 @@ Return
 
 runwithsys:
 Auto_runwithsys := !Auto_runwithsys
-IniWrite,%Auto_runwithsys%,%run_iniFile%,¹¦ÄÜ¿ª¹Ø,Auto_runwithsys
+IniWrite,%Auto_runwithsys%,%run_iniFile%,åŠŸèƒ½å¼€å…³,Auto_runwithsys
 
 	If Auto_runwithsys
 	{
-		Menu, addf, Check, ¿ª»úÆô¶¯
+		Menu, addf, Check, å¼€æœºå¯åŠ¨
 		RegWrite, REG_SZ, HKEY_LOCAL_MACHINE, SOFTWARE\Microsoft\Windows\CurrentVersion\Run, Run - Ahk, "%A_AhkPath%" "%A_ScriptFullPath%"
 		}
 	Else
 	{
-		Menu, addf, UnCheck, ¿ª»úÆô¶¯
+		Menu, addf, UnCheck, å¼€æœºå¯åŠ¨
 		RegDelete, HKEY_LOCAL_MACHINE, SOFTWARE\Microsoft\Windows\CurrentVersion\Run, Run - Ahk
 		}
 Return
 
 AutoSaveDeskIcons:
 Auto_SaveDeskIcons := !Auto_SaveDeskIcons
-IniWrite,%Auto_SaveDeskIcons%,%run_iniFile%,¹¦ÄÜ¿ª¹Ø,Auto_SaveDeskIcons
+IniWrite,%Auto_SaveDeskIcons%,%run_iniFile%,åŠŸèƒ½å¼€å…³,Auto_SaveDeskIcons
 If  Auto_SaveDeskIcons=1
-	Menu, addf, Check, Æô¶¯Ê±¼ÇÒä×ÀÃæÍ¼±ê
+	Menu, addf, Check, å¯åŠ¨æ—¶è®°å¿†æ¡Œé¢å›¾æ ‡
 	Else
-	Menu, addf, UnCheck, Æô¶¯Ê±¼ÇÒä×ÀÃæÍ¼±ê
+	Menu, addf, UnCheck, å¯åŠ¨æ—¶è®°å¿†æ¡Œé¢å›¾æ ‡
 Return
 
 smartchooserbrowser:
   Auto_smartchooserbrowser := !Auto_smartchooserbrowser
-  IniWrite,%Auto_smartchooserbrowser%,%run_iniFile%,¹¦ÄÜ¿ª¹Ø,Auto_smartchooserbrowser
+  IniWrite,%Auto_smartchooserbrowser%,%run_iniFile%,åŠŸèƒ½å¼€å…³,Auto_smartchooserbrowser
   If Auto_smartchooserbrowser
   {
-	  Menu, addf, Check, ÖÇÄÜä¯ÀÀÆ÷
+	  Menu, addf, Check, æ™ºèƒ½æµè§ˆå™¨
 	  writeahkurl()
 	}
 	Else
 	{
-	  Menu, addf, UnCheck, ÖÇÄÜä¯ÀÀÆ÷
+	  Menu, addf, UnCheck, æ™ºèƒ½æµè§ˆå™¨
 	  delahkurl()
 	}
 Return
 
 /*
-±àÒëµÄÔ­Òò£º½«ahkĞ´Èë×¢²á±íÊ±£¬Ä³Ğ©Èí¼şÔÚ´ò¿ªÍøÒ³Ê±£¬µ÷ÓÃ²»ÕıÈ·£¬²»»áµ÷ÓÃahk(ÈÆ¹ı)£¬»áÖ±½Ó´ò¿ªä¯ÀÀÆ÷¡£±àÒëºó»áµ÷ÓÃexeÎÄ¼ş´ò¿ªÍøÒ³£¬ËùÒÔ±àÒëÎªexeÎÄ¼şºó»áÎÈ¶¨Ğ©¡£
-×ÊÔ´¹ÜÀíÆ÷ËÑË÷ÎÄ¼ş£º ä¯ÀÀÆ÷.exe ¡°? ËÑË÷´Ê¡±
-			ËùÒÔÒª½«%1% Ìí¼Ó Ë«ÒıºÅ  ¼´ qq = "%1%"
-³£¼ûĞ´Èë×¢²á±íÊ§°ÜÔ­Òò  360Ëø¶¨ÁËä¯ÀÀÆ÷
+ç¼–è¯‘çš„åŸå› ï¼šå°†ahkå†™å…¥æ³¨å†Œè¡¨æ—¶ï¼ŒæŸäº›è½¯ä»¶åœ¨æ‰“å¼€ç½‘é¡µæ—¶ï¼Œè°ƒç”¨ä¸æ­£ç¡®ï¼Œä¸ä¼šè°ƒç”¨ahk(ç»•è¿‡)ï¼Œä¼šç›´æ¥æ‰“å¼€æµè§ˆå™¨ã€‚ç¼–è¯‘åä¼šè°ƒç”¨exeæ–‡ä»¶æ‰“å¼€ç½‘é¡µï¼Œæ‰€ä»¥ç¼–è¯‘ä¸ºexeæ–‡ä»¶åä¼šç¨³å®šäº›ã€‚
+èµ„æºç®¡ç†å™¨æœç´¢æ–‡ä»¶ï¼š æµè§ˆå™¨.exe â€œ? æœç´¢è¯â€
+			æ‰€ä»¥è¦å°†%1% æ·»åŠ  åŒå¼•å·  å³ qq = "%1%"
+å¸¸è§å†™å…¥æ³¨å†Œè¡¨å¤±è´¥åŸå›   360é”å®šäº†æµè§ˆå™¨
 */
 
 writeahkurl(){
@@ -127,7 +127,7 @@ IfNotInString,AhkURL,smartchooserbrowser.ahk
 	  RegWrite, REG_SZ, HKCR, Ahk.URL\shell\open\command, ,%appurl%
   }
 
-  ; ¼ì²éÊÇ·ñ´æÔÚ±¸·İ£¬Èô²»´æÔÚÔò¶ÁÈ¡ÏµÍ³Ä¬ÈÏ£¨·ÀÖ¹ÒâÍâÍË³ö£©
+  ; æ£€æŸ¥æ˜¯å¦å­˜åœ¨å¤‡ä»½ï¼Œè‹¥ä¸å­˜åœ¨åˆ™è¯»å–ç³»ç»Ÿé»˜è®¤ï¼ˆé˜²æ­¢æ„å¤–é€€å‡ºï¼‰
   RegRead old_FTP, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp\UserChoice, URL.LastFound
 if ErrorLevel
 	RegRead old_FTP, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp\UserChoice, Progid
@@ -140,12 +140,12 @@ if ErrorLevel
 if ErrorLevel
 	RegRead old_HTTPS, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice, Progid
 
-  ; Ğ´Èë±¸·İÉèÖÃ£¨·ÀÖ¹ÒâÍâÍË³ö£©
+  ; å†™å…¥å¤‡ä»½è®¾ç½®ï¼ˆé˜²æ­¢æ„å¤–é€€å‡ºï¼‰
   RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp\UserChoice, URL.LastFound, %old_FTP%
   RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice, URL.LastFound, %old_HTTP%
   RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice, URL.LastFound, %old_HTTPS%
 
-  ; ÉèÖÃÁÙÊ±¼üÖµ
+  ; è®¾ç½®ä¸´æ—¶é”®å€¼
   RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp\UserChoice, Progid, Ahk.URL
   RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice, Progid, Ahk.URL
   RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice, Progid, Ahk.URL
@@ -162,7 +162,7 @@ delahkurl()
   RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice, Progid, %old_HTTP%
   RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice, Progid, %old_HTTPS%
 
-  ; É¾³ı±¸·İÉèÖÃ
+  ; åˆ é™¤å¤‡ä»½è®¾ç½®
   RegDelete HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp\UserChoice, URL.LastFound
   RegDelete HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice, URL.LastFound
   RegDelete HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice, URL.LastFound

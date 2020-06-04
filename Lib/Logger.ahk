@@ -1,4 +1,4 @@
-; log := new Logger("test.log")
+﻿; log := new Logger("test.log")
 ; log.Debug("test")
 
 class Logger

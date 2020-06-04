@@ -1,4 +1,4 @@
-1007:
+ï»¿1007:
 	Sleep,500
 	If CloseWindowList.Length()
 	{
@@ -20,14 +20,14 @@
 	}
 Return
 
-7PlusMenu_×î½ü¹Ø±ÕµÄ´°¿Ú()
+7PlusMenu_æœ€è¿‘å…³é—­çš„çª—å£()
 {
-	section = ×î½ü¹Ø±ÕµÄ´°¿Ú
+	section = æœ€è¿‘å…³é—­çš„çª—å£
 	defaultSet=
 	( LTrim
 ID = 1007
-Name = ÖØĞÂ´ò¿ª¹Ø±ÕµÄ´°¿Ú
-Description = ÖØĞÂ´ò¿ª¹Ø±ÕµÄ´°¿Ú
+Name = é‡æ–°æ‰“å¼€å…³é—­çš„çª—å£
+Description = é‡æ–°æ‰“å¼€å…³é—­çš„çª—å£
 SubMenu =
 FileTypes =
 SingleFileOnly = 0

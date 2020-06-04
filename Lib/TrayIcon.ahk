@@ -1,5 +1,5 @@
-; À´Ô´ÍøÖ·£ºhttps://autohotkey.com/boards/viewtopic.php?p=9186#p9186
-; ×÷ÓÃÊÇ²Ù¿ØÓÒÏÂ½Ç ÏµÍ³ÍĞÅÌÇø µÄÍ¼±ê£¬¿ÉÓÒ¼üµã»÷µ÷³ö²Ëµ¥µÈ
+ï»¿; æ¥æºç½‘å€ï¼šhttps://autohotkey.com/boards/viewtopic.php?p=9186#p9186
+; ä½œç”¨æ˜¯æ“æ§å³ä¸‹è§’ ç³»ç»Ÿæ‰˜ç›˜åŒº çš„å›¾æ ‡ï¼Œå¯å³é”®ç‚¹å‡»è°ƒå‡ºèœå•ç­‰
 
 ; ----------------------------------------------------------------------------------------------------------------------
 ; Name ..........: TrayIcon library
@@ -120,11 +120,11 @@ TrayIcon_Hide(IDcmd, sTray := "Shell_TrayWnd", bHide:=True)
 	sTray := sTray = 0 ?  "NotifyIconOverflowWindow" : "Shell_TrayWnd"
 	DetectHiddenWindows, % (Setting_A_DetectHiddenWindows := A_DetectHiddenWindows) ? "On" :
 	idxTB := TrayIcon_GetTrayBar()
-	; win10 v2004 64bit Òş²ØÍĞÅÌÊ± idxTB ·µ»Ø 3, 
-	; NotifyIconOverflowWindow ÖĞÒş²ØµÄÍ¼±êËùÔÚÇøÓòÎª ToolbarWindow321£¬Î´Òş²ØµÄÍ¼±êÔÚToolbarWindow323
-	; Î´Òş²ØÊ±Îª ToolbarWindow323£¬ÏµÍ³°æ±¾²»Í¬¿ÉÄÜ»áÓĞ²»Í¬
-	; Win7 Òş²ØÍ¼±êÓë·ñ¶¼ÊÇ ToolbarWindow321
-	idxTB := sTray = "NotifyIconOverflowWindow" ? 1 : idxTB  ; ÊÊÓÃÓÚ win10 v2004 64bit Òş²ØÍĞÅÌÍ¼±ê
+	; win10 v2004 64bit éšè—æ‰˜ç›˜æ—¶ idxTB è¿”å› 3, 
+	; NotifyIconOverflowWindow ä¸­éšè—çš„å›¾æ ‡æ‰€åœ¨åŒºåŸŸä¸º ToolbarWindow321ï¼Œæœªéšè—çš„å›¾æ ‡åœ¨ToolbarWindow323
+	; æœªéšè—æ—¶ä¸º ToolbarWindow323ï¼Œç³»ç»Ÿç‰ˆæœ¬ä¸åŒå¯èƒ½ä¼šæœ‰ä¸åŒ
+	; Win7 éšè—å›¾æ ‡ä¸å¦éƒ½æ˜¯ ToolbarWindow321
+	idxTB := sTray = "NotifyIconOverflowWindow" ? 1 : idxTB  ; é€‚ç”¨äº win10 v2004 64bit éšè—æ‰˜ç›˜å›¾æ ‡
 	SendMessage, 0x404, IDcmd, bHide, ToolbarWindow32%idxTB%, ahk_class %sTray% ; TB_HIDEBUTTON
 	SendMessage, 0x1A, 0, 0, , ahk_class %sTray%
 	DetectHiddenWindows, %Setting_A_DetectHiddenWindows%
@@ -288,14 +288,14 @@ TrayIcon_Button(sExeName, sButton := "L", bDouble := false, index := 1)
 }
 
 ;___________________________________________________________________
-;;;; Tray.ahk v2.1 TrayIcon_Add Àı×Ó
+;;;; Tray.ahk v2.1 TrayIcon_Add ä¾‹å­
 /*
 #singleinstance, force
 		OnExit, OnExit
 		Gui,  +LastFound +AlwaysOnTop Toolwindow
 		hGui := WinExist()
 
-		TrayIcon_Add(hGui, "OnTrayIcon", "shell32.dll:25", "a²âÊÔdĞÅÏ¢1")
+		TrayIcon_Add(hGui, "OnTrayIcon", "shell32.dll:25", "aæµ‹è¯•dä¿¡æ¯1")
 	return
  
 	OnTrayIcon(Hwnd, Event){
@@ -316,10 +316,10 @@ return
 ;___________________________________________________________________
 
 ;___________________________________________________________________
-; ĞÂÌí¼Ó À´×Ô majkinetor - Tray.ahk v2.1 ÖĞµÄÒ»Ğ©º¯Êı(´úÂëÒÑ±»ĞŞ¸Ä)
-; ÂÛÌ³Ìû×Ó: https://autohotkey.com/board/topic/23741-module-tray-21/
-; Ô­´úÂë  : https://github.com/majkinetor/mm-autohotkey/tree/master/Tray
-; ²Î¿¼ÏûÏ¢: https://docs.microsoft.com/zh-cn/windows/win32/shell/notification-area?redirectedfrom=MSDN
+; æ–°æ·»åŠ  æ¥è‡ª majkinetor - Tray.ahk v2.1 ä¸­çš„ä¸€äº›å‡½æ•°(ä»£ç å·²è¢«ä¿®æ”¹)
+; è®ºå›å¸–å­: https://autohotkey.com/board/topic/23741-module-tray-21/
+; åŸä»£ç   : https://github.com/majkinetor/mm-autohotkey/tree/master/Tray
+; å‚è€ƒæ¶ˆæ¯: https://docs.microsoft.com/zh-cn/windows/win32/shell/notification-area?redirectedfrom=MSDN
 
 /*
 https://docs.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-notifyicondataa
@@ -479,10 +479,10 @@ TrayIcon_onShellIcon(Wparam, Lparam) {
 	return %handler%(Wparam, EVENT_%event%)
 }
 
-TrayIcon_staticValue(var="", value="¡î") { 
+TrayIcon_staticValue(var="", value="â˜†") { 
 	static
 	_ := %var%
-	ifNotEqual, value,¡î, SetEnv, %var%, %value%
+	ifNotEqual, value,â˜†, SetEnv, %var%, %value%
 	return _
 }
 

@@ -1,19 +1,19 @@
-Cando_GoogleÍøÂç·­Òë:
+ï»¿Cando_Googleç½‘ç»œç¿»è¯‘:
 	Gui,66:Default
 	Gui,Destroy
 	res=
 	global tkkkk
 	Google_keyword=%CandySel%
-	Google_»ù±¾ÊÍÒå:=GoogleApi(Google_keyword)
-	If Google_»ù±¾ÊÍÒå<>
+	Google_åŸºæœ¬é‡Šä¹‰:=GoogleApi(Google_keyword)
+	If Google_åŸºæœ¬é‡Šä¹‰<>
 	{
 		Gui,add,Edit,x10 y10 w260 h80 vGoogle_keyword,%Google_keyword%
-		Gui,add,button,x270 y10 w40 h80 vtransandplay gsoundpaly3,²¥·Å
-		Gui,add,Edit,x10 y100 w300 h80 vGoogle_»ù±¾ÊÍÒå,%Google_»ù±¾ÊÍÒå%
-		Gui,show,,GoogleÍøÂç·­Òë
+		Gui,add,button,x270 y10 w40 h80 vtransandplay gsoundpaly3,æ’­æ”¾
+		Gui,add,Edit,x10 y100 w300 h80 vGoogle_åŸºæœ¬é‡Šä¹‰,%Google_åŸºæœ¬é‡Šä¹‰%
+		Gui,show,,Googleç½‘ç»œç¿»è¯‘
 	}
 	else
-		MsgBox,,GoogleÍøÂç·­Òë,ÍøÂç´íÎó»ò²éÑ¯²»µ½¸Ãµ¥´ÊµÄ·­Òë¡£
+		MsgBox,,Googleç½‘ç»œç¿»è¯‘,ç½‘ç»œé”™è¯¯æˆ–æŸ¥è¯¢ä¸åˆ°è¯¥å•è¯çš„ç¿»è¯‘ã€‚
 Return
 
 soundpaly3:

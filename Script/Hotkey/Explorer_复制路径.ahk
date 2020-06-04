@@ -1,24 +1,24 @@
-;~ ÔÚ Explorer ÖĞÄ£·Â TC »ñÈ¡ÎÄ¼şºÍÎÄ¼ş¼ĞÂ·¾¶µÄ¹¦ÄÜ¡£
-¸´ÖÆÂ·¾¶:
+ï»¿;~ åœ¨ Explorer ä¸­æ¨¡ä»¿ TC è·å–æ–‡ä»¶å’Œæ–‡ä»¶å¤¹è·¯å¾„çš„åŠŸèƒ½ã€‚
+å¤åˆ¶è·¯å¾„:
 IfWinActive,ahk_Group ccc
 {
 	Gui,3:Destroy
 	;Hotkey, IfWinActive,ahk_Group ccc
-	;hotkey,^+c,¸´ÖÆÂ·¾¶
-	; ^+c »á´¥·¢ÇĞ»»ÊäÈë·¨,  ÈÈ¼üÀàĞÍÎª  k-hook   c¼üÊÍ·Å  ¿¨×¡¾ÍÏñ°´ÏÂÁËCtrl+Shift  È»ºóËÉ¿ª
-	; ^+c¸ÄÎªÈ«¾ÖÈÈ¼ü£¬ÈÈ¼üÀàĞÍÎª reg£¬¼ÓÈëÏÂÃæÒ»ĞĞ½Å±¾£¬Ôò²»Ò»¶¨»á´¥·¢
+	;hotkey,^+c,å¤åˆ¶è·¯å¾„
+	; ^+c ä¼šè§¦å‘åˆ‡æ¢è¾“å…¥æ³•,  çƒ­é”®ç±»å‹ä¸º  k-hook   cé”®é‡Šæ”¾  å¡ä½å°±åƒæŒ‰ä¸‹äº†Ctrl+Shift  ç„¶åæ¾å¼€
+	; ^+cæ”¹ä¸ºå…¨å±€çƒ­é”®ï¼Œçƒ­é”®ç±»å‹ä¸º regï¼ŒåŠ å…¥ä¸‹é¢ä¸€è¡Œè„šæœ¬ï¼Œåˆ™ä¸ä¸€å®šä¼šè§¦å‘
 	keywait LShift
 
-	;Send, ^c    ; ÕâÀïµÄ c ²»ÄÜĞ´³É´óĞ´ C  ´óĞ´C Îª·¢ËÍ^+c
+	;Send, ^c    ; è¿™é‡Œçš„ c ä¸èƒ½å†™æˆå¤§å†™ C  å¤§å†™C ä¸ºå‘é€^+c
 	Temp_Value:=GetSelText()
 	Loop, Parse, Temp_Value, `n, `r
 		FileFullPath=%A_LoopField%
 	Splitpath,FileFullPath,Filename,Filepath
 
-	Gui,3:Add, Button, gexit3 x0 y0  w490 h28 +Left,¸´ÖÆÂ·¾¶µ½¼ôÌù°å                                                            ÍË³ö
-	Gui,3:Add, Button, gCopyPath x0 y28 w490 h28 +Left,ÎÄ¼şÃû³Æ: %Filename%
-	Gui,3:Add, Button, gCopyPath x0 y56 w490 h28 +Left,ÎÄ¼şÄ¿Â¼: %Filepath%\
-	Gui,3:Add, Button, gCopyPath x0 y84 w490 h34 +Left,ÍêÕûÂ·¾¶: %FileFullPath%
+	Gui,3:Add, Button, gexit3 x0 y0  w490 h28 +Left,å¤åˆ¶è·¯å¾„åˆ°å‰ªè´´æ¿                                                            é€€å‡º
+	Gui,3:Add, Button, gCopyPath x0 y28 w490 h28 +Left,æ–‡ä»¶åç§°: %Filename%
+	Gui,3:Add, Button, gCopyPath x0 y56 w490 h28 +Left,æ–‡ä»¶ç›®å½•: %Filepath%\
+	Gui,3:Add, Button, gCopyPath x0 y84 w490 h34 +Left,å®Œæ•´è·¯å¾„: %FileFullPath%
 
 	Gui,3:Show, w485 h92
 	Gui,3:+AlwaysOnTop -Caption -Border +AlwaysOnTop
@@ -27,11 +27,11 @@ IfWinActive,ahk_Group ccc
 }
 Return
 
-;´úÂëÀ´Ô´ÓÚ7plus
-;¶ÔÓÚlnkÎÄ¼şÖ»ÄÜ»ñµÃÎÄ¼şÃû£¬²»ÄÜ»ñµÃlnkÀ©Õ¹Ãû
-;CTRL+ALT+C:¸´ÖÆÎÄ¼şÂ·¾¶µ½¼ôÌù°å
-;Shift+ALT+C:×·¼ÓÎÄ¼şÃûµ½¼ôÌù°å£¬Ô­¼ôÌù°åÄÚÈİ²»Çå¿Õ
-¸´ÖÆÎÄ¼şÃû:
+;ä»£ç æ¥æºäº7plus
+;å¯¹äºlnkæ–‡ä»¶åªèƒ½è·å¾—æ–‡ä»¶åï¼Œä¸èƒ½è·å¾—lnkæ‰©å±•å
+;CTRL+ALT+C:å¤åˆ¶æ–‡ä»¶è·¯å¾„åˆ°å‰ªè´´æ¿
+;Shift+ALT+C:è¿½åŠ æ–‡ä»¶ååˆ°å‰ªè´´æ¿ï¼ŒåŸå‰ªè´´æ¿å†…å®¹ä¸æ¸…ç©º
+å¤åˆ¶æ–‡ä»¶å:
 if !IsRenaming()
 CopyFilenames()
 Return
@@ -71,7 +71,7 @@ CopyPath:
 	StringLeft, copypath2, copypath, A_IsUnicode?5:9
 	StringTrimLeft, copypath, copypath, A_IsUnicode?5:9
 	Clipboard = %copypath%
-	CF_Traytip("¼ôÌù°å",copypath2 copypath "ÒÑ¾­¸´ÖÆµ½¼ôÌù°å¡£",3000)
+	CF_Traytip("å‰ªè´´æ¿",copypath2 copypath "å·²ç»å¤åˆ¶åˆ°å‰ªè´´æ¿ã€‚",3000)
 	Gui,3:Destroy
 return
 

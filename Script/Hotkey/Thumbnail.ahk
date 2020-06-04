@@ -1,6 +1,6 @@
-; ¶¯Ì¬ÏÔÊ¾´°¿ÚËõÂÔÍ¼£¬´°¿Ú×îÐ¡»¯ºóÎÞÊµÊ±Ð§¹û
+ï»¿; åŠ¨æ€æ˜¾ç¤ºçª—å£ç¼©ç•¥å›¾ï¼Œçª—å£æœ€å°åŒ–åŽæ— å®žæ—¶æ•ˆæžœ
 ;^#T::
-¶¯Ì¬ËõÂÔÍ¼:
+åŠ¨æ€ç¼©ç•¥å›¾:
 WinGetActiveStats, ThumbTitle, ThumbWide, ThumbHigh, X, Y
 ZoomNao := ZoomNao="" ? 0.25 : ZoomNao
 NuWide := ThumbWide * ZoomNao
@@ -15,65 +15,33 @@ Goto ThumbMake
 Return
 
 ;#]::
-·Å´ó¶¯Ì¬ËõÂÔÍ¼:
+æ”¾å¤§åŠ¨æ€ç¼©ç•¥å›¾:
 Gui,68: destroy
 sleep,1000
 ZoomNao += .05
-Goto ¶¯Ì¬ËõÂÔÍ¼
+Goto åŠ¨æ€ç¼©ç•¥å›¾
 Return
 
 ;#[::
-ËõÐ¡¶¯Ì¬ËõÂÔÍ¼:
+ç¼©å°åŠ¨æ€ç¼©ç•¥å›¾:
 Gui,68: destroy
 sleep,1000
 ZoomNao -= .05
-Goto ¶¯Ì¬ËõÂÔÍ¼
+Goto åŠ¨æ€ç¼©ç•¥å›¾
 Return
 
 ThumbMake:
-VarSetCapacity(thumbnail,4,0)
-hr1:=DllCall("dwmapi.dll\DwmRegisterThumbnail","UInt",target,"UInt",source,"UInt",&thumbnail)
-thumbnail:=NumGet(thumbnail)
-
-/*
-DWM_TNP_RECTDESTINATION (0x00000001)
-Indicates a value for rcDestination has been specified.
-DWM_TNP_RECTSOURCE (0x00000002)
-Indicates a value for rcSource has been specified.
-DWM_TNP_OPACITY (0x00000004)
-Indicates a value for opacity has been specified.
-DWM_TNP_VISIBLE (0x00000008)
-Indicates a value for fVisible has been specified.
-DWM_TNP_SOURCECLIENTAREAONLY (0x00000010)
-Indicates a value for fSourceClientAreaOnly has been specified ÊÇ·ñ°üÀ¨±êÌâÀ¸ºÍ±ß¿ò.
-*/
-
-dwFlags:=0X1 | 0x2 | 0x10
-opacity:=150
-fVisible:=1
-fSourceClientAreaOnly:=1
-
+thumbnail:=Thumbnail_Create(target, source)
 WinGetPos,wwx,wwy,www,wwh,ahk_id %target%
+Thumbnail_SetRegion(thumbnail, 0, 0, www, wwh,0, 0, www/zoomnao, wwh/zoomnao)
+Thumbnail_SetOpacity(thumbnail, 200)
+Thumbnail_SetIncludeNC(thumbnail, 0)
+Thumbnail_Show(thumbnail)
 
-VarSetCapacity(dskThumbProps,45,0)
-;struct _DWM_THUMBNAIL_PROPERTIES
-NumPut(dwFlags,dskThumbProps,0,"UInt")
-NumPut(0,dskThumbProps,4,"Int")
-NumPut(0,dskThumbProps,8,"Int")
-NumPut(www,dskThumbProps,12,"Int")
-NumPut(wwh,dskThumbProps,16,"Int")
-NumPut(0,dskThumbProps,20,"Int")
-NumPut(0,dskThumbProps,24,"Int")
-NumPut(www/zoomnao,dskThumbProps,28,"Int")
-NumPut(wwh/zoomnao,dskThumbProps,32,"Int")
-NumPut(opacity,dskThumbProps,36,"UChar")
-NumPut(fVisible,dskThumbProps,37,"Int")
-NumPut(fSourceClientAreaOnly,dskThumbProps,41,"Int")
-hr2:=DllCall("dwmapi.dll\DwmUpdateThumbnailProperties","UInt",thumbnail,"UInt",&dskThumbProps)
 Return
 
 ;^#w::
-¶¯Ì¬ËõÂÔÍ¼µ½Ö¸¶¨Gui:
+åŠ¨æ€ç¼©ç•¥å›¾åˆ°æŒ‡å®šGui:
 watchWindow:
 
    WinGetClass, class, A    ; get ahk_id of foreground window
@@ -90,7 +58,7 @@ watchWindow:
 return
 
 ;^#LButton::
-Êó±êÑ¡¶¨ÇøÓòµ½ËõÂÔÍ¼:
+é¼ æ ‡é€‰å®šåŒºåŸŸåˆ°ç¼©ç•¥å›¾:
 start_defining_region:
 
       Gui,65: Destroy
@@ -208,7 +176,7 @@ return
 
 WM_LBUTTONDOWN(wParam, lParam)
 {
-If (A_Gui =65)  ;  Î´¶¨ÒåÇå³þ£¬¶àGui½çÃæ´°¿ÚÊ±Ò×·¢Éú´íÎó
+If (A_Gui =65)  ;  æœªå®šä¹‰æ¸…æ¥šï¼Œå¤šGuiç•Œé¢çª—å£æ—¶æ˜“å‘ç”Ÿé”™è¯¯
  {
 DetectHiddenWindows,Off
     mX := lParam & 0xFFFF
@@ -216,7 +184,7 @@ DetectHiddenWindows,Off
     SendClickThrough(mX,mY)
  DetectHiddenWindows,On
 
-    PostMessage, 0xA1, 2   ;PostMessage, 0xA1, 2, , , Ahk_Id %Win_ID%    ´°¿Ú hwnd  ·Ç¿Ø¼þµÄhwnd  ·ñÔò¿Ø¼þ¾ÍÂÒ¡°ÅÜ¡±ÁË
+    PostMessage, 0xA1, 2   ;PostMessage, 0xA1, 2, , , Ahk_Id %Win_ID%    çª—å£ hwnd  éžæŽ§ä»¶çš„hwnd  å¦åˆ™æŽ§ä»¶å°±ä¹±â€œè·‘â€äº†
 }
 }
 
@@ -285,6 +253,19 @@ Thumbnail_Create(hDestination, hSource)
 }
 
 /*
+DWM_TNP_RECTDESTINATION (0x00000001)
+Indicates a value for rcDestination has been specified.
+DWM_TNP_RECTSOURCE (0x00000002)
+Indicates a value for rcSource has been specified.
+DWM_TNP_OPACITY (0x00000004)
+Indicates a value for opacity has been specified.
+DWM_TNP_VISIBLE (0x00000008)
+Indicates a value for fVisible has been specified.
+DWM_TNP_SOURCECLIENTAREAONLY (0x00000010)
+Indicates a value for fSourceClientAreaOnly has been specified æ˜¯å¦åŒ…æ‹¬æ ‡é¢˜æ å’Œè¾¹æ¡†.
+*/
+
+/*
 Function: Thumbnail_SetRegion()
 defines dimensions of a previously created thumbnail
 
@@ -308,21 +289,19 @@ Thumbnail_SetRegion(hThumb, xDest, yDest, wDest, hDest, xSource, ySource, wSourc
 	_ptr := A_PtrSize ? "UPtr" : "UInt"
 
 	VarSetCapacity(dskThumbProps, 45, 0)
+	;struct _DWM_THUMBNAIL_PROPERTIES
+	NumPut(dwFlags,         dskThumbProps, 00, "UInt")
+	NumPut(xDest,           dskThumbProps, 04, "Int")
+	NumPut(yDest,           dskThumbProps, 08, "Int")
+	NumPut(wDest+xDest,     dskThumbProps, 12, "Int")
+	NumPut(hDest+yDest,     dskThumbProps, 16, "Int")
 
-	NumPut(dwFlags,			dskThumbProps,	00,	"UInt")
-	NumPut(xDest,			dskThumbProps,	04,	"Int")
-	NumPut(yDest,			dskThumbProps,	08,	"Int")
-	NumPut(wDest+xDest,		dskThumbProps,	12,	"Int")
-	NumPut(hDest+yDest,		dskThumbProps,	16,	"Int")
-
-	NumPut(xSource,			dskThumbProps,	20,	"Int")
-	NumPut(ySource,			dskThumbProps,	24,	"Int")
-	NumPut(wSource-xSource,	dskThumbProps,	28,	"Int")
-	NumPut(hSource-ySource,	dskThumbProps,	32,	"Int")
-
+	NumPut(xSource,         dskThumbProps, 20, "Int")
+	NumPut(ySource,         dskThumbProps, 24, "Int")
+	NumPut(wSource-xSource, dskThumbProps, 28, "Int")
+	NumPut(hSource-ySource, dskThumbProps, 32, "Int")
 	return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties", _ptr, hThumb, _ptr, &dskThumbProps) >= 0x00
 }
-
 
 /*
 Function: Thumbnail_Show()
@@ -340,8 +319,8 @@ Thumbnail_Show(hThumb)
 	_ptr := A_PtrSize ? "UPtr" : "UInt"
 
 	VarSetCapacity(dskThumbProps, 45, 0)
-	NumPut(dwFlags,		dskThumbProps,	00,	"UInt")
-	NumPut(fVisible,	dskThumbProps,	37,	"Int")
+	NumPut(dwFlags,  dskThumbProps, 00, "UInt")
+	NumPut(fVisible, dskThumbProps, 37, "Int")
 
 	return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties", _ptr, hThumb, _ptr, &dskThumbProps) >= 0x00
 }
@@ -457,7 +436,7 @@ Thumbnail_SetIncludeNC(hThumb, include)
 	VarSetCapacity(dskThumbProps, 45, 0)
 
 	NumPut(dwFlags,		dskThumbProps,	00,	"UInt")
-	NumPut(!include,	dskThumbProps,	42, "UInt")
+	NumPut(!include,	dskThumbProps,	41, "UInt")
 
 	return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties", _ptr, hThumb, _ptr, &dskThumbProps) >= 0x00
 }

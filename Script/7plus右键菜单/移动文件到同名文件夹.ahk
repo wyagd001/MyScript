@@ -1,20 +1,20 @@
-;×ÀÃælnkÎÄ¼şÎŞĞ§(ËùÓĞlnkÎÄ¼ş¶¼ÎŞĞ§)
+ï»¿;æ¡Œé¢lnkæ–‡ä»¶æ— æ•ˆ(æ‰€æœ‰lnkæ–‡ä»¶éƒ½æ— æ•ˆ)
 1003:
 	;MsgBox
-	SetTimer,ÒÆ¶¯ÎÄ¼şµ½Í¬ÃûÎÄ¼ş¼Ğ,-200
+	SetTimer,ç§»åŠ¨æ–‡ä»¶åˆ°åŒåæ–‡ä»¶å¤¹,-200
 Return
 
-;ÎÄ¼şÒÆ¶¯µ½Í¬ÃûÎÄ¼ş¼ĞÄÚ
-;×ÀÃælnkÎÄ¼şÎŞĞ§  ÎŞ·¨»ñµÃlnk ºó×º
-;°´¿ì½İ¼üÎª½á¹ûÎª G:\Users\lyh\Desktop\QQ  Êµ¼ÊÎªQQ.lnk
+;æ–‡ä»¶ç§»åŠ¨åˆ°åŒåæ–‡ä»¶å¤¹å†…
+;æ¡Œé¢lnkæ–‡ä»¶æ— æ•ˆ  æ— æ³•è·å¾—lnk åç¼€
+;æŒ‰å¿«æ·é”®ä¸ºç»“æœä¸º G:\Users\lyh\Desktop\QQ  å®é™…ä¸ºQQ.lnk
 ;#G::
-ÒÆ¶¯ÎÄ¼şµ½Í¬ÃûÎÄ¼ş¼Ğ:
+ç§»åŠ¨æ–‡ä»¶åˆ°åŒåæ–‡ä»¶å¤¹:
 sleep,200
 Critical,On
 Files := GetSelectedFiles()
 If !Files
 {
-	MsgBox,,,»ñÈ¡ÎÄ¼şÂ·¾¶Ê§°Ü5¡£,3
+	MsgBox,,,è·å–æ–‡ä»¶è·¯å¾„å¤±è´¥5ã€‚,3
 	Return
 }
 Critical,Off
@@ -50,7 +50,7 @@ Loop, Parse, files, `n,`r
 				}
 			}
 		}
-		; ÎŞÍ¬ÃûÎÄ¼şÊ±£¬¸´ÖÆÎÄ¼ş
+		; æ— åŒåæ–‡ä»¶æ—¶ï¼Œå¤åˆ¶æ–‡ä»¶
 		else
 		{
 			Run, %comspec% /c move "%FileFullPath%" "%TargetFile%",,hide
@@ -59,14 +59,14 @@ Loop, Parse, files, `n,`r
 }
 Return
 
-7PlusMenu_ÒÆ¶¯ÎÄ¼şµ½Í¬ÃûÎÄ¼ş¼Ğ()
+7PlusMenu_ç§»åŠ¨æ–‡ä»¶åˆ°åŒåæ–‡ä»¶å¤¹()
 {
-	section = ÒÆ¶¯ÎÄ¼şµ½Í¬ÃûÎÄ¼ş¼Ğ
+	section = ç§»åŠ¨æ–‡ä»¶åˆ°åŒåæ–‡ä»¶å¤¹
 	defaultSet=
 	( LTrim
 ID = 1003
 Name = File(s)2Folder(s)
-Description = ÒÆ¶¯ÎÄ¼şµ½Í¬ÃûÎÄ¼ş¼Ğ(Ö§³Ö¶àÎÄ¼ş)
+Description = ç§»åŠ¨æ–‡ä»¶åˆ°åŒåæ–‡ä»¶å¤¹(æ”¯æŒå¤šæ–‡ä»¶)
 SubMenu = 7plus
 FileTypes = *
 SingleFileOnly = 0

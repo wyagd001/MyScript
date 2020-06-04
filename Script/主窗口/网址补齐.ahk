@@ -1,7 +1,7 @@
-; Ctrl+Enter×Ô¶¯²¹ÆëÍøÖ·
+ï»¿; Ctrl+Enterè‡ªåŠ¨è¡¥é½ç½‘å€
 ;#IfWinActive,ahk_Group AppMainWindow
 ;^Enter::
-ÍøÖ·²¹Æë:
+ç½‘å€è¡¥é½:
   Gui, Submit, NoHide
   if dir
   {

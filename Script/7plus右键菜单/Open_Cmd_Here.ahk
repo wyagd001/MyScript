@@ -1,5 +1,5 @@
-1010:
-	SetTimer,ÃüÁîÌáÊ¾·û,-200
+ï»¿1010:
+	SetTimer,å‘½ä»¤æç¤ºç¬¦,-200
 Return
 
 7PlusMenu_Open_Cmd_Here()
@@ -9,7 +9,7 @@ Return
 	( LTrim
 ID = 1010
 Name = Open CMD Here
-Description = CMD´ò¿ª¶¨Î»µ½¸ÃÎÄ¼ş¼Ğ
+Description = CMDæ‰“å¼€å®šä½åˆ°è¯¥æ–‡ä»¶å¤¹
 SubMenu = 7plus
 FileTypes =
 SingleFileOnly = 0

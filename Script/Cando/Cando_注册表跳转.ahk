@@ -1,7 +1,7 @@
-Cando_×¢²á±íÌø×ª:
-;Ìæ»»×Ö´®ÖĞµÚÒ»¸ö¡°£¬ ¡±Îª"\"
+ï»¿Cando_æ³¨å†Œè¡¨è·³è½¬:
+;æ›¿æ¢å­—ä¸²ä¸­ç¬¬ä¸€ä¸ªâ€œï¼Œ â€ä¸º"\"
 StringReplace,CandySel,CandySel,`,%A_Space%,\
-;Ìæ»»×Ö´®ÖĞµÚÒ»¸ö¡°£¬¡±Îª"\"
+;æ›¿æ¢å­—ä¸²ä¸­ç¬¬ä¸€ä¸ªâ€œï¼Œâ€ä¸º"\"
 StringReplace,CandySel,CandySel,`, ,\
 IfInString, CandySel,HKLM
 {
@@ -28,20 +28,20 @@ IfInString, CandySel,HKU
    StringTrimLeft, cutCandySel, CandySel, 3
    CandySel := "HKEY_USERS" . cutCandySel
 }
-;½«×Ö´®ÖĞµÄËùÓĞ¡°£Ü¡±(È«½Ç)Ìæ»»Îª¡°\¡±£¨°ë½Ç£©
-StringReplace,CandySel,CandySel,£Ü,\,All
+;å°†å­—ä¸²ä¸­çš„æ‰€æœ‰â€œï¼¼â€(å…¨è§’)æ›¿æ¢ä¸ºâ€œ\â€ï¼ˆåŠè§’ï¼‰
+StringReplace,CandySel,CandySel,ï¼¼,\,All
 StringReplace,CandySel,CandySel,%A_Space%\,\,All
 StringReplace,CandySel,CandySel,\%A_Space%,\,All
 
-;½«×Ö´®ÖĞµÄËùÓĞ¡°\\¡±Ìæ»»Îª¡°\¡±
+;å°†å­—ä¸²ä¸­çš„æ‰€æœ‰â€œ\\â€æ›¿æ¢ä¸ºâ€œ\â€
 StringReplace,CandySel,CandySel,\\,\,All
 
-IfWinExist, ×¢²á±í±à¼­Æ÷ ahk_class RegEdit_RegEdit
+IfWinExist, æ³¨å†Œè¡¨ç¼–è¾‘å™¨ ahk_class RegEdit_RegEdit
 {
-IfNotInString, CandySel, ¼ÆËã»ú\
-CandySel := "¼ÆËã»ú\" . CandySel
-WinActivate, ×¢²á±í±à¼­Æ÷
-ControlGet, hwnd, hwnd, , SysTreeView321, ×¢²á±í±à¼­Æ÷
+IfNotInString, CandySel, è®¡ç®—æœº\
+CandySel := "è®¡ç®—æœº\" . CandySel
+WinActivate, æ³¨å†Œè¡¨ç¼–è¾‘å™¨
+ControlGet, hwnd, hwnd, , SysTreeView321, æ³¨å†Œè¡¨ç¼–è¾‘å™¨
 TVPath_Set(hwnd, CandySel, matchPath)
 }
 Else

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
 MouseLeave(wParam, lParam, msg, hwnd)
 {
 Global
@@ -114,7 +114,7 @@ MouseLDown(wParam, lParam, msg, hwnd)
    Local Current_Down_Image
    Local Current_GUI
       if (A_Gui>50 &&  A_Gui<fi+50){
-       ;Êó±ê×ó¼üµã»÷ºóÄÜÍÏ×§ÒÆ¶¯´°¿Ú
+       ;é¼ æ ‡å·¦é”®ç‚¹å‡»åèƒ½æ‹–æ‹½ç§»åŠ¨çª—å£
        PostMessage, 0xA1, 2
     }
    else

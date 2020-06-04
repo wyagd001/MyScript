@@ -1,4 +1,4 @@
-IsStingFunc(str:="")
+锘縄sStingFunc(str:="")
 {
 	strfunc:=StrSplit(str,"(")
 	If IsFunc(strfunc[1])
@@ -33,7 +33,7 @@ RunStingFunc(str:="")
 			Transform,o1,Deref,% %o%
 		if !InStr(p,"""")
 			Transform,p1,Deref,% %p%
-		
+
 		%tempfunc%(o1?o1:InStr(o,"""")=1?Trim(o, """"):o, p1?p1:InStr(p,"""")=1?Trim(p, """"):p)
 	return
 	}
@@ -71,7 +71,7 @@ RunStingFunc(str:="")
 	}
 }
 
-; 来源帮助文件中的示例
+; 鏉ユ簮甯姪鏂囦欢涓殑绀轰緥
 RunScript(script, WaitResult:="false")
 {
 	static test_ahk := A_AhkPath,
@@ -93,7 +93,7 @@ RunNamedPipe(pipe_code:="", pipe_name:="")
 		; https://autohotkey.com/board/topic/23575-how-to-run-dynamic-script-through-a-pipe/
 		ptr := A_PtrSize ? "Ptr" : "UInt"
 		char_size := A_IsUnicode ? 2 : 1
-		pipe_name:=pipe_name?pipe_name:"运行Ahk命令"
+		pipe_name:=pipe_name?pipe_name:"杩愯Ahk鍛戒护"
 ; Before reading the file, AutoHotkey calls GetFileAttributes(). This causes
 ; the pipe to close, so we must create a second pipe for the actual file contents.
 ; Open them both before starting AutoHotkey, or the second attempt to open the

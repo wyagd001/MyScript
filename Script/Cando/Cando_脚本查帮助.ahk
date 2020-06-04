@@ -1,48 +1,48 @@
-/*
-ËµÃ÷£ºÈç¹ûÊÇÓĞ¶ÀÁ¢µÄÒ³Ãæ£¬ÔòÖ±½ÓÖ¸Ïò¶ÀÁ¢Ò³Ãæ
-·ñÔò£¬¾ÍÊÇËÑË÷
+ï»¿/*
+è¯´æ˜ï¼šå¦‚æœæ˜¯æœ‰ç‹¬ç«‹çš„é¡µé¢ï¼Œåˆ™ç›´æ¥æŒ‡å‘ç‹¬ç«‹é¡µé¢
+å¦åˆ™ï¼Œå°±æ˜¯æœç´¢
 */
-Cando_½Å±¾ÎÄ×Ö_²é°ïÖú:
+Cando_è„šæœ¬æ–‡å­—_æŸ¥å¸®åŠ©:
 
-; ×Ô¶¨Òå²¿·Ö
-	Ahkl°ïÖúÂ·¾¶=D:\Program Files\AutoHotkey\AutoHotkeyLCN.chm
-	Ahk°ïÖú±êÌâ=AutoHotkey ÖĞÎÄ°ïÖú
-	Ahk¹Ø¼ü×Ö±í=Block;BlockInput;Break;Catch;Click;ClipWait;ComObjActive;ComObjArray;ComObjConnect;ComObjCreate;ComObjError;ComObjFlags;ComObjGet;ComObjQuery;ComObjType;ComObjValue;Continue;Control;ControlClick;ControlFocus;ControlGet;ControlGetFocus;ControlGetPos;ControlGetText;ControlMove;ControlSend;ControlSetText;CoordMode;Critical;DetectHiddenText;DetectHiddenWindows;DllCall;Drive;DriveGet;DriveSpaceFree;Edit;Else;EnvAdd;EnvDiv;EnvGet;EnvMult;EnvSet;EnvSub;EnvUpdate;Exit;ExitApp;FileAppend;FileCopy;FileCopyDir;FileCreateDir;FileCreateShortcut;FileDelete;FileEncoding;FileGetAttrib;FileGetShortcut;FileGetSize;FileGetTime;FileGetVersion;FileInstall;FileMove;FileMoveDir;FileOpen;FileRead;FileReadLine;FileRecycle;FileRecycleEmpty;FileRemoveDir;FileSelectFile;FileSelectFolder;FileSetAttrib;FileSetTime;For;FormatTime;GetKeyState;Gosub;Goto;GroupActivate;GroupAdd;GroupClose;GroupDeactivate;Gui;GuiControl;GuiControlGet;GuiControls;Hotkey;IfBetween;IfEqual;IfExist;IfExpression;IfIn;IfInString;IfIs;IfMsgBox;IfWinActive;IfWinExist;ImageSearch;index;IniDelete;IniRead;IniWrite;Input;InputBox;KeyHistory;KeyWait;ListHotkeys;ListLines;ListVars;ListView;Loop;LoopFile;LoopParse;LoopReadFile;LoopReg;Menu;MouseClick;MouseClickDrag;MouseGetPos;MouseMove;MsgBox;ObjAddRef;OnExit;OnMessage;OutputDebug;Pause;PixelGetColor;PixelSearch;PostMessage;Process;Progress;Random;RegDelete;RegExMatch;RegExReplace;RegisterCallback;RegRead;RegWrite;Reload;Return;Run;RunAs;Send;SendLevel;SendMode;SetBatchLines;SetControlDelay;SetDefaultMouseSpeed;SetEnv;SetExpression;SetFormat;SetKeyDelay;SetMouseDelay;SetNumScrollCapsLockState;SetRegView;SetStoreCapslockMode;SetTimer;SetTitleMatchMode;SetWinDelay;SetWorkingDir;Shutdown;Sleep;Sort;SoundBeep;SoundGet;SoundGetWaveVolume;SoundPlay;SoundSet;SoundSetWaveVolume;SplashTextOn;SplitPath;StatusBarGetText;StatusBarWait;StringCaseSense;StringGetPos;StringLeft;StringLen;StringLower;StringMid;StringReplace;StringSplit;StringTrimLeft;StrPutGet;Suspend;SysGet;Thread;Throw;ToolTip;Transform;TrayTip;TreeView;Trim;Try;Until;URLDownloadToFile;VarSetCapacity;While;WinActivate;WinActivateBottom;WinClose;WinGet;WinGetActiveStats;WinGetActiveTitle;WinGetClass;WinGetPos;WinGetText;WinGetTitle;WinHide;WinKill;WinMaximize;WinMenuSelectItem;WinMinimize;WinMinimizeAll;WinMove;WinRestore;WinSet;WinSetTitle;WinShow;WinWait;WinWaitActive;WinWaitClose;#AllowSameLineComments;#ClipboardTimeout;#CommentFlag;#ErrorStdOut;#EscapeChar;#HotkeyInterval;#HotkeyModifierTimeout;#Hotstring;#If;#IfTimeout;#IfWinActive;#Include;#InputLevel;#InstallKeybdHook;#InstallMouseHook;#KeyHistory;#MaxHotkeysPerInterval;#MaxMem;#MaxThreads;#MaxThreadsBuffer;#MaxThreadsPerHotkey;#MenuMaskKey;#NoEnv;#NoTrayIcon;#Persistent;#SingleInstance;#UseHook;#Warn;#WinActivateForce
-	Ahk±»²é¹Ø¼ü×Ö=i)(^|;)%CandySel%($|;)
+; è‡ªå®šä¹‰éƒ¨åˆ†
+	Ahklå¸®åŠ©è·¯å¾„=D:\Program Files\AutoHotkey\AutoHotkeyLCN.chm
+	Ahkå¸®åŠ©æ ‡é¢˜=AutoHotkey ä¸­æ–‡å¸®åŠ©
+	Ahkå…³é”®å­—è¡¨=Block;BlockInput;Break;Catch;Click;ClipWait;ComObjActive;ComObjArray;ComObjConnect;ComObjCreate;ComObjError;ComObjFlags;ComObjGet;ComObjQuery;ComObjType;ComObjValue;Continue;Control;ControlClick;ControlFocus;ControlGet;ControlGetFocus;ControlGetPos;ControlGetText;ControlMove;ControlSend;ControlSetText;CoordMode;Critical;DetectHiddenText;DetectHiddenWindows;DllCall;Drive;DriveGet;DriveSpaceFree;Edit;Else;EnvAdd;EnvDiv;EnvGet;EnvMult;EnvSet;EnvSub;EnvUpdate;Exit;ExitApp;FileAppend;FileCopy;FileCopyDir;FileCreateDir;FileCreateShortcut;FileDelete;FileEncoding;FileGetAttrib;FileGetShortcut;FileGetSize;FileGetTime;FileGetVersion;FileInstall;FileMove;FileMoveDir;FileOpen;FileRead;FileReadLine;FileRecycle;FileRecycleEmpty;FileRemoveDir;FileSelectFile;FileSelectFolder;FileSetAttrib;FileSetTime;For;FormatTime;GetKeyState;Gosub;Goto;GroupActivate;GroupAdd;GroupClose;GroupDeactivate;Gui;GuiControl;GuiControlGet;GuiControls;Hotkey;IfBetween;IfEqual;IfExist;IfExpression;IfIn;IfInString;IfIs;IfMsgBox;IfWinActive;IfWinExist;ImageSearch;index;IniDelete;IniRead;IniWrite;Input;InputBox;KeyHistory;KeyWait;ListHotkeys;ListLines;ListVars;ListView;Loop;LoopFile;LoopParse;LoopReadFile;LoopReg;Menu;MouseClick;MouseClickDrag;MouseGetPos;MouseMove;MsgBox;ObjAddRef;OnExit;OnMessage;OutputDebug;Pause;PixelGetColor;PixelSearch;PostMessage;Process;Progress;Random;RegDelete;RegExMatch;RegExReplace;RegisterCallback;RegRead;RegWrite;Reload;Return;Run;RunAs;Send;SendLevel;SendMode;SetBatchLines;SetControlDelay;SetDefaultMouseSpeed;SetEnv;SetExpression;SetFormat;SetKeyDelay;SetMouseDelay;SetNumScrollCapsLockState;SetRegView;SetStoreCapslockMode;SetTimer;SetTitleMatchMode;SetWinDelay;SetWorkingDir;Shutdown;Sleep;Sort;SoundBeep;SoundGet;SoundGetWaveVolume;SoundPlay;SoundSet;SoundSetWaveVolume;SplashTextOn;SplitPath;StatusBarGetText;StatusBarWait;StringCaseSense;StringGetPos;StringLeft;StringLen;StringLower;StringMid;StringReplace;StringSplit;StringTrimLeft;StrPutGet;Suspend;SysGet;Thread;Throw;ToolTip;Transform;TrayTip;TreeView;Trim;Try;Until;URLDownloadToFile;VarSetCapacity;While;WinActivate;WinActivateBottom;WinClose;WinGet;WinGetActiveStats;WinGetActiveTitle;WinGetClass;WinGetPos;WinGetText;WinGetTitle;WinHide;WinKill;WinMaximize;WinMenuSelectItem;WinMinimize;WinMinimizeAll;WinMove;WinRestore;WinSet;WinSetTitle;WinShow;WinWait;WinWaitActive;WinWaitClose;#AllowSameLineComments;#ClipboardTimeout;#CommentFlag;#ErrorStdOut;#EscapeChar;#HotkeyInterval;#HotkeyModifierTimeout;#Hotstring;#If;#IfTimeout;#IfWinActive;#Include;#InputLevel;#InstallKeybdHook;#InstallMouseHook;#KeyHistory;#MaxHotkeysPerInterval;#MaxMem;#MaxThreads;#MaxThreadsBuffer;#MaxThreadsPerHotkey;#MenuMaskKey;#NoEnv;#NoTrayIcon;#Persistent;#SingleInstance;#UseHook;#Warn;#WinActivateForce
+	Ahkè¢«æŸ¥å…³é”®å­—=i)(^|;)%CandySel%($|;)
 
-; ÊÇ·ñÒÑ¾­ÔËĞĞ
-	IfWinNotExist, %Ahk°ïÖú±êÌâ%
+; æ˜¯å¦å·²ç»è¿è¡Œ
+	IfWinNotExist, %Ahkå¸®åŠ©æ ‡é¢˜%
 	{
-		Run, %Ahkl°ïÖúÂ·¾¶%
-		WinWait, %Ahk°ïÖú±êÌâ%,, 4
+		Run, %Ahklå¸®åŠ©è·¯å¾„%
+		WinWait, %Ahkå¸®åŠ©æ ‡é¢˜%,, 4
 	}
-	WinActivate, %Ahk°ïÖú±êÌâ%
+	WinActivate, %Ahkå¸®åŠ©æ ‡é¢˜%
 
-;ÓĞdoc¿É´ò¿ª
-	if RegExMatch(Ahk¹Ø¼ü×Ö±í,Ahk±»²é¹Ø¼ü×Ö)
+;æœ‰docå¯æ‰“å¼€
+	if RegExMatch(Ahkå…³é”®å­—è¡¨,Ahkè¢«æŸ¥å…³é”®å­—)
 	{
 		ProperClick("SysTabControl321")
-		SendMessage 0x130C,0,, SysTabControl321,%Ahk°ïÖú±êÌâ%
+		SendMessage 0x130C,0,, SysTabControl321,%Ahkå¸®åŠ©æ ‡é¢˜%
 		ProperClick("SysTabControl321")
 		Sleep,100
-		StringReplace,Ö±½Ó´ò¿ª,CandySel,#,_
-		AhkÌø×ªµÄµØÖ·=/docs/commands/%Ö±½Ó´ò¿ª%.htm
+		StringReplace,ç›´æ¥æ‰“å¼€,CandySel,#,_
+		Ahkè·³è½¬çš„åœ°å€=/docs/commands/%ç›´æ¥æ‰“å¼€%.htm
 		Send !gu
 		Loop 3
 			IfWinNotActive Ahk_Class #32770  ; Is it still searching?
 				Sleep 1000
 		IfWinActive Ahk_Class #32770  ; Error dialog
 		{
-			ControlSetText,edit1,%AhkÌø×ªµÄµØÖ·%
+			ControlSetText,edit1,%Ahkè·³è½¬çš„åœ°å€%
 			sleep,10
 			send,{enter}
 		}
 	}
-;Ã»ÓĞÔòËÑË÷
+;æ²¡æœ‰åˆ™æœç´¢
 	Else
 	{
-		SendMessage 0x130C, 2,, SysTabControl321,%Ahk°ïÖú±êÌâ%
-		ControlSetText,edit1,%CandySel%,%Ahk°ïÖú±êÌâ%
+		SendMessage 0x130C, 2,, SysTabControl321,%Ahkå¸®åŠ©æ ‡é¢˜%
+		ControlSetText,edit1,%CandySel%,%Ahkå¸®åŠ©æ ‡é¢˜%
 		ProperClick("SysTabControl321")
 		Sleep,100
 		SendMessage 0x130B,,, SysTabControl321  ; 0x130B = TCM_GETCURSEL. Which tabpage Is Selected? Answer Is ErrorLevel
@@ -58,50 +58,50 @@ Cando_½Å±¾ÎÄ×Ö_²é°ïÖú:
 	}
 	Return
 	
-Cando_²éĞÂ°æ°ïÖú:
-	AhklĞÂ°æ°ïÖúÂ·¾¶=D:\Program Files\AutoHotkey\AutoHotkeyLCN_New.chm
-	Ahk°ïÖú±êÌâ=AutoHotkey ÖĞÎÄ°ïÖú
-	Ahk¹Ø¼ü×Ö±í=Asc;AutoTrim;Block;BlockInput;Break;Catch;Chr;Click;ClipWait;ComObjActive;ComObjArray;ComObjConnect;ComObjCreate;ComObjError;ComObjFlags;ComObjGet;ComObjQuery;ComObjType;ComObjValue;Continue;Control;ControlClick;ControlFocus;ControlGet;ControlGetFocus;ControlGetPos;ControlGetText;ControlMove;ControlSend;ControlSetText;CoordMode;Critical;DetectHiddenText;DetectHiddenWindows;DllCall;Drive;DriveGet;DriveSpaceFree;Edit;Else;EnvAdd;EnvDiv;EnvGet;EnvMult;EnvSet;EnvSub;EnvUpdate;Exit;ExitApp;FileAppend;FileCopy;FileCopyDir;FileCreateDir;FileCreateShortcut;FileDelete;FileEncoding;FileExist;FileGetAttrib;FileGetShortcut;FileGetSize;FileGetTime;FileGetVersion;FileInstall;FileMove;FileMoveDir;FileOpen;FileRead;FileReadLine;FileRecycle;FileRecycleEmpty;FileRemoveDir;FileSelectFile;FileSelectFolder;FileSetAttrib;FileSetTime;Finally;For;Format;FormatTime;Func;GetKey;GetKeyState;Gosub;Goto;GroupActivate;GroupAdd;GroupClose;GroupDeactivate;Gui;GuiControl;GuiControlGet;GuiControls;Hotkey;Hotstring;IfBetween;IfEqual;IfExist;IfExpression;IfIn;IfInString;IfIs;IfMsgBox;IfWinActive;IfWinExist;ImageSearch;index;IniDelete;IniRead;IniWrite;Input;InputBox;InputHook;InStr;IsByRef;IsFunc;IsLabel;IsObject;KeyHistory;KeyWait;ListHotkeys;ListLines;ListVars;ListView;LoadPicture;Loop;LoopFile;LoopParse;LoopReadFile;LoopReg;Menu;MenuGetHandle;MenuGetName;MouseClick;MouseClickDrag;MouseGetPos;MouseMove;MsgBox;NumGet;NumPut;ObjAddRef;ObjBindMethod;OnClipboardChange;OnError;OnExit;OnMessage;Ord;OutputDebug;Pause;PixelGetColor;PixelSearch;PostMessage;Process;Progress;Random;RegDelete;RegExMatch;RegExReplace;RegisterCallback;RegRead;RegWrite;Reload;Return;Run;RunAs;Send;SendLevel;SendMode;SetBatchLines;SetControlDelay;SetDefaultMouseSpeed;SetEnv;SetExpression;SetFormat;SetKeyDelay;SetMouseDelay;SetNumScrollCapsLockState;SetRegView;SetStoreCapslockMode;SetTimer;SetTitleMatchMode;SetWinDelay;SetWorkingDir;Shutdown;Sleep;Sort;SoundBeep;SoundGet;SoundGetWaveVolume;SoundPlay;SoundSet;SoundSetWaveVolume;SplashTextOn;SplitPath;StatusBarGetText;StatusBarWait;StrGet;StringCaseSense;StringGetPos;StringLeft;StringLen;StringLower;StringMid;StringReplace;StringSplit;StringTrimLeft;StrPut;SubStr;Suspend;Switch;SysGet;Thread;Throw;ToolTip;Transform;TrayTip;TreeView;Trim;Try;Until;URLDownloadToFile;VarSetCapacity;While;WinActivate;WinActivateBottom;WinActive;WinClose;WinGet;WinGetActiveStats;WinGetActiveTitle;WinGetClass;WinGetPos;WinGetText;WinGetTitle;WinHide;WinKill;WinMaximize;WinMenuSelectItem;WinMinimize;WinMinimizeAll;WinMove;WinRestore;WinSet;WinSetTitle;WinShow;WinWait;WinWaitActive;WinWaitClose;#AllowSameLineComments;#ClipboardTimeout;#CommentFlag;#ErrorStdOut;#EscapeChar;#HotkeyInterval;#HotkeyModifierTimeout;#Hotstring;#If;#IfTimeout;#IfWinActive;#Include;#InputLevel;#InstallKeybdHook;#InstallMouseHook;#KeyHistory;#MaxHotkeysPerInterval;#MaxMem;#MaxThreads;#MaxThreadsBuffer;#MaxThreadsPerHotkey;#MenuMaskKey;#NoEnv;#NoTrayIcon;#Persistent;#SingleInstance;#UseHook;#Warn;#WinActivateForce
-	Ahk±»²é¹Ø¼ü×Ö=i)(^|;)%CandySel%($|;)
+Cando_æŸ¥æ–°ç‰ˆå¸®åŠ©:
+	Ahklæ–°ç‰ˆå¸®åŠ©è·¯å¾„=D:\Program Files\AutoHotkey\AutoHotkeyLCN_New.chm
+	Ahkå¸®åŠ©æ ‡é¢˜=AutoHotkey ä¸­æ–‡å¸®åŠ©
+	Ahkå…³é”®å­—è¡¨=Asc;AutoTrim;Block;BlockInput;Break;Catch;Chr;Click;ClipWait;ComObjActive;ComObjArray;ComObjConnect;ComObjCreate;ComObjError;ComObjFlags;ComObjGet;ComObjQuery;ComObjType;ComObjValue;Continue;Control;ControlClick;ControlFocus;ControlGet;ControlGetFocus;ControlGetPos;ControlGetText;ControlMove;ControlSend;ControlSetText;CoordMode;Critical;DetectHiddenText;DetectHiddenWindows;DllCall;Drive;DriveGet;DriveSpaceFree;Edit;Else;EnvAdd;EnvDiv;EnvGet;EnvMult;EnvSet;EnvSub;EnvUpdate;Exit;ExitApp;FileAppend;FileCopy;FileCopyDir;FileCreateDir;FileCreateShortcut;FileDelete;FileEncoding;FileExist;FileGetAttrib;FileGetShortcut;FileGetSize;FileGetTime;FileGetVersion;FileInstall;FileMove;FileMoveDir;FileOpen;FileRead;FileReadLine;FileRecycle;FileRecycleEmpty;FileRemoveDir;FileSelectFile;FileSelectFolder;FileSetAttrib;FileSetTime;Finally;For;Format;FormatTime;Func;GetKey;GetKeyState;Gosub;Goto;GroupActivate;GroupAdd;GroupClose;GroupDeactivate;Gui;GuiControl;GuiControlGet;GuiControls;Hotkey;Hotstring;IfBetween;IfEqual;IfExist;IfExpression;IfIn;IfInString;IfIs;IfMsgBox;IfWinActive;IfWinExist;ImageSearch;index;IniDelete;IniRead;IniWrite;Input;InputBox;InputHook;InStr;IsByRef;IsFunc;IsLabel;IsObject;KeyHistory;KeyWait;ListHotkeys;ListLines;ListVars;ListView;LoadPicture;Loop;LoopFile;LoopParse;LoopReadFile;LoopReg;Menu;MenuGetHandle;MenuGetName;MouseClick;MouseClickDrag;MouseGetPos;MouseMove;MsgBox;NumGet;NumPut;ObjAddRef;ObjBindMethod;OnClipboardChange;OnError;OnExit;OnMessage;Ord;OutputDebug;Pause;PixelGetColor;PixelSearch;PostMessage;Process;Progress;Random;RegDelete;RegExMatch;RegExReplace;RegisterCallback;RegRead;RegWrite;Reload;Return;Run;RunAs;Send;SendLevel;SendMode;SetBatchLines;SetControlDelay;SetDefaultMouseSpeed;SetEnv;SetExpression;SetFormat;SetKeyDelay;SetMouseDelay;SetNumScrollCapsLockState;SetRegView;SetStoreCapslockMode;SetTimer;SetTitleMatchMode;SetWinDelay;SetWorkingDir;Shutdown;Sleep;Sort;SoundBeep;SoundGet;SoundGetWaveVolume;SoundPlay;SoundSet;SoundSetWaveVolume;SplashTextOn;SplitPath;StatusBarGetText;StatusBarWait;StrGet;StringCaseSense;StringGetPos;StringLeft;StringLen;StringLower;StringMid;StringReplace;StringSplit;StringTrimLeft;StrPut;SubStr;Suspend;Switch;SysGet;Thread;Throw;ToolTip;Transform;TrayTip;TreeView;Trim;Try;Until;URLDownloadToFile;VarSetCapacity;While;WinActivate;WinActivateBottom;WinActive;WinClose;WinGet;WinGetActiveStats;WinGetActiveTitle;WinGetClass;WinGetPos;WinGetText;WinGetTitle;WinHide;WinKill;WinMaximize;WinMenuSelectItem;WinMinimize;WinMinimizeAll;WinMove;WinRestore;WinSet;WinSetTitle;WinShow;WinWait;WinWaitActive;WinWaitClose;#AllowSameLineComments;#ClipboardTimeout;#CommentFlag;#ErrorStdOut;#EscapeChar;#HotkeyInterval;#HotkeyModifierTimeout;#Hotstring;#If;#IfTimeout;#IfWinActive;#Include;#InputLevel;#InstallKeybdHook;#InstallMouseHook;#KeyHistory;#MaxHotkeysPerInterval;#MaxMem;#MaxThreads;#MaxThreadsBuffer;#MaxThreadsPerHotkey;#MenuMaskKey;#NoEnv;#NoTrayIcon;#Persistent;#SingleInstance;#UseHook;#Warn;#WinActivateForce
+	Ahkè¢«æŸ¥å…³é”®å­—=i)(^|;)%CandySel%($|;)
 
-;ÓĞdoc¿É´ò¿ª
-	if RegExMatch(Ahk¹Ø¼ü×Ö±í,Ahk±»²é¹Ø¼ü×Ö)
+;æœ‰docå¯æ‰“å¼€
+	if RegExMatch(Ahkå…³é”®å­—è¡¨,Ahkè¢«æŸ¥å…³é”®å­—)
 	{
-		IfWinNotExist,%Ahk°ïÖú±êÌâ%
+		IfWinNotExist,%Ahkå¸®åŠ©æ ‡é¢˜%
 		{
 			VarSetCapacity(ak, ak_size := 8+5*A_PtrSize+4, 0) ; HH_AKLINK struct
 			NumPut(ak_size, ak, 0, "UInt")
 			NumPut(&CandySel, ak, 8)
-			if !DllCall("HHCtrl.ocx\HtmlHelp", "Ptr", hGui, "str", AhklĞÂ°æ°ïÖúÂ·¾¶, "UInt", 0x000D, "ptr", &ak)
+			if !DllCall("HHCtrl.ocx\HtmlHelp", "Ptr", hGui, "str", Ahklæ–°ç‰ˆå¸®åŠ©è·¯å¾„, "UInt", 0x000D, "ptr", &ak)
 			{
-				Run, %AhklĞÂ°æ°ïÖúÂ·¾¶%
-				WinWait,%Ahk°ïÖú±êÌâ%,,5
-				WinActivate,%Ahk°ïÖú±êÌâ%
+				Run, %Ahklæ–°ç‰ˆå¸®åŠ©è·¯å¾„%
+				WinWait,%Ahkå¸®åŠ©æ ‡é¢˜%,,5
+				WinActivate,%Ahkå¸®åŠ©æ ‡é¢˜%
 				sleep,2000
 				wb := WBGet("ahk_class HH Parent")
-				StringReplace,Ö±½Ó´ò¿ª,CandySel,#,_
-				AhkÌø×ªµÄµØÖ·=/docs/commands/%Ö±½Ó´ò¿ª%.htm
-				myURL =mk:@MSITStore:%AhklĞÂ°æ°ïÖúÂ·¾¶%::%AhkÌø×ªµÄµØÖ·%
+				StringReplace,ç›´æ¥æ‰“å¼€,CandySel,#,_
+				Ahkè·³è½¬çš„åœ°å€=/docs/commands/%ç›´æ¥æ‰“å¼€%.htm
+				myURL =mk:@MSITStore:%Ahklæ–°ç‰ˆå¸®åŠ©è·¯å¾„%::%Ahkè·³è½¬çš„åœ°å€%
 				wb.Navigate(myURL)
 			}
 		Return
 		}
-		IfWinExist,%Ahk°ïÖú±êÌâ%
+		IfWinExist,%Ahkå¸®åŠ©æ ‡é¢˜%
 		{
-			WinActivate, %Ahk°ïÖú±êÌâ%
+			WinActivate, %Ahkå¸®åŠ©æ ‡é¢˜%
 			gosub monishuru
 		}
 	}
-;Ã»ÓĞÔòËÑË÷
+;æ²¡æœ‰åˆ™æœç´¢
 	Else
 	{
-;ÊÇ·ñÒÑ¾­ÔËĞĞ
-		IfWinNotExist,%Ahk°ïÖú±êÌâ%
+;æ˜¯å¦å·²ç»è¿è¡Œ
+		IfWinNotExist,%Ahkå¸®åŠ©æ ‡é¢˜%
 		{
-			Run, %AhklĞÂ°æ°ïÖúÂ·¾¶%
-			WinWait,%Ahk°ïÖú±êÌâ%,,5
+			Run, %Ahklæ–°ç‰ˆå¸®åŠ©è·¯å¾„%
+			WinWait,%Ahkå¸®åŠ©æ ‡é¢˜%,,5
 		}
-		WinActivate, %Ahk°ïÖú±êÌâ%
+		WinActivate, %Ahkå¸®åŠ©æ ‡é¢˜%
 		gosub monishuru2
 	}
 Return
@@ -109,7 +109,7 @@ Return
 monishuru:
 Thread, NoTimers
 sleep,1000
-WinGetPos, X, Y,,,%Ahk°ïÖú±êÌâ%
+WinGetPos, X, Y,,,%Ahkå¸®åŠ©æ ‡é¢˜%
 mousemove, % X+150, % Y+77
 
 ;send !N
@@ -123,8 +123,8 @@ wb.document.getElementsByTagName("input")[0].value := CandySel
 wb.document.getElementsByTagName("input")[0].focus()
 ;click
 sleep,100
-ControlSend,Internet Explorer_Server1,{enter},%Ahk°ïÖú±êÌâ%
-ControlSend,Internet Explorer_Server1,{enter},%Ahk°ïÖú±êÌâ%
+ControlSend,Internet Explorer_Server1,{enter},%Ahkå¸®åŠ©æ ‡é¢˜%
+ControlSend,Internet Explorer_Server1,{enter},%Ahkå¸®åŠ©æ ‡é¢˜%
 
 return
 
@@ -132,7 +132,7 @@ monishuru2:
 Thread, NoTimers
 sleep,2500
 ;send !S
-WinGetPos, X, Y,,,%Ahk°ïÖú±êÌâ%
+WinGetPos, X, Y,,,%Ahkå¸®åŠ©æ ‡é¢˜%
 mousemove, % X+250, % Y+77
 ;click
 
@@ -143,8 +143,8 @@ wb.document.getElementsByTagName("input")[1].value := CandySel
 wb.document.getElementsByTagName("input")[1].focus()
 ;click
 sleep 200
-ControlSend,Internet Explorer_Server1,{enter},%Ahk°ïÖú±êÌâ%
-ControlSend,Internet Explorer_Server1,{enter},%Ahk°ïÖú±êÌâ%
+ControlSend,Internet Explorer_Server1,{enter},%Ahkå¸®åŠ©æ ‡é¢˜%
+ControlSend,Internet Explorer_Server1,{enter},%Ahkå¸®åŠ©æ ‡é¢˜%
 
 return
 
@@ -156,14 +156,14 @@ return
 		BlockInput MouseMoveOff  ; Enable Mouse movement
 	}
 
-cando_ahk°ïÖú:
+cando_ahkå¸®åŠ©:
 ;-------------------------------------------------------------------------------
 ;#SingleInstance Force
 SetTitleMatchMode RegEx
 ;_______________________________________________________________________________
-;Äã°ïÖúÎÄ¼şµÄÂ·¾¶
-ahkÖĞÎÄ°ïÖú := "D:\Program Files\AutoHotkey\AutoHotkeyCN.chm"
-BaseURL_AHK  := "mk:@MSITStore:%ahkÖĞÎÄ°ïÖú%::/docs/commands/%function%.htm"
+;ä½ å¸®åŠ©æ–‡ä»¶çš„è·¯å¾„
+ahkä¸­æ–‡å¸®åŠ© := "D:\Program Files\AutoHotkey\AutoHotkeyCN.chm"
+BaseURL_AHK  := "mk:@MSITStore:%ahkä¸­æ–‡å¸®åŠ©%::/docs/commands/%function%.htm"
 ;_______________________________________________________________________________
 Lang := "ahk"
 sleep 500
@@ -179,5 +179,5 @@ ShowFunction( function, lang="ahk" ) {
   Transform ThisUrl, DeRef, % BaseURL_%lang%
   Run hh.exe %ThisUrl%
 
-  	CF_ToolTip("Äú¸Õ¸Õ²éÑ¯ÁË£º" function,2500)
+  	CF_ToolTip("æ‚¨åˆšåˆšæŸ¥è¯¢äº†ï¼š" function,2500)
 }

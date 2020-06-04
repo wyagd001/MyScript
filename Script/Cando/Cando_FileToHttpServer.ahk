@@ -1,7 +1,7 @@
-Cando_FileToHttpServer:
+ï»¿Cando_FileToHttpServer:
 	HttpServer_File     := CandySel
 	HttpServer_FileName := CandySel_FileNameWithExt
-	CF_ToolTip("ÎÄ¼şÒÑÉèÖÃÎª·şÎñÆ÷ÎÄ¼ş¡£`nÇëÔÚÊÖ»ú(/PC)ÉÏÊ¹ÓÃTasker»òä¯ÀÀÆ÷ÏÂÔØ¡£", 5000)
+	CF_ToolTip("æ–‡ä»¶å·²è®¾ç½®ä¸ºæœåŠ¡å™¨æ–‡ä»¶ã€‚`nè¯·åœ¨æ‰‹æœº(/PC)ä¸Šä½¿ç”¨Taskeræˆ–æµè§ˆå™¨ä¸‹è½½ã€‚", 5000)
 return
 
 Cando_FileToFlaskandTasker:

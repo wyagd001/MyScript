@@ -1,18 +1,18 @@
-^`::
+ï»¿^`::
 	if CHPITooltip
 	{
 		DCHPITooltip()
 	return
 	}
 	WinGet, OutputWId, ID, A
-	IniRead, CHPIF, %run_iniFile%, ³£¹æ, CHPIF   ; ¼ôÌù°åÔ¤ÀÀÏîÄ¿ÊÕ²Ø¼Ğ(×î¶à5¸ö)
+	IniRead, CHPIF, %run_iniFile%, å¸¸è§„, CHPIF   ; å‰ªè´´æ¿é¢„è§ˆé¡¹ç›®æ”¶è—å¤¹(æœ€å¤š5ä¸ª)
 	CHPIFArray := StrSplit(CHPIF, ",")
-	cliphistoryPIList := "¼ôÌù°åÀúÊ·ÏîÄ¿ÉÏÆÁ`n----------------------------------------`n" 
+	cliphistoryPIList := "å‰ªè´´æ¿å†å²é¡¹ç›®ä¸Šå±`n----------------------------------------`n" 
 	Loop, % CHPIFNo := CHPIFArray.Length()
 	{
 		temp_V := ""
 		tpos:=InStr(temp_Va := getFromTable("history", "data", "id=" CHPIFArray[A_index])[1], "`n")
-		temp_V := SubStr(temp_Va, 1, tpos=0?40:tpos<40?tpos-2:40) . (tpos=0?StrLen(temp_Va)<40?"":" ... ":" ... (¶àĞĞ)")
+		temp_V := SubStr(temp_Va, 1, tpos=0?40:tpos<40?tpos-2:40) . (tpos=0?StrLen(temp_Va)<40?"":" ... ":" ... (å¤šè¡Œ)")
 		cliphistoryPIList .= A_index ". " temp_V "`n"
 	}
 	Num := 9 - CHPIFNo
@@ -21,7 +21,7 @@
 	{
 		temp_V := ""
 		tpos:=InStr(temp_Va := cliphistoryPI[A_index], "`n")
-		temp_V := SubStr(temp_Va, 1, tpos=0?40:tpos<40?tpos-2:40) . (tpos=0?StrLen(temp_Va)<40?"":" ... ":" ... (¶àĞĞ)")
+		temp_V := SubStr(temp_Va, 1, tpos=0?40:tpos<40?tpos-2:40) . (tpos=0?StrLen(temp_Va)<40?"":" ... ":" ... (å¤šè¡Œ)")
 		cliphistoryPIList .= A_index + CHPIFNo ". " temp_V "`n"
 	}
 	ToolTip, % cliphistoryPIList, A_CaretX + 10, A_CaretY + 20
@@ -48,8 +48,8 @@ Esc::DCHPITooltip()
 CHPI2Screen(Num)
 {
 	global monitor, CHPIFNo, OutputWId, cliphistoryPI_ID, CHPIFArray
-	Saved_ClipBoard := ClipboardAll    ; ±¸·İ¼ôÌù°å
-	Clipboard := ""   ; Çå¿Õ¼ôÌù°å
+	Saved_ClipBoard := ClipboardAll    ; å¤‡ä»½å‰ªè´´æ¿
+	Clipboard := ""   ; æ¸…ç©ºå‰ªè´´æ¿
 	if (A_ThisHotkey = "Space")
 		Num := 1
 	if (Num <= CHPIFNo)

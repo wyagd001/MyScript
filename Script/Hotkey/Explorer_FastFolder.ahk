@@ -1,6 +1,6 @@
-;#ifWinActive,ahk_class CabinetWClass
+﻿;#ifWinActive,ahk_class CabinetWClass
 ;#q::
-�˸��ղص��ļ��в˵�:
+八个收藏的文件夹菜单:
       Menu, FastFolders, add,1,FastFolderMenuHandler
 	    Menu, FastFolders, DeleteAll
 		loop 8

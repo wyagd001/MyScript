@@ -1,4 +1,4 @@
-OnMessageEx(MsgNumber, params*) {
+﻿OnMessageEx(MsgNumber, params*) {
     ;version 1.0.2 by A_Samurai http://sites.google.com/site/ahkref/custom-functions/onmessageex
     Static Functions := {}
     

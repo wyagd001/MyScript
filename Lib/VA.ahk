@@ -1,4 +1,4 @@
-; VA v2.3
+ï»¿; VA v2.3
 
 ;
 ; MASTER CONTROLS
@@ -913,7 +913,7 @@ VA_xIPolicyConfigVista_SetDefaultEndpoint(this, DeviceId, Role) {
     return DllCall(NumGet(NumGet(this+0)+12*A_PtrSize), "ptr", this, "wstr", DeviceId, "int", Role)
 }
 
-; µ±Ç°´°¿Ú¾²ÒôÌí¼ÓÏÂÃæËùÓĞĞĞ
+; å½“å‰çª—å£é™éŸ³æ·»åŠ ä¸‹é¢æ‰€æœ‰è¡Œ
 VA_GetISimpleAudioVolume(Param)
 {
 	static IID_IASM2 := "{77AA99A0-1BD6-484F-8BC7-2C654C9A9B6F}"

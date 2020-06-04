@@ -1,4 +1,4 @@
-; WindowPad:
+ï»¿; WindowPad:
 ;
 ;   Move and resize windows with Win+Numpad.
 ;     Win+Numpad1 = Fill bottom-left quarter of screen
@@ -66,11 +66,11 @@
 ;  including windows you may not want to exclude, like the sidebar config window.)
 
 /*
-;ÒÆ³ýEasyKey
+;ç§»é™¤EasyKey
 SendEasyKey:
     Send {Blind}{%EasyKey%}
     return
-;ÒÆ³ýEasyKey
+;ç§»é™¤EasyKey
 */
 
 ; This is actually based on monitor number, so if your secondary is on the

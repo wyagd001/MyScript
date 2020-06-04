@@ -1,9 +1,9 @@
-$`::
+ï»¿$`::
 	FileGetTime,newtransT,%A_ScriptDir%\settings\translist.ini
 	if (newtransT != transT)
 	{
 		transT:= newtransT
-		translist:=IniObj(A_ScriptDir "\settings\translist.ini").·­Òë
+		translist:=IniObj(A_ScriptDir "\settings\translist.ini").ç¿»è¯‘
 	}
 	tempV:=GetSelText()
 	tempV=%tempV%

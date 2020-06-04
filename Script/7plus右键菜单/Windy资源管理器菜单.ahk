@@ -1,15 +1,15 @@
-1013:
+ï»¿1013:
 SetTimer,Windy,-200
 Return
 
-7PlusMenu_Windy×ÊÔ´¹ÜÀíÆ÷²Ëµ¥()
+7PlusMenu_Windyèµ„æºç®¡ç†å™¨èœå•()
 {
-	section = Windy×ÊÔ´¹ÜÀíÆ÷²Ëµ¥
+	section = Windyèµ„æºç®¡ç†å™¨èœå•
 	defaultSet=
 	( LTrim
 ID = 1013
 Name = Windy
-Description = Windy ÓÒ¼ü²Ëµ¥
+Description = Windy å³é”®èœå•
 SubMenu =
 FileTypes =
 SingleFileOnly = 0

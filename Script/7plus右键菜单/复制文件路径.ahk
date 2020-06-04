@@ -1,4 +1,4 @@
-1015:
+ï»¿1015:
 	SetTimer,CopyPathToClip,-200
 Return
 
@@ -8,22 +8,22 @@ CopyPathToClip:
 	Files := GetSelectedFiles()
 	If !Files
 	{
-		CF_ToolTip("ÎŞ·¨»ñÈ¡µ½ÎÄ¼şÂ·¾¶¡£", 3000)
+		CF_ToolTip("æ— æ³•è·å–åˆ°æ–‡ä»¶è·¯å¾„ã€‚", 3000)
 	return
 	}
 	Clipboard := Files
 	if !Auto_Clip
-	CF_ToolTip("ÒÑ¸´ÖÆÎÄ¼şÂ·¾¶µ½½Ø¼ôÌù°å¡£", 3000)
+	CF_ToolTip("å·²å¤åˆ¶æ–‡ä»¶è·¯å¾„åˆ°æˆªå‰ªè´´æ¿ã€‚", 3000)
 Return
 
-7PlusMenu_¸´ÖÆÎÄ¼şÂ·¾¶()
+7PlusMenu_å¤åˆ¶æ–‡ä»¶è·¯å¾„()
 {
-	section = ¸´ÖÆÎÄ¼şÂ·¾¶
+	section = å¤åˆ¶æ–‡ä»¶è·¯å¾„
 	defaultSet=
 	( LTrim
 		ID = 1015
-		Name = ¸´ÖÆÎÄ¼şÂ·¾¶
-		Description = ¸´ÖÆÎÄ¼şÂ·¾¶ÃüÁî(Ö§³Ö¶àÎÄ¼ş)
+		Name = å¤åˆ¶æ–‡ä»¶è·¯å¾„
+		Description = å¤åˆ¶æ–‡ä»¶è·¯å¾„å‘½ä»¤(æ”¯æŒå¤šæ–‡ä»¶)
 		SubMenu =
 		FileTypes = *
 		SingleFileOnly = 0

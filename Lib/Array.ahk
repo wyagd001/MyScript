@@ -1,4 +1,4 @@
-Array_removeDuplicates(InputArray)
+﻿Array_removeDuplicates(InputArray)
 {
 	for i, ival in InputArray
 	{

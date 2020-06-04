@@ -1,4 +1,4 @@
-垂直最大化:
+锘垮瀭鐩存渶澶у寲:
 WinGet, hw_active, ID, A
 WinGetPos, a_x, a_y, a_w, a_h, A
 If (a_y!= 0 || a_h != work_area_h)
@@ -16,7 +16,7 @@ Else
     windows[%hw_active%]_max_h := !windows[%hw_active%]_max_h
 return
 
-水平最大化:
+姘村钩鏈�澶у寲:
 WinGet, hw_active, ID, A
 WinGetPos, a_x, a_y, a_w, a_h, A
 If (a_x != 0 || a_w != work_area_w)

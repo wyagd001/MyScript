@@ -1,6 +1,6 @@
-; http://www.autohotkey.com/forum/topic68446.html
+ï»¿; http://www.autohotkey.com/forum/topic68446.html
 
-#ifwinexist, ahk_class #32768   ;ÓÒ¼ü²Ëµ¥
+#ifwinexist, ahk_class #32768   ;å³é”®èœå•
 ~lbutton::
 	sleep,1000
 	SetTimer,Monitormenuclick,off
@@ -14,7 +14,7 @@ Monitormenuclick:
 	{
 		idx :=A_Index-1
 		state := MenuState(hMenu,idx)
-		if (state = 128)  ; ¸ßÁÁ²Ëµ¥ MFS_HILITE 0x00000080
+		if (state = 128)  ; é«˜äº®èœå• MFS_HILITE 0x00000080
 		{
 			;IsEnabled := GetContextMenuState(hMenu, idx)
 			idn := DllCall("GetMenuItemID", "Uint", hMenu, "int", idx)
@@ -25,8 +25,8 @@ Monitormenuclick:
 			if (current_id <> IDn)
 				current_id := IDn
 		}
-		; ´ò¿ª²Ëµ¥ºóµÚÒ»´Îµã»÷ Õ³Ìù²¢´ò¿ª ²ÅÓĞĞ§
-		; ·ñÔòÒªÔÙ´Î´ò¿ª²Ëµ¥
+		; æ‰“å¼€èœå•åç¬¬ä¸€æ¬¡ç‚¹å‡» ç²˜è´´å¹¶æ‰“å¼€ æ‰æœ‰æ•ˆ
+		; å¦åˆ™è¦å†æ¬¡æ‰“å¼€èœå•
 		;tooltip % current_id "-" sString
 		If (current_id <> 0)
 		{
@@ -36,7 +36,7 @@ Monitormenuclick:
 				While, (_IsPressed("0D") || _IsPressed("01"))
 					Sleep 10
 
-				If (current_id = 4097) & (sString="Õ³Ìù²¢´ò¿ª"){
+				If (current_id = 4097) & (sString="ç²˜è´´å¹¶æ‰“å¼€"){
 					sleep,200
 					sendevent,{del}{ctrldown}v{ctrlup}{enter}
 					sleep,200
@@ -58,7 +58,7 @@ addmenuitem:
 	{
 		if(clsn="edit"){
 			;tooltip % act_class
-			STR_TEST := "Õ³Ìù²¢´ò¿ª"
+			STR_TEST := "ç²˜è´´å¹¶æ‰“å¼€"
 			Position=1 ; top position
 			uFlags:=0x40 ;pop menu
 			uIDNewItem=0x1001

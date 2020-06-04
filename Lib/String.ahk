@@ -1,15 +1,15 @@
-; wString		×ª»»ºóµÃµ½µÄunicode×Ö´®
-; sString		´ı×ª»»×Ö´®
-; CP				´ı×ª»»×Ö´®sStringµÄ´úÂëÒ³
-; ·µ»ØÖµ		×ª»»ºóµÃµ½µÄunicode×Ö´®,wStringµÄµØÖ·
-; ¸Ãº¯ÊıÓ³ÉäÒ»¸ö×Ö·û´® (MultiByteStr) µ½Ò»¸ö¿í×Ö·û (unicode UTF-16) µÄ×Ö·û´® (WideCharStr)¡£
-; ÓÉ¸Ãº¯ÊıÓ³ÉäµÄ×Ö·û´®Ã»±ØÒªÊÇ¶à×Ö½Ú×Ö·û×é¡£
-; &sString ´«ÈëµÄÊÇµØÖ·£¬ËùÒÔ sString ±äÁ¿²»ÄÜÖ±½Ó´«ÈëµØÖ·
+ï»¿; wString		è½¬æ¢åå¾—åˆ°çš„unicodeå­—ä¸²
+; sString		å¾…è½¬æ¢å­—ä¸²
+; CP				å¾…è½¬æ¢å­—ä¸²sStringçš„ä»£ç é¡µ
+; è¿”å›å€¼		è½¬æ¢åå¾—åˆ°çš„unicodeå­—ä¸²,wStringçš„åœ°å€
+; è¯¥å‡½æ•°æ˜ å°„ä¸€ä¸ªå­—ç¬¦ä¸² (MultiByteStr) åˆ°ä¸€ä¸ªå®½å­—ç¬¦ (unicode UTF-16) çš„å­—ç¬¦ä¸² (WideCharStr)ã€‚
+; ç”±è¯¥å‡½æ•°æ˜ å°„çš„å­—ç¬¦ä¸²æ²¡å¿…è¦æ˜¯å¤šå­—èŠ‚å­—ç¬¦ç»„ã€‚
+; &sString ä¼ å…¥çš„æ˜¯åœ°å€ï¼Œæ‰€ä»¥ sString å˜é‡ä¸èƒ½ç›´æ¥ä¼ å…¥åœ°å€
 /* 
-; A°æÔËĞĞÀı×Ó
-pp=ÖĞÎÄ
-Ansi2Unicode(qq,pp,936) ; ÕıÈ·
-Ansi2Unicode(qq,&pp,936) ; ´íÎó
+; Aç‰ˆè¿è¡Œä¾‹å­
+pp=ä¸­æ–‡
+Ansi2Unicode(qq,pp,936) ; æ­£ç¡®
+Ansi2Unicode(qq,&pp,936) ; é”™è¯¯
 */
 ;cp=65001 UTF-8   cp=0 default to ANSI code page
 Ansi2Unicode(ByRef wString, ByRef sString,  CP = 0)
@@ -20,18 +20,18 @@ Ansi2Unicode(ByRef wString, ByRef sString,  CP = 0)
 Return	&wString
 }
 
-; wString		´ı×ª»»µÄunicode×Ö´®  
-; sString		×ª»»ºóµÃµ½µÄ×Ö´®
-; CP				×ª»»ºóµÃµ½µÄ×Ö´®sStringµÄ´úÂëÒ³£¬ÀıÈç CP=65001£¬×ª»»µÃµ½µÄ×Ö´®¾ÍÊÇUTF8µÄ×Ö·û´®
-; ·µ»ØÖµ		×ª»»ºóµÃµ½µÄ×Ö´®sString
-; ¸Ãº¯ÊıÓ³ÉäÒ»¸ö¿í×Ö·û´® (unicode UTF-16) µ½Ò»¸öĞÂµÄ×Ö·û´®
-; °Ñ¿í×Ö·û´® (unicode UTF-16) ×ª»»³ÉÖ¸¶¨´úÂëÒ³µÄĞÂ×Ö·û´®
-; &wString ´«ÈëµÄÊÇµØÖ·£¬ËùÒÔwString±äÁ¿²»ÄÜÖ±½Ó´«ÈëµØÖ·
+; wString		å¾…è½¬æ¢çš„unicodeå­—ä¸²  
+; sString		è½¬æ¢åå¾—åˆ°çš„å­—ä¸²
+; CP				è½¬æ¢åå¾—åˆ°çš„å­—ä¸²sStringçš„ä»£ç é¡µï¼Œä¾‹å¦‚ CP=65001ï¼Œè½¬æ¢å¾—åˆ°çš„å­—ä¸²å°±æ˜¯UTF8çš„å­—ç¬¦ä¸²
+; è¿”å›å€¼		è½¬æ¢åå¾—åˆ°çš„å­—ä¸²sString
+; è¯¥å‡½æ•°æ˜ å°„ä¸€ä¸ªå®½å­—ç¬¦ä¸² (unicode UTF-16) åˆ°ä¸€ä¸ªæ–°çš„å­—ç¬¦ä¸²
+; æŠŠå®½å­—ç¬¦ä¸² (unicode UTF-16) è½¬æ¢æˆæŒ‡å®šä»£ç é¡µçš„æ–°å­—ç¬¦ä¸²
+; &wString ä¼ å…¥çš„æ˜¯åœ°å€ï¼Œæ‰€ä»¥wStringå˜é‡ä¸èƒ½ç›´æ¥ä¼ å…¥åœ°å€
 /* 
-; U°æÔËĞĞÀı×Ó
-qq=ÖĞÎÄ
-Unicode2Ansi(qq,pp,936) ; ÕıÈ·
-Unicode2Ansi(&qq,pp,936) ; ´íÎó
+; Uç‰ˆè¿è¡Œä¾‹å­
+qq=ä¸­æ–‡
+Unicode2Ansi(qq,pp,936) ; æ­£ç¡®
+Unicode2Ansi(&qq,pp,936) ; é”™è¯¯
 */
 Unicode2Ansi(ByRef wString,ByRef sString,  CP = 0)
 {
@@ -41,11 +41,11 @@ Unicode2Ansi(ByRef wString,ByRef sString,  CP = 0)
 	Return	sString
 }
 
-; Unicode2Ansi pString ¡ú sString
-; pString ÊÇµØÖ·±äÁ¿£¬ĞèÖ±½Ó´«ÈëµØÖ·
+; Unicode2Ansi pString â†’ sString
+; pString æ˜¯åœ°å€å˜é‡ï¼Œéœ€ç›´æ¥ä¼ å…¥åœ°å€
 /* 
-; Àı
-pp=ÖĞÎÄ
+; ä¾‹
+pp=ä¸­æ–‡
 Ansi4Unicode(&pp)
 */
 Ansi4Unicode(pString, nSize = "")
@@ -57,7 +57,7 @@ Ansi4Unicode(pString, nSize = "")
 Return	sString
 }
 
-; Ansi2Unicode  sString ¡ú wString
+; Ansi2Unicode  sString â†’ wString
 Unicode4Ansi(ByRef wString, sString, nSize = "")
 {
 	If (nSize = "")
@@ -67,10 +67,10 @@ Unicode4Ansi(ByRef wString, sString, nSize = "")
 Return	&wString
 }
 
-; UrlEncode("ÒÁ–|¥¨¥ê", "cp20936")
-; cp936			¼òÌåÖĞÎÄ GBK GB2312
-; cp10002		MAC»úÉÏµÄbig5±àÂë£¬
-; cp950			·±ÌåÖĞÎÄ big5
+; UrlEncode("ä¼Šæ±ã‚¨ãƒª", "cp20936")
+; cp936			ç®€ä½“ä¸­æ–‡ GBK GB2312
+; cp10002		MACæœºä¸Šçš„big5ç¼–ç ï¼Œ
+; cp950			ç¹ä½“ä¸­æ–‡ big5
 UrlEncode(Url, Enc = "UTF-8")
 {
 	StrPutVar(Url, Var, Enc)
@@ -149,32 +149,32 @@ UrlEncodeEscape(text)
     return StrGet(&LE, 2)
 }
 
-; ·¢ËÍÖĞÎÄ£¬±ÜÃâÊäÈë·¨Ó°Ïì £¨±¸·İ£¬ÒÑÓÃ SendStr ´úÌæ£©
+; å‘é€ä¸­æ–‡ï¼Œé¿å…è¾“å…¥æ³•å½±å“ ï¼ˆå¤‡ä»½ï¼Œå·²ç”¨ SendStr ä»£æ›¿ï¼‰
 _SendRaw(Keys)
 {
-	Len := StrLen(Keys) ; µÃµ½×Ö·û´®µÄ³¤¶È£¬×¢ÒâÒ»¸öÖĞÎÄ×Ö·ûµÄ³¤¶ÈÊÇ2
-	KeysInUnicode := "" ; ½«Òª·¢ËÍµÄ×Ö·ûĞòÁĞ
-	Char1 := "" ; Ôİ´æ×Ö·û1
-	Code1 := 0 ; ×Ö·û1µÄASCIIÂë£¬Öµ½éÓÚ 0x0-0xFF (¼´1~255)
-	Char2 := "" ; Ôİ´æ×Ö·û2
-	Index := 1 ; ÓÃÓÚÑ­»·
+	Len := StrLen(Keys) ; å¾—åˆ°å­—ç¬¦ä¸²çš„é•¿åº¦ï¼Œæ³¨æ„ä¸€ä¸ªä¸­æ–‡å­—ç¬¦çš„é•¿åº¦æ˜¯2
+	KeysInUnicode := "" ; å°†è¦å‘é€çš„å­—ç¬¦åºåˆ—
+	Char1 := "" ; æš‚å­˜å­—ç¬¦1
+	Code1 := 0 ; å­—ç¬¦1çš„ASCIIç ï¼Œå€¼ä»‹äº 0x0-0xFF (å³1~255)
+	Char2 := "" ; æš‚å­˜å­—ç¬¦2
+	Index := 1 ; ç”¨äºå¾ªç¯
 	Loop
 	{
-		Code2 := 0 ; ×Ö·û2µÄASCIIÂë
-		Char1 := SubStr(Keys, Index, 1) ; µÚÒ»¸ö×Ö·û
-		Code1 := Asc(Char1) ; µÃµ½ÆäASCIIÖµ
-		if(Code1 >= 129 And Code1 <= 254 And Index < Len) ; ÅĞ¶ÏÊÇ·ñÖĞÎÄ×Ö·ûµÄµÚÒ»¸ö×Ö·û
+		Code2 := 0 ; å­—ç¬¦2çš„ASCIIç 
+		Char1 := SubStr(Keys, Index, 1) ; ç¬¬ä¸€ä¸ªå­—ç¬¦
+		Code1 := Asc(Char1) ; å¾—åˆ°å…¶ASCIIå€¼
+		if(Code1 >= 129 And Code1 <= 254 And Index < Len) ; åˆ¤æ–­æ˜¯å¦ä¸­æ–‡å­—ç¬¦çš„ç¬¬ä¸€ä¸ªå­—ç¬¦
 		{
-			Char2 := SubStr(Keys, Index+1, 1) ; µÚ¶ş¸ö×Ö·û
-			Code2 := Asc(Char2) ; µÃµ½ÆäASCIIÖµ
-			if(Code2 >= 64 And Code2 <= 254) ; ÈôÌõ¼ş³ÉÁ¢ÔòËµÃ÷ÊÇÖĞÎÄ×Ö·û
+			Char2 := SubStr(Keys, Index+1, 1) ; ç¬¬äºŒä¸ªå­—ç¬¦
+			Code2 := Asc(Char2) ; å¾—åˆ°å…¶ASCIIå€¼
+			if(Code2 >= 64 And Code2 <= 254) ; è‹¥æ¡ä»¶æˆç«‹åˆ™è¯´æ˜æ˜¯ä¸­æ–‡å­—ç¬¦
 			{
-				Code1 <<= 8 ; µÚÒ»¸ö×Ö·ûÓ¦·Åµ½¸ß8Î»ÉÏ
-				Code1 += Code2 ; µÚ¶ş¸ö×Ö·û·ÅÔÚµÍ8Î»ÉÏ
+				Code1 <<= 8 ; ç¬¬ä¸€ä¸ªå­—ç¬¦åº”æ”¾åˆ°é«˜8ä½ä¸Š
+				Code1 += Code2 ; ç¬¬äºŒä¸ªå­—ç¬¦æ”¾åœ¨ä½8ä½ä¸Š
 			}
 			Index++
 		}
-		if(Code1 <= 255) ; Èç¹û´ËÖµÈÔ<=255ÔòËµÃ÷ÊÇ·ÇÖĞÎÄ×Ö·û£¬·ñÔò¾­¹ıÉÏÃæµÄ´¦Àí±ØÈ»´óÓÚ255
+		if(Code1 <= 255) ; å¦‚æœæ­¤å€¼ä»<=255åˆ™è¯´æ˜æ˜¯éä¸­æ–‡å­—ç¬¦ï¼Œå¦åˆ™ç»è¿‡ä¸Šé¢çš„å¤„ç†å¿…ç„¶å¤§äº255
 			Code1 := "0" . Code1
 		KeysInUnicode .= "{ASC " . Code1 . "}"
 		if(Code2 > 0 And Code2 < 64)
@@ -190,7 +190,7 @@ _SendRaw(Keys)
 }
 
 ; http://www.ahkcn.net/thread-5385.html
-; ·¢ËÍÖĞÎÄ£¬±ÜÃâÊäÈë·¨Ó°Ïì
+; å‘é€ä¸­æ–‡ï¼Œé¿å…è¾“å…¥æ³•å½±å“
 SendStr(String)
 {
 	if(A_IsUnicode)
@@ -198,7 +198,7 @@ SendStr(String)
 		Loop, Parse, String
 			ascString .= (Asc(A_loopfield)>127 )? A_LoopField : "{ASC 0" . Asc(A_loopfield) . "}"
 	}
-	else     ;Èç¹û·ÇUnicode
+	else     ;å¦‚æœéUnicode
 	{
 		z:=0
 		Loop,parse,String
@@ -227,7 +227,7 @@ SendStr(String)
 	SendInput %ascString%
 }
 
-; ·± ¡ú ¼ò
+; ç¹ â†’ ç®€
 fzj(trc)
 {
 	tmp1:= A_IsUnicode ? trc : Ansi2Unicode(tmp1, trc, 936)
@@ -236,7 +236,7 @@ fzj(trc)
 return A_IsUnicode ? tmp2 : Unicode2Ansi(tmp2, spc, 936)
 }
 
-; ¼ò ¡ú ·±
+; ç®€ â†’ ç¹
 jzf(spc)
 {
 	tmp1:= A_IsUnicode ? spc : Ansi2Unicode(tmp1, spc, 936)
@@ -245,7 +245,7 @@ jzf(spc)
 return A_IsUnicode ? tmp2 : Unicode2Ansi(tmp2, trc,936)
 }
 
-; ¸ù¾İ×Ö½ÚÈ¡×Ó×Ö·û´®£¬Èç¹û¶àÉ¾ÁËÒ»¸ö×Ö½Ú£¬²¹Ò»¸ö¿Õ¸ñ
+; æ ¹æ®å­—èŠ‚å–å­å­—ç¬¦ä¸²ï¼Œå¦‚æœå¤šåˆ äº†ä¸€ä¸ªå­—èŠ‚ï¼Œè¡¥ä¸€ä¸ªç©ºæ ¼
 SubStrByByte(text, length)
 {
     textForCalc := RegExReplace(text, "[^\x00-\xff]", "`t`t")
@@ -273,7 +273,7 @@ SubStrByByte(text, length)
 
     result := SubStr(text, 1, round(textLength - 0.5))
 
-    ; É¾µôÒ»¸öºº×Ö£¬²¹Ò»¸ö¿Õ¸ñ
+    ; åˆ æ‰ä¸€ä¸ªæ±‰å­—ï¼Œè¡¥ä¸€ä¸ªç©ºæ ¼
     if (round(textLength - 0.5) != round(textLength))
         result .= " "
 
@@ -430,7 +430,7 @@ f_LastIsBackslash(ThisPath)
 	if SubStr(ThisPath, 0) = "\" ; if last is \
 	{
 		StringTrimRight, ThisPath, ThisPath, 1 ; trim last \
-		Loop ; prevent ³\¥\»\ problem
+		Loop ; prevent ç ›î™¢ç±  problem
 		{
 			if ThisPath =
 				return Mod(A_Index, 2)

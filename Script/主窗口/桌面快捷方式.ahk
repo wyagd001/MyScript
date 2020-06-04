@@ -1,4 +1,4 @@
-;×ÀÃæ¿ì½İ·½Ê½
+ï»¿;æ¡Œé¢å¿«æ·æ–¹å¼
 Desktoplnk:
 	mydesktopmenu := FolderMenu(A_desktop, "lnk",,1,0,1,0)
 	menu, % mydesktopmenu, show

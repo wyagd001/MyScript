@@ -1,5 +1,6 @@
+ï»¿#include %A_ScriptDir%\Lib\SaveScreen.ahk
 ;#IfWinNotActive  ahk_group DesktopTaskbarGroup
-´°¿ÚËõÂÔÍ¼:
+çª—å£ç¼©ç•¥å›¾:
 if(MiniMizeNum>=fi+50)
 {
 return
@@ -91,7 +92,7 @@ WinActivate, ahk_id %Title2MiniMize%
 return
 
 /*
-;ÒÑÒÆ¶¯µ½Ö÷´°¿Ú_Í¼Æ¬°´Å¥MouseLDownÖĞ¡£
+;å·²ç§»åŠ¨åˆ°ä¸»çª—å£_å›¾ç‰‡æŒ‰é’®MouseLDownä¸­ã€‚
 WM_LBUTTONDOWN() {   ; this is the function that moves the gui
   If A_Gui
   PostMessage, 0xA1, 2

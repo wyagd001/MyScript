@@ -1,14 +1,14 @@
-;#IfWinActive,ahk_class RegEdit_RegEdit
+ï»¿;#IfWinActive,ahk_class RegEdit_RegEdit
 ;!x::
-×¢²á±í¸´ÖÆÂ·¾¶:
-ControlGet, hwnd, hwnd, , SysTreeView321,×¢²á±í±à¼­Æ÷
+æ³¨å†Œè¡¨å¤åˆ¶è·¯å¾„:
+ControlGet, hwnd, hwnd, , SysTreeView321,æ³¨å†Œè¡¨ç¼–è¾‘å™¨
 ret:=TVPath_Get(hwnd, outPath)
 if( ret = "")
 {
 StringGetPos,hpos,outPath,HKEY
 StringTrimLeft, OutputVar, outPath, hpos
 clipboard := OutputVar
-CF_Traytip("¼ôÌù°å", OutputVar " ÒÑ¾­¸´ÖÆµ½¼ôÌù°å¡£", 2500)
+CF_Traytip("å‰ªè´´æ¿", OutputVar " å·²ç»å¤åˆ¶åˆ°å‰ªè´´æ¿ã€‚", 2500)
 }
 Return
 ;#IfWinActive
@@ -22,7 +22,7 @@ if( ret = "")
 StringGetPos,hpos,outPath,HKEY
 StringTrimLeft, OutputVar, outPath, hpos
 clipboard := OutputVar
-CF_Traytip("¼ôÌù°å", OutputVar "ÒÑ¾­¸´ÖÆµ½¼ôÌù°å¡£", 2500)
+CF_Traytip("å‰ªè´´æ¿", OutputVar "å·²ç»å¤åˆ¶åˆ°å‰ªè´´æ¿ã€‚", 2500)
 }
 return
 */

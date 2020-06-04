@@ -1,8 +1,8 @@
-; Ô­½Å±¾ÒÑ±»ĞŞ¸Ä
+ï»¿; åŸè„šæœ¬å·²è¢«ä¿®æ”¹
 ; MoveInactiveWin.ahk
 ; http://www.1hoursoftware.com
 ; Easy Window Dragging -- KDE style (requires XP/2k/NT) -- by Jonny
-; http://www.autohotkey.com/forum/topic2062.html ºÍ  °ïÖúÎÄ¼şÀïµÄ½Å±¾ÊµÀıÖĞÓĞÊÕÂ¼
+; http://www.autohotkey.com/forum/topic2062.html å’Œ  å¸®åŠ©æ–‡ä»¶é‡Œçš„è„šæœ¬å®ä¾‹ä¸­æœ‰æ”¶å½•
 
 ;SetWinDelay,0
 ;SetBatchLines,-1
@@ -10,7 +10,7 @@
 
 ;#ifWinNotActive,Warcraft III
 ;!LButton::
-AltºÍ×ó¼üÒÆ¶¯´°¿Ú:
+Altå’Œå·¦é”®ç§»åŠ¨çª—å£:
 ;ifWinActive,ahk_class Valve001
 ;{
 ;    Send !{LButton}
@@ -45,7 +45,7 @@ Return
 
 ;#ifWinNotActive,Warcraft III
 ;!RButton::
-AltºÍÓÒ¼ü´°¿Ú´óĞ¡:
+Altå’Œå³é”®çª—å£å¤§å°:
 ;ifWinActive,ahk_class Valve001
 ;{
 ;    Send !{RButton}
@@ -90,7 +90,7 @@ return
 ;#ifWinNotActive
 
 ;!^LButton::
-¿Ø¼şÎ»ÖÃ:
+æ§ä»¶ä½ç½®:
 ; Get the initial mouse position and Control id relative to the Window
 CoordMode,Mouse,Relative
 MouseGetPos,KDE_X1,KDE_Y1,KDE_id,KDE_Ctrl
@@ -111,7 +111,7 @@ Loop
 return
 
 ;!^RButton::
-¿Ø¼ş´óĞ¡:
+æ§ä»¶å¤§å°:
 ; Get the initial mouse position and Control id relative to the Window
 CoordMode,Mouse,Relative
 MouseGetPos,KDE_X1,KDE_Y1,KDE_id,KDE_Ctrl

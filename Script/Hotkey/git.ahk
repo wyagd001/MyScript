@@ -1,24 +1,24 @@
-; ¸´ÖÆÂ·¾¶ºó£¬×Ô¶¯´ò¿ª±¾µØÎÄ¼ş(ÓÃÓÚgithub ÉÏ°ïÖúÎÄ¼ş¸üĞÂÊ±×Ô¶¯´ò¿ª±¾µØÎÄ¼şÍ¬²½¸üĞÂ)
+ï»¿; å¤åˆ¶è·¯å¾„åï¼Œè‡ªåŠ¨æ‰“å¼€æœ¬åœ°æ–‡ä»¶(ç”¨äºgithub ä¸Šå¸®åŠ©æ–‡ä»¶æ›´æ–°æ—¶è‡ªåŠ¨æ‰“å¼€æœ¬åœ°æ–‡ä»¶åŒæ­¥æ›´æ–°)
 git:
 	if !SelectedPath
 		SelectedPath := GetSelText()
 	SelectedPath := StrReplace(SelectedPath, "/", "\")
 
-	Switch  ; ĞèÒªÖ÷³ÌĞò°æ±¾ 1.1.31.00
+	Switch  ; éœ€è¦ä¸»ç¨‹åºç‰ˆæœ¬ 1.1.31.00
 	{
 		case InStr(SelectedPath,"zh-cn"), InStr(SelectedPath,"v1"):
 		{
 			SelectedPath:=SubStr(SelectedPath, InStr(SelectedPath,"docs")+5)
-			if FileExist("N:\×ÊÁÏ\autohotkey °ïÖú\v1\docs\" SelectedPath)
+			if FileExist("N:\èµ„æ–™\autohotkey å¸®åŠ©\v1\docs\" SelectedPath)
 			{
 				if WinExist("ahk_class Notepad3U")
 				{
 					WinActivate, ahk_class Notepad3U
-					DropFiles("N:\×ÊÁÏ\autohotkey °ïÖú\v1\docs\" SelectedPath, "ahk_class Notepad3U")
+					DropFiles("N:\èµ„æ–™\autohotkey å¸®åŠ©\v1\docs\" SelectedPath, "ahk_class Notepad3U")
 				return
 				}
 				else
-					run "%notepad3%" "N:\×ÊÁÏ\autohotkey °ïÖú\v1\docs\%SelectedPath%"
+					run "%notepad3%" "N:\èµ„æ–™\autohotkey å¸®åŠ©\v1\docs\%SelectedPath%"
 				return
 			}
 		}
@@ -26,16 +26,16 @@ git:
 		case InStr(SelectedPath,"v2"):
 		{
 			SelectedPath:=SubStr(SelectedPath, InStr(SelectedPath,"docs")+5)
-			if FileExist("N:\×ÊÁÏ\autohotkey °ïÖú\v2\docs\" SelectedPath)
+			if FileExist("N:\èµ„æ–™\autohotkey å¸®åŠ©\v2\docs\" SelectedPath)
 			{
 				if WinExist("ahk_class Notepad2U")
 				{
 					WinActivate, ahk_class Notepad2U
-					DropFiles("N:\×ÊÁÏ\autohotkey °ïÖú\v2\docs\" SelectedPath, "ahk_class Notepad2U")
+					DropFiles("N:\èµ„æ–™\autohotkey å¸®åŠ©\v2\docs\" SelectedPath, "ahk_class Notepad2U")
 				return
 				}
 			else
-				run "%notepad2%" "N:\×ÊÁÏ\autohotkey °ïÖú\v2\docs\%SelectedPath%"
+				run "%notepad2%" "N:\èµ„æ–™\autohotkey å¸®åŠ©\v2\docs\%SelectedPath%"
 			return
 			}
 		}
@@ -43,31 +43,31 @@ git:
 		Default:
 		{
 			SelectedPath := LTrim(SelectedPath,"\")
-			if FileExist("N:\×ÊÁÏ\autohotkey °ïÖú\v1\" SelectedPath)
+			if FileExist("N:\èµ„æ–™\autohotkey å¸®åŠ©\v1\" SelectedPath)
 			{
 				if WinExist("ahk_class Notepad3U")
 				{
 					WinActivate, ahk_class Notepad3U
-					DropFiles("N:\×ÊÁÏ\autohotkey °ïÖú\v1\" SelectedPath, "ahk_class Notepad3U")
+					DropFiles("N:\èµ„æ–™\autohotkey å¸®åŠ©\v1\" SelectedPath, "ahk_class Notepad3U")
 				}
 				else
 				{
-					run "%notepad3%" "N:\×ÊÁÏ\autohotkey °ïÖú\v1\%SelectedPath%"
+					run "%notepad3%" "N:\èµ„æ–™\autohotkey å¸®åŠ©\v1\%SelectedPath%"
 					sleep, 200
 					WinSet, AlwaysOnTop,, ahk_class Notepad3U
 				}
 			}
 			sleep 1000
-			if FileExist("N:\×ÊÁÏ\autohotkey °ïÖú\v2\" SelectedPath)
+			if FileExist("N:\èµ„æ–™\autohotkey å¸®åŠ©\v2\" SelectedPath)
 			{
 				if WinExist("ahk_class Notepad2U")
 				{
 					WinActivate, ahk_class Notepad2U
-					DropFiles("N:\×ÊÁÏ\autohotkey °ïÖú\v2\" SelectedPath, "ahk_class Notepad2U")
+					DropFiles("N:\èµ„æ–™\autohotkey å¸®åŠ©\v2\" SelectedPath, "ahk_class Notepad2U")
 				}
 				else
 				{
-					run "%notepad2%" "N:\×ÊÁÏ\autohotkey °ïÖú\v2\%SelectedPath%"
+					run "%notepad2%" "N:\èµ„æ–™\autohotkey å¸®åŠ©\v2\%SelectedPath%"
 					sleep, 200
 					WinSet, AlwaysOnTop,, ahk_class Notepad2U
 				}

@@ -1,4 +1,4 @@
-Cando_Í¼ÏñÎÄ¼ş·Å½ø¼ôÌù°å:
+ï»¿Cando_å›¾åƒæ–‡ä»¶æ”¾è¿›å‰ªè´´æ¿:
 pToken := Gdip_Startup()
 pbitmap := Gdip_CreateBitmapFromFile(CandySel)
 Gdip_SetBitmapToClipboard(pBitmap)
@@ -6,27 +6,31 @@ Gdip_DisposeImage(pBitmap)
 Gdip_Shutdown(pToken)
 Return
 
-Cando_Í¼Ïñ³ß´çËõĞ¡:
+Cando_å›¾åƒå°ºå¯¸ç¼©å°:
 Output := CandySel_ParentPath . "\" . CandySel_FileNamenoExt . "_0.5." . CandySel_Ext
 ConvertImage(CandySel, Output, "50", "50", "Percent")
 IfNotExist %Output%
-	TrayTip, Í¼Ïñ×ª»»Ê§°Ü, %Output%, 3000
+	TrayTip, å›¾åƒè½¬æ¢å¤±è´¥, %Output%, 3000
 Return
 
-; JPGÆ·ÖÊĞ¡ÓÚ50Ê±²»ÄÜÔÙ´ÎÑ¹Ëõ³ß´ç
-Cando_Í¼Ïñ×ªÎªJPG:
+; JPGå“è´¨å°äº50æ—¶ä¸èƒ½å†æ¬¡å‹ç¼©å°ºå¯¸
+Cando_å›¾åƒè½¬ä¸ºJPG:
 Output := CandySel_ParentPath . "\" . CandySel_FileNamenoExt . "-0.5.jpg"
 ConvertImage_Quality(CandySel, Output, 50)
 IfNotExist %Output%
-	TrayTip, Í¼Ïñ×ª»»Ê§°Ü, %Output%, 3000
+	TrayTip, å›¾åƒè½¬æ¢å¤±è´¥, %Output%, 3000
 Return
 
-Cando_Í¼ÏñÈ¥É«:
+Cando_å›¾åƒå»è‰²:
 Output := CandySel_ParentPath . "\" . CandySel_FileNamenoExt . "_GreyScale." . CandySel_Ext
 ConvertImage_GreyScale(CandySel, output)
 IfNotExist %Output%
-	TrayTip, Í¼Ïñ×ª»»Ê§°Ü, %Output%, 3000
+	TrayTip, å›¾åƒè½¬æ¢å¤±è´¥, %Output%, 3000
 Return
+
+Cando_OCR:
+MsgBox % OCR(CandySel, "chi_sim")
+return
 
 ConvertImage_Quality(sInput, sOutput, Quality)
 {
@@ -71,7 +75,7 @@ ConvertImage(sInput, sOutput, sWidth="", sHeight="", Method="Percent")
 	return 0
 }
 
-; À´Ô´ÍøÖ·: https://autohotkey.com/board/topic/61891-convert-image-to-greyscale/page-2
+; æ¥æºç½‘å€: https://autohotkey.com/board/topic/61891-convert-image-to-greyscale/page-2
 ConvertImage_GreyScale(sInput, sOutput)
 {
 	SetBatchLines, -1 

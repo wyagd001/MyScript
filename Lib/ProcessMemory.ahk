@@ -1,4 +1,4 @@
-; https://autohotkey.com/board/topic/113942-solved-get-cpu-usage-in/
+ï»¿; https://autohotkey.com/board/topic/113942-solved-get-cpu-usage-in/
 CPULoad()
 {
     static PIT, PKT, PUT
@@ -43,7 +43,7 @@ WMI_Query(pid)
     if queryEnum[process]
         sResult.=process.CommandLine
     else
-        MsgBox Ö¸¶¨½ø³ÌÃ»ÓĞÕÒµ½!  
+        MsgBox æŒ‡å®šè¿›ç¨‹æ²¡æœ‰æ‰¾åˆ°!  
    Return   sResult
 }
 
@@ -63,8 +63,8 @@ JEE_NotepadGetPath(hWnd)
 	;PROCESS_QUERY_INFORMATION := 0x400 ;PROCESS_VM_READ := 0x10
 	if !hProc := DllCall("kernel32\OpenProcess", UInt, 0x410, Int, 0, UInt, vPID, Ptr)
 		return
-; Èç¹û¸Ã½ø³ÌÊÇ32Î»Ó¦ÓÃ³ÌĞò£¬ÔËĞĞÔÚ64Î»²Ù×÷ÏµÍ³ÉÏ£¬¸ÃÖµÎªTrue£¬·ñÔòÎªFalse¡£
-; Èç¹û¸Ã½ø³ÌÊÇ64Î»Ó¦ÓÃ³ÌĞò£¬ÔËĞĞÔÚ64Î»²Ù×÷ÏµÍ³ÉÏ£¬¸ÃÖµÒ²±»ÉèÖÃÎªFalse¡£
+; å¦‚æœè¯¥è¿›ç¨‹æ˜¯32ä½åº”ç”¨ç¨‹åºï¼Œè¿è¡Œåœ¨64ä½æ“ä½œç³»ç»Ÿä¸Šï¼Œè¯¥å€¼ä¸ºTrueï¼Œå¦åˆ™ä¸ºFalseã€‚
+; å¦‚æœè¯¥è¿›ç¨‹æ˜¯64ä½åº”ç”¨ç¨‹åºï¼Œè¿è¡Œåœ¨64ä½æ“ä½œç³»ç»Ÿä¸Šï¼Œè¯¥å€¼ä¹Ÿè¢«è®¾ç½®ä¸ºFalseã€‚
 	if A_Is64bitOS
 	{
 		DllCall("kernel32\IsWow64Process", Ptr, hProc, IntP, vIsWow64Process)
@@ -82,10 +82,10 @@ JEE_NotepadGetPath(hWnd)
 		vMbiBaseAddress := DllCall(A_PtrSize = 4  ? "GetWindowLong" : "GetWindowLongPtr", "Ptr", hwnd, "Int", -6, "Ptr")  ; GWLP_HINSTANCE = -6
 		VarSetCapacity(vPath, MAX_PATH*2)
 		DllCall("psapi\GetMappedFileName", Ptr, hProc, Ptr, vMbiBaseAddress, Str, vPath, UInt, MAX_PATH*2, UInt)
-		;msgbox %vPath%  ; ½á¹ûÈçÏÂ
-		; \Device\HarddiskVolume6\WINDOWS\notepad.exe XP CÅÌ
-		; \Device\HarddiskVolume1\Windows\System32\notepad.exe  win8 JÅÌ
-		; \Device\HarddiskVolume10\Windows\notepad.exe  win7 GÅÌ
+		;msgbox %vPath%  ; ç»“æœå¦‚ä¸‹
+		; \Device\HarddiskVolume6\WINDOWS\notepad.exe XP Cç›˜
+		; \Device\HarddiskVolume1\Windows\System32\notepad.exe  win8 Jç›˜
+		; \Device\HarddiskVolume10\Windows\notepad.exe  win7 Gç›˜
 
 		if !InStr(vPath, "notepad")
 		return
@@ -93,16 +93,16 @@ JEE_NotepadGetPath(hWnd)
 		if (vPVersionnum > 10)    ; win10
 		{
 			;get address where path starts
-			if vPIs64  ; win10 x64 ²»ÄÜµÃµ½µØÖ· Ö±½Ó·µ»Ø
+			if vPIs64  ; win10 x64 ä¸èƒ½å¾—åˆ°åœ°å€ ç›´æ¥è¿”å›
 			return
 			;vAddress := vMbiBaseAddress + 0x245C0
 			;vAddress := vMbiBaseAddress + 0x10B40
 			else
 			{
 				If (vPVersion = "10.0.15063.0")
-					vAddress := vMbiBaseAddress + 0x1F000 ; (0x1CB30 ÎÄ¼ş²Ëµ¥´ò¿ªÊ±ÓĞĞ§ ÍÏ×§ÎŞĞ§  0x1E000 ÍÏ×§ÎÄ¼ş´ò¿ªºÍÎÄ¼ş²Ëµ¥´ò¿ª¶¼ÓĞĞ§)
+					vAddress := vMbiBaseAddress + 0x1F000 ; (0x1CB30 æ–‡ä»¶èœå•æ‰“å¼€æ—¶æœ‰æ•ˆ æ‹–æ‹½æ— æ•ˆ  0x1E000 æ‹–æ‹½æ–‡ä»¶æ‰“å¼€å’Œæ–‡ä»¶èœå•æ‰“å¼€éƒ½æœ‰æ•ˆ)
 				If (vPVersion = "10.0.14393.0")
-					vAddress := vMbiBaseAddress + 0x1E000  ; ÆäËû¿ÉÄÜµÄÖµ 0x1D220
+					vAddress := vMbiBaseAddress + 0x1E000  ; å…¶ä»–å¯èƒ½çš„å€¼ 0x1D220
 					;MsgBox, % Format("0x{:X}", vMbiBaseAddress) "`r`n" Format("0x{:X}", vAddress)
 			}
 		}
@@ -122,7 +122,7 @@ JEE_NotepadGetPath(hWnd)
 				if vPIs64
 					vAddress := vMbiBaseAddress + 0x10B40
 				else
-					vAddress := vMbiBaseAddress + 0x17960  ;(vMbiBaseAddress + 0x18260 ¶ÔÍÏ×§ÎŞĞ§)
+					vAddress := vMbiBaseAddress + 0x17960  ;(vMbiBaseAddress + 0x18260 å¯¹æ‹–æ‹½æ— æ•ˆ)
 			}
 		}
 	}
@@ -139,7 +139,7 @@ JEE_NotepadGetPath(hWnd)
 	}
 	else
 	{
-		; ×ª»»vPathÎªansi°æÄÜÊ¶±ğµÄ×Ö·û U°æ²»ĞèÒª×ª»»
+		; è½¬æ¢vPathä¸ºansiç‰ˆèƒ½è¯†åˆ«çš„å­—ç¬¦ Uç‰ˆä¸éœ€è¦è½¬æ¢
 		VarSetCapacity(vfilepath, MAX_PATH, 0) 
 		DllCall("WideCharToMultiByte", "Uint", 0, "Uint", 0, "str", vPath, "int", -1, "str", vfilepath, "int", MAX_PATH, "Uint", 0, "Uint", 0)
 		If FileExist(vfilepath)

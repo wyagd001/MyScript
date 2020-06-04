@@ -1,4 +1,4 @@
-ÓÃ¼ÇÊÂ±¾´ò¿ª:
+ï»¿ç”¨è®°äº‹æœ¬æ‰“å¼€:
 EditSelectedFiles()
 Return
 
@@ -18,17 +18,17 @@ EditSelectedFiles()
 	z:=% %DefaultPlayer%
 	if(!FileExist(x))
 {
-		TrayTip,ÉèÖÃ´íÎó,Ä¬ÈÏÎÄ±¾±à¼­Æ÷µÄÂ·¾¶´íÎó£¡,3
+		TrayTip,è®¾ç½®é”™è¯¯,é»˜è®¤æ–‡æœ¬ç¼–è¾‘å™¨çš„è·¯å¾„é”™è¯¯ï¼,3
 return
 }
 	if(!FileExist(y))
 {
-		TrayTip,ÉèÖÃ´íÎó,Ä¬ÈÏÍ¼Æ¬±à¼­Æ÷µÄÂ·¾¶´íÎó£¡,3
+		TrayTip,è®¾ç½®é”™è¯¯,é»˜è®¤å›¾ç‰‡ç¼–è¾‘å™¨çš„è·¯å¾„é”™è¯¯ï¼,3
 return
 }
 	if(!FileExist(z))
 {
-		TrayTip,ÉèÖÃ´íÎó,Ä¬ÈÏÒôÆµ²¥·ÅÆ÷µÄÂ·¾¶´íÎó£¡,3
+		TrayTip,è®¾ç½®é”™è¯¯,é»˜è®¤éŸ³é¢‘æ’­æ”¾å™¨çš„è·¯å¾„é”™è¯¯ï¼,3
 return
 }
 	if (files || Imagesplitfiles ||audiosplitfiles)

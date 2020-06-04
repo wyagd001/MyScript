@@ -1,4 +1,4 @@
-;#include %A_ScriptDir%\Lib\StrArray.ahk
+ï»¿;#include %A_ScriptDir%\Lib\StrArray.ahk
 ;+MButton::
 Pin2Desk:
 	WinGetClass,WinClass,A
@@ -13,7 +13,7 @@ if (vWinID=WinID)
 return
 	If StrAr_Find(ToggleList,WinID)
 	{
-; 		»¹Ô­´°¿Ú
+; 		è¿˜åŸçª—å£
 		DllCall("SetParent", "UInt", WinID, "UInt", 0)
 		;WinSet, Style, +0xC00000,ahk_id %WinID%
 		WinSet,Region,,ahk_id %WinID%
@@ -48,10 +48,10 @@ Loop, parse,ToggleList,`|
 }
 }
 Menu,AllWinMenu,Add
-Menu,AllWinMenu,Add,»¹Ô­ËùÓĞ´°¿Ú,Disall
+Menu,AllWinMenu,Add,è¿˜åŸæ‰€æœ‰çª—å£,Disall
 Return
 
-DeskAdd: ;Ìí¼Óµ½×ÀÃæ n
+DeskAdd: ;æ·»åŠ åˆ°æ¡Œé¢ n
 If (ActDeskNum=A_ThisMenuItemPos)
 {
 	Return
@@ -99,7 +99,7 @@ disall:
 }
 Return
 
-ActDesk: ;¼¤»î×ÀÃæ n
+ActDesk: ;æ¿€æ´»æ¡Œé¢ n
 If (A_ThisMenuItemPos=ActDeskNum)
 {
 	Return
@@ -113,12 +113,12 @@ Loop, parse,ToggleList,`|
 	WinHide,ahk_id %A_LoopField%
 }
 
-;Ìí¼ÓĞéÄâ×ÀÃæ¹¦ÄÜ
+;æ·»åŠ è™šæ‹Ÿæ¡Œé¢åŠŸèƒ½
 DetectHiddenWindows,Off
 SwitchToDesktop(ActDeskNum)
 Sleep,200
 DetectHiddenWindows,On
-;Ìí¼ÓĞéÄâ×ÀÃæ¹¦ÄÜ
+;æ·»åŠ è™šæ‹Ÿæ¡Œé¢åŠŸèƒ½
 
 DeskGroup:=DeskGroup_%ActDeskNum%
 ; MsgBox %DeskGroup%
@@ -141,17 +141,17 @@ Loop, parse,DeskGroup,`|
 
 Loop 4
 {
-	MenuName=ĞéÄâ×ÀÃæ %A_Index%
+	MenuName=è™šæ‹Ÿæ¡Œé¢ %A_Index%
 	Menu,SigleMenu,Uncheck,%MenuName%
 }
 
-MenuName=ĞéÄâ×ÀÃæ %ActDeskNum%
+MenuName=è™šæ‹Ÿæ¡Œé¢ %ActDeskNum%
 Menu,SigleMenu,Check,%MenuName%
 ; ToolTip % DeskGroup_%ActDeskNum%
 
 Return
 
-SubHandler:  ;¼¤»î²Ëµ¥´°Ìå
+SubHandler:  ;æ¿€æ´»èœå•çª—ä½“
 Title:=StrAr_Get(ToggleList,A_ThisMenuItemPos)
 WinShow,ahk_id %Title%
 WinActivate,ahk_id %Title%
@@ -159,7 +159,7 @@ WinActivate,ahk_id %Title%
 Return
 
 
-ToggleDesktop: ;¶¤×¡×ÀÃæ
+ToggleDesktop: ;é’‰ä½æ¡Œé¢
 
 ;Gosub,SetReg
 
@@ -287,7 +287,7 @@ If StrAr_Find(ToggleList,WinID)
 else send #{Right}
 Return
 
-; ***** ĞéÄâ×ÀÃæº¯Êı functions *****
+; ***** è™šæ‹Ÿæ¡Œé¢å‡½æ•° functions *****
 ; https://autohotkey.com/board/topic/5793-multiple-virtual-desktops/page-1
 
 ; switch to the desktop with the given index number

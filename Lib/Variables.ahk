@@ -1,4 +1,4 @@
-f_DerefPath(ThisPath)
+ï»¿f_DerefPath(ThisPath)
 {
 	StringReplace, ThisPath, ThisPath, ``, ````, All
 	StringReplace, ThisPath, ThisPath, `%F_CurrentDir`%, ```%F_CurrentDir```%, All
@@ -6,8 +6,8 @@ f_DerefPath(ThisPath)
 	return ThisPath
 }
 
-; ½âÎöÓÃ»§¡¢ÏµÍ³»·¾³±äÁ¿
-; ppath Îª ²»´øÒıºÅµÄÎÄ±¾»ò°Ù·ÖºÅ°üÎ§µÄÎÄ±¾
+; è§£æç”¨æˆ·ã€ç³»ç»Ÿç¯å¢ƒå˜é‡
+; ppath ä¸º ä¸å¸¦å¼•å·çš„æ–‡æœ¬æˆ–ç™¾åˆ†å·åŒ…å›´çš„æ–‡æœ¬
 ExpandEnvVars(ppath)
 {
 	VarSetCapacity(dest, 2000)

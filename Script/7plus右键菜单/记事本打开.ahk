@@ -1,4 +1,4 @@
-1011:
+ï»¿1011:
 	SetTimer,notepadopen,-200
 Return
 
@@ -8,20 +8,20 @@ Critical,On
 Files := GetSelectedFiles()
 If !Files
 {
-	MsgBox,,,»ñÈ¡ÎÄ¼şÂ·¾¶Ê§°Ü¡£,3
+	MsgBox,,,è·å–æ–‡ä»¶è·¯å¾„å¤±è´¥ã€‚,3
 Return
 }
 run "%TextEditor%" "%files%"
 Return
 
-7PlusMenu_¼ÇÊÂ±¾´ò¿ª()
+7PlusMenu_è®°äº‹æœ¬æ‰“å¼€()
 {
-	section = ¼ÇÊÂ±¾´ò¿ª
+	section = è®°äº‹æœ¬æ‰“å¼€
 	defaultSet=
 	( LTrim
 ID = 1011
-Name = ÓÃ¼ÇÊÂ±¾´ò¿ª
-Description = Ê¹ÓÃ¼ÇÊÂ±¾´ò¿ªµ±Ç°Ñ¡ÖĞÎÄ¼ş
+Name = ç”¨è®°äº‹æœ¬æ‰“å¼€
+Description = ä½¿ç”¨è®°äº‹æœ¬æ‰“å¼€å½“å‰é€‰ä¸­æ–‡ä»¶
 SubMenu = 7plus
 FileTypes = *
 SingleFileOnly = 1

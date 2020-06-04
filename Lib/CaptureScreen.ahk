@@ -1,4 +1,4 @@
-/* CaptureScreen(aRect, bCursor, sFileTo, nQuality)
+ï»¿/* CaptureScreen(aRect, bCursor, sFileTo, nQuality)
 1) If the optional parameter bCursor is True, captures the cursor too.
 2) If the optional parameter sFileTo is 0, set the image to Clipboard.
    If it is omitted or "", saves to screen.bmp in the script folder,
@@ -175,7 +175,7 @@ Convert(sFileFr = "", sFileTo = "", nQuality = "")
 }
 
 /*
-;ÒòÎªÓëGdipÎÄ¼şÖĞµÄº¯ÊıÖØ¸´ËùÒÔ×¢ÊÍµôÁË,ÉÔÎ¢ĞŞ¸Ä½Å±¾ÖĞµ÷ÓÃ¸Ãº¯Êı´¦µÄ²ÎÊıË³Ğò
+;å› ä¸ºä¸Gdipæ–‡ä»¶ä¸­çš„å‡½æ•°é‡å¤æ‰€ä»¥æ³¨é‡Šæ‰äº†,ç¨å¾®ä¿®æ”¹è„šæœ¬ä¸­è°ƒç”¨è¯¥å‡½æ•°å¤„çš„å‚æ•°é¡ºåº
 CreateDIBSection(hDC, nW, nH, bpp = 32, ByRef pBits = "")
 {
 	VarSetCapacity(bi, 40, 0)

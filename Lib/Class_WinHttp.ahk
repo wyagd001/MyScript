@@ -1,49 +1,49 @@
-; https://autohotkey.com/board/topic/9529-urldownloadtovar/page-7
+﻿; https://autohotkey.com/board/topic/9529-urldownloadtovar/page-7
 ; URL,Charset="",URLCodePage="",Proxy="",ProxyBypassList="",Cookie="",Referer="",UserAgent="",EnableRedirects="",Timeout=-1
 ; http://ahkcn.net/thread-5658.html
 
 /*
-������־��
+更新日志：
 	2018.10.20
-	URLDownloadToFile �� URLDownloadToVar  ���ߺϲ�ΪURLGet
-	URLPost ����gzip��ѹ���������ع���
-	�޸İ汾��Ϊ��1.5
+	URLDownloadToFile 和 URLDownloadToVar  二者合并为URLGet
+	URLPost 添加gzip解压函数和下载功能
+	修改版本号为：1.5
 
 	2015.09.12
-	�Ż�����ṹ
-	�汾��Ϊ1.4
+	优化代码结构
+	版本号为1.4
 
 	2015.09.11
-	������ʱ���ڴ���ʱ�䱻��������⡣��http://ahkcn.net/thread-5658-post-33736.html#pid33736��
-	������tmplinshi������������ϸ������
+	修正超时会在错误时间被激活的问题。（http://ahkcn.net/thread-5658-post-33736.html#pid33736）
+	以下是tmplinshi对这个问题的详细描述。
 	----------------------------------------------------------------------------------------------
-	WebRequest.WaitForResponse(��ʱ����)
-	Ĭ������£������ʱ����������������Ϊ�վ�һֱ�ȴ������� 60 �͵ȴ� 60 �롣����Ҫ������Ĭ�ϵĳ�ʱ���á�
+	WebRequest.WaitForResponse(超时秒数)
+	默认情况下，这个超时秒数并不是你设置为空就一直等待，设置 60 就等待 60 秒。而是要受限于默认的超时设置。
 
-	Ĭ�ϵĳ�ʱ����Ϊ:
-	������ʱ: 0 ��
-	���ӳ�ʱ: 60 ��
-	���ͳ�ʱ: 30 ��
-	���ճ�ʱ: 30 ��
+	默认的超时设置为:
+	解析超时: 0 秒
+	连接超时: 60 秒
+	发送超时: 30 秒
+	接收超时: 30 秒
 
-	WaitForResponse Ӧ����ָ���ճ�ʱ�ɡ������أ�Ĭ�ϵĻ���ʹ������ WaitForResponse(60) ʵ���ϻ������͵ȴ� 30 �롣��
+	WaitForResponse 应该是指接收超时吧。所以呢，默认的话即使你设置 WaitForResponse(60) 实际上还是最多就等待 30 秒。。
 
-	Ĭ��ֵ����ͨ�� WebRequest.SetTimeouts(������ʱ, ���ӳ�ʱ, ���ͳ�ʱ, ���ճ�ʱ) �����ã���� MSDN ��˵��������ѽ��ճ�ʱ�޸�Ϊ 120 �� ���� WebRequest.SetTimeouts(0, 60000, 30000, 120000)
+	默认值可以通过 WebRequest.SetTimeouts(解析超时, 连接超时, 发送超时, 接收超时) 来设置，详见 MSDN 的说明。比如把接收超时修改为 120 秒 —— WebRequest.SetTimeouts(0, 60000, 30000, 120000)
 
-	���û�����׿ɰ��Һ����ˡ����д��һ����ѯ������������ѯʧ�ܡ���ԭ����Ϊ����վ����Ӧ����Ϊ��û�����ó�ʱ����Ϊ������һֱ�ȴ�����������˵�ˣ���һֱ�ȴ�����������?Ĭ�ϵ����ʱ����������ϸ��ץ�����ݣ�����ÿ�ζ� 30 �볬ʱ���ء��������������ȴ�������� 40 �����ʱ�򷵻��˽������ŷ������������Ծ���
+	这点没有明白可把我害惨了。最近写的一个查询软件，经常查询失败。我原本以为是网站无响应，因为我没有设置超时，以为软件会一直等待（但是上面说了，“一直等待”会受限于?默认的最大超时）。后来仔细看抓包数据，看到每次都 30 秒超时返回。而用浏览器测试却正常，在 40 多秒的时候返回了结果，这才发觉是软件不对劲。
 
-	ϣ��������֪�����˵�����п��һ�Ҫ�ٷ���������˵����һ�㡣������@���� ��Ҳ�����޸��´��룬������ݵĳ�ʱ������Ĭ�ϵ� 30 �������һ�� SetTimeouts��
+	希望更多人知道这点说明，有空我还要再发几个帖子说明这一点。。另外@兔子 你也可以修改下代码，如果传递的超时超过了默认的 30 秒则调用一下 SetTimeouts。
 	----------------------------------------------------------------------------------------------
-	�汾��Ϊ1.3
+	版本号为1.3
 
 	2015.06.05
-	���Ӿ�̬����Status��StatusText���÷���ResponseHeadersһ�¡�
-	�����¹��ܣ���ָ��״̬�������Դ�����������n�Σ�ֱ��״̬����Ԥ��һ�¡�
-	�汾��Ϊ1.2
+	添加静态变量Status、StatusText，用法和ResponseHeaders一致。
+	添加新功能，若指定状态码与重试次数，将重试n次，直至状态码与预期一致。
+	版本号为1.2
 
-��֪���⣺
-	��֧��gzipѹ��������ݡ���������£��㲻�������˵������Ҫgzipѹ��������ݣ������ǲ�����㷢�͵ģ�����ûӰ�졣
-	cookieû��ʵ����������������Զ��������������������Ҫ��ʱ����ʱȡ�������й�����
+已知问题：
+	不支持gzip压缩后的数据。正常情况下，你不向服务器说明你需要gzip压缩后的数据，它们是不会给你发送的，所以没影响。
+	cookie没有实现像浏览器那样的自动管理。但是你可以在需要的时候随时取出，自行管理。
 */
 
 class WinHttp
@@ -52,105 +52,105 @@ class WinHttp
 	static ResponseHeaders:=[],Status:="",StatusText:="",extra:=[]
 
 	/*
-	*****************�汾*****************
+	*****************版本*****************
 	URLGet v 1.5
 
-	*****************˵��*****************
-	�˺������������� UrlDownloadToFile �����������¼��㣺
-	1.�����ٶȸ��죬���100%��
-	2.��������ִ��ʱ������AHK�����ǿ���״̬���˺������ᡣ
-	3.������������һЩ������վ�����硰ţ��������ʱ����������ý��̻��̳߳����������˺������ᡣ
-	4.֧��������ҳ�ַ�����URL�ı��롣�����������ɽ����
-	5.֧���������С�Request Header�����������У�Cookie��Referer��User-Agent����վ����������ɽ����
-	6.֧�����ó�ʱ���������ȡ�
-	7.֧�����ô�������������
-	8.֧�������Ƿ��Զ��ض�����ַ��
-	9.��RequestHeaders��������ʽ��chrome�Ŀ����߹����еġ�Request Header����ͬ����˿�ֱ�Ӹ��ƹ������ã�������ԡ�
-	10.֧�ִ�ȡ��Cookie����������ģ���¼״̬��
-	11.֧���ж���ҳ����ʱ��״̬�룬����200��404�ȡ�
+	*****************说明*****************
+	此函数与内置命令 UrlDownloadToFile 的区别有以下几点：
+	1.下载速度更快，大概100%。
+	2.内置命令执行时，整个AHK程序都是卡顿状态。此函数不会。
+	3.内置命令下载一些诡异网站（例如“牛杂网”）时，会概率性让进程或线程彻底死掉。此函数不会。
+	4.支持设置网页字符集、URL的编码。乱码问题轻松解决。
+	5.支持设置所有“Request Header”。常见的有：Cookie、Referer、User-Agent。网站检测问题轻松解决。
+	6.支持设置超时，不必死等。
+	7.支持设置代理及白名单。
+	8.支持设置是否自动重定向网址。
+	9.“RequestHeaders”参数格式与chrome的开发者工具中的“Request Header”相同，因此可直接复制过来就用，方便调试。
+	10.支持存取“Cookie”，可用于模拟登录状态。
+	11.支持判断网页返回时的状态码，例如200，404等。
 
-	*****************����*****************
-	URL ��ַ������������ơ�http://���Ŀ�ͷ����www.�����Ҳ���ϣ���Щ��վ��Ҫ��
-	Options��RequestHeaders�ĸ�ʽΪ��ÿ��һ����������������һ��ð��Ϊ��������֮������βΪ����ֵ������������С�����ɲ��ա�������Ϣ������()��ע���е����ӡ�
+	*****************参数*****************
+	URL 网址，必须包含类似“http://”的开头。“www.”最好也带上，有些网站需要。
+	Options、RequestHeaders的格式为：每行一个参数，行首至第一个冒号为参数名，之后至行尾为参数值。多个参数换行。具体可参照“解析信息到对象()”注释中的例子。
 
 	*****************Options*****************
-	֧������7��(9��)���ã���������ֵ���κ�Ч�����޴�СдҪ��
-	Charset ��ҳ�ַ����������ǡ�936��֮������֣������ǡ�gb2312���������ַ���
-	URLCodePage URL�ı��룬�ǡ�936��֮������֣�Ĭ���ǡ�65001������Щ��վ��ҪUTF-8����Щ��վ����Ҫgb2312��
-	proxy_setting �������������ã�0��ʾʹ�á�Proxycfg.exe�������ã�1��ʾ���ӡ�Proxy��ָ���Ĵ�����ֱ�����ӣ�2��ʾʹ�á�Proxy��ָ���Ĵ�����
-	Proxy �����������������硰http://www.tuzi.com:80�����ַ����������ݴ˴���ֵ�Զ����ú��ʵġ�proxy_setting������ͨ������²��ùܡ�proxy_setting�������������Լ����ơ�
-	ProxyBypassList �������������������������硰*.microsoft.com����������������������ַ������ͨ���������������ʡ�
-	EnableRedirects �ض���Ĭ�ϻ�ȡ��ת���ҳ����Ϣ��0Ϊ����ת��
-	Timeout ��ʱ����λΪ�룬Ĭ�ϲ�ʹ�ó�ʱ��Timeout=-1����
-	expected_status	״̬�룬ͨ��200��ʾ��ҳ������404��ʾ��ҳ�Ҳ����ˡ����ú���ҳ���ص�״̬����˴���һ�����׳�������Ϣ����������ʹ�ô˲�������ͬʱʹ��try��䣩��
-	number_of_retries	���Դ�������״̬�����ʹ�ã�������ҳ���ص�״̬��������״̬�벻һ��ʱ���������ԵĴ�����
+	支持以下7种(9种)设置，输入其它值无任何效果，无大小写要求。
+	Charset 网页字符集，不能是“936”之类的数字，必须是“gb2312”这样的字符。
+	URLCodePage URL的编码，是“936”之类的数字，默认是“65001”。有些网站需要UTF-8，有些网站又需要gb2312。
+	proxy_setting 代理服务器设置，0表示使用“Proxycfg.exe”的设置；1表示无视“Proxy”指定的代理而直接连接；2表示使用“Proxy”指定的代理。
+	Proxy 代理服务器，是形如“http://www.tuzi.com:80”的字符。程序会根据此处的值自动设置合适的“proxy_setting”，即通常情况下不用管“proxy_setting”，除非你想自己控制。
+	ProxyBypassList 代理服务器绕行名单，是形如“*.microsoft.com”的域名。符合域名的网址，将不通过代理服务器访问。
+	EnableRedirects 重定向，默认获取跳转后的页面信息，0为不跳转。
+	Timeout 超时，单位为秒，默认不使用超时（Timeout=-1）。
+	expected_status	状态码，通常200表示网页正常，404表示网页找不到了。设置后当网页返回的状态码与此处不一致则抛出调试信息并报错（故使用此参数后建议同时使用try语句）。
+	number_of_retries	重试次数（与状态码配对使用），当网页返回的状态码与期望状态码不一致时，可以重试的次数。
 
 	*****************RequestHeaders*****************
-	֧������RequestHeader����Сд�ĸı���ܻ�Ӱ��������������������Щ��
-	Cookie �������ڵ�¼��֤��
-	Referer ������ַ�������ڷ�������
-	User-Agent �û���Ϣ�������ڷ�������
+	支持所有RequestHeader，大小写的改变可能会影响结果。常见的有以下这些。
+	Cookie ，常用于登录验证。
+	Referer 引用网址，常用于防盗链。
+	User-Agent 用户信息，常用于防盗链。
 	Content-Type  application/x-www-form-urlencoded
 
-	*****************ע��*****************
-	ÿ�����ز����󣬡�ResponseHeaders����������д洢�ľ���ÿ�η�����ַʱ�����������صġ�ResponseHeaders������Ȼ�����Ѿ��������ɶ�����?������ֱ��ʹ�á�
-	����Ҫ��ʱ�򣬿��Բ��ù�������Ҫ��ʱ������������ַ�󣬽����Ŷ�ȡ�����������ˡ�
-	���硰obj:=WinHttp.ResponseHeaders������ʱobj�оͰ����˸ղŷ�����ַʱ���������ص����С�ResponseHeaders����
-	���ǡ�MsgBox, % obj["Content-type"]�����͵õ��ˡ�Content-type����
-	���ǡ�MsgBox, % obj["Set-Cookie"]�����͵õ��ˡ�Set-Cookie����
-	����ġ�Set-Cookie��������cookie��
+	*****************注意*****************
+	每次下载操作后，“ResponseHeaders”这个变量中存储的就是每次访问网址时，服务器返回的“ResponseHeaders”。当然，它已经被解析成对象了?，方便直接使用。
+	不需要的时候，可以不用管它。需要的时候，则在下载网址后，紧接着读取这个对象就行了。
+	例如“obj:=WinHttp.ResponseHeaders”，此时obj中就包含了刚才访问网址时服务器返回的所有“ResponseHeaders”。
+	于是“MsgBox, % obj["Content-type"]”，就得到了“Content-type”。
+	于是“MsgBox, % obj["Set-Cookie"]”，就得到了“Set-Cookie”。
+	上面的“Set-Cookie”，就是cookie。
 
-	��Ҫע����ǣ����ڡ�Set-Cookie���ܿ���һ�η����˶���������������ڶ�����Set-Cookie�����������á�`r`n���ָ��ġ�
-	��Status���͡�StatusText���÷��롰ResponseHeaders��һ�£�����Ϊǰ�����Ǵ�������
-	���硰MsgBox, % WinHttp.Status�����͵õ���״̬�롣
+	需要注意的是，由于“Set-Cookie”很可能一次返回了多条，所以如果存在多条“Set-Cookie”，它们是用“`r`n”分隔的。
+	“Status”和“StatusText”用法与“ResponseHeaders”一致，区别为前两者是纯变量。
+	例如“MsgBox, % WinHttp.Status”，就得到了状态码。
 
-	;~ ����������˵����
+	;~ 所以整体来说就是
 	WinHttp.UrlDownloadToVar("http://www.baidu.com")
 	obj:=WinHttp.ResponseHeaders
 	MsgBox, % obj["Set-Cookie"]
-	MsgBox, �����Ǹ�����cookie
+	MsgBox, 上面那个就是cookie
 
-	��������Ĳ�����Ҫ���뵽��RequestHeaders���У�����ʾ�����֧��gzip����ѹ�����ᵼ�·���������ѹ��������ݹ�����Ҳ�ͻ������
+	类似下面的参数不要加入到“RequestHeaders”中，它表示浏览器支持gzip数据压缩，会导致服务器发送压缩后的数据过来，也就会出错。
 	Accept-Encoding:gzip,deflate,sdch
 	*/
 	UrlGet(URL, Options:="", RequestHeaders:="", FilePath:="")
 	{
-		Options:=this.������Ϣ������(Options)
-		RequestHeaders:=this.������Ϣ������(RequestHeaders)
+		Options:=this.解析信息到对象(Options)
+		RequestHeaders:=this.解析信息到对象(RequestHeaders)
 
-		ComObjError(0) 							;���� COM ����ͨ�档���ú󣬼�� A_LastError ��ֵ���ű�����ʵ���Լ��Ĵ�����
+		ComObjError(0) 							;禁用 COM 错误通告。禁用后，检查 A_LastError 的值，脚本可以实现自己的错误处理
 		WebRequest := ComObjCreate("WinHttp.WinHttpRequest.5.1")
 
-		if (URL="") 								; ����ȫΪ�� �������õ� WinHttp ����
+		if (URL="") 								; 参数全为空 返回重置的 WinHttp 对象
 		return ComObjCreate("WinHttp.WinHttpRequest.5.1")
 
-		if (Options["URLCodePage"]<>"")    							;����URL�ı���
+		if (Options["URLCodePage"]<>"")    							;设置URL的编码
 			WebRequest.Option(2):=Options["URLCodePage"]
-		if (Options["EnableRedirects"]<>"")							;�����Ƿ��ȡ��ת���ҳ����Ϣ
+		if (Options["EnableRedirects"]<>"")							;设置是否获取跳转后的页面信息
 			WebRequest.Option(6):=Options["EnableRedirects"]
-		;proxy_settingûֵʱ������Proxyֵ����������趨�Ƿ�Ҫ���д������ʡ�
-		;�����ĺô��Ƕ����������Ҫ����ʱ��Ȼֻ�ø���������������ַ���ɡ������Ѿ�����������������ַ���ֿ��Ժܷ���Ķ��Ƿ����ô������п��ء�
+		;proxy_setting没值时，根据Proxy值的情况智能设定是否要进行代理访问。
+		;这样的好处是多数情况下需要代理时依然只用给出代理服务器地址即可。而在已经给出代理服务器地址后，又可以很方便的对是否启用代理进行开关。
 		if (Options["proxy_setting"]="" and Options["Proxy"]<>"")
-			Options["proxy_setting"]:=2										;0��ʾ Proxycfg.exe ����������ѭ Proxycfg.exe �����ã�û������Ч��ͬ����Ϊ1����1��ʾ���Դ���ֱ����2��ʾʹ�ô���
+			Options["proxy_setting"]:=2										;0表示 Proxycfg.exe 运行了且遵循 Proxycfg.exe 的设置（没运行则效果同设置为1）。1表示忽略代理直连。2表示使用代理
 		if (Options["proxy_setting"]="" and Options["Proxy"]="")
 			Options["proxy_setting"]:=1
-		;���ô�����������΢���Ĵ��� SetProxy() �Ƿ��� Open() ֮ǰ�ģ�������Ҳ��ǰ�����ã�������Ч
+		;设置代理服务器。微软的代码 SetProxy() 是放在 Open() 之前的，所以我也放前面设置，以免无效
 		WebRequest.SetProxy(Options["proxy_setting"],Options["Proxy"],Options["ProxyBypassList"])
-		if (Options["Timeout"]="")											;Options["Timeout"]���������Ϊ-1�������������޳�ʱ��������Ȼ��ѭSetTimeouts��4���������õ����ʱʱ��
-			WebRequest.SetTimeouts(0,60000,30000,0)			;0��-1����ʾ��ʱ���޵ȴ������������ʾ���ʱ����λ���룩
-		else if (Options["Timeout"]>30)									;�����ʱ���ô���30�룬����Ҫ��Ĭ�ϵ����ʱʱ���޸�Ϊ����30��
+		if (Options["Timeout"]="")											;Options["Timeout"]如果被设置为-1，并不代表无限超时，而是依然遵循SetTimeouts第4个参数设置的最大超时时间
+			WebRequest.SetTimeouts(0,60000,30000,0)			;0或-1都表示超时无限等待，正整数则表示最大超时（单位毫秒）
+		else if (Options["Timeout"]>30)									;如果超时设置大于30秒，则需要将默认的最大超时时间修改为大于30秒
 			WebRequest.SetTimeouts(0,60000,30000,Options["Timeout"]*1000)
 		else
-			WebRequest.SetTimeouts(0,60000,30000,30000)	;��ΪSetTimeouts��Ĭ�����á������Բ��ӣ���ΪĬ�Ͼ�������������������Ϊ�˱���������
+			WebRequest.SetTimeouts(0,60000,30000,30000)	;此为SetTimeouts的默认设置。这句可以不加，因为默认就是这样，加在这里是为了表述清晰。
 
-		WebRequest.Open("GET", URL, true)   						;trueΪ�첽��ȡ��Ĭ����false�����ٵĸ�Դ���������ٵĸ�Դ������
+		WebRequest.Open("GET", URL, true)   						;true为异步获取。默认是false，龟速的根源！！！卡顿的根源！！！
 
-		;SetRequestHeader() ���� Open() ֮�����Ч
+		;SetRequestHeader() 必须 Open() 之后才有效
 		for k, v in RequestHeaders
 		{
 			if (k="Cookie")
 			{
-				WebRequest.SetRequestHeader("Cookie","tuzi")    ;������һ��cookie����ֹ������msdn�Ƽ���ô��
+				WebRequest.SetRequestHeader("Cookie","tuzi")    ;先设置一个cookie，防止出错，msdn推荐这么做
 				WebRequest.SetRequestHeader("Cookie",v)
 			}
 			else
@@ -160,139 +160,139 @@ class WinHttp
 		Loop
 		{
 			WebRequest.Send()
-			WebRequest.WaitForResponse(-1)  ; �ȴ�
-			;WaitForResponse����ȷ����ȡ������������Ӧ��-1��ʾ����ʹ��SetTimeouts���õĳ�ʱ
+			WebRequest.WaitForResponse(-1)  ; 等待
+			;WaitForResponse方法确保获取的是完整的响应。-1表示总是使用SetTimeouts设置的超时
 
-			;��ȡ״̬�룬һ��statusΪ200˵������ɹ�
+			;获取状态码，一般status为200说明请求成功
 			this.Status:=WebRequest.Status()
 			this.StatusText:=WebRequest.StatusText()
 
 			if (Options["expected_status"]="" or Options["expected_status"]=this.Status)
 				break
-				;����ָ��������ҳ�淵�ص�״̬��������Ԥ��״̬�벻һ�£����׳�������ϸ������Ϣ����ʹ������һ������������ר�ż�¼�������ǣ�
-			;��ʹnumber_of_retriesΪ�գ�����ʽ��Ȼ���������Բ���Ϊnumber_of_retries���ó�ʼֵ��
+				;尝试指定次数后页面返回的状态码依旧与预期状态码不一致，则抛出错误及详细错误信息（可使用我另一个错误处理函数专门记录处理它们）
+			;即使number_of_retries为空，表达式依然成立，所以不用为number_of_retries设置初始值。
 			else if (A_Index>=Options["number_of_retries"])
 			{
 				this.extra.URL:=URL
 				this.extra.Expected_Status:=Options["expected_status"]
 				this.extra.Status:=this.Status
 				this.extra.StatusText:=this.StatusText
-				throw, Exception("����" Options.number_of_retries "�γ��Ժ󣬷���������״̬������������ֵ��һ��", -1, Object(this.extra))
+				throw, Exception("经过" Options.number_of_retries "次尝试后，服务器返回状态码依旧与期望值不一致", -1, Object(this.extra))
 			}
 		}
 
-		if (Options["Charset"]<>"") or (FilePath<>"")						;�����ַ����򱣴��ļ�
+		if (Options["Charset"]<>"") or (FilePath<>"")						;设置字符集或保存文件
 		{
-			this.ResponseHeaders:=this.������Ϣ������(WebRequest.GetAllResponseHeaders())
-			ADO:=ComObjCreate("adodb.stream")   		;ʹ�� adodb.stream ���뷵��ֵ���ο� http://bbs.howtoadmin.com/ThRead-814-1-1.html
-			ADO.Type:=1														;�Զ����Ʒ�ʽ����
-			ADO.Mode:=3 													;��ͬʱ���ж�д
-			ADO.Open()  														;�������
+			this.ResponseHeaders:=this.解析信息到对象(WebRequest.GetAllResponseHeaders())
+			ADO:=ComObjCreate("adodb.stream")   		;使用 adodb.stream 编码返回值。参考 http://bbs.howtoadmin.com/ThRead-814-1-1.html
+			ADO.Type:=1														;以二进制方式操作
+			ADO.Mode:=3 													;可同时进行读写
+			ADO.Open()  														;开启物件
 			ADO.Write(WebRequest.ResponseBody())
-			; д�������ע��û���� WebRequest.ResponseBody() ����һ�����������Ա��������ַ�ʽд�ļ�.
+			; 写入物件。注意没法将 WebRequest.ResponseBody() 存入一个变量，所以必须用这种方式写文件.
 			if(FilePath<>"")
 			{
-				ADO.SaveToFile(FilePath,2)   						 	;�ļ������򸲸�
+				ADO.SaveToFile(FilePath,2)   						 	;文件存在则覆盖
 				ADO.Close()
 			return, 1
 			}
 			Else
 			{
-			; ע�� WebRequest.ResponseBody() ��ȡ�������޷��ŵ�bytes��ͨ�� adodb.stream ת�����ַ���string
-				ADO.Position:=0 												;��ͷ��ʼ
-				ADO.Type:=2 														;������ģʽ����
-				ADO.Charset:=Options["Charset"]    				;�趨���뷽ʽ
-				ret_var:=ADO.ReadText()   								;������ڵ����ֶ���
+			; 注意 WebRequest.ResponseBody() 获取到的是无符号的bytes，通过 adodb.stream 转换成字符串string
+				ADO.Position:=0 												;从头开始
+				ADO.Type:=2 														;以文字模式操作
+				ADO.Charset:=Options["Charset"]    				;设定编码方式
+				ret_var:=ADO.ReadText()   								;将物件内的文字读出
 				ADO.Close()
 			return, ret_var
 			}
 		}
 		Else
 		{
-			this.ResponseHeaders:=this.������Ϣ������(WebRequest.GetAllResponseHeaders())
+			this.ResponseHeaders:=this.解析信息到对象(WebRequest.GetAllResponseHeaders())
 		return, WebRequest.ResponseText()
 		}
 	}
 
 	/*
-	*****************�汾*****************
+	*****************版本*****************
 	UrlPost v 1.5
 
-	*****************˵��*****************
-	�˺������������� UrlDownloadToFile �����������¼��㣺
-	1.ֱ�����ص�������û����ʱ�ļ���
-	2.�����ٶȸ��죬���100%��
-	3.��������ִ��ʱ������AHK�����ǿ���״̬���˺������ᡣ
-	4.������������һЩ������վ�����硰ţ��������ʱ����������ý��̻��̳߳����������˺������ᡣ
-	5.֧��������ҳ�ַ�����URL�ı��롣�����������ɽ����
-	6.֧���������С�Request Header�����������У�Cookie��Referer��User-Agent��Referer��X-Requested-With����վ����������ɽ����
-	7.֧�����ó�ʱ���������ȡ�
-	8.֧�����ô�������������
-	9.֧�������Ƿ��Զ��ض�����ַ��
-	10.��RequestHeaders��������ʽ��chrome�Ŀ����߹����еġ�Request Header����ͬ����˿�ֱ�Ӹ��ƹ������ã�������ԡ�
-	11.ʹ�á�POST����������˿��ϴ����ݡ�
-	12.֧�ִ�ȡ��Cookie����������ģ���¼״̬��
-	13.֧���ж���ҳ����ʱ��״̬�룬����200��404�ȡ�
+	*****************说明*****************
+	此函数与内置命令 UrlDownloadToFile 的区别有以下几点：
+	1.直接下载到变量，没有临时文件。
+	2.下载速度更快，大概100%。
+	3.内置命令执行时，整个AHK程序都是卡顿状态。此函数不会。
+	4.内置命令下载一些诡异网站（例如“牛杂网”）时，会概率性让进程或线程彻底死掉。此函数不会。
+	5.支持设置网页字符集、URL的编码。乱码问题轻松解决。
+	6.支持设置所有“Request Header”。常见的有：Cookie、Referer、User-Agent、Referer、X-Requested-With。网站检测问题轻松解决。
+	7.支持设置超时，不必死等。
+	8.支持设置代理及白名单。
+	9.支持设置是否自动重定向网址。
+	10.“RequestHeaders”参数格式与chrome的开发者工具中的“Request Header”相同，因此可直接复制过来就用，方便调试。
+	11.使用“POST”方法，因此可上传数据。
+	12.支持存取“Cookie”，可用于模拟登录状态。
+	13.支持判断网页返回时的状态码，例如200，404等。
 
-	*****************����*****************
-	URL ��ַ������������ơ�http://���Ŀ�ͷ����www.�����Ҳ���ϣ���Щ��վ��Ҫ��
-	Data ���ݣ�Ĭ�����ı����������߹����С�Request Payload�����е����ݡ�
-	Options��RequestHeaders�ĸ�ʽΪ��ÿ��һ����������������һ��ð��Ϊ��������֮������βΪ����ֵ������������С�����ɲ��ա�������Ϣ������()��ע���е����ӡ�
+	*****************参数*****************
+	URL 网址，必须包含类似“http://”的开头。“www.”最好也带上，有些网站需要。
+	Data 数据，默认是文本，即开发者工具中“Request Payload”段中的内容。
+	Options、RequestHeaders的格式为：每行一个参数，行首至第一个冒号为参数名，之后至行尾为参数值。多个参数换行。具体可参照“解析信息到对象()”注释中的例子。
 
 	*****************Options*****************
-	֧������6�����ã���������ֵ���κ�Ч�����޴�СдҪ��
-	Charset ��ҳ�ַ����������ǡ�936��֮������֣������ǡ�gb2312���������ַ���
-	URLCodePage URL�ı��룬�ǡ�936��֮������֣�Ĭ���ǡ�65001������Щ��վ��ҪUTF-8����Щ��վ����Ҫgb2312��
-	proxy_setting �������������ã�0��ʾʹ�á�Proxycfg.exe�������ã�1��ʾ���ӡ�Proxy��ָ���Ĵ�����ֱ�����ӣ�2��ʾʹ�á�Proxy��ָ���Ĵ�����
-	Proxy �����������������硰http://www.tuzi.com:80�����ַ����������ݴ˴���ֵ�Զ����ú��ʵġ�proxy_setting������ͨ������²��ùܡ�proxy_setting�������������Լ����ơ�
-	ProxyBypassList �������������������������硰*.microsoft.com����������������������ַ������ͨ���������������ʡ�
-	EnableRedirects �ض���Ĭ�ϻ�ȡ��ת���ҳ����Ϣ��0Ϊ����ת��
-	Timeout ��ʱ����λΪ�룬Ĭ�ϲ�ʹ�ó�ʱ��Timeout=-1����
-	expected_status	״̬�룬ͨ��200��ʾ��ҳ������404��ʾ��ҳ�Ҳ����ˡ����ú���ҳ���ص�״̬����˴���һ�����׳�������Ϣ����������ʹ�ô˲�������ͬʱʹ��try��䣩��
-	number_of_retries	���Դ�������״̬�����ʹ�ã�������ҳ���ص�״̬��������״̬�벻һ��ʱ���������ԵĴ�����
+	支持以下6种设置，输入其它值无任何效果，无大小写要求。
+	Charset 网页字符集，不能是“936”之类的数字，必须是“gb2312”这样的字符。
+	URLCodePage URL的编码，是“936”之类的数字，默认是“65001”。有些网站需要UTF-8，有些网站又需要gb2312。
+	proxy_setting 代理服务器设置，0表示使用“Proxycfg.exe”的设置；1表示无视“Proxy”指定的代理而直接连接；2表示使用“Proxy”指定的代理。
+	Proxy 代理服务器，是形如“http://www.tuzi.com:80”的字符。程序会根据此处的值自动设置合适的“proxy_setting”，即通常情况下不用管“proxy_setting”，除非你想自己控制。
+	ProxyBypassList 代理服务器绕行名单，是形如“*.microsoft.com”的域名。符合域名的网址，将不通过代理服务器访问。
+	EnableRedirects 重定向，默认获取跳转后的页面信息，0为不跳转。
+	Timeout 超时，单位为秒，默认不使用超时（Timeout=-1）。
+	expected_status	状态码，通常200表示网页正常，404表示网页找不到了。设置后当网页返回的状态码与此处不一致则抛出调试信息并报错（故使用此参数后建议同时使用try语句）。
+	number_of_retries	重试次数（与状态码配对使用），当网页返回的状态码与期望状态码不一致时，可以重试的次数。
 
 	*****************RequestHeaders*****************
 
-	*****************ע��*****************
-	��������Ĳ������뵽��RequestHeaders���У���ʾ�����֧��gzip����ѹ�����ᵼ�·���������ѹ��������ݹ�����
-	Accept-Encoding:gzip,deflate,sdch�� ���ӽ�ѹ������δ����ʵ�ʵ�Ч����
+	*****************注意*****************
+	类似下面的参数加入到“RequestHeaders”中，表示浏览器支持gzip数据压缩，会导致服务器发送压缩后的数据过来。
+	Accept-Encoding:gzip,deflate,sdch。 添加解压函数，未测试实际的效果。
 	*/
 
 	UrlPost(URL, PostData, Options:="", RequestHeaders:="",FilePath:="")
 	{
-		Options:=this.������Ϣ������(Options)
-		RequestHeaders:=this.������Ϣ������(RequestHeaders)
+		Options:=this.解析信息到对象(Options)
+		RequestHeaders:=this.解析信息到对象(RequestHeaders)
 
-		ComObjError(0) 														 		;���� COM ����ͨ�档���ú󣬼�� A_LastError ��ֵ���ű�����ʵ���Լ��Ĵ�����
+		ComObjError(0) 														 		;禁用 COM 错误通告。禁用后，检查 A_LastError 的值，脚本可以实现自己的错误处理
 		WebRequest := ComObjCreate("WinHttp.WinHttpRequest.5.1")
 
-		if (Options["URLCodePage"]<>"")    							;����URL�ı���
+		if (Options["URLCodePage"]<>"")    							;设置URL的编码
 			WebRequest.Option(2):=Options["URLCodePage"]
-		if (Options["EnableRedirects"]<>"")							;�����Ƿ��ȡ��ת���ҳ����Ϣ
+		if (Options["EnableRedirects"]<>"")							;设置是否获取跳转后的页面信息
 			WebRequest.Option(6):=Options["EnableRedirects"]
-		;proxy_settingûֵʱ������Proxyֵ����������趨�Ƿ�Ҫ���д������ʡ�
-		;�����ĺô��Ƕ����������Ҫ����ʱ��Ȼֻ�ø���������������ַ���ɡ������Ѿ�����������������ַ���ֿ��Ժܷ���Ķ��Ƿ����ô������п��ء�
+		;proxy_setting没值时，根据Proxy值的情况智能设定是否要进行代理访问。
+		;这样的好处是多数情况下需要代理时依然只用给出代理服务器地址即可。而在已经给出代理服务器地址后，又可以很方便的对是否启用代理进行开关。
 		if (Options["proxy_setting"]="" and Options["Proxy"]<>"")
-			Options["proxy_setting"]:=2										;0��ʾ Proxycfg.exe ����������ѭ Proxycfg.exe �����ã�û������Ч��ͬ����Ϊ1����1��ʾ���Դ���ֱ����2��ʾʹ�ô���
+			Options["proxy_setting"]:=2										;0表示 Proxycfg.exe 运行了且遵循 Proxycfg.exe 的设置（没运行则效果同设置为1）。1表示忽略代理直连。2表示使用代理
 		if (Options["proxy_setting"]="" and Options["Proxy"]="")
 			Options["proxy_setting"]:=1
-		;���ô�����������΢���Ĵ��� SetProxy() �Ƿ��� Open() ֮ǰ�ģ�������Ҳ��ǰ�����ã�������Ч
+		;设置代理服务器。微软的代码 SetProxy() 是放在 Open() 之前的，所以我也放前面设置，以免无效
 		WebRequest.SetProxy(Options["proxy_setting"],Options["Proxy"],Options["ProxyBypassList"])
-		if (Options["Timeout"]="")											;Options["Timeout"]���������Ϊ-1�������������޳�ʱ��������Ȼ��ѭSetTimeouts��4���������õ����ʱʱ��
-			WebRequest.SetTimeouts(0,60000,30000,0)			;0��-1����ʾ��ʱ���޵ȴ������������ʾ���ʱ����λ���룩
-		else if (Options["Timeout"]>30)									;�����ʱ���ô���30�룬����Ҫ��Ĭ�ϵ����ʱʱ���޸�Ϊ����30��
+		if (Options["Timeout"]="")											;Options["Timeout"]如果被设置为-1，并不代表无限超时，而是依然遵循SetTimeouts第4个参数设置的最大超时时间
+			WebRequest.SetTimeouts(0,60000,30000,0)			;0或-1都表示超时无限等待，正整数则表示最大超时（单位毫秒）
+		else if (Options["Timeout"]>30)									;如果超时设置大于30秒，则需要将默认的最大超时时间修改为大于30秒
 			WebRequest.SetTimeouts(0,60000,30000,Options["Timeout"]*1000)
 		else
-			WebRequest.SetTimeouts(0,60000,30000,30000)	;��ΪSetTimeouts��Ĭ�����á������Բ��ӣ���ΪĬ�Ͼ�������������������Ϊ�˱���������
+			WebRequest.SetTimeouts(0,60000,30000,30000)	;此为SetTimeouts的默认设置。这句可以不加，因为默认就是这样，加在这里是为了表述清晰。
 
-		WebRequest.Open("POST", URL, true)   ;trueΪ�첽��ȡ��Ĭ����false�����ٵĸ�Դ���������ٵĸ�Դ������
+		WebRequest.Open("POST", URL, true)   ;true为异步获取。默认是false，龟速的根源！！！卡顿的根源！！！
 
-		;SetRequestHeader() ���� Open() ֮�����Ч
+		;SetRequestHeader() 必须 Open() 之后才有效
 		for k, v in RequestHeaders
 		{
 			if (k="Cookie")
 			{
-				WebRequest.SetRequestHeader("Cookie","tuzi")    ;������һ��cookie����ֹ������msdn�Ƽ���ô��
+				WebRequest.SetRequestHeader("Cookie","tuzi")    ;先设置一个cookie，防止出错，msdn推荐这么做
 				WebRequest.SetRequestHeader("Cookie",v)
 			}
 			else
@@ -303,28 +303,28 @@ class WinHttp
 		Loop
 		{
 			WebRequest.Send(PostData)
-			WebRequest.WaitForResponse(-1)								;WaitForResponse����ȷ����ȡ������������Ӧ��-1��ʾ����ʹ��SetTimeouts���õĳ�ʱ
+			WebRequest.WaitForResponse(-1)								;WaitForResponse方法确保获取的是完整的响应。-1表示总是使用SetTimeouts设置的超时
 
-			;��ȡ״̬�룬һ��statusΪ200˵������ɹ�
+			;获取状态码，一般status为200说明请求成功
 			this.Status:=WebRequest.Status()
 			this.StatusText:=WebRequest.StatusText()
 
 			if (Options["expected_status"]="" or Options["expected_status"]=this.Status)
 				break
-			;����ָ��������ҳ�淵�ص�״̬��������Ԥ��״̬�벻һ�£����׳�������ϸ������Ϣ����ʹ������һ������������ר�ż�¼�������ǣ�
-			;��ʹnumber_of_retriesΪ�գ�����ʽ��Ȼ���������Բ���Ϊnumber_of_retries���ó�ʼֵ��
+			;尝试指定次数后页面返回的状态码依旧与预期状态码不一致，则抛出错误及详细错误信息（可使用我另一个错误处理函数专门记录处理它们）
+			;即使number_of_retries为空，表达式依然成立，所以不用为number_of_retries设置初始值。
 			else if (A_Index>=Options["number_of_retries"])
 			{
 				this.extra.URL:=URL
 				this.extra.Expected_Status:=Options["expected_status"]
 				this.extra.Status:=this.Status
 				this.extra.StatusText:=this.StatusText
-				throw, Exception("����" Options.number_of_retries "�γ��Ժ󣬷���������״̬������������ֵ��һ��", -1, Object(this.extra))
+				throw, Exception("经过" Options.number_of_retries "次尝试后，服务器返回状态码依旧与期望值不一致", -1, Object(this.extra))
 			}
 		}
 		if (Options["Accept-Encoding"]<>"") && (WebRequest.GetResponseHeader("Content-Encoding") = "gzip")
 		{
-			this.ResponseHeaders:=this.������Ϣ������(WebRequest.GetAllResponseHeaders())
+			this.ResponseHeaders:=this.解析信息到对象(WebRequest.GetAllResponseHeaders())
 			body := WebRequest.ResponseBody
 			size := body.MaxIndex() + 1
 		
@@ -342,14 +342,14 @@ class WinHttp
 			return StrGet(&data, size, Options["Charset"])
 		}
 
-		if (Options["Charset"]<>"") or (FilePath<>"")									;�����ַ���
+		if (Options["Charset"]<>"") or (FilePath<>"")									;设置字符集
 		{
-			this.ResponseHeaders:=this.������Ϣ������(WebRequest.GetAllResponseHeaders())
-			ADO:=ComObjCreate("adodb.stream") 		 	;ʹ�� adodb.stream ���뷵��ֵ���ο� http://bbs.howtoadmin.com/ThRead-814-1-1.html
-			ADO.Type:=1 														;�Զ����Ʒ�ʽ����
-			ADO.Mode:=3 													;��ͬʱ���ж�д
-			ADO.Open()  														;�������
-			ADO.Write(WebRequest.ResponseBody())    	;д�������ע�� WebRequest.ResponseBody() ��ȡ�������޷��ŵ�bytes��ͨ�� adodb.stream ת�����ַ���string
+			this.ResponseHeaders:=this.解析信息到对象(WebRequest.GetAllResponseHeaders())
+			ADO:=ComObjCreate("adodb.stream") 		 	;使用 adodb.stream 编码返回值。参考 http://bbs.howtoadmin.com/ThRead-814-1-1.html
+			ADO.Type:=1 														;以二进制方式操作
+			ADO.Mode:=3 													;可同时进行读写
+			ADO.Open()  														;开启物件
+			ADO.Write(WebRequest.ResponseBody())    	;写入物件。注意 WebRequest.ResponseBody() 获取到的是无符号的bytes，通过 adodb.stream 转换成字符串string
 			if(FilePath<>"")
 			{
 				ADO.SaveToFile( FilePath, 2 )
@@ -358,25 +358,25 @@ class WinHttp
 			}
 			else
 			{
-				ADO.Position:=0 												;��ͷ��ʼ
-				ADO.Type:=2 														;������ģʽ����
-				ADO.Charset:=Options["Charset"]   				;�趨���뷽ʽ
-				ret_var:=ADO.ReadText()   								;������ڵ����ֶ���
+				ADO.Position:=0 												;从头开始
+				ADO.Type:=2 														;以文字模式操作
+				ADO.Charset:=Options["Charset"]   				;设定编码方式
+				ret_var:=ADO.ReadText()   								;将物件内的文字读出
 				ADO.Close()
 				return, ret_var
 			}
 		}
 		else
 		{
-			this.ResponseHeaders:=this.������Ϣ������(WebRequest.GetAllResponseHeaders())
+			this.ResponseHeaders:=this.解析信息到对象(WebRequest.GetAllResponseHeaders())
 		return, WebRequest.ResponseText()
 		}
 	}
 
 	/*
-	infos�ĸ�ʽ��ÿ��һ����������������һ��ð��Ϊ��������֮������βΪ����ֵ������������С�
-	���仰˵��chrome�Ŀ����߹����С�Request Header���Ƕ�����ֱ�Ӹ��ƹ��������á�
-	��Ҫע���һ�С�GET /?tn=sitehao123 HTTP/1.1����ʵ��û���κ����õģ���Ϊû�С�:���������ƹ�����Ҳ������Ӱ������������
+	infos的格式：每行一个参数，行首至第一个冒号为参数名，之后至行尾为参数值。多个参数换行。
+	换句话说，chrome的开发者工具中“Request Header”那段内容直接复制过来就能用。
+	需要注意第一行“GET /?tn=sitehao123 HTTP/1.1”其实是没有任何作用的，因为没有“:”。但复制过来了也并不会影响正常解析。
 
 	infos=
 	(
@@ -392,24 +392,24 @@ class WinHttp
 	Accept-Language: zh-CN,zh;q=0.8
 	)
 	*/
-	������Ϣ������(infos)
+	解析信息到对象(infos)
 	{
 		if (IsObject(infos)=1)
 			return, infos
 
-		;���������ɽ���infos�����з�ͳһΪ`r`n�������������ʽ��ȡʱ����
+		;以下两步可将“infos”换行符统一为`r`n，避免正则表达式提取时出错
 		StringReplace, infos, infos, `r`n, `n, All
 		StringReplace, infos, infos, `n, `r`n, All
 
 		infos_temp:=GlobalRegExMatch(infos,"m)(^.*?):(.*$)",1)
-		;������ƥ�䵽����Ϣ�����µĶ����У�������{"Connection":"keep-alive","Cache-Control":"max-age=0"}
+		;将正则匹配到的信息存入新的对象中，像这样{"Connection":"keep-alive","Cache-Control":"max-age=0"}
 		infos:=[]
 		Loop, % infos_temp.MaxIndex()
 		{
-			name:=Trim(infos_temp[A_Index].Value[1], " `t`r`n`v`f")						;Trim()�����þ��ǰѡ�abc: haha����haha�Ķ���հ׷�����
+			name:=Trim(infos_temp[A_Index].Value[1], " `t`r`n`v`f")						;Trim()的作用就是把“abc: haha”中haha的多余空白符消除
 			value:=Trim(infos_temp[A_Index].Value[2], " `t`r`n`v`f")
 
-			;��Set-Cookie���ǿ���һ�η��ض����ġ�
+			;“Set-Cookie”是可以一次返回多条的。
 			if (name="Set-Cookie")
 				infos[name].=value . "`r`n"
 			else
@@ -420,26 +420,26 @@ class WinHttp
 	}
 
 	/*
-	�ڡ�GetAllResponseHeaders���У���Set-Cookie������һ�δ��ڶ�������硰Set-Cookie:name=a; domain=xxx.com `r`n Set-Cookie:name=b; domain=www.xxx.com����
-	֮�������������cookie��ʱ�򣬻�����֤domain������֤path�����߶��ɹ����ٷ������з���������cookies��
-	domain��ƥ�䷽ʽ�Ǵ��ַ�����β����ʼ�Ƚϡ�
-	path��ƥ�䷽ʽ�Ǵ�ͷ��ʼ���ַ����Ƚϣ�����/blog��/blog��/blogrool�ȵȶ�ƥ�䣩����Ҫע����ǣ�pathֻ��domain���ƥ���űȽϡ�
-	���´η��ʡ�www.xxx.com��ʱ��������2������������cookie�����Է��͸���������cookieӦ���ǡ�name=b; name=a����
-	���´η��ʡ�xxx.com��ʱ������ֻ��1������������cookie�����Է��͸���������cookieӦ���ǡ�name=a����
-	�����ǣ�pathԽ��ϸ��Խ��ǰ��domainԽ��ϸ��Խ��ǰ��domain��path������������ַ�ˣ���
-	������Ҫע����ǣ���Set-Cookie����û��domain����path�Ļ������Ե�ǰurlΪ׼��
-	���Ҫ����һ�����е�cookieֵ����ô��Ҫ����һ��name��domain��path����ȫ��ͬ�ġ�Set-Cookie����name���ǡ�cookie:name=value; path=/���е�name����
-	��һ��cookie���ڣ����ҿ�ѡ���������Ļ�����cookie��ֵ���ڽ�������ÿ�������б���������������
-	��ֵ���洢����ΪCookie��HTTP��Ϣͷ�У�����ֻ������cookie��ֵ��������ѡ��ȫ����ȥ����expires��domain��path��secureȫ��û���ˣ���
-	�����ָ�����������ж��cookies����ô���ǻᱻ�ֺźͿո�ֿ������磺��Cookie:value1 ; value2 ; name1=value1��
-	��û��expiresѡ��ʱ��cookie�����������ڵ�һ�ĻỰ�С�������Ĺر���ζ��һ�λỰ�Ľ��������ԻỰcookieֻ��������������ִ򿪵�״̬֮�¡�
-	���expiresѡ��������һ����ȥ��ʱ��㣬��ô���cookie�ᱻ����ɾ����
-	���һ��ѡ����secure����������ѡ���ѡ��ֻ��һ����ǲ���û��������ֵ��
-	��http://my.oschina.net/hmj/blog/69638�� �ο��𰸡�
-	Ҫ��������ȫ����������Զ�����cookies��ÿ�����ӷ���Ӧ��cookie���Ѷ��Ĵ�ģ���¼ʲô�ģ�����һ��һ����ȡ����cookie�ٷ��͸����������ۺϿ��ǣ���ʱ��д�Զ�������
+	在“GetAllResponseHeaders”中，“Set-Cookie”可能一次存在多个，比如“Set-Cookie:name=a; domain=xxx.com `r`n Set-Cookie:name=b; domain=www.xxx.com”。
+	之后向服务器发送cookie的时候，会先验证domain，再验证path，两者都成功，再发送所有符合条件的cookies。
+	domain的匹配方式是从字符串的尾部开始比较。
+	path的匹配方式是从头开始逐字符串比较（例如/blog与/blog、/blogrool等等都匹配）。需要注意的是，path只在domain完成匹配后才比较。
+	当下次访问“www.xxx.com”时，由于有2个符合条件的cookie，所以发送给服务器的cookie应该是“name=b; name=a”。
+	当下次访问“xxx.com”时，由于只有1个符合条件的cookie，所以发送给服务器的cookie应该是“name=a”。
+	规则是，path越详细，越靠前。domain越详细，越靠前（domain和path加起来就是网址了）。
+	另外需要注意的是，“Set-Cookie”中没有domain或者path的话，则以当前url为准。
+	如果要覆盖一个已有的cookie值，那么需要创建一个name、domain、path，完全相同的“Set-Cookie”（name就是“cookie:name=value; path=/”中的name）。
+	当一个cookie存在，并且可选条件允许的话，该cookie的值会在接下来的每个请求中被发送至服务器。
+	其值被存储在名为Cookie的HTTP消息头中，并且只包含了cookie的值，其它的选项全部被去除（expires，domain，path，secure全部没有了）。
+	如果在指定的请求中有多个cookies，那么它们会被分号和空格分开，例如：（Cookie:value1 ; value2 ; name1=value1）
+	在没有expires选项时，cookie的寿命仅限于单一的会话中。浏览器的关闭意味这一次会话的结束，所以会话cookie只存在于浏览器保持打开的状态之下。
+	如果expires选项设置了一个过去的时间点，那么这个cookie会被立即删除。
+	最后一个选项是secure。不像其它选项，该选项只是一个标记并且没有其它的值。
+	“http://my.oschina.net/hmj/blog/69638” 参考答案。
+	要想做到完全如浏览器般自动管理cookies，每个链接发对应的cookie，难度颇大。模拟登录什么的，可以一步一步提取所需cookie再发送给服务器。综合考虑，暂时不写自动管理。
 	*/
 
-	;����cookie(cookie)
+	;管理cookie(cookie)
 	;{
 	;	return
 	;}
@@ -481,49 +481,49 @@ GZIP_DecompressBuffer( ByRef var, nSz ) { ; 'Microsoft GZIP Compression DLL' SKA
 	Return Ok ? vsz : 0
 }
 
-;�˺����� RegExMatch() ����������
-;1.�� 3 ������,����������Ϊ StartingPosition
-;2.����ֵ���������,��ÿ��ֵ����ʹ�� "O" ѡ��ص�ƥ�����
-;���� ����ֵ.1.Pos[0] �� ����ֵ[2].Len[1] �ȷ�ʽ��ȡÿ������ĸ�����Ϣ. ������Ի�ȡ��ʲô,��ο� "ƥ�����"
-;���� ����ֵ.MaxIndex()="" �ж���ƥ��
+;此函数和 RegExMatch() 有两个区别
+;1.仅 3 个参数,第三个参数为 StartingPosition
+;2.返回值是数组对象,其每个值都是使用 "O" 选项返回的匹配对象
+;可用 返回值.1.Pos[0] 或 返回值[2].Len[1] 等方式获取每个捕获的各种信息. 具体可以获取到什么,请参考 "匹配对象"
+;可用 返回值.MaxIndex()="" 判断无匹配
 GlobalRegExMatch(Haystack,NeedleRegEx,StartingPosition)
   {
     ObjOut:=[]
-    NeedleRegEx:=��������Oѡ��(NeedleRegEx)					;Ϊ�������� "O" ѡ��
+    NeedleRegEx:=正则添加O选项(NeedleRegEx)					;为正则添加 "O" 选项
     Loop
       {
-        RegExMatch(Haystack,NeedleRegEx,UnquotedOutputVar,StartingPosition)	;ע�����������,��������ȴʵ�����������ź��Ч������ ���ҵĸ�Դ������Щ�ط�����
-        If (UnquotedOutputVar.Value[0]="")					;����ֱ��ʹ�øú�������ֵ�ж��Ƿ��ҵ�����. �ڱ���ʽΪ "0*$" ,��ƥ���ִ�Ϊ "100.101" ,����ַ��� λ��8 , ����0 �Ĵ���
-            break								;ƥ��ֵΪ��(��������ʧ��),���˳�ѭ��������ѭ��
-        StartingPosition:=UnquotedOutputVar.Pos[0]+UnquotedOutputVar.Len[0]	;ƥ��ɹ��������´�ƥ�����Ϊ�ϴγɹ�ƥ���ַ�����ĩβ. ��������ʹ����ʽ "ABCABC" ,ƥ���ַ��� "ABCABCABCABC" ʱ���� 2 �ν��
+        RegExMatch(Haystack,NeedleRegEx,UnquotedOutputVar,StartingPosition)	;注意第三个参数,无需引号却实现了添加引号后的效果…… 混乱的根源就在这些地方……
+        If (UnquotedOutputVar.Value[0]="")					;不能直接使用该函数返回值判断是否找到内容. 在表达式为 "0*$" ,待匹配字串为 "100.101" ,会出现返回 位置8 , 长度0 的错误
+            break								;匹配值为空(隐含函数失败),则退出循环避免死循环
+        StartingPosition:=UnquotedOutputVar.Pos[0]+UnquotedOutputVar.Len[0]	;匹配成功则设置下次匹配起点为上次成功匹配字符串的末尾. 这样可以使表达式 "ABCABC" ,匹配字符串 "ABCABCABCABC" 时返回 2 次结果
         ObjOut.Insert(UnquotedOutputVar)
       }
     return,ObjOut
   }
 
-;�˺������õ�ͬ RegExMatch() ,��Ҫ������ͳһ����ֵ��ʽ,���ڴ���
+;此函数作用等同 RegExMatch() ,主要意义是统一返回值格式,便于处理
 RegExMatchLikeGlobal(Haystack,NeedleRegEx,StartingPosition)
   {
     ObjOut:=[]
-    NeedleRegEx:=��������Oѡ��(NeedleRegEx)					;Ϊ�������� "O" ѡ��
+    NeedleRegEx:=正则添加O选项(NeedleRegEx)					;为正则添加 "O" 选项
     RegExMatch(Haystack,NeedleRegEx,UnquotedOutputVar,StartingPosition)
     If (UnquotedOutputVar.Value[0]<>"")
         ObjOut.Insert(UnquotedOutputVar)
     return,ObjOut
   }
 
-;�˺������ڸ��������ʽ���� "O" ѡ��,ʹ���������Ϊƥ�����,���ڷ�������
-;����ֵ��ȷ�� "O" ѡ����ڲ�����һ��,������� OimO)abc.* �������
-;���뵽�˺����е��������ʽΪ�������ŵ�����,�ɰ���ѡ��. ���� im)abc.* ����֧��. "im)123.*" ����֧��
-��������Oѡ��(NeedleRegEx)
+;此函数用于给正则表达式添加 "O" 选项,使得输出变量为匹配对象,便于分析处理
+;返回值将确保 "O" 选项存在并仅存一个,不会出现 OimO)abc.* 这种情况
+;输入到此函数中的正则表达式为不带引号的正则,可包含选项. 例如 im)abc.* 将被支持. "im)123.*" 不被支持
+正则添加O选项(NeedleRegEx)
 {
-  ѡ��ָ���λ��:=InStr(NeedleRegEx,")")
-  If (ѡ��ָ���λ��<>0)
+  选项分隔符位置:=InStr(NeedleRegEx,")")
+  If (选项分隔符位置<>0)
     {
-      ����ѡ��:=SubStr(NeedleRegEx,1,ѡ��ָ���λ��)
-      ����:=SubStr(NeedleRegEx,ѡ��ָ���λ��+1)
-      StringCaseSense, On			;��Сд����
-      StringReplace, temp, ����ѡ��, i, , All	;�������������ʽѡ���п��ܴ��ڵ��ַ�
+      正则选项:=SubStr(NeedleRegEx,1,选项分隔符位置)
+      正则:=SubStr(NeedleRegEx,选项分隔符位置+1)
+      StringCaseSense, On			;大小写敏感
+      StringReplace, temp, 正则选项, i, , All	;以下是正则表达式选项中可能存在的字符
       StringReplace, temp, temp, m, , All
       StringReplace, temp, temp, s, , All
       StringReplace, temp, temp, x, , All
@@ -542,12 +542,12 @@ RegExMatchLikeGlobal(Haystack,NeedleRegEx,StartingPosition)
       StringReplace, temp, temp, %A_Space%, , All
       StringReplace, temp, temp, %A_Tab%, , All
       StringCaseSense, Off
-      If (temp=")")				;���������ʣ������ ")" ,˵��������ŵ�������ѡ��ָ���
+      If (temp=")")				;若最后结果仅剩闭括号 ")" ,说明这个括号的作用是选项分隔符
         {
-          If (InStr(����ѡ��,"O",1)<>0)		;��Сд���еļ��ѡ�����Ƿ���� "O" ѡ��,��ȷ������ڲ�Ψһ
-              return,NeedleRegEx		;����ѡ�� "O" ��ֱ�ӷ���
+          If (InStr(正则选项,"O",1)<>0)		;大小写敏感的检查选项中是否存在 "O" 选项,需确保其存在并唯一
+              return,NeedleRegEx		;存在选项 "O" 则直接返回
           Else
-              return,"O" . ����ѡ�� . ����	;����ѡ�� "O" ������
+              return,"O" . 正则选项 . 正则	;添加选项 "O" 并返回
         }
     }
   return,"O)" . NeedleRegEx

@@ -1,40 +1,40 @@
-;ÎÄ¼ş¼ĞÖĞÒÔÎÄ¼şÃûÀ´ËÑË÷
-ÎÄ¼ş¼ĞÖĞËÑË÷ÎÄ¼ş:
+ï»¿;æ–‡ä»¶å¤¹ä¸­ä»¥æ–‡ä»¶åæ¥æœç´¢
+æ–‡ä»¶å¤¹ä¸­æœç´¢æ–‡ä»¶:
 pppp:=GetCurrentFolder()
 If(pppp)
 {
-	Old_ClipBoard := ClipboardAll    ;±¸·İ¼ôÌù°å
-	Clipboard =                                  ;Çå¿Õ¼ôÌù°å
+	Old_ClipBoard := ClipboardAll    ;å¤‡ä»½å‰ªè´´æ¿
+	Clipboard =                                  ;æ¸…ç©ºå‰ªè´´æ¿
 	Clipboard := pppp
-	run "%A_AhkPath%" "%A_ScriptDir%\Plugins\ÎÄ¼ş¼ĞÖĞËÑË÷ÎÄ¼ş.ahk"
+	run "%A_AhkPath%" "%A_ScriptDir%\Plugins\æ–‡ä»¶å¤¹ä¸­æœç´¢æ–‡ä»¶.ahk"
 	Sleep,3000
-	Clipboard := Old_ClipBoard        ;»¹Ô­¼ôÌù°å
-	Old_ClipBoard =                          ;Çå³ı±äÁ¿ÄÚÈİ
+	Clipboard := Old_ClipBoard        ;è¿˜åŸå‰ªè´´æ¿
+	Old_ClipBoard =                          ;æ¸…é™¤å˜é‡å†…å®¹
 }
 Return
 
-;ËÑË÷ÎÄ¼ş¼ĞÖĞµÄÄ³ÖÖÀàĞÍµÄÎÄ¼şÄÚÈİÊÇ·ñ°üº¬×Ö·û
-ÎÄ¼şÖĞ²éÕÒ×Ö·û:
+;æœç´¢æ–‡ä»¶å¤¹ä¸­çš„æŸç§ç±»å‹çš„æ–‡ä»¶å†…å®¹æ˜¯å¦åŒ…å«å­—ç¬¦
+æ–‡ä»¶ä¸­æŸ¥æ‰¾å­—ç¬¦:
 pppp:=GetCurrentFolder()
 If InStr(FileExist(pppp), "D")
 {
-	IniWrite, % pppp, %run_iniFile%, ÎÄ¼şÖĞ²éÕÒ×Ö·û, Â·¾¶
-	Run "%A_AhkPath%" "%A_ScriptDir%\Plugins\ÎÄ¼şÖĞ²éÕÒ×Ö·û.ahk"
+	IniWrite, % pppp, %run_iniFile%, æ–‡ä»¶ä¸­æŸ¥æ‰¾å­—ç¬¦, è·¯å¾„
+	Run "%A_AhkPath%" "%A_ScriptDir%\Plugins\æ–‡ä»¶ä¸­æŸ¥æ‰¾å­—ç¬¦.ahk"
 }
 Else
-	Run "%A_AhkPath%" "%A_ScriptDir%\Plugins\ÎÄ¼şÖĞ²éÕÒ×Ö·û.ahk"
+	Run "%A_AhkPath%" "%A_ScriptDir%\Plugins\æ–‡ä»¶ä¸­æŸ¥æ‰¾å­—ç¬¦.ahk"
 Return
 
-;µ÷ÓÃÑ¸À×ÏÂÔØ
-ĞÂ°æÑ¸À×¿ª·ÅÒıÇæÏÂÔØ:
+;è°ƒç”¨è¿…é›·ä¸‹è½½
+æ–°ç‰ˆè¿…é›·å¼€æ”¾å¼•æ“ä¸‹è½½:
 IfInString, Clipboard,://
 {
-	Run,"%ahklu%" "%A_ScriptDir%\Plugins\ĞÂ°æÑ¸À×¿ª·ÅÒıÇæÏÂÔØ.ahk" %Clipboard%
+	Run,"%ahklu%" "%A_ScriptDir%\Plugins\æ–°ç‰ˆè¿…é›·å¼€æ”¾å¼•æ“ä¸‹è½½.ahk" %Clipboard%
 }
 Else
 {
 	DURL:=GetSelText()
-	Run,%ahklu% "%A_ScriptDir%\Plugins\ĞÂ°æÑ¸À×¿ª·ÅÒıÇæÏÂÔØ.ahk" %DURL%
+	Run,%ahklu% "%A_ScriptDir%\Plugins\æ–°ç‰ˆè¿…é›·å¼€æ”¾å¼•æ“ä¸‹è½½.ahk" %DURL%
 	DURL = 
 }
 Return

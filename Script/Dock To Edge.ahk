@@ -1,4 +1,4 @@
-Gui_Dock_Windows:
+ÔªøGui_Dock_Windows:
 CoordMode,Mouse,Screen
 Edge_Dock_%Gui_wid% =%Gui_wid% ; write window ID to a unique variable
 Edge_Dock_Position_%Gui_wid% :=A_ThisMenuItem ; store Left, Right, etc
@@ -196,13 +196,13 @@ Slide(Win,X,Y,Dir,Num=10, Sleep=5)  ;Thanks Infogulch for the idea behind this.
 	{
 		Loop %Num%
 		{
-			if(x=MWAleft)   ;øø◊Û
+			if(x=MWAleft)   ;Èù†Â∑¶
 				WinMove_X:=A_Index * Dock_Width / Num - Dock_Width + MWAleft
-			if(x>0 and x != MWAleft)   ;øø”“
+			if(x>0 and x != MWAleft)   ;Èù†Âè≥
 				WinMove_X:=MWAright - A_Index * Dock_Width / Num
-			if(y=MWAtop)   ;øø…œ
+			if(y=MWAtop)   ;Èù†‰∏ä
 				WinMove_Y:=A_Index * Dock_Hight / Num - Dock_Hight + MWAtop
-			if(y>0 and y !=MWAtop)   ;øøœ¬
+			if(y>0 and y !=MWAtop)   ;Èù†‰∏ã
 				WinMove_Y:=MWAbottom- A_Index * Dock_Hight / Num
 			WinMove, ahk_id %Win%,, %WinMove_X%, %WinMove_Y%
 			Sleep, %Sleep%

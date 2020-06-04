@@ -1,12 +1,12 @@
-; Explorer .. View mode--------------By a_h_k & ..:: Free Radical ::..
+ï»¿; Explorer .. View mode--------------By a_h_k & ..:: Free Radical ::..
 ; http://www.autohotkey.com/forum/topic57686.html
 
-´°¿ÚÖÃ¶¥:
+çª—å£ç½®é¡¶:
 ;^Up::
 WinSet,AlwaysOnTop,,A
 return
 
-ÔİÊ±Òş²Ø´°¿Ú:
+æš‚æ—¶éšè—çª—å£:
 ;#Space::
 WinGet, active_id, ID, A
 WinHide, ahk_id %active_id%
@@ -14,25 +14,25 @@ Sleep, 4000
 WinShow, ahk_id %active_id%
 return
 
-¹Ø±ÕÏÔÊ¾Æ÷²¢Ëø¶¨µçÄÔ:
+å…³é—­æ˜¾ç¤ºå™¨å¹¶é”å®šç”µè„‘:
 ;#s::
-KeyWait LWin    ;µÈ´ıLWin¼üËÉ¿ªºó£¬²Å¼ÌĞø
+KeyWait LWin    ;ç­‰å¾…LWiné”®æ¾å¼€åï¼Œæ‰ç»§ç»­
 KeyWait S
-BlockInput On   ;Ëø¶¨¼üÅÌ£¬Êó±ê
-SendMessage, 0x112, 0xF170, 2,, Program Manager ;¹Ø±ÕÏÔÊ¾Æ÷
-DllCall("LockWorkStation")                      ;Ëø¶¨µçÄÔ£¬Ïàµ±ÓÚWin+L
-BlockInput Off  ;½âËøËø¼üÅÌ£¬Êó±ê
+BlockInput On   ;é”å®šé”®ç›˜ï¼Œé¼ æ ‡
+SendMessage, 0x112, 0xF170, 2,, Program Manager ;å…³é—­æ˜¾ç¤ºå™¨
+DllCall("LockWorkStation")                      ;é”å®šç”µè„‘ï¼Œç›¸å½“äºWin+L
+BlockInput Off  ;è§£é”é”é”®ç›˜ï¼Œé¼ æ ‡
 return
 
-½ûÖ¹¹Ø±Õ°´Å¥:
+ç¦æ­¢å…³é—­æŒ‰é’®:
 ;#8::
 ;DisableCloseButton(WinExist("A"))
 ;DisableMenuButtons(WinExist("A"))
 ;DisableMinimizeButton(WinExist("A"))
-WinSet, Style, -0x80000, A    ;Òş²Ø±êÌâÀ¸Í¼±ê£¬°´Å¥£¬±êÌâÀ¸²Ëµ¥
+WinSet, Style, -0x80000, A    ;éšè—æ ‡é¢˜æ å›¾æ ‡ï¼ŒæŒ‰é’®ï¼Œæ ‡é¢˜æ èœå•
 return
 
-»Ö¸´¹Ø±Õ°´Å¥:
+æ¢å¤å…³é—­æŒ‰é’®:
 ;#9::
 ;RedrawSysmenu(WinExist("A"))
 WinSet, Style, +0x80000, A
@@ -80,12 +80,12 @@ DisableCloseButton(hWnd="") {
 Return ""
 }
 
-Òş²ØÈÎÎñÀ¸:
+éšè—ä»»åŠ¡æ :
 ;#6::
 winhide, ahk_class Shell_TrayWnd
 Return
 
-»Ö¸´ÈÎÎñÀ¸:
+æ¢å¤ä»»åŠ¡æ :
 ;#7::
 winshow, ahk_class Shell_TrayWnd
 Return
@@ -95,10 +95,10 @@ ExploreDrive:
    ifExist %Drv%:\
       Run %Drv%:\
    else
-      TrayTip,´íÎó,%Drv%ÅÌ²»´æÔÚ!,10,3
+      TrayTip,é”™è¯¯,%Drv%ç›˜ä¸å­˜åœ¨!,10,3
 Return
 
-ËõÎª±êÌâÀ¸:
+ç¼©ä¸ºæ ‡é¢˜æ :
 ;#z::
 ; Change this line to pick a different hotkey.
 ; Below this point, no changes should be made unless you want to
@@ -152,37 +152,37 @@ return
 ;^d::InvertSelection()
 ;#IfWinActive
 
-×ÊÔ´¹ÜÀíÆ÷·´Ñ¡:
+èµ„æºç®¡ç†å™¨åé€‰:
 ControlGet, hCtl, Hwnd, , SHELLDLL_DefView1, A
-PostMessage, 0x111, 28706, 0, , ahk_id %hCtl%		;±à¼­, ·´ÏòÑ¡Ôñ
-; µ¯³ö²Ëµ¥È»ºóÑ¡Ôñ²Ëµ¥µÄ·½Ê½
+PostMessage, 0x111, 28706, 0, , ahk_id %hCtl%		;ç¼–è¾‘, åå‘é€‰æ‹©
+; å¼¹å‡ºèœå•ç„¶åé€‰æ‹©èœå•çš„æ–¹å¼
 ; InvertSelection()
 return
 
 InvertSelection()
 {
-;µ¯³ö´°¿Ú²Ëµ¥À¸£¬Ñ¡ÔñÏàÓ¦²Ëµ¥»Ø³µ
+;å¼¹å‡ºçª—å£èœå•æ ï¼Œé€‰æ‹©ç›¸åº”èœå•å›è½¦
 	PostMessage,0x112,0xf100,0,,A
 	SendInput {Right}{Down}{Up}{Enter}
 	return
 }
 
-;Win_7ÖĞ×Ô´øµÄ¿ì½İ¼ü¡°^+¹öÂÖ¡± Îª·Å´óÍ¼±êºÍÇĞ»»ÊÓÍ¼
-;ÊÊÓÃÓÚ×ÊÔ´¹ÜÀíÆ÷ºÍ¶Ô»°¿ò
-ÇĞ»»ÊÓÍ¼:
+;Win_7ä¸­è‡ªå¸¦çš„å¿«æ·é”®â€œ^+æ»šè½®â€ ä¸ºæ”¾å¤§å›¾æ ‡å’Œåˆ‡æ¢è§†å›¾
+;é€‚ç”¨äºèµ„æºç®¡ç†å™¨å’Œå¯¹è¯æ¡†
+åˆ‡æ¢è§†å›¾:
 MouseGetPos,x,y,winid,ctrlid,2
 Sleep,0
 WM_COMMAND=0x111
 
-;²é¿´·½Ê½  XP¼æÈİ
-ODM_VIEW_ICONS =0x7029			;28713		Í¼±ê
-ODM_VIEW_LIST  =0x702b				;28715		ÁĞ±í
-ODM_VIEW_DETAIL=0x702c			;28716		ÏêÏ¸ĞÅÏ¢
-ODM_VIEW_THUMBS=0x702d	;28717		ËõÂÔÍ¼
-ODM_VIEW_TILES =0x702e				;28718		Æ½ÆÌ
+;æŸ¥çœ‹æ–¹å¼  XPå…¼å®¹
+ODM_VIEW_ICONS =0x7029			;28713		å›¾æ ‡
+ODM_VIEW_LIST  =0x702b				;28715		åˆ—è¡¨
+ODM_VIEW_DETAIL=0x702c			;28716		è¯¦ç»†ä¿¡æ¯
+ODM_VIEW_THUMBS=0x702d	;28717		ç¼©ç•¥å›¾
+ODM_VIEW_TILES =0x702e				;28718		å¹³é“º
 
 /*
-;·Ö×éÒÀ¾İ
+;åˆ†ç»„ä¾æ®
 ODM_VIEW_ICONS =0x7602
 ODM_VIEW_LIST  =0x7603
 ODM_VIEW_DETAIL=0x7604
@@ -207,7 +207,7 @@ Loop
 return
 
 ;#V::
-´úÂë±£´æ²¢ÔËĞĞ:
+ä»£ç ä¿å­˜å¹¶è¿è¡Œ:
 SelCode:=GetSelText(2,, bin,5)
 CF_HTML := DllCall("RegisterClipboardFormat", "str", "HTML Format")
 n := 0
@@ -222,7 +222,7 @@ while format := NumGet(bin, n, "uint")
     }
     n += A_PtrSize + 4 + size
 }
-SelCode := sourceURL ? (";À´Ô´ÍøÖ·: " sourceURL "`r`n" SelCode) : SelCode
+SelCode := sourceURL ? (";æ¥æºç½‘å€: " sourceURL "`r`n" SelCode) : SelCode
 if SelCode 
 {
 	Code_File:=  A_Desktop "\" . A_Now  ".ahk"
@@ -233,22 +233,22 @@ SelCode:=bin:=""
 return
 
 ;!F1::
-ÓĞµÀÍøÂç·­Òë:
+æœ‰é“ç½‘ç»œç¿»è¯‘:
 	Youdao_keyword:=GetSelText()
-	If !Youdao_keyword                          ;Èç¹ûÕ³Ìù°åÀïÃæÃ»ÓĞÄÚÈİ£¬ÔòÅĞ¶ÏÊÇ·ñÓĞ´°¿Ú¶¨Òå
+	If !Youdao_keyword                          ;å¦‚æœç²˜è´´æ¿é‡Œé¢æ²¡æœ‰å†…å®¹ï¼Œåˆ™åˆ¤æ–­æ˜¯å¦æœ‰çª—å£å®šä¹‰
 	Return
-	Youdao_ÒëÎÄ:=YouDaoApi(Youdao_keyword)
-	Youdao_»ù±¾ÊÍÒå:= json(Youdao_ÒëÎÄ, "basic.explains")
-	Youdao_ÍøÂçÊÍÒå:= json(Youdao_ÒëÎÄ, "web.value")
-	If Youdao_»ù±¾ÊÍÒå<>
+	Youdao_è¯‘æ–‡:=YouDaoApi(Youdao_keyword)
+	Youdao_åŸºæœ¬é‡Šä¹‰:= json(Youdao_è¯‘æ–‡, "basic.explains")
+	Youdao_ç½‘ç»œé‡Šä¹‰:= json(Youdao_è¯‘æ–‡, "web.value")
+	If Youdao_åŸºæœ¬é‡Šä¹‰<>
 	{
-		ToolTip,%Youdao_keyword%:`n»ù±¾ÊÍÒå:%Youdao_»ù±¾ÊÍÒå%`nÍøÂçÊÍÒå:%Youdao_ÍøÂçÊÍÒå%
+		ToolTip,%Youdao_keyword%:`nåŸºæœ¬é‡Šä¹‰:%Youdao_åŸºæœ¬é‡Šä¹‰%`nç½‘ç»œé‡Šä¹‰:%Youdao_ç½‘ç»œé‡Šä¹‰%
 		gosub,soundpaly
 		ToolTip
-		Youdao_ÒëÎÄ := Youdao_»ù±¾ÊÍÒå := Youdao_ÍøÂçÊÍÒå:= Youdao_keyword := ""
+		Youdao_è¯‘æ–‡ := Youdao_åŸºæœ¬é‡Šä¹‰ := Youdao_ç½‘ç»œé‡Šä¹‰:= Youdao_keyword := ""
 	}
 else
-MsgBox,,ÓĞµÀÍøÂç·­Òë,ÍøÂç´íÎó»ò²éÑ¯²»µ½¸Ãµ¥´ÊµÄ·­Òë¡£
+MsgBox,,æœ‰é“ç½‘ç»œç¿»è¯‘,ç½‘ç»œé”™è¯¯æˆ–æŸ¥è¯¢ä¸åˆ°è¯¥å•è¯çš„ç¿»è¯‘ã€‚
 return
 
 /*

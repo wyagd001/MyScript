@@ -1,23 +1,23 @@
-; http://ahk.5d6d.com/viewthread.php?tid=703
+ï»¿; http://ahk.5d6d.com/viewthread.php?tid=703
 
 #IfWinActive ahk_group ccc
 F2::
-    WinID := WinExist("A")  ; »ñÈ¡µ±Ç°´°¿ÚµÄ ID
-    ControlGetFocus, ControlName, ahk_id %WinID%    ; »ñÈ¡µ±Ç°´°¿Ú»ñµÃ½¹µãµÄ¿Ø¼şÃû
+    WinID := WinExist("A")  ; è·å–å½“å‰çª—å£çš„ ID
+    ControlGetFocus, ControlName, ahk_id %WinID%    ; è·å–å½“å‰çª—å£è·å¾—ç„¦ç‚¹çš„æ§ä»¶å
 
-    IfNotInString, ControlName, Edit    ; ÅĞ¶Ïµ±Ç°ÊÇ·ñ´¦ÓÚÃüÃû×´Ì¬, Edit ÊÇÖØÃüÃû±à¼­¿òµÄÀàÃû
+    IfNotInString, ControlName, Edit    ; åˆ¤æ–­å½“å‰æ˜¯å¦å¤„äºå‘½åçŠ¶æ€, Edit æ˜¯é‡å‘½åç¼–è¾‘æ¡†çš„ç±»å
     {
 		State = 0
         Send, {F2}
         Sleep, 100
     }
 
-    ControlID := GetFocusControlID()    ; »ñÈ¡ÖØÃüÃû±à¼­¿òµÄ ID
-    ControlGetText, FileName,, ahk_id %ControlID%   ; »ñÈ¡ÎÄ¼şÃû»òÎÄ¼ş¼ĞÃû
+    ControlID := GetFocusControlID()    ; è·å–é‡å‘½åç¼–è¾‘æ¡†çš„ ID
+    ControlGetText, FileName,, ahk_id %ControlID%   ; è·å–æ–‡ä»¶åæˆ–æ–‡ä»¶å¤¹å
 
-    StringGetPos, DotPostion, FileName, ., R ; »ñÈ¡×îÓÒ±ßµÄ "." µÄÎ»ÖÃ
+    StringGetPos, DotPostion, FileName, ., R ; è·å–æœ€å³è¾¹çš„ "." çš„ä½ç½®
 
-    If !ErrorLevel   ; µ±ÎÄ¼şÃûÓĞ "." Ê±²Å½øĞĞ±ä»»Ñ¡Ôñ
+    If !ErrorLevel   ; å½“æ–‡ä»¶åæœ‰ "." æ—¶æ‰è¿›è¡Œå˜æ¢é€‰æ‹©
     {
         MoveCount := StrLen(FileName) - DotPostion
         if state=
@@ -31,34 +31,34 @@ RenameState0:
 State = 1
 Return
 
-; ½öÑ¡ÖĞÀ©Õ¹Ãû
+; ä»…é€‰ä¸­æ‰©å±•å
 RenameState1:
     ExtensionMoveCount := MoveCount - 1
     Send, ^{End}+{Left %ExtensionMoveCount%}
 		State =2
 Return
 
-; È«Ñ¡ÎÄ¼şÃû£¨°üÀ¨À©Õ¹Ãû£©
+; å…¨é€‰æ–‡ä»¶åï¼ˆåŒ…æ‹¬æ‰©å±•åï¼‰
 RenameState2:
     Send, ^{Home}+^{End}
 		State = 3
 Return
 
-; ¹â±êÍ£ÔÚÀ©Õ¹ÃûµÄ"."Ç°
+; å…‰æ ‡åœåœ¨æ‰©å±•åçš„"."å‰
 RenameState3:
     Send, ^{End}{Left %MoveCount%}
 		State = 4
 Return
 
-; ½öÑ¡ÖĞÎÄ¼şÃû£¨²»°üÀ¨À©Õ¹Ãû£©
+; ä»…é€‰ä¸­æ–‡ä»¶åï¼ˆä¸åŒ…æ‹¬æ‰©å±•åï¼‰
 RenameState4:
-Send, ^{Home}+^{End}+{Left %MoveCount%} ; È«Ñ¡£¬È»ºó°´×¡ Shift ×óÒÆ£¬²»Ñ¡ÖĞÀ©Õ¹Ãû
+Send, ^{Home}+^{End}+{Left %MoveCount%} ; å…¨é€‰ï¼Œç„¶åæŒ‰ä½ Shift å·¦ç§»ï¼Œä¸é€‰ä¸­æ‰©å±•å
 	State = 1
 Return
 
 ;-------------------------------------------------------------------------------
 
-; ~ ·µ»Øµ±Ç°´°¿Ú»ñµÃ½¹µãµÄ¿Ø¼şµÄ ID
+; ~ è¿”å›å½“å‰çª—å£è·å¾—ç„¦ç‚¹çš„æ§ä»¶çš„ ID
 GetFocusControlID()
     {
         WinID := WinExist("A")

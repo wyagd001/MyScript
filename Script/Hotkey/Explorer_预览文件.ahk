@@ -1,4 +1,4 @@
-#ifWinActive, ahk_group MyPreWWinGroup
+ï»¿#ifWinActive, ahk_group MyPreWWinGroup
 $Space::
 gosub PreWWinGuiClose
 return
@@ -6,7 +6,7 @@ return
 #ifWinActive ahk_Group ccc
 $Space::
 ;tooltip % A_Cursor " - " IsRenaming()
-;ÖØÃüÃûÊ±£¬Ö±½Ó·¢ËÍ¿Õ¸ñ
+;é‡å‘½åæ—¶ï¼Œç›´æ¥å‘é€ç©ºæ ¼
 if(A_Cursor="IBeam") or IsRenaming()
 {
  send {space}
@@ -63,10 +63,10 @@ GuiControl, Move, displayArea, x0 y0 w%A_GuiWidth% h%A_GuiHeight%
 GuiControl, Move, WMP,x0 y0 w%A_GuiWidth% h%A_GuiHeight%
 return
 
-; ÏêÇé  https://github.com/mozilla/pdf.js
+; è¯¦æƒ…  https://github.com/mozilla/pdf.js
 Cando_pdf_prew:
 	gosub,IE_Open
-	WB.Navigate("https://mozilla.github.io/pdf.js/es5/web/viewer.html?file=blank.pdf")  ; ÀÏ°æä¯ÀÀÆ÷
+	WB.Navigate("https://mozilla.github.io/pdf.js/es5/web/viewer.html?file=blank.pdf")  ; è€ç‰ˆæµè§ˆå™¨
 	WBStartTime := A_TickCount
 	loop 
 	{
@@ -96,7 +96,7 @@ TranslateAccelerator := NumGet( NumGet( pipa+0 ) + 5*A_PtrSize )
 OnMessage( 0x0100, "WM_KeyPress" ) ; WM_KEYDOWN 
 OnMessage( 0x0101, "WM_KeyPress" ) ; WM_KEYUP   
 
-Gui, PreWWin:Show ,,% Files " - ÎÄ¼şÔ¤ÀÀ"
+Gui, PreWWin:Show ,,% Files " - æ–‡ä»¶é¢„è§ˆ"
 return
 
 autoopenpdf:
@@ -153,7 +153,7 @@ Cando_music_prew:
 Gui, +LastFound +Resize
 Gui, Add, ActiveX, x0 y0 w0 h0 vWMP, WMPLayer.OCX
 WMP.Url := files
-Gui, PreWWin:Show, w500 h300 Center,% Files " - ÎÄ¼şÔ¤ÀÀ"
+Gui, PreWWin:Show, w500 h300 Center,% Files " - æ–‡ä»¶é¢„è§ˆ"
 return
 
 Cando_pic_prew:
@@ -170,7 +170,7 @@ Propor:=Propor > 1?1:Propor
 	hW  := Floor(WidthO * Propor)
 	hH := Floor(HeightO * Propor)
 Gui, Add, Picture,w%hw% h%hh%, %files%
-Gui,PreWWin: Show,  Center, % Files " - ÎÄ¼şÔ¤ÀÀ"
+Gui,PreWWin: Show,  Center, % Files " - æ–‡ä»¶é¢„è§ˆ"
 return
 
 /*
@@ -178,7 +178,7 @@ Cando_rar_prew:
 textvalue:= cmdSilenceReturn("for /f ""eol=- skip=8 tokens=5*"" `%a in ('D:\Progra~1\Tool\WinRAR\unRAR.exe l -c- " """" files """') do @echo `%a `%b")
 Gui, +ReSize
 Gui, Add, Edit, w800 h600 ReadOnly vdisplayArea,
-Gui,PreWWin: Show, AutoSize Center, % Files " - ÎÄ¼şÔ¤ÀÀ"
+Gui,PreWWin: Show, AutoSize Center, % Files " - æ–‡ä»¶é¢„è§ˆ"
 GuiControl,, displayArea,%textvalue%
 textvalue=
 return
@@ -187,7 +187,7 @@ return
 Cando_rar_prew:
 	if !7z
 	{
-		msgbox 7z ±äÁ¿Î´ÉèÖÃ£¬ÇëÔÚÑ¡Ïî¡úÔËĞĞ¡ú×Ô¶¨Òå¶ÌÓïÖĞÌí¼Ó¡£`nÀıÈç: 7z=G:\Program Files\7z\7z.exe
+		msgbox 7z å˜é‡æœªè®¾ç½®ï¼Œè¯·åœ¨é€‰é¡¹â†’è¿è¡Œâ†’è‡ªå®šä¹‰çŸ­è¯­ä¸­æ·»åŠ ã€‚`nä¾‹å¦‚: 7z=G:\Program Files\7z\7z.exe
 	return
 	}
 	textvalue:= cmdSilenceReturn("for /f ""skip=12 tokens=5,* eol=-"" `%a in ('^;""" 7z """ ""l"" " """" files """') do @echo `%a `%b")
@@ -200,7 +200,7 @@ Cando_rar_prew:
 			StringTrimLeft, Tmp_val2, Tmp_val, % tmp_pos
 			if (Tmp_val2 = "Name") or (Tmp_val2 = "folders")
 				continue
-			if RegExMatch(Tmp_val,"^[0-9]+\s")  ; ²»ÄÜÕıÈ·µÃµ½7zÑ¹Ëõ°üÖĞÒÔÊı×Ö¿Õ¸ñ¿ªÍ·µÄÎÄ¼şÃû
+			if RegExMatch(Tmp_val,"^[0-9]+\s")  ; ä¸èƒ½æ­£ç¡®å¾—åˆ°7zå‹ç¼©åŒ…ä¸­ä»¥æ•°å­—ç©ºæ ¼å¼€å¤´çš„æ–‡ä»¶å
 				Tmp_value .= Tmp_val2 "`n"
 			else
 				Tmp_value .= Tmp_val "`n"
@@ -211,14 +211,14 @@ Cando_rar_prew:
 	}
 Sort, Tmp_value
 Gui, +ReSize
-ImageListID := IL_Create(5)  ; ´´½¨³õÊ¼ÈİÁ¿Îª 5 ¸öÍ¼±êµÄÍ¼ÏñÁĞ±í.
-Loop 5  ; ¼ÓÔØÒ»Ğ©±ê×¼ÏµÍ³Í¼±êµ½Í¼ÏñÁĞ±íÖĞ.
+ImageListID := IL_Create(5)  ; åˆ›å»ºåˆå§‹å®¹é‡ä¸º 5 ä¸ªå›¾æ ‡çš„å›¾åƒåˆ—è¡¨.
+Loop 5  ; åŠ è½½ä¸€äº›æ ‡å‡†ç³»ç»Ÿå›¾æ ‡åˆ°å›¾åƒåˆ—è¡¨ä¸­.
     IL_Add(ImageListID, "shell32.dll", A_Index)
 Gui, Add, TreeView,r30 w800 h580 ImageList%ImageListID%
-Gui, Add, button,gtree2text,ÏÔÊ¾ÎÄ±¾
+Gui, Add, button,gtree2text,æ˜¾ç¤ºæ–‡æœ¬
 AddBranchesToTree(Tmp_value)
 
-Gui,PreWWin: Show, AutoSize Center, % Files " - ÎÄ¼şÔ¤ÀÀ"
+Gui,PreWWin: Show, AutoSize Center, % Files " - æ–‡ä»¶é¢„è§ˆ"
 ;GuiControl,, displayArea, %Tmp_value%
 textvalue:=Tmp_val:=""
 return
@@ -226,7 +226,7 @@ return
 tree2text:
 Gui,66:Default 
 Gui, Add, Edit, w600 h300 ReadOnly,%Files%`n%Tmp_value%
-Gui show, AutoSize Center, % Files " - ÎÄ¼şÔ¤ÀÀ"
+Gui show, AutoSize Center, % Files " - æ–‡ä»¶é¢„è§ˆ"
 return
 
 cmdSilenceReturn(command){
@@ -242,7 +242,7 @@ cmdSilenceReturn(command){
 return  CMDReturn
 }
 
-; À´Ô´ÍøÖ·: https://autohotkey.com/board/topic/39809-script-to-open-list-of-filesfolders-in-treeview/
+; æ¥æºç½‘å€: https://autohotkey.com/board/topic/39809-script-to-open-list-of-filesfolders-in-treeview/
 AddBranchesToTree(filelist)
 {
 	level = 0
@@ -322,7 +322,7 @@ Gdip_GetImageDimensions(pBitmap, width, height)
 Gui, Add, Picture,w%width% h%height% 0xE hwndhwndGif1
 Gdip_DisposeImage(pBitmap)
 hgif1 := new Gif(Files, hwndGif1)
-Gui,PreWWin: Show, AutoSize Center, % Files " - ÎÄ¼şÔ¤ÀÀ"
+Gui,PreWWin: Show, AutoSize Center, % Files " - æ–‡ä»¶é¢„è§ˆ"
 hgif1.Play()
 gif_prew:=true
 return
@@ -334,7 +334,7 @@ FileEncoding, % File_Encode
 	if (File_Size > 102400) && ((File_Encode = "CP936") or (File_Encode = "UTF-8-RAW"))
 	{
 		FileReadLine, LineVar, % files, 1
-		MsgBox, 36, Ñ¡ÔñÔ´ÎÄ¼şµÄ±àÂëANSI/UTF-8, ÎÄ¼şµÚÒ»ĞĞÄÚÈİ: %LineVar%`nµ±Ç°Ê¹ÓÃ±àÂëÎª: %File_Encode%`nÎÄ±¾Õı³£ÏÔÊ¾µã»÷"ÊÇ"£¬·ñÔòµã»÷"·ñ"¡£, 2
+		MsgBox, 36, é€‰æ‹©æºæ–‡ä»¶çš„ç¼–ç ANSI/UTF-8, æ–‡ä»¶ç¬¬ä¸€è¡Œå†…å®¹: %LineVar%`nå½“å‰ä½¿ç”¨ç¼–ç ä¸º: %File_Encode%`næ–‡æœ¬æ­£å¸¸æ˜¾ç¤ºç‚¹å‡»"æ˜¯"ï¼Œå¦åˆ™ç‚¹å‡»"å¦"ã€‚, 2
 		IfMsgBox, No
 		{
 			File_Encode := (File_Encode = "CP936") ? "UTF-8" : "CP936"
@@ -358,7 +358,7 @@ FileRead,textvalue,%files%
 FileEncoding
 Gui, +ReSize
 Gui, Add, Edit, w800 h600 ReadOnly vdisplayArea,
-Gui,PreWWin: Show, AutoSize Center, % Files " - ÎÄ¼şÔ¤ÀÀ"
+Gui,PreWWin: Show, AutoSize Center, % Files " - æ–‡ä»¶é¢„è§ˆ"
 GuiControl,, displayArea,%textvalue%
 textvalue := File_Encode := File_Size := ""
 return
@@ -438,6 +438,6 @@ class Gif
 	{
 		Gdip_DisposeImage(this.pBitmap)
 		Object.Delete("dimensionIDs")
-		CF_ToolTip("³É¹¦ÊÍ·Å¶ÔÏó!",3000)
+		CF_ToolTip("æˆåŠŸé‡Šæ”¾å¯¹è±¡!",3000)
 	}
 }

@@ -1,4 +1,4 @@
-WM_QUERYENDSESSION(wParam, lParam)
+ï»¿WM_QUERYENDSESSION(wParam, lParam)
 {
 	global ShutdownBlock
 	If not ShutdownBlock
@@ -7,18 +7,18 @@ WM_QUERYENDSESSION(wParam, lParam)
 	Return false
 	/*   ; XP
 	ENDSESSION_LOGOFF = 0x80000000
-	If (lParam & ENDSESSION_LOGOFF)  ; ÓÃ»§ÕıÔÚ×¢Ïú
-		EventType = ×¢Ïú
-	Else  ; ÏµÍ³ÕıÔÚ¹Ø±Õ»òÖØÆô¡£
-		EventType = ¹Ø»ú
-	MsgBox, 4,, ÕıÔÚ%EventType%£¬ÊÇ·ñÔÊĞí£¿
+	If (lParam & ENDSESSION_LOGOFF)  ; ç”¨æˆ·æ­£åœ¨æ³¨é”€
+		EventType = æ³¨é”€
+	Else  ; ç³»ç»Ÿæ­£åœ¨å…³é—­æˆ–é‡å¯ã€‚
+		EventType = å…³æœº
+	MsgBox, 4,, æ­£åœ¨%EventType%ï¼Œæ˜¯å¦å…è®¸ï¼Ÿ
 	IfMsgBox Yes
-		Return true  ; ¸æËß²Ù×÷ÏµÍ³ÔÊĞí ¹Ø»ú/×¢Ïú ²Ù×÷¼ÌĞø¡£
+		Return true  ; å‘Šè¯‰æ“ä½œç³»ç»Ÿå…è®¸ å…³æœº/æ³¨é”€ æ“ä½œç»§ç»­ã€‚
 	Else
 	{
-		; ²»ÔÙ×èÖ¹ÏµÍ³¹Ø»ú
+		; ä¸å†é˜»æ­¢ç³»ç»Ÿå…³æœº
 		DllCall("ShutdownBlockReasonDestroy","Uint",hAhk)
-	Return false  ; ¸æËß²Ù×÷ÏµÍ³ÖÕÖ¹ ¹Ø»ú/×¢Ïú¡£
+	Return false  ; å‘Šè¯‰æ“ä½œç³»ç»Ÿç»ˆæ­¢ å…³æœº/æ³¨é”€ã€‚
 	}
 	*/
 }
@@ -44,7 +44,7 @@ if SubStr(A_OSVersion,1,3) = "10."
    sleep 400
    WinClose, ahk_class Progman
    sleep 200
-   WinActivate, ¹Ø±Õ Windows ahk_class #32770
+   WinActivate, å…³é—­ Windows ahk_class #32770
    SetTimer, ShutdownDialog, off
 }
 else
@@ -65,12 +65,12 @@ If not ErrorLevel
 }
 Return
 
-#IfWinActive, ¹Ø±Õ Windows ahk_class #32770
+#IfWinActive, å…³é—­ Windows ahk_class #32770
 $Enter::
 ControlGet, Choice, Choice, , ComboBox1
 ControlGetFocus, Focus
 tooltip % Choice 
-If Choice in ×¢Ïú,ÖØĞÂÆô¶¯,¹Ø»ú,¸üĞÂ²¢ÖØÆô,ÖØÆô,¸üĞÂ²¢¹Ø»ú
+If Choice in æ³¨é”€,é‡æ–°å¯åŠ¨,å…³æœº,æ›´æ–°å¹¶é‡å¯,é‡å¯,æ›´æ–°å¹¶å…³æœº
 {
 tooltip % Choice "-" Focus "-" A_ThisHotkey
    If (Focus = "ComboBox1" && A_ThisHotkey = "$Enter") or (Focus = "Button3")
@@ -91,16 +91,16 @@ HookProc(hWinEventHook2, Event, hWnd)
 	{
 		WinGetClass, Class, ahk_id %hWnd%
 		WinGetTitle, Title, ahk_id %hWnd%
-		if (Class = "Button" and Title = "È·¶¨")
+		if (Class = "Button" and Title = "ç¡®å®š")
 		{
 			ControlGet, Choice, Choice, , ComboBox1, ahk_id %hShutdownDialog%
-			if Choice in ×¢Ïú,ÖØĞÂÆô¶¯,¹Ø»ú,¸üĞÂ²¢ÖØÆô,ÖØÆô,¸üĞÂ²¢¹Ø»ú
+			if Choice in æ³¨é”€,é‡æ–°å¯åŠ¨,å…³æœº,æ›´æ–°å¹¶é‡å¯,é‡å¯,æ›´æ–°å¹¶å…³æœº
 				ShutdownBlock := false
 		}
 	}
 	if Event = 9
 	{
-		ifWinActive, ¹Ø±Õ Windows ahk_class #32770
+		ifWinActive, å…³é—­ Windows ahk_class #32770
 		{
 			sleep,2000
 			ShutdownBlock := true
@@ -110,7 +110,7 @@ HookProc(hWinEventHook2, Event, hWnd)
 	{
 		WinGetClass, Class, ahk_id %hWnd%
 		WinGetTitle, Title, ahk_id %hWnd%
-		If (Class = "#32770" and Title = "¹Ø±Õ Windows")
+		If (Class = "#32770" and Title = "å…³é—­ Windows")
 			hShutdownDialog := hWnd
 	}
 	else if Event = 17 ; EVENT_SYSTEM_DIALOGEND

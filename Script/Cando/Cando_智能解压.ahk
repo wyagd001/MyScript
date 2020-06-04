@@ -1,4 +1,4 @@
-cando_ÖÇÄÜ½âÑ¹:
+ï»¿cando_æ™ºèƒ½è§£å‹:
 If !CandySel
 Return
 Loop Parse, CandySel, `n, `r

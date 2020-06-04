@@ -1,7 +1,7 @@
-Cando_msdnËÑË÷:
+ï»¿Cando_msdnæœç´¢:
 	funct_string=https://www.bing.com/search?q=%candysel%+msdn
 	a := WinHttp.URLGet(funct_string,"Charset:UTF-8")
-	; Æ¥ÅäËÑË÷½á¹ûµÄÕıÔò    ¾ø´ó¶àÊıÄÜÆ¥Åäµ½  Î¢ÈíÍøÒ³µØÖ·¸Ä°æÁË£¬»ù±¾Ã»ÓÃÁË
+	; åŒ¹é…æœç´¢ç»“æœçš„æ­£åˆ™    ç»å¤§å¤šæ•°èƒ½åŒ¹é…åˆ°  å¾®è½¯ç½‘é¡µåœ°å€æ”¹ç‰ˆäº†ï¼ŒåŸºæœ¬æ²¡ç”¨äº†
 	RegExmatch(a,"m)(*ANYCRLF).*?href\=""(https://msdn.*?\(v=vs.85\)\.aspx)"".*?",m)
 	dizhi:= m1
   a:=""

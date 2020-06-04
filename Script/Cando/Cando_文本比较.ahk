@@ -1,4 +1,4 @@
-Cando_ÎÄ±¾±È½Ï:
+ï»¿Cando_æ–‡æœ¬æ¯”è¾ƒ:
 	IfWinExist, ahk_id %GuiID%
 	{
 		Gui,66:Default 
@@ -34,29 +34,29 @@ Cando_ÎÄ±¾±È½Ï:
 		else
 			textfile1:=""
 		Menu, ContextMenu, deleteall
-		Menu, ContextMenu, Add, ³·Ïû, RichEdit_Undo
-		Menu, ContextMenu, Add, ÖØ×ö, RichEdit_Redo
+		Menu, ContextMenu, Add, æ’¤æ¶ˆ, RichEdit_Undo
+		Menu, ContextMenu, Add, é‡åš, RichEdit_Redo
 		Menu, ContextMenu, Add
-		Menu, ContextMenu, Add, ¼ôÇĞ, RichEdit_Cut
-		Menu, ContextMenu, Add, ¸´ÖÆ, RichEdit_Copy
-		Menu, ContextMenu, Add, Õ³Ìù, RichEdit_Paste
+		Menu, ContextMenu, Add, å‰ªåˆ‡, RichEdit_Cut
+		Menu, ContextMenu, Add, å¤åˆ¶, RichEdit_Copy
+		Menu, ContextMenu, Add, ç²˜è´´, RichEdit_Paste
 		Menu, ContextMenu, Add
-		Menu, ContextMenu, Add, È«Ñ¡, RichEdit_SelAll
+		Menu, ContextMenu, Add, å…¨é€‰, RichEdit_SelAll
 		twidth := 600, bwidth := 150, bwidth2 := 100, opts := "x5 y30 r40 0x100000 gMessageHandler"
 		Gui, Add,text ,,%textfile1%
 		Gui, Add,text, x610 yp w600 vtextfile2, 
 		t1 := new RichEdit(66, opts " w" twidth)
 		t2 := new RichEdit(66, opts " w" twidth " xp" twidth)
-		t1.SetEventMask(["SELCHANGE"])   ; ¼à¿Ø¿Ø¼şÏûÏ¢
+		t1.SetEventMask(["SELCHANGE"])   ; ç›‘æ§æ§ä»¶æ¶ˆæ¯
 		t2.SetEventMask(["SELCHANGE"])
-		Gui, Add, Button, Default w%bwidth% x520 gcompare, ±È½Ï/¸üĞÂ
-		Gui, Add,text, x700 yp+10 h25,Ä£Ê½£º
-		Gui, Add, Radio, x740 yp-8 h25 gsub Group vcompmode,×Ö
-		Gui, Add, Radio, x790 yp h25 gsub, Á¬×Ö
-		Gui, Add, Radio, x860 yp h25 gsub Checked,ĞĞ
+		Gui, Add, Button, Default w%bwidth% x520 gcompare, æ¯”è¾ƒ/æ›´æ–°
+		Gui, Add,text, x700 yp+10 h25,æ¨¡å¼ï¼š
+		Gui, Add, Radio, x740 yp-8 h25 gsub Group vcompmode,å­—
+		Gui, Add, Radio, x790 yp h25 gsub, è¿å­—
+		Gui, Add, Radio, x860 yp h25 gsub Checked,è¡Œ
 		Gui, Add, Statusbar
 		SB_SetParts(610)
-		gui show,, ÎÄ×Ö±È½Ï
+		gui show,, æ–‡å­—æ¯”è¾ƒ
 		gosub UpdateSBText
 		if Candy_isFile
 		{
@@ -83,14 +83,14 @@ return
 
 ; https://www.autohotkey.com/boards/viewtopic.php?f=6&t=59029
 ; https://github.com/oif2003/RichEditBox/blob/master/textCompare.ahk
-; ĞŞ¸ÄÎª v1 °æ±¾  ²»Çø·Ö´óĞ¡Ğ´
+; ä¿®æ”¹ä¸º v1 ç‰ˆæœ¬  ä¸åŒºåˆ†å¤§å°å†™
 compare()
 {
 	global t1, t2, GuiID, compmode, c:= [], t1Arr := [], t2Arr := []
 	t1text:=t1.GetText(), t1.SetText(t1text)
 	t2text:=t2.GetText(), t2.SetText(t2text)
 	t1.WordWrap("on"), t2.WordWrap("on")
-	ToolTip, ÕıÔÚ±È½ÏÎÄ±¾£¬ÇëµÈ´ı...
+	ToolTip, æ­£åœ¨æ¯”è¾ƒæ–‡æœ¬ï¼Œè¯·ç­‰å¾…...
 	StartTime:=A_TickCount
 
 	if (compmode=1) && ((strlen(t1text) > 10000) or (strlen(t2text) > 10000))
@@ -100,7 +100,7 @@ compare()
 	if (compmode=1) 
 		de := ""
 	else if (compmode=2)
-		de := ["£¬" , "¡£", " ", "`n", "`r"]
+		de := ["ï¼Œ" , "ã€‚", " ", "`n", "`r"]
 	else
 		de := ["`n", "`r"]
 
@@ -166,7 +166,7 @@ compare()
 	WinActivate, ahk_id %GuiID%
 	ElapsedTime := (A_TickCount - StartTime) / 1000
 	ElapsedTime := ZTrim(ElapsedTime)
-	CF_ToolTip("±È½ÏÍê³É¡£ÓÃÊ±: " ElapsedTime "Ãë¡£", 3000)
+	CF_ToolTip("æ¯”è¾ƒå®Œæˆã€‚ç”¨æ—¶: " ElapsedTime "ç§’ã€‚", 3000)
 return
 }
 
@@ -366,13 +366,13 @@ UpdateSBText:
 	if (FocusedControl = "RICHEDIT50W1")
 	{
 		Stats := t1.GetStatistics()
-		SB_SetText("×ó: " Stats.Line . " : " . Stats.LinePos, 1)
+		SB_SetText("å·¦: " Stats.Line . " : " . Stats.LinePos, 1)
 	return
 	}
 	if (FocusedControl = "RICHEDIT50W2")
 	{
 		Stats := t2.GetStatistics()
-		SB_SetText("ÓÒ: " Stats.Line . " : " . Stats.LinePos, 2)
+		SB_SetText("å³: " Stats.Line . " : " . Stats.LinePos, 2)
 	}
 Return
 

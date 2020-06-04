@@ -1,5 +1,5 @@
-;LAlt & MButton::  ; Ò»¼ü´ò¿ªµ±Ç°¼¤»î´°¿ÚµÄËùÔÚÄ¿Â¼
-´°¿Ú³ÌĞòËùÔÚÄ¿Â¼:
+ï»¿;LAlt & MButton::  ; ä¸€é”®æ‰“å¼€å½“å‰æ¿€æ´»çª—å£çš„æ‰€åœ¨ç›®å½•
+çª—å£ç¨‹åºæ‰€åœ¨ç›®å½•:
 	Sleep,100
 	WinGet,ProcessPath,ProcessPath,A
 	Run,% "explorer.exe /select," ProcessPath 
@@ -10,32 +10,32 @@
 Return
 
 ;RAlt & MButton::
-´ò¿ªÎÄµµËùÔÚÄ¿Â¼:
+æ‰“å¼€æ–‡æ¡£æ‰€åœ¨ç›®å½•:
 	WinGet pid, PID, A 
 	WinGetActiveTitle _Title
 	WinGet,ProcessPath,ProcessPath,A 
 
-; ´°¿Ú±êÌâÓĞÂ·¾¶µÄ´°¿ÚÖ±½Ó»ñÈ¡´°¿Ú±êÌâÎÄ×Ö
+; çª—å£æ ‡é¢˜æœ‰è·¯å¾„çš„çª—å£ç›´æ¥è·å–çª—å£æ ‡é¢˜æ–‡å­—
 	IfInString,_Title,:\ 
 	{  
-		; Æ¥ÅäÄ¿Â¼²»ÄÜÆ¥ÅäÎÄ¼ş
+		; åŒ¹é…ç›®å½•ä¸èƒ½åŒ¹é…æ–‡ä»¶
 		;FullNamell:=RegExReplace(_Title,"^.*(.:(\\)?.*)\\.*$","$1")
-		; ±à¼­Æ÷ÎÄ¼şĞŞ¸Äºó±êÌâ¿ªÍ·´ø¡°*¡±
+		; ç¼–è¾‘å™¨æ–‡ä»¶ä¿®æ”¹åæ ‡é¢˜å¼€å¤´å¸¦â€œ*â€
 		RegExMatch(_Title, "i)^\*?\K.*\..*(?= [-*] )", FileFullPath)
 		If FileFullPath
 			goto OpenFileFullPath
 	}
 
 /*
-; ·½Ê½Ò»
-; Â·¾¶´øÒıºÅ¿ÉÊ¶±ğ  ²»´øÒıºÅ²»ĞĞ
+; æ–¹å¼ä¸€
+; è·¯å¾„å¸¦å¼•å·å¯è¯†åˆ«  ä¸å¸¦å¼•å·ä¸è¡Œ
 RegExMatch(CMDLine, "Ui) ""([^""]+)""", ff_)
 */
 
 /*
-; ·½Ê½¶ş
-RegExMatch(CMDLine, "i).*exe.*?\s+(.*)", ff_)   ; ÕıÔòÆ¥ÅäÃüÁîĞĞ²ÎÊı
-; ´ø²ÎÊıµÄÃüÁîĞĞ²»ÄÜµÃµ½Â·¾¶  ÀıÈç a.exe /resart "D:\123.txt"
+; æ–¹å¼äºŒ
+RegExMatch(CMDLine, "i).*exe.*?\s+(.*)", ff_)   ; æ­£åˆ™åŒ¹é…å‘½ä»¤è¡Œå‚æ•°
+; å¸¦å‚æ•°çš„å‘½ä»¤è¡Œä¸èƒ½å¾—åˆ°è·¯å¾„  ä¾‹å¦‚ a.exe /resart "D:\123.txt"
 startzimu:=RegExMatch(ff_1, "i)^[a-z]")
 
  if !startzimu
@@ -51,8 +51,8 @@ run % "explorer.exe /select,"  FullName
 */
 
 /*
-;·½Ê½Èı
-;FullName:=RegExReplace(CMDLine,"^.*(.:(\\)?.*)\\.*$","$1",6)      ;Ö±½ÓµÃµ½²»°üº¬ÎÄ¼şÃûµÄÂ·¾¶
+;æ–¹å¼ä¸‰
+;FullName:=RegExReplace(CMDLine,"^.*(.:(\\)?.*)\\.*$","$1",6)      ;ç›´æ¥å¾—åˆ°ä¸åŒ…å«æ–‡ä»¶åçš„è·¯å¾„
 ;Run,%FullName%
 */
 
@@ -62,13 +62,13 @@ run % "explorer.exe /select,"  FullName
 ;if ff_1<>
 ;Run, % "explorer.exe /select,"  ff_1
 
-;;;;;;;;;;;;;;ÌáÈ¡ÃüÁîĞĞ;;;;;;;;;
+;;;;;;;;;;;;;;æå–å‘½ä»¤è¡Œ;;;;;;;;;
 ;WMI_Query("\\.\root\cimv2", "Win32_Process")
 	CMDLine:= WMI_Query(pid)
 
-	RegExMatch(CMDLine, "i).*exe.*?\s+(.*)", ff_)   ; ÕıÔòÆ¥ÅäÃüÁîĞĞ²ÎÊı
-; ´ø²ÎÊıµÄÃüÁîĞĞ²»ÄÜµÃµ½Â·¾¶  ÀıÈç a.exe /resart "D:\123.txt"
-; ÃüÁîĞĞ²ÎÊıÖĞ´ò¿ªµÄÎÄ¼şÓĞĞ©³ÌĞò´ø  ¡°"¡±£¬£¨"´ò¿ªÎÄ¼şÂ·¾¶"£© ÓĞĞ©³ÌĞò²»´ø ¡°"¡±£¨´ò¿ªÎÄ¼şÂ·¾¶£©
+	RegExMatch(CMDLine, "i).*exe.*?\s+(.*)", ff_)   ; æ­£åˆ™åŒ¹é…å‘½ä»¤è¡Œå‚æ•°
+; å¸¦å‚æ•°çš„å‘½ä»¤è¡Œä¸èƒ½å¾—åˆ°è·¯å¾„  ä¾‹å¦‚ a.exe /resart "D:\123.txt"
+; å‘½ä»¤è¡Œå‚æ•°ä¸­æ‰“å¼€çš„æ–‡ä»¶æœ‰äº›ç¨‹åºå¸¦  â€œ"â€ï¼Œï¼ˆ"æ‰“å¼€æ–‡ä»¶è·¯å¾„"ï¼‰ æœ‰äº›ç¨‹åºä¸å¸¦ â€œ"â€ï¼ˆæ‰“å¼€æ–‡ä»¶è·¯å¾„ï¼‰
 	StringReplace,FileFullPath,ff_1,`",,All
 	startzimu:=RegExMatch(FileFullPath, "i)^[a-z]")
 
@@ -89,7 +89,7 @@ run % "explorer.exe /select,"  FullName
 		WinGetText, _Title, %_Title%
 		IfInString,_Title,:/
 		{
-			; RealPlayerÊ½Àı£ºfile://N:/µçÓ°/Ğ¡ÊÓÆµ/¡¾ÌÙ²øÂ¥¡¿±Ø¿´£¡ÕıÈ·µÄµçÏßÈÆÈ¦ÊÕ¼¯·½·¨ ±êÇå.flv
+			; RealPlayerå¼ä¾‹ï¼šfile://N:/ç”µå½±/å°è§†é¢‘/ã€è—¤ç¼ æ¥¼ã€‘å¿…çœ‹ï¼æ­£ç¡®çš„ç”µçº¿ç»•åœˆæ”¶é›†æ–¹æ³• æ ‡æ¸….flv
 			StringReplace,_Title,_Title,/,\,1
 			Loop, parse, _Title, `n, `r
 			{
@@ -103,15 +103,15 @@ run % "explorer.exe /select,"  FullName
 	Return
 	}
 
-; Word¡¢WPS¡¢Excel¡¢et³ÌĞò
+; Wordã€WPSã€Excelã€etç¨‹åº
 	FileFullPath:=getDocumentPath(ProcessPath)  
 	if FileFullPath
 		goto OpenFileFullPath
 
-	; Ö±½Ó´ò¿ª¼ÇÊÂ±¾³ÌĞò£¬È»ºó´ò¿ªÎÄ±¾ÎÄ¼ş£¬ÃüÁîĞĞÃ»ÓĞÎÄ¼şÂ·¾¶£¬Ê¹ÓÃ¶ÁÈ¡ÄÚ´æµÄ·½·¨µÃµ½Â·¾¶
-	IfInString,_Title,¼ÇÊÂ±¾
+	; ç›´æ¥æ‰“å¼€è®°äº‹æœ¬ç¨‹åºï¼Œç„¶åæ‰“å¼€æ–‡æœ¬æ–‡ä»¶ï¼Œå‘½ä»¤è¡Œæ²¡æœ‰æ–‡ä»¶è·¯å¾„ï¼Œä½¿ç”¨è¯»å–å†…å­˜çš„æ–¹æ³•å¾—åˆ°è·¯å¾„
+	IfInString,_Title,è®°äº‹æœ¬
 	{
-		If(_Title="ÎŞ±êÌâ - ¼ÇÊÂ±¾")
+		If(_Title="æ— æ ‡é¢˜ - è®°äº‹æœ¬")
 		{
 			FileFullPath:=_Title:=pid:=ProcessPath:=startzimu:=ff_:=ff_1:=fff_:=fff_1=""
 		Return
@@ -122,19 +122,19 @@ run % "explorer.exe /select,"  FullName
 			gosub OpenFileFullPath
 		else
 		{
-			OSRecentTextFile := A_AppData "\Microsoft\Windows\Recent\" StrReplace(_Title, " - ¼ÇÊÂ±¾") ".lnk"
+			OSRecentTextFile := A_AppData "\Microsoft\Windows\Recent\" StrReplace(_Title, " - è®°äº‹æœ¬") ".lnk"
 			FileGetShortcut, % OSRecentTextFile, FileFullPath
 			if FileExist(FileFullPath)
 				gosub OpenFileFullPath
 		}
 	}
 
-	; ½áÊøÇåÀí
+	; ç»“æŸæ¸…ç†
 	FileFullPath:=_Title:=pid:=ProcessPath:=startzimu:=ff_:=ff_1:=fff_:=fff_1=""
 Return
 
 OpenFileFullPath:
-	; QQ Ó°Òô  ÎÄ¼şÂ·¾¶Ä©Î²´ø¡°*¡±ºÅ
+	; QQ å½±éŸ³  æ–‡ä»¶è·¯å¾„æœ«å°¾å¸¦â€œ*â€å·
 	FileFullPath:=Trim(FileFullPath,"`*")
 	If Fileexist(FileFullPath)
 	{
@@ -154,7 +154,7 @@ OpenFileFullPath:
 		Splitpath,FileFullPath,,Filepath
 		If Fileexist(Filepath)
 		{
-			Msgbox,% "Ä¿±êÎÄ¼ş²»´æÔÚ " FileFullPath "£¬`r`n" "´ò¿ªÎÄ¼şËùÔÚÄ¿Â¼ " Filepath "¡£"
+			Msgbox,% "ç›®æ ‡æ–‡ä»¶ä¸å­˜åœ¨ " FileFullPath "ï¼Œ`r`n" "æ‰“å¼€æ–‡ä»¶æ‰€åœ¨ç›®å½• " Filepath "ã€‚"
 			Run,% Filepath
 			FileFullPath:=_Title:=pid:=ProcessPath:=""
 			Return

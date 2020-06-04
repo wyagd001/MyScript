@@ -1,11 +1,11 @@
-; À´Ô´ÍøÖ·: https://www.autohotkey.com/boards/viewtopic.php?f=6&t=3216&sid=fda9945d8bfa77fd0593f8e2bee09918&start=60
+ï»¿; æ¥æºç½‘å€: https://www.autohotkey.com/boards/viewtopic.php?f=6&t=3216&sid=fda9945d8bfa77fd0593f8e2bee09918&start=60
 ; https://autohotkey.com/board/topic/5278-simple-icon-browser/
 ; https://gist.github.com/AHK-just-me/5518511
 ; Program: Icon Browser
-; Ê×´Î·¢²¼: 2005.09.29
-; ×î½üĞŞ¸Ä: 2019.06.02
-; ĞŞ¸ÄÄÚÈİ: Ìí¼Ó AHK-just-me ĞŞ¸ÄµÄ IconEx ½Å±¾ÖĞµÄ±£´æ¹¦ÄÜ, 32Î»ÏµÍ³ÏÂ²âÊÔÍ¨¹ı
-; Ö»ÓĞ±£´æÍ¼±ê×éµÄ¹¦ÄÜ£¬Ã»ÓĞÌí¼Ó±£´æµ¥¸öÍ¼±êµÄ¹¦ÄÜ
+; é¦–æ¬¡å‘å¸ƒ: 2005.09.29
+; æœ€è¿‘ä¿®æ”¹: 2019.06.02
+; ä¿®æ”¹å†…å®¹: æ·»åŠ  AHK-just-me ä¿®æ”¹çš„ IconEx è„šæœ¬ä¸­çš„ä¿å­˜åŠŸèƒ½, 32ä½ç³»ç»Ÿä¸‹æµ‹è¯•é€šè¿‡
+; åªæœ‰ä¿å­˜å›¾æ ‡ç»„çš„åŠŸèƒ½ï¼Œæ²¡æœ‰æ·»åŠ ä¿å­˜å•ä¸ªå›¾æ ‡çš„åŠŸèƒ½
 
 Cando_DllIcon:
 dllfile := CandySel
@@ -105,7 +105,7 @@ LoadLibraryEx(File) {
    Return DllCall("Kernel32.dll\LoadLibraryEx", "Str", File, "Ptr", 0, "UInt", 0x02, "UPtr")
 }
 
-SaveIcon(Filename, Prompt := "±£´æ Icon Îª") {
+SaveIcon(Filename, Prompt := "ä¿å­˜ Icon ä¸º") {
    FileSelectFile, File, 16, %Filename%, %Prompt%, Icon (*.ico)
    Return ((File <> "" && SubStr(File, -3) <> ".ico") ? File . ".ico" : File)
 }

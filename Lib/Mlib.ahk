@@ -1,4 +1,4 @@
-migrateHistory(){
+ï»¿migrateHistory(){
 ; migrates History files to the database
 	createHisTable()
 	DB.Exec("BEGIN TRANSACTION")
@@ -30,7 +30,7 @@ mLiblistview()
 	LV_ModifyCol(5,150)
 	LV_ModifyCol(6,150)
 	GuiControl, +Redraw, ListView
-	;MsgBox, % "ºÄÊ±: " (A_TickCount-TickCount_Start)/1000 " Ãë"
+	;MsgBox, % "è€—æ—¶: " (A_TickCount-TickCount_Start)/1000 " ç§’"
 return true
 }
 
@@ -51,7 +51,7 @@ createHisTable(){
 		`)
 	)
 	if !DB.Exec(q)
-    MsgBox, 16, SQLite´íÎó, % "ÏûÏ¢:`t" . DB.ErrorMsg . "`n´úÂë:`t" . DB.ErrorCode
+    MsgBox, 16, SQLiteé”™è¯¯, % "æ¶ˆæ¯:`t" . DB.ErrorMsg . "`nä»£ç :`t" . DB.ErrorCode
 }
 
 addmusicfile(file){
@@ -65,7 +65,7 @@ addmusicfile(file){
 		. createtime """, 0, "
 		. Round(CF_FileGetSize(file)/1024, 1) "," 0 ")"
 	if (!DB.Exec(q))
-    MsgBox, 16, SQLite ´íÎó, % "ÏûÏ¢:`t" . DB.ErrorMsg . "`n´úÂë:`t" . DB.ErrorCode
+    MsgBox, 16, SQLite é”™è¯¯, % "æ¶ˆæ¯:`t" . DB.ErrorMsg . "`nä»£ç :`t" . DB.ErrorCode
 }
 
 updateMlib()
@@ -119,7 +119,7 @@ q:= "insert into Mlib (name, type, mp3, createtime, lastplayedtime, size, plcoun
 ;fileappend, % q, %A_ScriptDir%\ddd.txt
 
 	if (!DB.Exec(q))
-    MsgBox, 16, SQLite ´íÎó, % "ÏûÏ¢:`t" . DB.ErrorMsg . "`n´úÂë:`t" . DB.ErrorCode
+    MsgBox, 16, SQLite é”™è¯¯, % "æ¶ˆæ¯:`t" . DB.ErrorMsg . "`nä»£ç :`t" . DB.ErrorCode
 q:=""
 return
 }
@@ -140,7 +140,7 @@ updatemusicfile(file){
 	q := "Update Mlib Set lastplayedtime=""" lastplayedtime """, plcount=""" plcount """ Where mp3=""" file """"
 
 	if (!DB.Exec(q))
-    MsgBox, 16, SQLite ´íÎó, % "ÏûÏ¢:`t" . DB.ErrorMsg . "`n´úÂë:`t" . DB.ErrorCode
+    MsgBox, 16, SQLite é”™è¯¯, % "æ¶ˆæ¯:`t" . DB.ErrorMsg . "`nä»£ç :`t" . DB.ErrorCode
 return
 }
 

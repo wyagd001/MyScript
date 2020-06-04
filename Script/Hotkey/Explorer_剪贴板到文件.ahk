@@ -1,6 +1,6 @@
-; �������ֻ�ͼƬ��,����Դ�����������棬
-; ���¿�ݼ����渴������Ϊ�ļ�
-�����嵽�ļ�:
+﻿; 复制文字或图片后,在资源管理器和桌面，
+; 按下快捷键保存复制内容为文件
+剪贴板到文件:
  If (InFileList() && !IsRenaming())
 {
 CurrentFolder:=GetCurrentFolder()

@@ -1,17 +1,17 @@
-/*
-Ô­½Å±¾ÒÑ±»ĞŞ¸Ä
-Ãû³Æ£º F1¼üĞŞ¸ÄÎÄ¼şÊôĞÔÀ©Õ¹ÃûºÍÎÄ¼şÊ±¼ä(×ÊÔ´¹ÜÀíÆ÷¼ÓÇ¿)
-×÷Õß£º dule2859
-Ìû×Ó£º http://forum.ahkbbs.cn/thread-979-1-1.html
+ï»¿/*
+åŸè„šæœ¬å·²è¢«ä¿®æ”¹
+åç§°ï¼š F1é”®ä¿®æ”¹æ–‡ä»¶å±æ€§æ‰©å±•åå’Œæ–‡ä»¶æ—¶é—´(èµ„æºç®¡ç†å™¨åŠ å¼º)
+ä½œè€…ï¼š dule2859
+å¸–å­ï¼š http://forum.ahkbbs.cn/thread-979-1-1.html
 */
 
 ;#IfWinActive,ahk_group ccc
-;F4::    ;;ÓÃF4ĞŞ¸ÄÎÄ¼şÊôĞÔ
-ĞŞ¸ÄÎÄ¼şÊôĞÔ:
+;F4::    ;;ç”¨F4ä¿®æ”¹æ–‡ä»¶å±æ€§
+ä¿®æ”¹æ–‡ä»¶å±æ€§:
 files:=GetSelText()
 if !files
 {
-    IniRead,  failsendkey, %run_iniFile%,¿ì½İ¼ü, ĞŞ¸ÄÎÄ¼şÊôĞÔ
+    IniRead,  failsendkey, %run_iniFile%,å¿«æ·é”®, ä¿®æ”¹æ–‡ä»¶å±æ€§
     Send,{%failsendkey%}
     Return
 }
@@ -22,7 +22,7 @@ If ary0=1
       FileGetAttrib,attributes,%ary1%
       If ErrorLevel
       {
-        MsgBox ÎÄ¼ş²»´æÔÚ»òÃ»ÓĞ·ÃÎÊÈ¨ÏŞ
+        MsgBox æ–‡ä»¶ä¸å­˜åœ¨æˆ–æ²¡æœ‰è®¿é—®æƒé™
         Return
       }
       IfNotInString, attributes ,D
@@ -40,19 +40,19 @@ Gui,6:Default
 Gui,Destroy
 Gui,Submit 
 gui,+AlwaysOnTop +Owner +LastFound -MinimizeBox 
-WinSetTitle,,,ÎÄ¼şÊôĞÔĞŞ¸Ä
-Gui,Add,CheckBox,xm vReadOnly,Ö»¶Á(&R)
-Gui,Add,CheckBox,xp+100 yp vHidden,Òş²Ø(&H)
-Gui,Add,CheckBox,xm vSystem vSystem,ÏµÍ³(&S)
-Gui,Add,CheckBox,xp+100 yp vArchive,´æµµ(&A)
-Gui,Add,Text,xm yp+30,ÎÄ¼şÃû£º
+WinSetTitle,,,æ–‡ä»¶å±æ€§ä¿®æ”¹
+Gui,Add,CheckBox,xm vReadOnly,åªè¯»(&R)
+Gui,Add,CheckBox,xp+100 yp vHidden,éšè—(&H)
+Gui,Add,CheckBox,xm vSystem vSystem,ç³»ç»Ÿ(&S)
+Gui,Add,CheckBox,xp+100 yp vArchive,å­˜æ¡£(&A)
+Gui,Add,Text,xm yp+30,æ–‡ä»¶åï¼š
 Gui,Add,Edit,xp+50  H20 W120 vname_no_ext
-Gui,Add,Text,xm yp+30,À©Õ¹Ãû£º
+Gui,Add,Text,xm yp+30,æ‰©å±•åï¼š
 Gui,Add,Edit,xp+50 yp H20 W120 vExt
-Gui,Add,Button,xm yp+30 W80 gRegOpenFile,´ò¿ª×¢²á±í
-Gui,Add,Button,xp+100 yp W80 gFileChangeDate,ĞŞ¸ÄÈÕÆÚ
-Gui,Add,Button,xm yp+30 W80 gSingleInit,³·ÏúĞŞ¸Ä
-Gui,Add,Button,xp+100 yp W80 gSingleApply Default,Ö´ĞĞĞŞ¸Ä
+Gui,Add,Button,xm yp+30 W80 gRegOpenFile,æ‰“å¼€æ³¨å†Œè¡¨
+Gui,Add,Button,xp+100 yp W80 gFileChangeDate,ä¿®æ”¹æ—¥æœŸ
+Gui,Add,Button,xm yp+30 W80 gSingleInit,æ’¤é”€ä¿®æ”¹
+Gui,Add,Button,xp+100 yp W80 gSingleApply Default,æ‰§è¡Œä¿®æ”¹
 Gosub,SingleInit
 Gui,Show,W200 H180
 Return
@@ -116,7 +116,7 @@ If (newpath2 = curpath) or (newpath = curpath)
   Return
  }
 IfExist,%newpath%
-  MsgBox,4112,´íÎó,ÏàÍ¬ÎÄ¼şÒÑ¾­´æÔÚ£¬ÖØÃüÃûÊ§°Ü¡£,3
+  MsgBox,4112,é”™è¯¯,ç›¸åŒæ–‡ä»¶å·²ç»å­˜åœ¨ï¼Œé‡å‘½åå¤±è´¥ã€‚,3
 If(newpath != curpath) and !FileExist(newpath)
   FileMove,%curpath%,%newpath%,0
 Gui,Destroy
@@ -149,14 +149,14 @@ FileChangeDate:
 Gui,Destroy
 Gui,Submit
 gui, +AlwaysOnTop   +Owner +LastFound -MinimizeBox
-WinSetTitle,,,ÎÄ¼şÊ±¼äĞŞ¸Ä
-Gui,Add,Radio,group xm+20 checked H20 Section  vOrder gGetTime,ĞŞ¸ÄÊ±¼ä
-Gui,Add,Radio,xp+80 yp H20 gGetTime,´´½¨Ê±¼ä
-Gui,Add,Radio,xp+80 yp H20 gGetTime,·ÃÎÊÊ±¼ä
+WinSetTitle,,,æ–‡ä»¶æ—¶é—´ä¿®æ”¹
+Gui,Add,Radio,group xm+20 checked H20 Section  vOrder gGetTime,ä¿®æ”¹æ—¶é—´
+Gui,Add,Radio,xp+80 yp H20 gGetTime,åˆ›å»ºæ—¶é—´
+Gui,Add,Radio,xp+80 yp H20 gGetTime,è®¿é—®æ—¶é—´
 Gui, Add, DateTime, vMyDateTime xm+10 yp+30,'Date:' yyyy-MM-dd   'Time:' HH:mm:ss
-Gui,Add,Button,xm+30 yp+30 gGetTime,³·ÏúĞŞ¸Ä
-Gui,Add,Button,xp+80 yp gCurTime,µ±Ç°Ê±¼ä
-Gui,Add,Button,xp+80 yp gFileSetTime Default,Ö´ĞĞĞŞ¸Ä
+Gui,Add,Button,xm+30 yp+30 gGetTime,æ’¤é”€ä¿®æ”¹
+Gui,Add,Button,xp+80 yp gCurTime,å½“å‰æ—¶é—´
+Gui,Add,Button,xp+80 yp gFileSetTime Default,æ‰§è¡Œä¿®æ”¹
 GoSub,GetTime
 Gui,Show,W300 H100
 Return
@@ -206,16 +206,16 @@ Gui,6:Default
 Gui,Destroy
 Gui,Submit 
 Gui,+AlwaysOnTop   +Owner +LastFound -MinimizeBox
-WinSetTitle,,,ÎÄ¼şÊôĞÔĞŞ¸Ä
-Gui,Add,CheckBox,xm vReadOnly,Ö»¶Á(&R)
-Gui,Add,CheckBox,xp+100 yp vHidden,Òş²Ø(&H)
-Gui,Add,CheckBox,xm vSystem vSystem,ÏµÍ³(&S)
-Gui,Add,CheckBox,xp+100 yp vArchive,´æµµ(&A)
-Gui,Add,CheckBox,xm yp+25 vRecurse Checked,ÊÇ·ñ½«ĞŞ¸ÄÓ¦ÓÃµ½×ÓÎÄ¼ş
-Gui,Add,Button,xm yp+20 W80 gShowFile,²é¿´ÎÄ¼ş
-Gui,Add,Button,xp+100 yp W80 gMultiDate,ĞŞ¸ÄÈÕÆÚ
-Gui,Add,Button,xm yp+30 W80 gMultiInit,³·ÏúĞŞ¸Ä
-Gui,Add,Button,xp+100 yp W80 gMultiApply Default,Ö´ĞĞĞŞ¸Ä
+WinSetTitle,,,æ–‡ä»¶å±æ€§ä¿®æ”¹
+Gui,Add,CheckBox,xm vReadOnly,åªè¯»(&R)
+Gui,Add,CheckBox,xp+100 yp vHidden,éšè—(&H)
+Gui,Add,CheckBox,xm vSystem vSystem,ç³»ç»Ÿ(&S)
+Gui,Add,CheckBox,xp+100 yp vArchive,å­˜æ¡£(&A)
+Gui,Add,CheckBox,xm yp+25 vRecurse Checked,æ˜¯å¦å°†ä¿®æ”¹åº”ç”¨åˆ°å­æ–‡ä»¶
+Gui,Add,Button,xm yp+20 W80 gShowFile,æŸ¥çœ‹æ–‡ä»¶
+Gui,Add,Button,xp+100 yp W80 gMultiDate,ä¿®æ”¹æ—¥æœŸ
+Gui,Add,Button,xm yp+30 W80 gMultiInit,æ’¤é”€ä¿®æ”¹
+Gui,Add,Button,xp+100 yp W80 gMultiApply Default,æ‰§è¡Œä¿®æ”¹
 Gosub,MultiInit
 Gui,Show
 Return
@@ -249,15 +249,15 @@ Gui,6:Default
 Gui,Destroy
 Gui,Submit 
 gui,+AlwaysOnTop   +Owner +LastFound -MinimizeBox
-WinSetTitle,,,ÎÄ¼şÊ±¼äĞŞ¸Ä
-Gui,Add,Radio,group xm+20 checked H20 Section  vOrder gGetTime,ĞŞ¸ÄÊ±¼ä
-Gui,Add,Radio,xp+80 yp H20 gGetTime,´´½¨Ê±¼ä
-Gui,Add,Radio,xp+80 yp H20 gGetTime,·ÃÎÊÊ±¼ä
-Gui,Add,CheckBox,xm+20  H20 vRecurse Checked,ÊÇ·ñ½«ĞŞ¸ÄÓ¦ÓÃµ½×ÓÎÄ¼ş
+WinSetTitle,,,æ–‡ä»¶æ—¶é—´ä¿®æ”¹
+Gui,Add,Radio,group xm+20 checked H20 Section  vOrder gGetTime,ä¿®æ”¹æ—¶é—´
+Gui,Add,Radio,xp+80 yp H20 gGetTime,åˆ›å»ºæ—¶é—´
+Gui,Add,Radio,xp+80 yp H20 gGetTime,è®¿é—®æ—¶é—´
+Gui,Add,CheckBox,xm+20  H20 vRecurse Checked,æ˜¯å¦å°†ä¿®æ”¹åº”ç”¨åˆ°å­æ–‡ä»¶
 Gui, Add, DateTime, vMyDateTime xm+10 yp+30,'Date:' yyyy-MM-dd   'Time:' HH:mm:ss
-Gui,Add,Button,xm+30 yp+30 gGetTime,³·ÏúĞŞ¸Ä
-Gui,Add,Button,xp+80 yp gCurTime,µ±Ç°Ê±¼ä
-Gui,Add,Button,xp+80 yp gMultiSetTime Default,Ö´ĞĞĞŞ¸Ä
+Gui,Add,Button,xm+30 yp+30 gGetTime,æ’¤é”€ä¿®æ”¹
+Gui,Add,Button,xp+80 yp gCurTime,å½“å‰æ—¶é—´
+Gui,Add,Button,xp+80 yp gMultiSetTime Default,æ‰§è¡Œä¿®æ”¹
 Gosub,GetTime
 Gui,Show,W300 H120
 Return
@@ -294,10 +294,10 @@ Return
 Gui,Destroy
 Return
 
-;×ÊÔ´¹ÜÀíÆ÷F2ÖØÃüÃûÊ±£¬Ô­Éú¹¦ÄÜ°´TabÌø×ªµ½ÏÂÒ»¸öÎÄ¼ş
+;èµ„æºç®¡ç†å™¨F2é‡å‘½åæ—¶ï¼ŒåŸç”ŸåŠŸèƒ½æŒ‰Tabè·³è½¬åˆ°ä¸‹ä¸€ä¸ªæ–‡ä»¶
 ;#IfWinActive,ahk_group ccc
 ;!F2::
-ĞŞ¸ÄÎÄ¼şÃûÀ©Õ¹Ãû:
+ä¿®æ”¹æ–‡ä»¶åæ‰©å±•å:
 MouseGetPos,,, win
 filerename:
 files:=GetSelText()
@@ -310,7 +310,7 @@ If ary0=1
       FileGetAttrib,attributes,%ary1%
       If ErrorLevel
       {
-        MsgBox ÎÄ¼ş²»´æÔÚ»òÃ»ÓĞ·ÃÎÊÈ¨ÏŞ
+        MsgBox æ–‡ä»¶ä¸å­˜åœ¨æˆ–æ²¡æœ‰è®¿é—®æƒé™
         Return
       }
       IfNotInString, attributes ,D
@@ -327,14 +327,14 @@ Gui,25:Default
 Gui,Destroy
 Gui,Submit 
 gui,+AlwaysOnTop   +Owner +LastFound -MinimizeBox
-WinSetTitle,,,ÎÄ¼şÃûĞŞ¸Ä
-Gui,Add,Text,xm yp+10,ÎÄ¼şÃû£º
+WinSetTitle,,,æ–‡ä»¶åä¿®æ”¹
+Gui,Add,Text,xm yp+10,æ–‡ä»¶åï¼š
 Gui,Add,Edit,xp+50  H20 W220 vname_no_ext
-Gui,Add,Text,xm yp+30,À©Õ¹Ãû£º
+Gui,Add,Text,xm yp+30,æ‰©å±•åï¼š
 Gui,Add,Edit,xp+50 yp H20 W220 vExt
-Gui,Add,Button,xm yp+30 W60 gFilePrex,ÉÏÒ»¸ö(&P)
-Gui,Add,Button,xm+70 yp W60 gFileNext,ÏÂÒ»¸ö(&N)
-Gui,Add,Button,xm+140 yp W100 gApplyOff Default,ĞŞ¸Ä`&&¹Ø±Õ(&S)
+Gui,Add,Button,xm yp+30 W60 gFilePrex,ä¸Šä¸€ä¸ª(&P)
+Gui,Add,Button,xm+70 yp W60 gFileNext,ä¸‹ä¸€ä¸ª(&N)
+Gui,Add,Button,xm+140 yp W100 gApplyOff Default,ä¿®æ”¹`&&å…³é—­(&S)
 Gosub,SingleInit2
 Gui,Show,W300 H100
 Return
@@ -387,7 +387,7 @@ Gui,Destroy
 Return
 }
 IfExist,%newpath%
-  MsgBox,4112,´íÎó,¸ÃÎÄ¼şÃû%newpath%-%newpath%ÒÑ¾­´æÔÚ!,3
+  MsgBox,4112,é”™è¯¯,è¯¥æ–‡ä»¶å%newpath%-%newpath%å·²ç»å­˜åœ¨!,3
 else
   FileMove,%curpath%,%newpath%,0
 Gui,Destroy

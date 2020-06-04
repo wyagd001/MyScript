@@ -1,5 +1,5 @@
-;CMDÖĞÓÒ¼ü¸´ÖÆ£¬ÓÒ¼üÕ³Ìù
-ÃüÁîÌáÊ¾·û:
+ï»¿;CMDä¸­å³é”®å¤åˆ¶ï¼Œå³é”®ç²˜è´´
+å‘½ä»¤æç¤ºç¬¦:
 CurrentFolder:=GetCurrentFolder()
 if(CurrentFolder)
 Run "cmd.exe", %CurrentFolder%
@@ -30,7 +30,7 @@ return
 ; And to run it visibly and keep the command prompt
 ; window after that command, just use '//' instead of '/'
 
-;----------µØÖ·À¸ÔËĞĞÃüÁîÌáÊ¾·û  /²»ÏÔÊ¾cmd´°¿Ú //ÏÔÊ¾cmd´°¿Ú----------
+;----------åœ°å€æ è¿è¡Œå‘½ä»¤æç¤ºç¬¦  /ä¸æ˜¾ç¤ºcmdçª—å£ //æ˜¾ç¤ºcmdçª—å£----------
 
 ~/::
    do = n

@@ -1,15 +1,15 @@
-Cando_脚本文件_编译:
+锘緾ando_鑴氭湰鏂囦欢_缂栬瘧:
 	Runwait, D:\Program Files\AutoHotkey\Compiler\Ahk2Exe.exe /in "%CandySel%"
 Return
 
-Cando_脚本文件_编译la:
+Cando_鑴氭湰鏂囦欢_缂栬瘧la:
 	Runwait, D:\Program Files\AutoHotkey\Compiler\La\Compiler\Ahk2Exe.exe /in "%CandySel%"
 Return
 
-Cando_脚本文件_编译lu:
+Cando_鑴氭湰鏂囦欢_缂栬瘧lu:
 	Runwait, D:\Program Files\AutoHotkey\Compiler\Lu\Compiler\Ahk2Exe.exe /in "%CandySel%"
 Return
 
-Cando_脚本文件_编译v2:
+Cando_鑴氭湰鏂囦欢_缂栬瘧v2:
 	Runwait, D:\Program Files\AutoHotkey\Compiler\v2\Compiler\Ahk2Exe.exe /in "%CandySel%"
 Return

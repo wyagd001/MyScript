@@ -1,10 +1,10 @@
-StrAr_Add(Str,It) ;Ìí¼ÓÔªËØ
+ï»¿StrAr_Add(Str,It) ;æ·»åŠ å…ƒç´ 
 {
 	ReturnVal=%Str%|%It%
 	Return ReturnVal
 }
 
-StrAr_Get(Str,witch) ;·µ»ØÔªËØ
+StrAr_Get(Str,witch) ;è¿”å›å…ƒç´ 
 {
 	global Spliter
 	
@@ -26,14 +26,14 @@ StrAr_Get(Str,witch) ;·µ»ØÔªËØ
 	Return Var	
 }
 
-StrAr_Find(Str,item) ;·µ»ØÕÒµ½ÖÆ¶¨ÔªËØµÄ´ÎÊı
+StrAr_Find(Str,item) ;è¿”å›æ‰¾åˆ°åˆ¶å®šå…ƒç´ çš„æ¬¡æ•°
 {
 ;~ 	MsgBox %Str% [%item%]
 	StringReplace,Str,Str,%item%,%item%,UseErrorLevel
 	Return ErrorLevel
 }
 
-StrAr_Size(Str) ;·µ»ØÔªËØ¸öÊı
+StrAr_Size(Str) ;è¿”å›å…ƒç´ ä¸ªæ•°
 {
 	Str:=_StrAr_Format(Str)
 ;~ 	MsgBox %Str%
@@ -49,12 +49,12 @@ StrAr_Size(Str) ;·µ»ØÔªËØ¸öÊı
 ;~ 	MsgBox %Count% 
 	Return Count	
 }
-_StrAr_Format(Str)	;½«×Ö·û¸ñÊ½»¯Îª A|B|C| ´¦ÀíµÄ±ê×¼¸ñÊ½
+_StrAr_Format(Str)	;å°†å­—ç¬¦æ ¼å¼åŒ–ä¸º A|B|C| å¤„ç†çš„æ ‡å‡†æ ¼å¼
 {
 ;~ 	MsgBox %Str%
 	V:=Str
-	StringLeft,VL,Str,1		;»ñÈ¡×ó±ßµÚÒ»¸ö×Ö·û	
-	StringRight,VR,Str,1	;»ñÈ¡ÓÒ±ßµÚÒ»¸ö×Ö·û
+	StringLeft,VL,Str,1		;è·å–å·¦è¾¹ç¬¬ä¸€ä¸ªå­—ç¬¦	
+	StringRight,VR,Str,1	;è·å–å³è¾¹ç¬¬ä¸€ä¸ªå­—ç¬¦
 	If(VL="|")
 	{
 		StringTrimLeft,V,V,1
@@ -70,7 +70,7 @@ _StrAr_Format(Str)	;½«×Ö·û¸ñÊ½»¯Îª A|B|C| ´¦ÀíµÄ±ê×¼¸ñÊ½
 }
 
 
-StrAr_Delet(Str,index) ;É¾³ı
+StrAr_Delet(Str,index) ;åˆ é™¤
 {
 	Str:=_StrAr_Format(Str)
 	Element:=StrAr_Get(Str,index)
@@ -79,7 +79,7 @@ StrAr_Delet(Str,index) ;É¾³ı
 	Return NewStr
 }
 
-StrAr_DeletElement(Str,Element,IsAll=0) ;É¾³ıÔªËØ
+StrAr_DeletElement(Str,Element,IsAll=0) ;åˆ é™¤å…ƒç´ 
 {
 	Str:=_StrAr_Format(Str)
 	If (Element="")
@@ -112,7 +112,7 @@ StrAr_DeletElement(Str,Element,IsAll=0) ;É¾³ıÔªËØ
 ;~ MsgBox %item%
 
 
-;~ b=Alt+¹öÂÖÉÏ|Alt+¹öÂÖÏÂ|Ctrl+¹öÂÖÉÏ|Ctrl+¹öÂÖÏÂ|×ó¼ü+ÓÒ¼ü|ÓÒ¼ü+×ó¼ü|ÖĞ¼ü
+;~ b=Alt+æ»šè½®ä¸Š|Alt+æ»šè½®ä¸‹|Ctrl+æ»šè½®ä¸Š|Ctrl+æ»šè½®ä¸‹|å·¦é”®+å³é”®|å³é”®+å·¦é”®|ä¸­é”®
 ;~ b=1232p1234p3453p4562
 
 ;~ b=|1234
@@ -121,11 +121,11 @@ StrAr_DeletElement(Str,Element,IsAll=0) ;É¾³ıÔªËØ
 
 ;~ b:=StrAr_Delet(b,2)
 ;~ b:=StrAr_Get(b,2)
-;~ b:=StrAr_DeletElement(b,"Ctrl+¹öÂÖÉÏ")
+;~ b:=StrAr_DeletElement(b,"Ctrl+æ»šè½®ä¸Š")
 ;~ MsgBox %b%
 
 
-;~ b=Alt+¹öÂÖÉÏ|Alt+¹öÂÖÏÂ|Ctrl+¹öÂÖÉÏ|Ctrl+¹öÂÖÏÂ|×ó¼ü+ÓÒ¼ü|ÓÒ¼ü+×ó¼ü|ÖĞ¼ü
+;~ b=Alt+æ»šè½®ä¸Š|Alt+æ»šè½®ä¸‹|Ctrl+æ»šè½®ä¸Š|Ctrl+æ»šè½®ä¸‹|å·¦é”®+å³é”®|å³é”®+å·¦é”®|ä¸­é”®
 ;~ StringGetPos,V,b,|
 ;~ MsgBox %V%
 ;~ aa=Cb3

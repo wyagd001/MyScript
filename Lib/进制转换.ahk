@@ -1,4 +1,4 @@
-hex2dec(h)
+﻿hex2dec(h)
 {
 	oldfrmt := A_FormatInteger
 	SetFormat, integer, dec

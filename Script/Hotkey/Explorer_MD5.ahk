@@ -1,9 +1,9 @@
-;!M::
-ÎÄ¼şMD5:
+ï»¿;!M::
+æ–‡ä»¶MD5:
 cando_MD5:
 	Gui,2:Default
 	;IfWinActive,ahk_Group ccc
-	IfWinExist,MD5ÑéÖ¤
+	IfWinExist,MD5éªŒè¯
 	{
 		Md5FilePath2:=GetSelectedFiles()
 		if (Md5FilePath2 = Md5FilePath)
@@ -31,27 +31,27 @@ cando_MD5:
     }
     Else
       GuiControl,, hash2, % MD5_File(Md5FilePath2)
-		WinActivate,MD5ÑéÖ¤
+		WinActivate,MD5éªŒè¯
   }
   Else
   {
     Md5FilePath:=GetSelectedFiles()
     if (Md5FilePath = "")
       Return
-    Gui, add, text,x5 ,ÎÄ¼ş1
+    Gui, add, text,x5 ,æ–‡ä»¶1
     Gui, Add, edit, x+10 VMd5FilePath readonly w350,%Md5FilePath%
     Gui, add, edit,  y+7  h20 w350 Vhash readonly cblue,
-    Gui, Add, Button,x+5 w65 h20 gdelfile,É¾³ıÎÄ¼ş1
+    Gui, Add, Button,x+5 w65 h20 gdelfile,åˆ é™¤æ–‡ä»¶1
 		Gui, add, text,  yp-25 w60 cgreen vCRC32 gCRC32,CRC32
 
 
-		Gui, add, text,x5 ,ÎÄ¼ş2
+		Gui, add, text,x5 ,æ–‡ä»¶2
 		Gui, Add, edit, x+10 VMd5FilePath2 w350 readonly,
 		Gui, add, edit, y+7  h20 w350 Vhash2 readonly gTrueorFalse cblue,
-		Gui, Add, Button,x+5 w65 h20 vdel2 gdelfile,É¾³ıÎÄ¼ş2
+		Gui, Add, Button,x+5 w65 h20 vdel2 gdelfile,åˆ é™¤æ–‡ä»¶2
 		Gui, add, text, yp-25 w60 cgreen vCRC32_2 gCRC32,CRC32
 
-		Gui, add, text,x5 ,Á½ÎÄ¼şÊÇ·ñÏàÍ¬£º
+		Gui, add, text,x5 ,ä¸¤æ–‡ä»¶æ˜¯å¦ç›¸åŒï¼š
 		Gui, add, text,x+1 vtof w30,
 
    GuiControl,disable,CRC32_2
@@ -78,7 +78,7 @@ VarSetCapacity(md5sum_1, -1)
 		Else
 			GuiControl,, hash, % MD5_File(Md5FilePath)
 
-		Gui, Show, ,MD5ÑéÖ¤
+		Gui, Show, ,MD5éªŒè¯
 	}
 
 	Gosub TrueorFalse
@@ -96,13 +96,13 @@ if(hash=hash2)
 {
 Gui, Font,  cgreen bold
 GuiControl,Font, tof
-GuiControl, , tof,ÊÇ
+GuiControl, , tof,æ˜¯
 }
 Else
 {
 Gui, Font,  cred bold
 GuiControl,Font, tof
-GuiControl, , tof,·ñ
+GuiControl, , tof,å¦
 }
 Return
 
@@ -177,7 +177,7 @@ if whichbutton=Button1
 else 
   delfile=Md5FilePath2
 GuiControlGet,Md5FilePath,,%delfile%
-MsgBox,4,É¾³ıÌáÊ¾,È·¶¨Òª°ÑÏÂÃæµÄÎÄ¼ş·ÅÈë»ØÊÕÕ¾Âğ£¿`n`n%Md5FilePath%
+MsgBox,4,åˆ é™¤æç¤º,ç¡®å®šè¦æŠŠä¸‹é¢çš„æ–‡ä»¶æ”¾å…¥å›æ”¶ç«™å—ï¼Ÿ`n`n%Md5FilePath%
 IfMsgBox Yes
 FileRecycle,%Md5FilePath%
 return

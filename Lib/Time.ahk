@@ -1,9 +1,9 @@
-; http://thinkai.net/p/11
+ï»¿; http://thinkai.net/p/11
 
 Time_unix2human(time)
 {
 	human=19700101000000
-	time-=((A_NowUTC-A_Now)//10000)*3600     ; Ê±²î
+	time-=((A_NowUTC-A_Now)//10000)*3600     ; æ—¶å·®
 	human+=%time%,Seconds
 	return human
 }
@@ -11,7 +11,7 @@ Time_unix2human(time)
 Time_human2unix(time)
 {
 	time-=19700101000000,Seconds
-	time+=((A_NowUTC-A_Now)//10000)*3600     ; Ê±²î
+	time+=((A_NowUTC-A_Now)//10000)*3600     ; æ—¶å·®
 	return time
 }
  

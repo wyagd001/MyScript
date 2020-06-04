@@ -1,4 +1,4 @@
-; "DeskIcons.ahk"
+ï»¿; "DeskIcons.ahk"
 ; Updated to be x86 and x64 compatible by Joe DF
 ; Revision Date : 22:13 2014/05/09
 ; From : Rapte_Of_Suzaku
@@ -23,8 +23,8 @@
 */
 
 /*
-É¾³ıÍ¼±êÎŞÓ°Ïì
-¿ì½İ·½Ê½¸ÄÃû/ĞÂ½¨  ÓĞÓ°Ïì
+åˆ é™¤å›¾æ ‡æ— å½±å“
+å¿«æ·æ–¹å¼æ”¹å/æ–°å»º  æœ‰å½±å“
 */
 
 SaveDesktopIconsPositions:
@@ -36,14 +36,14 @@ SaveDesktopIconsPositions:
 	coords := DeskIcons()
 	if (coords = "")
 	{
-		;MsgBox, ÎŞ·¨±£´æ×ÀÃæÍ¼±ê£¬ÇëÖØÊÔ£¡
+		;MsgBox, æ— æ³•ä¿å­˜æ¡Œé¢å›¾æ ‡ï¼Œè¯·é‡è¯•ï¼
 	Return
 	}
 	FileRead, read_coords, %SaveDeskIcons_inifile%
  
 	if (read_coords != coords)
 	{
-		if Ã¿¸ô¼¸Ğ¡Ê±½á¹ûÎªÕæ(12)
+		if æ¯éš”å‡ å°æ—¶ç»“æœä¸ºçœŸ(12)
 			FileAppend, %read_coords%,*%A_ScriptDir%\settings\tmp\SaveDeskIcons_%A_Now%.ini
 		FileDelete, %SaveDeskIcons_inifile%
 		FileAppend, %coords%, *%SaveDeskIcons_inifile%
@@ -52,10 +52,10 @@ SaveDesktopIconsPositions:
 	read_coords := coords := ""
 	IfExist, %SaveDeskIcons_inifile%
 	{
-		Menu, addf, Enable, »Ö¸´×ÀÃæÍ¼±ê
+		Menu, addf, Enable, æ¢å¤æ¡Œé¢å›¾æ ‡
 	}
 	Else
-		MsgBox, ±£´æ×ÀÃæÍ¼±ê³öÏÖ´íÎó£¬ÇëÖØÊÔ£¡
+		MsgBox, ä¿å­˜æ¡Œé¢å›¾æ ‡å‡ºç°é”™è¯¯ï¼Œè¯·é‡è¯•ï¼
 Return
 
 RestoreDesktopIconsPositions:
@@ -66,7 +66,7 @@ RestoreDesktopIconsPositions:
 		coords := ""
 	}
 	Else
-		MsgBox, Ã»ÓĞ¶ÁÈ¡µ½ÅäÖÃÎÄ¼ş£¬Çë±£´æ×ÀÃæÍ¼±êºó£¬ÔÙÖØÊÔ¡£
+		MsgBox, æ²¡æœ‰è¯»å–åˆ°é…ç½®æ–‡ä»¶ï¼Œè¯·ä¿å­˜æ¡Œé¢å›¾æ ‡åï¼Œå†é‡è¯•ã€‚
 Return
 
 DeskIcons(coords := "")
@@ -80,7 +80,7 @@ DeskIcons(coords := "")
 	ControlGet, hwWindow, HWND,, SysListView321, ahk_class Progman
 	if !hwWindow ; #D mode
 	{
-		;MsgBox,,,Çëµã»÷×ÀÃæ¿Õ°×´¦Íê³É±£´æ×ÀÃæµÄ²Ù×÷,2
+		;MsgBox,,,è¯·ç‚¹å‡»æ¡Œé¢ç©ºç™½å¤„å®Œæˆä¿å­˜æ¡Œé¢çš„æ“ä½œ,2
 		;WinWaitActive,ahk_class WorkerW
 		ControlGet, hwWindow, HWND,, SysListView321, ahk_class WorkerW
 	}
@@ -91,8 +91,8 @@ DeskIcons(coords := "")
                               , "Ptr",   iProcessID)
 	if hwWindow and hProcess
 	{
-		ControlGet, list, list, Col1  ; µÚ1ÁĞ Ãû³Æ
-		ControlGet, list2, list, Col3 ; µÚ2ÁĞ ´óĞ¡ µÚ3ÁĞ ÏîÄ¿ÀàĞÍ
+		ControlGet, list, list, Col1  ; ç¬¬1åˆ— åç§°
+		ControlGet, list2, list, Col3 ; ç¬¬2åˆ— å¤§å° ç¬¬3åˆ— é¡¹ç›®ç±»å‹
 		Loop, Parse, list2, `n
 		{
 			filetype_%A_Index% := SubStr(A_LoopField, 1)

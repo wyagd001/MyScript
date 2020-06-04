@@ -1,6 +1,6 @@
-;#ifwinactive, ahk_Group AppMainWindow
+ï»¿;#ifwinactive, ahk_Group AppMainWindow
 ;Del::
-É¾³ıÔËĞĞÀúÊ·ÌõÄ¿:
+åˆ é™¤è¿è¡Œå†å²æ¡ç›®:
 GuiControlGet, focused_control, focusV
 ifEqual, focused_control, Dir
 {
@@ -23,7 +23,7 @@ ifEqual, focused_control, Dir
 	GuiControl, , %Focused_Control%, |%ComboBoxShowItems%
 	sLength := StrLen(stableProgram)
 	StringTrimLeft, historyData, ComboBoxShowItems, %sLength%
-	IniWrite,%historyData%,%run_iniFile%,¹Ì¶¨µÄ³ÌĞò,historyData
+	IniWrite,%historyData%,%run_iniFile%,å›ºå®šçš„ç¨‹åº,historyData
 }
 Return
 ;#ifwinactive
@@ -31,8 +31,8 @@ Return
 ;#ifwinactive, ahk_Group AppMainWindow
 ;~Enter::
 ;~Numpadenter::
-¼ÇÂ¼ÔËĞĞÀúÊ·:
-¼ÇÂ¼ÔËĞĞÀúÊ·ÈÈ¼ü¶ş:
+è®°å½•è¿è¡Œå†å²:
+è®°å½•è¿è¡Œå†å²çƒ­é”®äºŒ:
 if temp_runhistory
 {
 temp_runhistory=0
@@ -55,10 +55,10 @@ ifEqual, focused_control, Dir
 	historyData .= EditContent
 	Sort, historyData, D| U
 	ComboBoxShowItems :=stableProgram . historyData
-	IniWrite,%historyData%,%run_iniFile%,¹Ì¶¨µÄ³ÌĞò,historyData
+	IniWrite,%historyData%,%run_iniFile%,å›ºå®šçš„ç¨‹åº,historyData
 	GuiControl, , %Focused_Control%, |%ComboBoxShowItems%
 	GuiControl,ChooseString,dir,%EditContent%
-	GuiControl, +default,´ò¿ª(&O)
+	GuiControl, +default,æ‰“å¼€(&O)
 	}
 }
 Return

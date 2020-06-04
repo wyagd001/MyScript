@@ -1,4 +1,4 @@
-Cando_ÎÄ¼ş¼ĞÍ¼±êÉèÖÃ:
+ï»¿Cando_æ–‡ä»¶å¤¹å›¾æ ‡è®¾ç½®:
 Splitpath,CandySel,Filename
 
 if Fileexist(CandySel "\" Filename ".exe")
@@ -10,7 +10,7 @@ Splitpath,CandySel,,FilePath
 ChangeFolderIcon(FilePath,CandySel)
 Return
 
-Cando_ÎÄ¼ş¼ĞÍ¼±ê»¹Ô­:
+Cando_æ–‡ä»¶å¤¹å›¾æ ‡è¿˜åŸ:
 If InStr(FileExist(CandySel), "D")  
 {
 if Fileexist(CandySel "\desktop.ini" ) 

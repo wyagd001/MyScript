@@ -1,4 +1,4 @@
-/* TheGood
+﻿/* TheGood
 WinMouse
 https://autohotkey.com/board/topic/36620-winmouse-move-windows-using-your-mouse/
 */
@@ -62,7 +62,7 @@ ProcessMouse:
 Return
 
 /*
-;Capslock+tab   �˳�����
+;Capslock+tab   退出程序
 $Tab::
 	If Not GetKeyState("Capslock")
 		Send {Tab Down}
@@ -77,10 +77,10 @@ Return
 
 $Space Up::Send {Space Up}
 
-;��ݼ� Capslock�ͷź�Shift �ƶ�����ʱ����ԭ���� �Ƿ񡱿ɼ������Ƿ���������򼤻�ģ�
-;�������Զ�������ù����г�ͻ����Ϊ���²�Ĵ��������Զ���Ϊ�����ϲ㣬�����ڴ���û�б��Զ������ʱ����Ч
-;ע�͵�����ܻ���shift ����ס���������
-;bBringToFront Ĭ��1 bTemp��Ϊ0��bBringToFront ��Ĭ��0bTemp��Ϊ2
+;快捷键 Capslock释放后按Shift 移动窗口时保持原窗口 是否”可见“（是否在最上面或激活的）
+;鼠标左键自动激活与该功能有冲突，因为在下层的窗口总是自动变为了在上层，所以在窗口没有被自动“激活”时才有效
+;注释掉后可能会有shift 被按住的情况出现
+;bBringToFront 默认1 bTemp设为0，bBringToFront ，默认0bTemp设为2
 ;bTemp := bBringToFront ? 0 : 2
 $LShift::
 	If Not GetKeyState("Capslock")

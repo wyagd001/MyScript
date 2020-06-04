@@ -1,4 +1,4 @@
-lrcPause(x)
+ï»¿lrcPause(x)
 {
 	global
 	Stime:=starttime
@@ -20,11 +20,11 @@ lrcECHO(lrcfile,GuiTitle){
 	;WinSet, TransColor, FF0F0F
 	;WinSet, ExStyle, +0x20
 	if hidelrc=0
-		Gui, 2:Show, NoActivate, %GuiTitle% - AhkPlayer  ; ²»¼¤»î´°Ìå±ÜÃâ¸Ä±äµ±Ç°¼¤»îµÄ´°¿Ú
+		Gui, 2:Show, NoActivate, %GuiTitle% - AhkPlayer  ; ä¸æ¿€æ´»çª—ä½“é¿å…æ”¹å˜å½“å‰æ¿€æ´»çš„çª—å£
 
 	FileEncoding, % File_GetEncoding(lrcfile)
 
-	; ¶ÁÈ¡lrcÎÄ¼þµÄÄÚÈÝ
+	; è¯»å–lrcæ–‡ä»¶çš„å†…å®¹
 	n:=1
 	temp:=1
 	Loop, read, %lrcfile%
@@ -57,10 +57,10 @@ lrcECHO(lrcfile,GuiTitle){
 							Break
 					lrc%n%:=SubStr(A_LoopReadLine, InStr(A_LoopReadLine,"]","",1)+1)
 					lrc%n%:= RegExReplace(lrc%n%, "\[[0-9]+\:[0-9]+\.[0-9]+\]")
-					; Ô­´úÂë´ÓÓÒµ½×ó²éÕÒ¡°]¡±£¬ÕÒµ½ºó´Ó¡°]¡±Î»ÖÃ+1£¬¿ªÊ¼¸´ÖÆ£¨¸´ÖÆÈ«²¿£©
+					; åŽŸä»£ç ä»Žå³åˆ°å·¦æŸ¥æ‰¾â€œ]â€ï¼Œæ‰¾åˆ°åŽä»Žâ€œ]â€ä½ç½®+1ï¼Œå¼€å§‹å¤åˆ¶ï¼ˆå¤åˆ¶å…¨éƒ¨ï¼‰
 					; lrc%n%:=SubStr(A_LoopReadLine, InStr(A_LoopReadLine,"]","",0)+1)
 					n:=n+1
-					; Ô­´úÂë continue  ,Í¬Ò»ÐÐ²éÕÒ¶à´Î,¶Ô[xxx][xxx]xxx¸ñÊ½ÓÐÐ§  ¶Ô[xxx]x[xxx]x[xxx]¸ñÊ½ÎÞÐ§
+					; åŽŸä»£ç  continue  ,åŒä¸€è¡ŒæŸ¥æ‰¾å¤šæ¬¡,å¯¹[xxx][xxx]xxxæ ¼å¼æœ‰æ•ˆ  å¯¹[xxx]x[xxx]x[xxx]æ ¼å¼æ— æ•ˆ
 					; continue
 					Break
 				}
@@ -70,7 +70,7 @@ lrcECHO(lrcfile,GuiTitle){
 		}
 	}
 
-; ¶ÔÊ±¼ä´Á½øÐÐÅÅÐò
+; å¯¹æ—¶é—´æˆ³è¿›è¡ŒæŽ’åº
 	Loop
 	{
 		n:=1
@@ -81,19 +81,19 @@ lrcECHO(lrcfile,GuiTitle){
 			If(sec%n% > sec%nx%) And (sec%nx%<>"")
 			{
 				flag+=1
-				; ½»»»secÊý¾Ý    Êµ¼Ê¿ÉÒÔÖ»ÓÃÒ»¸ö±äÁ¿×öÖÐ½é¼´¿É  ²»¹ý ´Ë´¦²»Ó°Ïì³ÌÐòÖ´ÐÐµÄÐ§ÂÊ.
+				; äº¤æ¢secæ•°æ®    å®žé™…å¯ä»¥åªç”¨ä¸€ä¸ªå˜é‡åšä¸­ä»‹å³å¯  ä¸è¿‡ æ­¤å¤„ä¸å½±å“ç¨‹åºæ‰§è¡Œçš„æ•ˆçŽ‡.
 				tz:=sec%n%
 				tx:=sec%nx%
 				sec%n%:=tx
 				sec%nx%:=tz
-				; ½»»»lrcÊý¾Ý
+				; äº¤æ¢lrcæ•°æ®
 				tz:=lrc%n%
 				tx:=lrc%nx%
 				lrc%n%:=tx
 				lrc%nx%:=tz
 			}
 			n:=n+1
-			If(sec%nx%="")	;Èç¹ûÏÂÒ»¸öÔªËØÎª¿Õ£¬ÔòÍË³öÑ­»·
+			If(sec%nx%="")	;å¦‚æžœä¸‹ä¸€ä¸ªå…ƒç´ ä¸ºç©ºï¼Œåˆ™é€€å‡ºå¾ªçŽ¯
 				Break
 		}
 		If(flag=0)
@@ -118,7 +118,7 @@ lrcECHO(lrcfile,GuiTitle){
 	sec := nowtime - min*60
 
 	tx:=t+1
-	/*Ô­°æ´úÂë
+	/*åŽŸç‰ˆä»£ç 
 	If ( (min*60+sec) >= sec%t% and (min*60+sec) <= sec%tx% )
 	{
 		GuiControl, 2:, lrc, % lrc%t%
@@ -155,7 +155,7 @@ lrcClear(){
 	global
 	count:=1
 	SetTimer, lrcpause, Off
-	Loop, 99			;Çå¿Õ±äÁ¿
+	Loop, 99			;æ¸…ç©ºå˜é‡
 	{
 		min%count%:=""
 		sec%count%:=""

@@ -1,4 +1,4 @@
-~LButton::
+﻿~LButton::
 	CoordMode, Mouse, Screen
 	MouseGetPos, lastx, lasty, id
 	WinGetClass, Class, ahk_id %id%

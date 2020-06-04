@@ -1,16 +1,16 @@
-addfavorites:
+ï»¿addfavorites:
 	Loop, parse, A_GuiEvent, `n, `r
 	{
 		Gui, Submit, NoHide
 		myfav = %A_ScriptDir%\favorites
 		ifNotExist, %Dir%
 		{
-			msgbox,Ã»ÓĞÑ¡ÔñÎÄ¼ş»òÎÄ¼ş¼Ğ¡£
+			msgbox,æ²¡æœ‰é€‰æ‹©æ–‡ä»¶æˆ–æ–‡ä»¶å¤¹ã€‚
 		return
 		}
 
 		SplitPath,Dir, OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive
-		InputBox,shortName,,ÇëÊäÈë¿ì½İ·½Ê½µÄÃû³Æ?,,,,,,,,%OutNameNoExt%
+		InputBox,shortName,,è¯·è¾“å…¥å¿«æ·æ–¹å¼çš„åç§°?,,,,,,,,%OutNameNoExt%
 		if ErrorLevel{
 		return
 		}
@@ -18,7 +18,7 @@ addfavorites:
 		{
 			IfExist,%myfav%\%shortName%.lnk
 			{
-				msgbox,4,,Í¬ÃûµÄ¿ì½İ·½Ê½ÒÑ¾­´æÔÚ£¬ÊÇ·ñÌæ»»?
+				msgbox,4,,åŒåçš„å¿«æ·æ–¹å¼å·²ç»å­˜åœ¨ï¼Œæ˜¯å¦æ›¿æ¢?
 				IfMsgBox No
 				return
 				else{
@@ -33,7 +33,7 @@ addfavorites:
 return
 
 showfavorites:
-	myfavmenu := FolderMenu(A_ScriptDir "\Favorites", "lnk","ÊÕ²Ø¼Ğ",0,2,1,1)
+	myfavmenu := FolderMenu(A_ScriptDir "\Favorites", "lnk","æ”¶è—å¤¹",0,2,1,1)
 	Menu, % myfavmenu, show
 	Menu, % myfavmenu, delete
 return

@@ -1,9 +1,9 @@
-1008:
+ï»¿1008:
 	sPara=/SRC
-	SetTimer,´´½¨Ä¿Â¼Áª½Ó,-200
+	SetTimer,åˆ›å»ºç›®å½•è”æ¥,-200
 Return
 
-´´½¨Ä¿Â¼Áª½Ó:
+åˆ›å»ºç›®å½•è”æ¥:
 	Critical,On
 	If(sPara="/SRC")
 		Files := GetSelectedFiles()
@@ -11,7 +11,7 @@ Return
 		Files:=GetCurrentFolder()
 	If !Files
 	{
-		MsgBox,,,»ñÈ¡ÎÄ¼şÂ·¾¶Ê§°Ü¡£,3
+		MsgBox,,,è·å–æ–‡ä»¶è·¯å¾„å¤±è´¥ã€‚,3
 		Return
 	}
 	Critical,Off
@@ -19,20 +19,20 @@ Return
 	DriveGet, tempStr, FS, %tempStr1%
 	If (tempStr<>"NTFS") {
 		Gui, +OwnDialogs
-		MsgBox, 262192, ´ÅÅÌ¸ñÊ½²»Æ¥Åä, µ±Ç°´ÅÅÌ %tempStr1% ²»ÊÇ NTFS ÎÄ¼şÏµÍ³¸ñÊ½£¬ÎŞ·¨´´½¨Ä¿Â¼Áª½Ó£¡
+		MsgBox, 262192, ç£ç›˜æ ¼å¼ä¸åŒ¹é…, å½“å‰ç£ç›˜ %tempStr1% ä¸æ˜¯ NTFS æ–‡ä»¶ç³»ç»Ÿæ ¼å¼ï¼Œæ— æ³•åˆ›å»ºç›®å½•è”æ¥ï¼
 		Return
 	}
 	
 	Gui,9:Destroy
 	Gui,9:Default
-	Gui,Add,Text,x10 y17, Áª½ÓÃû³Æ(&N)
+	Gui,Add,Text,x10 y17, è”æ¥åç§°(&N)
 	Gui,Add,Edit,x90 y15 w250 vVL_Name,
-	Gui,Add,Text,x10 y48, Áª½ÓÄ¿Â¼(&P)
+	Gui,Add,Text,x10 y48, è”æ¥ç›®å½•(&P)
 	Gui,Add,Edit,x90 y46 w250 vVL_Path,% temp:=((sPara="/DES")?Files:"")
-	Gui,Add,Text,x10 y79, Ä¿±êÄ¿Â¼(&T)
+	Gui,Add,Text,x10 y79, ç›®æ ‡ç›®å½•(&T)
 	Gui,Add,Edit,x90 y77 w250 vTG_Path,% temp:=((sPara="/SRC")?Files:"")
-	Gui,Add,Button,x140 y110 w100 h25 Default gVL_OK, È·¶¨(&S)
-	Gui,Add,Button,x245 y110 w100 h25 gVL_Cancel, È¡Ïû(&X)
+	Gui,Add,Button,x140 y110 w100 h25 Default gVL_OK, ç¡®å®š(&S)
+	Gui,Add,Button,x245 y110 w100 h25 gVL_Cancel, å–æ¶ˆ(&X)
 	If(sPara="/SRC")
 	{
 		GuiControl,disable,TG_Path
@@ -40,12 +40,12 @@ Return
 			tempStr:=Files
 		Else
 			SplitPath, Files, tempStr
-		tempStr:="´´½¨Ö¸ÏòÄ¿Â¼ [" . tempStr . "] µÄÁª½Ó"
+		tempStr:="åˆ›å»ºæŒ‡å‘ç›®å½• [" . tempStr . "] çš„è”æ¥"
 	}
 	Else
 	{
 		GuiControl,disable,VL_Path
-		tempStr:="ÔÚµ±Ç°Î»ÖÃ´´½¨Ä¿Â¼Áª½Ó"
+		tempStr:="åœ¨å½“å‰ä½ç½®åˆ›å»ºç›®å½•è”æ¥"
 	}
 	Gui,show,,%tempStr%
 Return
@@ -55,30 +55,30 @@ VL_OK:
 	Gui,Submit,NoHide
 	VL_Name:=Trim(VL_Name),VL_Path:=Trim(VL_Path,"\"),TG_Path:=Trim(TG_Path,"\"),errFlag := 0
 	If (VL_Name="")
-		errFlag:=1, tempStr:="Î´ÉèÖÃÁª½ÓÃû³Æ"
+		errFlag:=1, tempStr:="æœªè®¾ç½®è”æ¥åç§°"
 	If (errFlag=0) And (VL_Path="")
-		errFlag:=2, tempStr:="Î´ÉèÖÃÁª½ÓËùÔÚÄ¿Â¼" 
+		errFlag:=2, tempStr:="æœªè®¾ç½®è”æ¥æ‰€åœ¨ç›®å½•" 
 	If (errFlag=0) And (TG_Path="")
-		errFlag:=3, tempStr:="Î´ÉèÖÃÄ¿±êÄ¿Â¼" 
+		errFlag:=3, tempStr:="æœªè®¾ç½®ç›®æ ‡ç›®å½•" 
 	If (errFlag=0) And (RegexMatch(VL_Name, "[\\/:\*\?""<>\|]")>0)
-		errFlag:=4, tempStr:="Áª½ÓÃû³Æ²»µÃ°üº¬ÒÔÏÂÈÎÒâ×Ö·û£º\ / : * \ ? "" < > |"
+		errFlag:=4, tempStr:="è”æ¥åç§°ä¸å¾—åŒ…å«ä»¥ä¸‹ä»»æ„å­—ç¬¦ï¼š\ / : * \ ? "" < > |"
 	If (errFlag=0) And (FileExist(VL_Path)="")
-		errFlag:=5, tempStr:= "Áª½ÓÄ¿Â¼²»´æÔÚ"
+		errFlag:=5, tempStr:= "è”æ¥ç›®å½•ä¸å­˜åœ¨"
 	If (errFlag=0) And (FileExist(TG_Path)="")
-		errFlag:=6, tempStr:= "Ä¿±êÄ¿Â¼²»´æÔÚ"
+		errFlag:=6, tempStr:= "ç›®æ ‡ç›®å½•ä¸å­˜åœ¨"
 	If ((errFlag=0) And (sPara="/SRC")) 
 	{
 		SplitPath,VL_Path, , , , , tempStr1
 		DriveGet, tempStr, FS, %tempStr1%
 		If (tempStr<>"NTFS")
-			errFlag:=7, tempStr:= "Áª½ÓËùÔÚ´ÅÅÌ " tempStr1 " ²»ÊÇ NTFS ÎÄ¼şÏµÍ³¸ñÊ½£¬ÎŞ·¨´´½¨Ä¿Â¼Áª½Ó"
+			errFlag:=7, tempStr:= "è”æ¥æ‰€åœ¨ç£ç›˜ " tempStr1 " ä¸æ˜¯ NTFS æ–‡ä»¶ç³»ç»Ÿæ ¼å¼ï¼Œæ— æ³•åˆ›å»ºç›®å½•è”æ¥"
 	}
 		If ((errFlag=0) And (sPara="/DES")) 
 	{
 		SplitPath,TG_Path, , , , , tempStr1
 		DriveGet, tempStr, FS, %tempStr1%
 		If (tempStr<>"NTFS")
-			errFlag:=8, tempStr:="Áª½ÓÄ¿Â¼ËùÔÚ´ÅÅÌ " tempStr1 " ²»ÊÇ NTFS ÎÄ¼şÏµÍ³¸ñÊ½£¬ÎŞ·¨´´½¨Ä¿Â¼Áª½Ó"
+			errFlag:=8, tempStr:="è”æ¥ç›®å½•æ‰€åœ¨ç£ç›˜ " tempStr1 " ä¸æ˜¯ NTFS æ–‡ä»¶ç³»ç»Ÿæ ¼å¼ï¼Œæ— æ³•åˆ›å»ºç›®å½•è”æ¥"
 	}
 	If (errFlag=0)
 	{
@@ -94,7 +94,7 @@ VL_OK:
 			Else
 			{
 				tempStr=%tempStr%
-				If (tempStr<>"Îª " . VL_Path . "\" . VL_Name . " <<===>> " . TG_Path . " ´´½¨µÄÁª½Ó")
+				If (tempStr<>"ä¸º " . VL_Path . "\" . VL_Name . " <<===>> " . TG_Path . " åˆ›å»ºçš„è”æ¥")
 					errFlag:=1
 			}
 		}
@@ -103,15 +103,15 @@ VL_OK:
 
 		Gui, +OwnDialogs
 		If (errFlag=0)
-			MsgBox, 262208, ´´½¨Ä¿Â¼Áª½Ó³É¹¦, % "³É¹¦´´½¨Ä¿Â¼Áª½Ó£¡`nÁª½Ó: " . VL_Path . "\" . VL_Name "`nÖ¸Ïò: " TG_Path
+			MsgBox, 262208, åˆ›å»ºç›®å½•è”æ¥æˆåŠŸ, % "æˆåŠŸåˆ›å»ºç›®å½•è”æ¥ï¼`nè”æ¥: " . VL_Path . "\" . VL_Name "`næŒ‡å‘: " TG_Path
 		Else
-			MsgBox, 262192, ´íÎó, ´´½¨Ä¿Â¼Áª½Ó´íÎó£¬Çë¼ì²éºóÖØÊÔ£¡
+			MsgBox, 262192, é”™è¯¯, åˆ›å»ºç›®å½•è”æ¥é”™è¯¯ï¼Œè¯·æ£€æŸ¥åé‡è¯•ï¼
 		Return
 	} 
 	Else 
 	{
 		Gui, +OwnDialogs
-		MsgBox, 262192, ´´½¨Ä¿Â¼Áª½Ó´íÎó, %tempStr%£¡
+		MsgBox, 262192, åˆ›å»ºç›®å½•è”æ¥é”™è¯¯, %tempStr%ï¼
 		If errFlag In 1,4
 			GuiControl, Focus, VL_Name
 		If errFlag In 2,5,7
@@ -128,14 +128,14 @@ VL_Cancel:
 	Gui,9:Destroy
 Return
 
-7PlusMenu_´´½¨Ñ¡ÖĞÄ¿Â¼µÄÁª½Óµ½ÆäËûÄ¿Â¼()
+7PlusMenu_åˆ›å»ºé€‰ä¸­ç›®å½•çš„è”æ¥åˆ°å…¶ä»–ç›®å½•()
 {
-	section = ´´½¨Ñ¡ÖĞÄ¿Â¼µÄÁª½Óµ½ÆäËûÄ¿Â¼
+	section = åˆ›å»ºé€‰ä¸­ç›®å½•çš„è”æ¥åˆ°å…¶ä»–ç›®å½•
 	defaultSet=
 	( LTrim
 ID = 1008
-Name = ´´½¨ÎÄ¼ş¼ĞµÄÄ¿Â¼Áª½Ó(¾µÏñ)
-Description = ÔÚÖ¸¶¨ÎÄ¼ş¼ĞÖĞ´´½¨Ñ¡ÖĞÎÄ¼ş¼ĞµÄÄ¿Â¼Áª½Ó(¾µÏñ)
+Name = åˆ›å»ºæ–‡ä»¶å¤¹çš„ç›®å½•è”æ¥(é•œåƒ)
+Description = åœ¨æŒ‡å®šæ–‡ä»¶å¤¹ä¸­åˆ›å»ºé€‰ä¸­æ–‡ä»¶å¤¹çš„ç›®å½•è”æ¥(é•œåƒ)
 SubMenu = 7plus
 FileTypes =
 SingleFileOnly = 0

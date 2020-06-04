@@ -1,38 +1,38 @@
-changyong:
+ï»¿changyong:
 Menu, f_Folders, Add, &C:\, C:\
 Menu, f_Folders, Add, &D:\, D:\
 Menu, f_Folders, Add, &E:\, E:\
-Menu, f_Folders, Add, ÎÒµÄÎÄµµ, ÎÒµÄÎÄµµ
-Menu, f_Folders, Add, ³ÌĞòÎÄ¼ş¼Ğ, ³ÌĞòÎÄ¼ş¼Ğ
+Menu, f_Folders, Add, æˆ‘çš„æ–‡æ¡£, æˆ‘çš„æ–‡æ¡£
+Menu, f_Folders, Add, ç¨‹åºæ–‡ä»¶å¤¹, ç¨‹åºæ–‡ä»¶å¤¹
 
-Menu, tabs, Add, ÎÄ¼ş¼Ğ(&F), :f_Folders
-Menu, tabs, Add, ÎÒµÄµçÄÔ(&C), ÎÒµÄµçÄÔ
-Menu, tabs, Add, ÍøÂçÁ¬½Ó(&N), ÍøÂçÁ¬½Ó
-Menu, tabs, Add, ¿ØÖÆÃæ°å(&P), ¿ØÖÆÃæ°å
-Menu, tabs, Add, »ØÊÕÕ¾(&R), »ØÊÕÕ¾
+Menu, tabs, Add, æ–‡ä»¶å¤¹(&F), :f_Folders
+Menu, tabs, Add, æˆ‘çš„ç”µè„‘(&C), æˆ‘çš„ç”µè„‘
+Menu, tabs, Add, ç½‘ç»œè¿æ¥(&N), ç½‘ç»œè¿æ¥
+Menu, tabs, Add, æ§åˆ¶é¢æ¿(&P), æ§åˆ¶é¢æ¿
+Menu, tabs, Add, å›æ”¶ç«™(&R), å›æ”¶ç«™
 Menu, tabs, Add
-Menu, tabs, Add, ×¢Ïú(&L),×¢Ïú
-Menu, tabs, Add, ´ı»ú(&D),´ı»ú
-Menu, tabs, Add, ÖØÆô(&U),ÖØÆô
-Menu, tabs, Add, ¹Ø»ú(&S),¹Ø»ú
+Menu, tabs, Add, æ³¨é”€(&L),æ³¨é”€
+Menu, tabs, Add, å¾…æœº(&D),å¾…æœº
+Menu, tabs, Add, é‡å¯(&U),é‡å¯
+Menu, tabs, Add, å…³æœº(&S),å…³æœº
 Menu, tabs,Show
 Menu, tabs,Deleteall
 Return
 
-ÎÒµÄµçÄÔ:
+æˆ‘çš„ç”µè„‘:
 Run ::{20d04fe0-3aea-1069-a2d8-08002b30309d}
 Return
 
-ÍøÂçÁ¬½Ó:
+ç½‘ç»œè¿æ¥:
 run ::{7007ACC7-3202-11D1-AAD2-00805FC1270E}
 Return
 
-¿ØÖÆÃæ°å:
+æ§åˆ¶é¢æ¿:
 Run ::{20D04FE0-3AEA-1069-A2D8-08002B30309D}\::{21EC2020-3AEA-1069-A2DD-08002B30309D}
 ;run control.exe
 Return
 
-»ØÊÕÕ¾:
+å›æ”¶ç«™:
 Run ::{645FF040-5081-101B-9F08-00AA002F954E}
 Return
 
@@ -48,26 +48,26 @@ E:\:
 Run E:\
 Return
 
-ÎÒµÄÎÄµµ:
+æˆ‘çš„æ–‡æ¡£:
 Run ::{450d8fba-ad25-11d0-98a8-0800361b1103}
 Return
 
-³ÌĞòÎÄ¼ş¼Ğ:
+ç¨‹åºæ–‡ä»¶å¤¹:
 Run C:\Program Files
 Return
 
-×¢Ïú:
+æ³¨é”€:
 Shutdown, 0
 Return
 
-¹Ø»ú:
+å…³æœº:
 Shutdown,1
 Return
 
-ÖØÆô:
+é‡å¯:
 Shutdown,2
 Return
 
-´ı»ú:
+å¾…æœº:
 DllCall("PowrProf\SetSuspendState", "int", 0, "int", 0, "int", 0)
 Return

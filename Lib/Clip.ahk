@@ -1,11 +1,11 @@
-GetClipboardFormat(type=1)  ;Thanks nnnik
+ï»¿GetClipboardFormat(type=1)  ;Thanks nnnik
 {
 	Critical, On  
 	DllCall("OpenClipboard", "int", "")
 	while c := DllCall("EnumClipboardFormats","Int",c?c:0)
 		x .= "," c
 	DllCall("CloseClipboard")
-	Critical, OFF    ; ÔÚ¿ªÊ¼Ö´ĞĞ¶ÎÊ¹ÓÃ¸Ãº¯Êı£¬Ê¹ËùÓĞºóĞøÏß³Ì±äÎª²»¿ÉÖĞ¶Ï£¬½Å±¾»á¿¨ËÀ£¬ËùÒÔĞèÒª¹Ø±Õ
+	Critical, OFF    ; åœ¨å¼€å§‹æ‰§è¡Œæ®µä½¿ç”¨è¯¥å‡½æ•°ï¼Œä½¿æ‰€æœ‰åç»­çº¿ç¨‹å˜ä¸ºä¸å¯ä¸­æ–­ï¼Œè„šæœ¬ä¼šå¡æ­»ï¼Œæ‰€ä»¥éœ€è¦å…³é—­
 	if type=1
 		if Instr(x, ",1") and Instr(x, ",13")
 		return 1
@@ -17,19 +17,19 @@ GetClipboardFormat(type=1)  ;Thanks nnnik
 		return x
 }
 
-; returnnum = 0 ²»»¹Ô­¼ôÌù°å£¬·µ»Ø¸´ÖÆµÄÄÚÈİ£¨ĞÂ¼ôÌù°å£©
-; returnnum = 1 »¹Ô­¼ôÌù°å(¼ôÌù°åÄÚÈİ²»±ä)£¬Çå¿Õ _isFile _ClipAll£¬·µ»Ø¸´ÖÆµÄÄÚÈİ
-; returnnum = 2/3/4.. »¹Ô­¼ôÌù°å£¬¸³Öµ _isFile _ClipAll£¬·µ»Ø¸´ÖÆµÄÄÚÈİ
+; returnnum = 0 ä¸è¿˜åŸå‰ªè´´æ¿ï¼Œè¿”å›å¤åˆ¶çš„å†…å®¹ï¼ˆæ–°å‰ªè´´æ¿ï¼‰
+; returnnum = 1 è¿˜åŸå‰ªè´´æ¿(å‰ªè´´æ¿å†…å®¹ä¸å˜)ï¼Œæ¸…ç©º _isFile _ClipAllï¼Œè¿”å›å¤åˆ¶çš„å†…å®¹
+; returnnum = 2/3/4.. è¿˜åŸå‰ªè´´æ¿ï¼Œèµ‹å€¼ _isFile _ClipAllï¼Œè¿”å›å¤åˆ¶çš„å†…å®¹
 GetSelText(returnnum:=1, ByRef _isFile:="", ByRef _ClipAll:="",waittime:=0.5)
 {
 	global monitor
 	monitor := (returnnum = 0) ? 1 : 0
-	Saved_ClipBoard := ClipboardAll    ; ±¸·İ¼ôÌù°å
-	Clipboard=    ; Çå¿Õ¼ôÌù°å
+	Saved_ClipBoard := ClipboardAll    ; å¤‡ä»½å‰ªè´´æ¿
+	Clipboard=    ; æ¸…ç©ºå‰ªè´´æ¿
 	Send, ^c
 	sleep 200
 	ClipWait, % waittime
-	If(ErrorLevel) ; Èç¹ûÕ³Ìù°åÀïÃæÃ»ÓĞÄÚÈİ£¬Ôò»¹Ô­¼ôÌù°å
+	If(ErrorLevel) ; å¦‚æœç²˜è´´æ¿é‡Œé¢æ²¡æœ‰å†…å®¹ï¼Œåˆ™è¿˜åŸå‰ªè´´æ¿
 	{
 		Clipboard:=Saved_ClipBoard
 		sleep 100
@@ -42,12 +42,12 @@ GetSelText(returnnum:=1, ByRef _isFile:="", ByRef _ClipAll:="",waittime:=0.5)
 		_isFile := _ClipAll := ""
 	else
 	{
-		_isFile:=DllCall("IsClipboardFormatAvailable","UInt",15) ; ÊÇ·ñÊÇÎÄ¼şÀàĞÍ
+		_isFile:=DllCall("IsClipboardFormatAvailable","UInt",15) ; æ˜¯å¦æ˜¯æ–‡ä»¶ç±»å‹
 		_ClipAll := ClipboardAll
 	}
 	ClipSel := Clipboard
 
-	Clipboard := Saved_ClipBoard  ; »¹Ô­Õ³Ìù°å
+	Clipboard := Saved_ClipBoard  ; è¿˜åŸç²˜è´´æ¿
 	sleep 200
 	monitor := 1
 	return ClipSel

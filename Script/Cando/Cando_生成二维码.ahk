@@ -1,14 +1,14 @@
-Cando_Éú³É¶şÎ¬Âë:
+ï»¿Cando_ç”ŸæˆäºŒç»´ç :
 	Gui,66:Destroy
 	Gui,66:Default
 GUI,pic:Add,Pic,x20 y20 w500 h-1 hwndhimage,% f:=GEN_QR_CODE(CandySel)
-GUI,pic:Add,Text,x20 y542 h24,°´EscÈ¡Ïû
-GUI,pic:Add,Button,x420 y540 w100 h24 gSaveAs,Áí´æÎª(&S)
+GUI,pic:Add,Text,x20 y542 h24,æŒ‰Escå–æ¶ˆ
+GUI,pic:Add,Button,x420 y540 w100 h24 gSaveAs,å¦å­˜ä¸º(&S)
 GUI,pic:Show,w540 h580
 return
 
 SaveAs:
-  Fileselectfile,nf,s16,,Áí´æÎª,PNGÍ¼Æ¬(*.png)
+  Fileselectfile,nf,s16,,å¦å­˜ä¸º,PNGå›¾ç‰‡(*.png)
   If not strlen(nf)
     return
   nf := RegExMatch(nf,"i)\.png") ? nf : nf ".png"

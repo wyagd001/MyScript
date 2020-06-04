@@ -1,6 +1,6 @@
-Cando_打开方式:
+锘緾ando_鎵撳紑鏂瑰紡:
 CreateOpenWithMenu(CandySel,1,1)
-;Menu, MyOpenWithMenu, Add, 打开方式, % ":" . CreateOpenWithMenu(CandySel)
+;Menu, MyOpenWithMenu, Add, 鎵撳紑鏂瑰紡, % ":" . CreateOpenWithMenu(CandySel)
 ;Menu, MyOpenWithMenu, Show
 Return
 

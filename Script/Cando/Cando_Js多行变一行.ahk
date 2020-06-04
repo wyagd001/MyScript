@@ -1,4 +1,4 @@
-; ¹¹½¨Ò»ÐÐJs
+ï»¿; æž„å»ºä¸€è¡ŒJs
 ; "javascript:void((function(){" . js . "})())"
 getSingleLineOfJS(js){
 url:="https://javascript-minifier.com/raw"

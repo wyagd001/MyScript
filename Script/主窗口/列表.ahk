@@ -1,17 +1,17 @@
-;Ä¿±êÎÄ¼ş¼ĞµÄÎÄ¼şÁĞ±í
+ï»¿;ç›®æ ‡æ–‡ä»¶å¤¹çš„æ–‡ä»¶åˆ—è¡¨
 liebiao:
 	if !TargetFolder or !FileExist(TargetFolder)
 	{
 		TargetFolder=
-		IniWrite,%TargetFolder%, %run_iniFile%,Â·¾¶ÉèÖÃ, TargetFolder
-		msgbox,Ã»ÓĞÉèÖÃÄ¿±êÎÄ¼ş¼Ğ£¬ÇëÍÏ×§ÎÄ¼ş¼Ğµ½´°¿Ú»òÑ¡ÔñÒ»¸öÎÄ¼ş¼Ğ¡£
+		IniWrite,%TargetFolder%, %run_iniFile%,è·¯å¾„è®¾ç½®, TargetFolder
+		msgbox,æ²¡æœ‰è®¾ç½®ç›®æ ‡æ–‡ä»¶å¤¹ï¼Œè¯·æ‹–æ‹½æ–‡ä»¶å¤¹åˆ°çª—å£æˆ–é€‰æ‹©ä¸€ä¸ªæ–‡ä»¶å¤¹ã€‚
 	return
 	}
 
-rootdir := TargetFolder       ;¿ì½İ·½Ê½Ä¿Â¼
-updatealways =1      ;1×Ô¶¯Ë¢ĞÂ£¬0½ûÖ¹×Ô¶¯Ë¢ĞÂ
+rootdir := TargetFolder       ;å¿«æ·æ–¹å¼ç›®å½•
+updatealways =1      ;1è‡ªåŠ¨åˆ·æ–°ï¼Œ0ç¦æ­¢è‡ªåŠ¨åˆ·æ–°
 SetTimer,ini,500
-TrayTip,Ä¿Â¼²Ëµ¥,³õÊ¼»¯½øĞĞÖĞ
+TrayTip,ç›®å½•èœå•,åˆå§‹åŒ–è¿›è¡Œä¸­
 if updatealways = 1
    gosub createdatabase
 else
@@ -24,7 +24,7 @@ if !C_error
 {
 Menu,DirMenu,add,%rootdir%,godir
 Menu,DirMenu,disable,%rootdir%
-Menu,DirMenu,add,-`:`:´ò¿ª Ä¿Â¼`:`:-,godir
+Menu,DirMenu,add,-`:`:æ‰“å¼€ ç›®å½•`:`:-,godir
 goto createmenu
 }
 C_error=0
@@ -45,7 +45,7 @@ Loop, Read, %A_ScriptDir%\settings\tmp\folderlist.txt
       StringLeft,pardir,Line,%pos%
       StringReplace,dir,Line,%pardir%,
       StringReplace,dir,dir,\
-      Menu,%Line%,add,-`:`:´ò¿ª Ä¿Â¼`:`:-,godir
+      Menu,%Line%,add,-`:`:æ‰“å¼€ ç›®å½•`:`:-,godir
 
       if pardir =
          pardir = DirMenu
@@ -89,7 +89,7 @@ settimer,kill_process1,-6000
 return
 
 ini:
-   TrayTip,Ä¿Â¼²Ëµ¥,³õÊ¼»¯½øĞĞÖĞ,30
+   TrayTip,ç›®å½•èœå•,åˆå§‹åŒ–è¿›è¡Œä¸­,30
 return
 
 kill_process1:
@@ -107,7 +107,7 @@ Process,Exist,%cpid2%
 if ErrorLevel 
 {
 SetTimer,ini,off
-TrayTip,Ä¿Â¼²Ëµ¥´´½¨Ê§°Ü, Ñ¡¶¨ÎÄ¼ş¼ĞÄÚÎÄ¼ş¹ı¶à`nÎŞ·¨´´½¨Ä¿Â¼ÎÄ¼şÁĞ±í£¬Ïß³Ì³¬Ê±ÍË³ö¡£
+TrayTip,ç›®å½•èœå•åˆ›å»ºå¤±è´¥, é€‰å®šæ–‡ä»¶å¤¹å†…æ–‡ä»¶è¿‡å¤š`næ— æ³•åˆ›å»ºç›®å½•æ–‡ä»¶åˆ—è¡¨ï¼Œçº¿ç¨‹è¶…æ—¶é€€å‡ºã€‚
 Process,Close,%cpid2%
 FileRecycle, %A_ScriptDir%\settings\tmp\folderlist.txt
 C_error=1

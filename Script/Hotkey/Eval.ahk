@@ -1,8 +1,8 @@
-;#IfWinActive,ÍÏ×§ÒÆ¶¯ÎÄ¼þµ½Ä¿±êÎÄ¼þ¼Ð£¨×Ô¶¯ÖØÃüÃû£©
-;* ÈÎÒâ==ºÅÊ±×Ô¶¯´¥·¢£¬²»ÐèÒªÖÕÖ¹·û´¥·¢£¬B0 ´¥·¢²»É¾³ý==
+ï»¿;#IfWinActive,æ‹–æ‹½ç§»åŠ¨æ–‡ä»¶åˆ°ç›®æ ‡æ–‡ä»¶å¤¹ï¼ˆè‡ªåŠ¨é‡å‘½åï¼‰
+;* ä»»æ„==å·æ—¶è‡ªåŠ¨è§¦å‘ï¼Œä¸éœ€è¦ç»ˆæ­¢ç¬¦è§¦å‘ï¼ŒB0 è§¦å‘ä¸åˆ é™¤==
 :?B0*:==::
 If !IME_IsENG()
-; ¼ì²â IME ×´Ì¬£¬ÖÐÎÄÊäÈëÊ±²»Ö´ÐÐÈÎºÎÃüÁî£¬
+; æ£€æµ‹ IME çŠ¶æ€ï¼Œä¸­æ–‡è¾“å…¥æ—¶ä¸æ‰§è¡Œä»»ä½•å‘½ä»¤ï¼Œ
 {
 sleep,400
 Return
@@ -11,14 +11,14 @@ Else
 {
 V := ClipboardAll
 Clipboard :=
-;¸´ÖÆ
+;å¤åˆ¶
 Send, +{Home}^c
-;¼ôÌù
+;å‰ªè´´
 ;Send, +{Home}^x
 ClipWait, 0.5
 StringReplace, Clipboard, Clipboard,==,,all
 q:=% ZTrim( Eval(Clipboard) )
-;ÊÇ·ñ±£Áô¹«Ê½
+;æ˜¯å¦ä¿ç•™å…¬å¼
 ;Send, {end}=
 SendInput,%q%
 Clipboard := V
@@ -52,7 +52,7 @@ RegExMatch(x, "(.*\d)(e)(.*)", y)
 IfEqual y2,e, Return Eval_(y1)*10**Eval_(y3)
 StringGetPos i, x, ^, R
 IfGreaterOrEqual i,0, Return Eval_(SubStr(x,1,i)) ** Eval_(SubStr(x,2+i))
-If !RegExMatch(x,"i)(abs|round|ceil|floor|exp|sqrt|ln|log|sin|cos|tan|tg|ctg|sec|csc|asin|acos|random|hex|d|r|pi)(.*)", y) ;½«Ö§³ÖµÄº¯Êý»ò±äÁ¿Ð´ÕâÀï,ÕýÔòµÄÔ­ÒòÃû×Ö¼òµ¥µÄÒª¾¡Á¿¿¿ºó
+If !RegExMatch(x,"i)(abs|round|ceil|floor|exp|sqrt|ln|log|sin|cos|tan|tg|ctg|sec|csc|asin|acos|random|hex|d|r|pi)(.*)", y) ;å°†æ”¯æŒçš„å‡½æ•°æˆ–å˜é‡å†™è¿™é‡Œ,æ­£åˆ™çš„åŽŸå› åå­—ç®€å•çš„è¦å°½é‡é åŽ
         Return x
 If y1=random
 {
@@ -76,23 +76,23 @@ IfEqual y1, pi,        Return 3.141592654
 Return %y1%(Eval_(y2))
 }
 
-/* ËãÊ½¼ÆËã
+/* ç®—å¼è®¡ç®—
 http://forum.ahkbbs.cn/thread-1945-1-1.html
-1¡¢Ôö¼ÓÁËÈ¥µô¶àÓàµÄÐ¡ÊýµãºÍ0µÄ¹¦ÄÜ£¬¿´×Å¸üÖ±¹Û
-2¡¢SendÄ£Ê½¸ÄÎªSendInput ¿ÉÒÔ¿ìÒ»µãÏÔÊ¾
-3¡¢e²»ÔÙ±íÊ¾2.718£¬²»ÔõÃ´ÊµÓÃ,¸ÄÎª¿ÆÑ§¼ÆÊý·¨£¬Èç3.1e-2=0.031
-4¡¢ÐÞÕýÁËÊ®Áù½øÖÆ×ª»¯µÄ´íÎó ÏÖÔÚ²ÅÊÇ hex12=0xc
-5.   °ÑSend, +{Home}^c{right}=¸ÄÎªSend, +{Home}^x{right} ¡¾ÈÕ³£Ê¹ÓÃÍùÍùÖ»Òª½á¹û£¬±ÈÈçÔËËãÊäÈëÄêºÏÍ¬¶îµÈ£¬ËùÒÔÓÃ¼ôÇÐÌæ»»¸´ÖÆ¡¿
-6.  °Ñ:?*:=?::¸ÄÎª:?*:=\::,ÈÈ×Ö´®Æô¶¯,ÊäÈë¹«Ê½£¬°´=\ÆôÓÃ
-7.  ÇóÓàÊ¹ÓÃ%£¬ÇóÃÝÊ¹ÓÃ^£¬(¿ÉÒÔÓÃ ^-1Çóµ¹Êý£¬^0.5ÇóËãÊõÆ½·½¸ù¡¢µ±È» i ÊÇ²»Ö§³ÖµÄ)
-        ¾ø¶ÔÖµabs£¬ËÄÉáÎåÈëround¡¢ÏòÉÏÈ¡Õûceil¡¢ÏòÏÂÈ¡Õûfloor¡¢
-        eµÄN´ÎÃÝexp¡¢ËãÊõÆ½·½¸ùsqrt¡¢×ÔÈ»¶ÔÊýln¡¢³£ÓÃ¶ÔÊýlog¡¢
-        ÕýÏÒsin¡¢ÓàÏÒcos¡¢ÕýÇÐtan»òtg¡¢ÓàÇÐctg¡¢Õý¸îsec»òasin¡¢Óà¸îcsc»òacos£¨Èý½Çº¯Êý²ÎÊýÊ¹ÓÃ»¡¶È£©¡¢
-        Ëæ»úÊýrandom£¨½ÓÕûÊý³öÕûÊý£¬½ÓÐ¡Êý³öÐ¡Êý£©¡¢
-        ×ª»¯ÎªÊ®Áù½øÖÆhex£¨hex12=0xc£©
-        »¡¶È×ª½Ç¶Èd£¨Èçd pi=180.000000¡¢½Ç¶È×ª»¡¶Èr£¨Èçr45=0.785398£©¡¢
-        ³£Êýpi=3.141592654¡¢e=2.718281828
-        ³£Êý¾«¶È²»ÂúÒâ¿ÉÒÔ×Ô¼º¸Ä£¬º¯ÊýÊýÁ¿ÉÙ¿ÉÒÔ×Ô¼º¶¨Òå
-8.   Ê®Áù½øÖÆ¿ÉÒÔÖ±½Ó¼ÆËã£¬Èç 0xFF/5=51.000000¡¢×¢Òâ¼õ·¨Ê¹ÓÃ¡°¼ÓÏà·´Êý¡±µÄ°ì·¨£¬Èç 0xCC+-12=192¡¢Ö±½Ó×ª»¯Îª10½øÖÆÓÃ¼Ó0µÄ°ì·¨£¬Èç 0xFFFFFF+0=16777215
-9.   º¯ÊýµÄÓÅÏÈ¼¶ÊÇ´óÓÚÃÝÔËËãµÄ£¬±ÈÈç£ºround5.5^2=36
+1ã€å¢žåŠ äº†åŽ»æŽ‰å¤šä½™çš„å°æ•°ç‚¹å’Œ0çš„åŠŸèƒ½ï¼Œçœ‹ç€æ›´ç›´è§‚
+2ã€Sendæ¨¡å¼æ”¹ä¸ºSendInput å¯ä»¥å¿«ä¸€ç‚¹æ˜¾ç¤º
+3ã€eä¸å†è¡¨ç¤º2.718ï¼Œä¸æ€Žä¹ˆå®žç”¨,æ”¹ä¸ºç§‘å­¦è®¡æ•°æ³•ï¼Œå¦‚3.1e-2=0.031
+4ã€ä¿®æ­£äº†åå…­è¿›åˆ¶è½¬åŒ–çš„é”™è¯¯ çŽ°åœ¨æ‰æ˜¯ hex12=0xc
+5.   æŠŠSend, +{Home}^c{right}=æ”¹ä¸ºSend, +{Home}^x{right} ã€æ—¥å¸¸ä½¿ç”¨å¾€å¾€åªè¦ç»“æžœï¼Œæ¯”å¦‚è¿ç®—è¾“å…¥å¹´åˆåŒé¢ç­‰ï¼Œæ‰€ä»¥ç”¨å‰ªåˆ‡æ›¿æ¢å¤åˆ¶ã€‘
+6.  æŠŠ:?*:=?::æ”¹ä¸º:?*:=\::,çƒ­å­—ä¸²å¯åŠ¨,è¾“å…¥å…¬å¼ï¼ŒæŒ‰=\å¯ç”¨
+7.  æ±‚ä½™ä½¿ç”¨%ï¼Œæ±‚å¹‚ä½¿ç”¨^ï¼Œ(å¯ä»¥ç”¨ ^-1æ±‚å€’æ•°ï¼Œ^0.5æ±‚ç®—æœ¯å¹³æ–¹æ ¹ã€å½“ç„¶ i æ˜¯ä¸æ”¯æŒçš„)
+        ç»å¯¹å€¼absï¼Œå››èˆäº”å…¥roundã€å‘ä¸Šå–æ•´ceilã€å‘ä¸‹å–æ•´floorã€
+        eçš„Næ¬¡å¹‚expã€ç®—æœ¯å¹³æ–¹æ ¹sqrtã€è‡ªç„¶å¯¹æ•°lnã€å¸¸ç”¨å¯¹æ•°logã€
+        æ­£å¼¦sinã€ä½™å¼¦cosã€æ­£åˆ‡tanæˆ–tgã€ä½™åˆ‡ctgã€æ­£å‰²secæˆ–asinã€ä½™å‰²cscæˆ–acosï¼ˆä¸‰è§’å‡½æ•°å‚æ•°ä½¿ç”¨å¼§åº¦ï¼‰ã€
+        éšæœºæ•°randomï¼ˆæŽ¥æ•´æ•°å‡ºæ•´æ•°ï¼ŒæŽ¥å°æ•°å‡ºå°æ•°ï¼‰ã€
+        è½¬åŒ–ä¸ºåå…­è¿›åˆ¶hexï¼ˆhex12=0xcï¼‰
+        å¼§åº¦è½¬è§’åº¦dï¼ˆå¦‚d pi=180.000000ã€è§’åº¦è½¬å¼§åº¦rï¼ˆå¦‚r45=0.785398ï¼‰ã€
+        å¸¸æ•°pi=3.141592654ã€e=2.718281828
+        å¸¸æ•°ç²¾åº¦ä¸æ»¡æ„å¯ä»¥è‡ªå·±æ”¹ï¼Œå‡½æ•°æ•°é‡å°‘å¯ä»¥è‡ªå·±å®šä¹‰
+8.   åå…­è¿›åˆ¶å¯ä»¥ç›´æŽ¥è®¡ç®—ï¼Œå¦‚ 0xFF/5=51.000000ã€æ³¨æ„å‡æ³•ä½¿ç”¨â€œåŠ ç›¸åæ•°â€çš„åŠžæ³•ï¼Œå¦‚ 0xCC+-12=192ã€ç›´æŽ¥è½¬åŒ–ä¸º10è¿›åˆ¶ç”¨åŠ 0çš„åŠžæ³•ï¼Œå¦‚ 0xFFFFFF+0=16777215
+9.   å‡½æ•°çš„ä¼˜å…ˆçº§æ˜¯å¤§äºŽå¹‚è¿ç®—çš„ï¼Œæ¯”å¦‚ï¼šround5.5^2=36
 */

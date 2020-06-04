@@ -1,5 +1,5 @@
-;·½·¨À´×Ô¹ÙÍø£¬ĞèÒªgdipÖ§³Ö
-Cando_ÌáÈ¡Í¼±ê:
+ï»¿;æ–¹æ³•æ¥è‡ªå®˜ç½‘ï¼Œéœ€è¦gdipæ”¯æŒ
+Cando_æå–å›¾æ ‡:
 	ptr := A_PtrSize =8 ? "ptr" : "uint"   ;for AHK Basic
 	FileName := CandySel
 	hIcon := DllCall("Shell32\ExtractAssociatedIcon" (A_IsUnicode ? "W" : "A")

@@ -1,4 +1,4 @@
-; https://www.autohotkey.com/boards/viewtopic.php?f=6&t=4890
+﻿; https://www.autohotkey.com/boards/viewtopic.php?f=6&t=4890
 ; https://www.autohotkey.com/boards/viewtopic.php?p=277982
 ; https://github.com/zhamlin/AHKhttp
 

@@ -1,10 +1,10 @@
-#ifwinactive, ahk_Group AppMainWindow
+ï»¿#ifwinactive, ahk_Group AppMainWindow
 ~@::
 sleep,200
 GuiControlGet, EditContent,,dir
 if EditContent=@
 {
-Temp_ComboBoxShowItems:="@ExeAhk@|@Cmd@|@Proxy@|@regedit@|@×ª»»@UrlDecode@|@×ª»»@UrlEncode@|@×ª»»@10¡ú16@|@×ª»»@16¡ú10@|@×ª»»@Å©Àú¡ú¹«Àú@|@×ª»»@¹«Àú¡úÅ©Àú@|@×ª»»@¼ò¡ú·±@|@×ª»»@·±¡ú¼ò@"
+Temp_ComboBoxShowItems:="@ExeAhk@|@Cmd@|@Proxy@|@regedit@|@è½¬æ¢@UrlDecode@|@è½¬æ¢@UrlEncode@|@è½¬æ¢@10â†’16@|@è½¬æ¢@16â†’10@|@è½¬æ¢@å†œå†â†’å…¬å†@|@è½¬æ¢@å…¬å†â†’å†œå†@|@è½¬æ¢@ç®€â†’ç¹@|@è½¬æ¢@ç¹â†’ç®€@"
 GuiControl, , dir, |%Temp_ComboBoxShowItems%
 changeComboBox=1
 send @

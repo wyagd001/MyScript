@@ -1,17 +1,17 @@
-Cando_Ìí¼Óµ¥´Êµ½·­ÒëÎÄ¼ş:
+ï»¿Cando_æ·»åŠ å•è¯åˆ°ç¿»è¯‘æ–‡ä»¶:
 	Gui,66:Default
 	Gui,Destroy
-	Gui, add, text,x5 ,Ó¢ÎÄµ¥´Ê:
+	Gui, add, text,x5 ,è‹±æ–‡å•è¯:
 	Gui, Add, edit, x+10 Veword  w250,%CandySel%
-	Gui, add, text,x5 ,ÖĞÎÄ·­Òë:
+	Gui, add, text,x5 ,ä¸­æ–‡ç¿»è¯‘:
 	Gui, Add, edit, x+10 Vctrans  w250,% json(YouDaoApi(CandySel), "basic.explains")
-	Gui, Add, Button,x250  w65 h20 -Multi Default gwtranslist,È·ÈÏĞ´Èë
-	Gui, Show, ,µ¥´Ê·­ÒëĞ´ÈëÎÄ¼ş
+	Gui, Add, Button,x250  w65 h20 -Multi Default gwtranslist,ç¡®è®¤å†™å…¥
+	Gui, Show, ,å•è¯ç¿»è¯‘å†™å…¥æ–‡ä»¶
 return
 
 wtranslist:
 	Gui,Submit,NoHide
 	if ctrans
-		IniWrite,% ctrans,%A_ScriptDir%\settings\translist.ini,·­Òë,% eword
+		IniWrite,% ctrans,%A_ScriptDir%\settings\translist.ini,ç¿»è¯‘,% eword
 	Gui,Destroy
 return

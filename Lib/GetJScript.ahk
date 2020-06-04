@@ -1,4 +1,4 @@
-GetJScript()
+﻿GetJScript()
 {
 script =
 (

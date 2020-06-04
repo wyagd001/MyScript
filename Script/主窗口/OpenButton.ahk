@@ -1,8 +1,8 @@
-; Ö÷´°¿Ú´ò¿ª°´Å¥ÔËĞĞÊäÈëµÄÃüÁî£¬ÍøÖ·£¬³ÌĞò
+ï»¿; ä¸»çª—å£æ‰“å¼€æŒ‰é’®è¿è¡Œè¾“å…¥çš„å‘½ä»¤ï¼Œç½‘å€ï¼Œç¨‹åº
 openbutton:
 	Gui, Submit, NoHide
 
-	If !dir  ; dirÎª¿Õ·µ»Ø
+	If !dir  ; dirä¸ºç©ºè¿”å›
 		Return
 
 	if changeComboBox=1
@@ -18,7 +18,7 @@ openbutton:
 	Return
 	}
 
-	OpenButton_All_cmd:="@Cmd@|@ExeAhk@|@Proxy@|@regedit@|@×ª»»@UrlDecode@|@×ª»»@UrlEncode@|@×ª»»@10¡ú16@|@×ª»»@16¡ú10@|@×ª»»@Å©Àú¡ú¹«Àú@|@×ª»»@¹«Àú¡úÅ©Àú@|@×ª»»@¼ò¡ú·±@|@×ª»»@·±¡ú¼ò@"
+	OpenButton_All_cmd:="@Cmd@|@ExeAhk@|@Proxy@|@regedit@|@è½¬æ¢@UrlDecode@|@è½¬æ¢@UrlEncode@|@è½¬æ¢@10â†’16@|@è½¬æ¢@16â†’10@|@è½¬æ¢@å†œå†â†’å…¬å†@|@è½¬æ¢@å…¬å†â†’å†œå†@|@è½¬æ¢@ç®€â†’ç¹@|@è½¬æ¢@ç¹â†’ç®€@"
 	If RegExMatch(dir,"i)^\s*(" OpenButton_All_cmd ")\s*")
 	{
 		StringTrimLeft,dir,dir,1
@@ -50,12 +50,12 @@ openbutton:
 				If CF_regread("HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","Proxyenable") = 1
 				{
 					CF_RegWrite("REG_DWORD","HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","Proxyenable",0)
-					MsgBox,ÒÑÈ¡ÏûIE´úÀí£¡
+					MsgBox,å·²å–æ¶ˆIEä»£ç†ï¼
 				}
 				Else If CF_regread("HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","Proxyenable") = 0
 				{
 					CF_RegWrite("REG_DWORD","HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","Proxyenable",1)
-					MsgBox, IE´úÀíÒÑÉèÖÃÎª ¡±%OpenButton_Cmd_Str2%¡±£¡ÒªÈ¡Ïû´úÀí£¬ÇëÔÙ´ÎÔËĞĞ±¾ÃüÁî¡£
+					MsgBox, IEä»£ç†å·²è®¾ç½®ä¸º â€%OpenButton_Cmd_Str2%â€ï¼è¦å–æ¶ˆä»£ç†ï¼Œè¯·å†æ¬¡è¿è¡Œæœ¬å‘½ä»¤ã€‚
 				}
 				dllcall("wininet\InternetSetOptionW","int","0","int","39","int","0","int","0")
 				dllcall("wininet\InternetSetOptionW","int","0","int","37","int","0","int","0")
@@ -66,7 +66,7 @@ openbutton:
 				If CF_regread("HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","Proxyenable") = 1
 				{
 					CF_RegWrite("REG_DWORD","HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","Proxyenable",0)
-					MsgBox,ÒÑÈ¡ÏûIE´úÀí£¡
+					MsgBox,å·²å–æ¶ˆIEä»£ç†ï¼
 				}
 				Else If CF_regread("HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","Proxyenable") = 0
 				{
@@ -74,11 +74,11 @@ openbutton:
 					if ProxyServer
 					{
 						CF_RegWrite("REG_DWORD","HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","Proxyenable",1)
-						MsgBox, IE´úÀíÒÑÉèÖÃÎª¡°%ProxyServer%¡±£¡ÒªÈ¡Ïû´úÀí£¬ÇëÔÙ´ÎÔËĞĞ±¾ÃüÁî¡£
+						MsgBox, IEä»£ç†å·²è®¾ç½®ä¸ºâ€œ%ProxyServer%â€ï¼è¦å–æ¶ˆä»£ç†ï¼Œè¯·å†æ¬¡è¿è¡Œæœ¬å‘½ä»¤ã€‚
 					}
 					else
 					{
-						MsgBox,ÇëÊäÈë´úÀí·şÎñÆ÷IP:¶Ë¿ÚºÅ¡£
+						MsgBox,è¯·è¾“å…¥ä»£ç†æœåŠ¡å™¨IP:ç«¯å£å·ã€‚
 					}
 				}
 				dllcall("wininet\InternetSetOptionW","int","0","int","39","int","0","int","0")
@@ -91,18 +91,18 @@ openbutton:
 			f_OpenReg(OpenButton_Cmd_Str2)
 		return
 		}
-		Else If (OpenButton_Cmd_Str1="×ª»»")  
+		Else If (OpenButton_Cmd_Str1="è½¬æ¢")  
 		{
 			If (OpenButton_Cmd_Str2="UrlDecode")
 			{
 				If OpenButton_Cmd_Str3
 				{
-					q:=% UrlDecode(OpenButton_Cmd_Str3)          ;Ä¬ÈÏÊ¹ÓÃUTF-8±àÂë×ª»»
+					q:=% UrlDecode(OpenButton_Cmd_Str3)          ;é»˜è®¤ä½¿ç”¨UTF-8ç¼–ç è½¬æ¢
 					settimer,sendq,-1000
 				Return
 				}
 				Else
-				{  ;¸´ÖÆµ½¼ôÌù°åµÄ×Ö·û´®Ê¹ÓÃGBK±àÂë×ª»»
+				{  ;å¤åˆ¶åˆ°å‰ªè´´æ¿çš„å­—ç¬¦ä¸²ä½¿ç”¨GBKç¼–ç è½¬æ¢
 					If Clipboard
 					{
 						q:=% UrlDecode(Clipboard,CP936)
@@ -116,12 +116,12 @@ openbutton:
 			{
 				If OpenButton_Cmd_Str3
 				{
-					q:=% UrlEncode(OpenButton_Cmd_Str3)      ;Ä¬ÈÏÊ¹ÓÃUTF-8±àÂë×ª»»
+					q:=% UrlEncode(OpenButton_Cmd_Str3)      ;é»˜è®¤ä½¿ç”¨UTF-8ç¼–ç è½¬æ¢
 					settimer,sendq,-1000
 				Return
 				}
 				Else
-				{  ;¸´ÖÆµ½¼ôÌù°åµÄ×Ö·û´®Ê¹ÓÃGBK±àÂë×ª»»
+				{  ;å¤åˆ¶åˆ°å‰ªè´´æ¿çš„å­—ç¬¦ä¸²ä½¿ç”¨GBKç¼–ç è½¬æ¢
 					If Clipboard
 					{
 						q:=% UrlEncode(Clipboard,CP936)
@@ -131,37 +131,37 @@ openbutton:
 					Return
 				}
 			}
-			Else If (OpenButton_Cmd_Str2="10¡ú16")
+			Else If (OpenButton_Cmd_Str2="10â†’16")
 			{
 				q:=% dec2hex(OpenButton_Cmd_Str3)
 				settimer,sendq,-1000
 			Return
 			}
-			Else If (OpenButton_Cmd_Str2="16¡ú10")
+			Else If (OpenButton_Cmd_Str2="16â†’10")
 			{
 				q:=% hex2dec(OpenButton_Cmd_Str3)
 				settimer,sendq,-2000
 			Return
 			}
-			Else If (OpenButton_Cmd_Str2="Å©Àú¡ú¹«Àú")
+			Else If (OpenButton_Cmd_Str2="å†œå†â†’å…¬å†")
 			{
 				q:=% Date_GetDate(OpenButton_Cmd_Str3)
 				settimer,sendq,-1000
 			Return
 			}
-			Else If (OpenButton_Cmd_Str2="¹«Àú¡úÅ©Àú")
+			Else If (OpenButton_Cmd_Str2="å…¬å†â†’å†œå†")
 			{
 				q:=% Date_GetLunarDate(OpenButton_Cmd_Str3?OpenButton_Cmd_Str3:A_YYYY A_MM A_DD)
 				settimer,sendq,-1000
 			Return
 			}
-			Else If (OpenButton_Cmd_Str2="¼ò¡ú·±")
+			Else If (OpenButton_Cmd_Str2="ç®€â†’ç¹")
 			{
 				q:=% jzf(OpenButton_Cmd_Str3)
 				settimer,sendq,-1000
 			Return
 			}
-			Else If (OpenButton_Cmd_Str2="·±¡ú¼ò")
+			Else If (OpenButton_Cmd_Str2="ç¹â†’ç®€")
 			{
 				q:=% fzj(OpenButton_Cmd_Str3)
 				settimer,sendq,-1000
@@ -217,7 +217,7 @@ Return
 
 g_search:
 	temp_Error = 0
-	msgbox,3,ËÑË÷ÒıÇæÑ¡Ôñ,°Ù¶ÈËÑË÷µã"ÊÇ"£¬googleµã"·ñ"
+	msgbox,3,æœç´¢å¼•æ“é€‰æ‹©,ç™¾åº¦æœç´¢ç‚¹"æ˜¯"ï¼Œgoogleç‚¹"å¦"
 	Ifmsgbox yes     
 		Run http://www.baidu.com/s?wd=%Dir% 
 	Ifmsgbox no

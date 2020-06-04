@@ -1,13 +1,13 @@
-#include %A_ScriptDir%\Lib\CaptureScreen.ahk
+ï»¿#include %A_ScriptDir%\Lib\CaptureScreen.ahk
 /*
-CaptureScreen(0, False, 0)   ½ØÆÁ²»´øÊó±ê
-CaptureScreen(0, True, 0)    ½ØÆÁ´øÊó±ê
-CaptureScreen(1, False, 0)   ½Ø´°¿Ú²»´øÊó±ê
-CaptureScreen(1, True, 0)    ½Ø´°¿Ú´øÊó±ê
+CaptureScreen(0, False, 0)   æˆªå±ä¸å¸¦é¼ æ ‡
+CaptureScreen(0, True, 0)    æˆªå±å¸¦é¼ æ ‡
+CaptureScreen(1, False, 0)   æˆªçª—å£ä¸å¸¦é¼ æ ‡
+CaptureScreen(1, True, 0)    æˆªçª—å£å¸¦é¼ æ ‡
 */
-;½ØÈ¡È«ÆÁ£¨PrintScreen£©»ò´°¿Ú£¨Alt+PrintScreen£©
+;æˆªå–å…¨å±ï¼ˆPrintScreenï¼‰æˆ–çª—å£ï¼ˆAlt+PrintScreenï¼‰
 ;PrintScreen::
-È«ÆÁ½ØÍ¼:
+å…¨å±æˆªå›¾:
 CaptureScreen(0, True, 0)
 ssFileName := "Screen_" A_Now
 sleep,300
@@ -15,19 +15,19 @@ sleep,300
 AfterCaptureScreen:
 IfExist, %A_ScriptDir%\Sound\shutter.wav
 SoundPlay, %A_ScriptDir%\Sound\shutter.wav, wait
-if(Ñ¯ÎÊ=1)
+if(è¯¢é—®=1)
 {
- ;¼àÊÓ½ØÍ¼¶Ô»°¿ò°ïÖú°´Å¥
+ ;ç›‘è§†æˆªå›¾å¯¹è¯æ¡†å¸®åŠ©æŒ‰é’®
  OnMessage(0x53, "WM_HELP")
  Gui +OwnDialogs
  SetTimer, ChangeButtonNames, 50
- msgbox,16387,½ØÍ¼,ÆÁÄ»ÒÑ¾­½ØÈ¡,µã»÷¡°ÊÇ¡±×Ô¶¯±£´æ¡£`nµã»÷¡°·ñ¡±´ò¿ª»­Í¼£¬±à¼­Í¼Æ¬¡£
+ msgbox,16387,æˆªå›¾,å±å¹•å·²ç»æˆªå–,ç‚¹å‡»â€œæ˜¯â€è‡ªåŠ¨ä¿å­˜ã€‚`nç‚¹å‡»â€œå¦â€æ‰“å¼€ç”»å›¾ï¼Œç¼–è¾‘å›¾ç‰‡ã€‚
   IfMsgBox Yes
   gosub,SaveCapture
   IfMsgBox No
    {
     Run, mspaint.exe
-    WinWaitActive,ÎŞ±êÌâ - »­Í¼,,3
+    WinWaitActive,æ— æ ‡é¢˜ - ç”»å›¾,,3
     if ErrorLevel
     return
     Send,^v
@@ -40,9 +40,9 @@ else
 gosub,SaveCapture
 Return
 
-;½ØÈ¡´°¿Ú´øÊó±ê£¨Shift+PrintScreen£©
+;æˆªå–çª—å£å¸¦é¼ æ ‡ï¼ˆShift+PrintScreenï¼‰
 ;+PrintScreen::
-´°¿Ú½ØÍ¼:
+çª—å£æˆªå›¾:
 CaptureScreen(1, True, 0)
 ssFileName := "Window_" A_Now
 gosub AfterCaptureScreen
@@ -53,19 +53,19 @@ Convert(0,  screenshot_path . "\" ssFileName "." . filetp)
 Return
 
 ChangeButtonNames:
-IfWinNotExist, ½ØÍ¼
+IfWinNotExist, æˆªå›¾
     return  ; Keep waiting.
 SetTimer, ChangeButtonNames, off
 WinActivate
-ControlSetText, Button4, ÖØÃüÃû
+ControlSetText, Button4, é‡å‘½å
 return
 
 WM_HELP(){
 global  filetp,screenshot_path
-IfWinExist,½ØÍ¼
+IfWinExist,æˆªå›¾
 {
-WinClose,½ØÍ¼
-InputBox,SsFileName,½ØÍ¼,`nÊäÈë½ØÍ¼ÎÄ¼şÃû²¢±£´æÎÄ¼ş,,440,160
+WinClose,æˆªå›¾
+InputBox,SsFileName,æˆªå›¾,`nè¾“å…¥æˆªå›¾æ–‡ä»¶åå¹¶ä¿å­˜æ–‡ä»¶,,440,160
 if ErrorLevel=0
 {
 File:= screenshot_path . "\" SsFileName "." . filetp

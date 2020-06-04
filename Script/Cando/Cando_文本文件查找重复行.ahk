@@ -1,4 +1,4 @@
-Cando_ÎÄ±¾ÎÄ¼ş²éÕÒÖØ¸´ĞĞ:
+ï»¿Cando_æ–‡æœ¬æ–‡ä»¶æŸ¥æ‰¾é‡å¤è¡Œ:
 	Stime := A_TickCount
 	FileEncoding, % File_GetEncoding(CandySel)
 	Fline_array1 := {}
@@ -15,7 +15,7 @@ Cando_ÎÄ±¾ÎÄ¼ş²éÕÒÖØ¸´ĞĞ:
 			else
 			{
 				Fline_array1[A_LoopReadLine] += 1
-				FileAppend % Fline_array2[A_LoopReadLine] " - " A_index " - " Fline_array1[A_LoopReadLine] " " A_LoopReadLine "`r`n", %CandySel_ParentPath%\ÖØ¸´ĞĞ.txt
+				FileAppend % Fline_array2[A_LoopReadLine] " - " A_index " - " Fline_array1[A_LoopReadLine] " " A_LoopReadLine "`r`n", %CandySel_ParentPath%\é‡å¤è¡Œ.txt
 				Fline_array2[A_LoopReadLine] := A_index
 			}
 		}
@@ -23,10 +23,10 @@ Cando_ÎÄ±¾ÎÄ¼ş²éÕÒÖØ¸´ĞĞ:
 	Fline_array1 := {}
 	Fline_array2 := {}
 	FileEncoding
-	CF_ToolTip("²éÕÒÍê±ÏÓÃÊ± " Round(A_TickCount/1000 - Stime/1000, 3) " Ãë¡£", 3000)
+	CF_ToolTip("æŸ¥æ‰¾å®Œæ¯•ç”¨æ—¶ " Round(A_TickCount/1000 - Stime/1000, 3) " ç§’ã€‚", 3000)
 return
 
-Cando_²éÕÒÎÄ¼ş¼ĞÖĞËùÓĞÎÄ±¾ÎÄ¼şµÄÖØ¸´ĞĞ:
+Cando_æŸ¥æ‰¾æ–‡ä»¶å¤¹ä¸­æ‰€æœ‰æ–‡æœ¬æ–‡ä»¶çš„é‡å¤è¡Œ:
 	Fline_array1 := {}
 	Loop, %CandySel%\*.*, 0, 1
 	{
@@ -39,7 +39,7 @@ Cando_²éÕÒÎÄ¼ş¼ĞÖĞËùÓĞÎÄ±¾ÎÄ¼şµÄÖØ¸´ĞĞ:
 				Continue
 				if strlen(A_LoopReadLine)<30
 				Continue
-				if InStr(A_LoopReadLine,"<p>ÀàĞÍ:") or InStr(A_LoopReadLine,"<h2") or InStr(A_LoopReadLine,"#ExBasic")
+				if InStr(A_LoopReadLine,"<p>ç±»å‹:") or InStr(A_LoopReadLine,"<h2") or InStr(A_LoopReadLine,"#ExBasic")
 				Continue
 				if !Fline_array1[Trim(A_LoopReadLine)]
 				{
@@ -48,7 +48,7 @@ Cando_²éÕÒÎÄ¼ş¼ĞÖĞËùÓĞÎÄ±¾ÎÄ¼şµÄÖØ¸´ĞĞ:
 				else
 				{
 					Fline_array1[Trim(A_LoopReadLine)] += 1
-					FileAppend % A_LoopFileLongPath "`t" Fline_array1[Trim(A_LoopReadLine)] "`t" A_index "`t" Trim(A_LoopReadLine) "`r`n", %CandySel%\ÖØ¸´ĞĞ.txt
+					FileAppend % A_LoopFileLongPath "`t" Fline_array1[Trim(A_LoopReadLine)] "`t" A_index "`t" Trim(A_LoopReadLine) "`r`n", %CandySel%\é‡å¤è¡Œ.txt
 				}
 			}
 		}

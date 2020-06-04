@@ -1,9 +1,9 @@
-; SB_SetProgress
+ï»¿; SB_SetProgress
 ; (w) by DerRaphael / Released under the Terms of EUPL 1.0
 ; see http://ec.europa.eu/idabc/en/document/7330 for details
 ; https://autohotkey.com/board/topic/34593-stdlib-sb-setprogress/
 ; When visual styles are enabled, PBM_SETBARCOLOR and PBM_SETBKCOLOR message has no effect.
-; win7 Ö÷ÌâÏÂÑÕÉ«Ñ¡ÏîÎŞĞ§£¬ĞèÇĞ»»µ½¾­µäÖ÷Ìâ²ÅÄÜÏÔÊ¾³öĞ§¹û
+; win7 ä¸»é¢˜ä¸‹é¢œè‰²é€‰é¡¹æ— æ•ˆï¼Œéœ€åˆ‡æ¢åˆ°ç»å…¸ä¸»é¢˜æ‰èƒ½æ˜¾ç¤ºå‡ºæ•ˆæœ
 SB_SetProgress(Value=0,Seg=1,Ops="")
 {
    ; Definition of Constants

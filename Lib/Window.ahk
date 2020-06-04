@@ -1,4 +1,4 @@
-/*! TheGood (modified a bit by Fragman)
+Ôªø/*! TheGood (modified a bit by Fragman)
     Checks if a window is in fullscreen mode.
     ______________________________________________________________________________________________________________
     sWinTitle       - WinTitle of the window to check. Same syntax as the WinTitle parameter of, e.g., WinExist().
@@ -13,7 +13,7 @@
     circumstances does a program cover the taskbar. Even if the window passed to IsFullscreen is not the
     foreground application, IsFullscreen will check if, were it the foreground, it would cover the taskbar.
 */
-IsFullscreen(sWinTitle = "A", UseExcludeList = true, UseIncludeList=true) {             ;≤Œ ˝ °¬‘   bRefreshRes = False
+IsFullscreen(sWinTitle = "A", UseExcludeList = true, UseIncludeList=true) {             ;ÂèÇÊï∞ÁúÅÁï•   bRefreshRes = False
     Static
     Local iWinX, iWinY, iWinW, iWinH, iCltX, iCltY, iCltW, iCltH, iMidX, iMidY, iMonitor, c, D, iBestD
     global FullScreenExclude, FullScreenInclude

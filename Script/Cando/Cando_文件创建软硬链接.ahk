@@ -1,36 +1,36 @@
-Cando_ÎÄ¼ş´´½¨ÈíÁ´½Ó:
+ï»¿Cando_æ–‡ä»¶åˆ›å»ºè½¯é“¾æ¥:
 sPara=/S
-gosub Cando_ÎÄ¼ş´´½¨ÈíÓ²Á´½Ó
+gosub Cando_æ–‡ä»¶åˆ›å»ºè½¯ç¡¬é“¾æ¥
 return
 
-Cando_ÎÄ¼ş´´½¨Ó²Á´½Ó:
+Cando_æ–‡ä»¶åˆ›å»ºç¡¬é“¾æ¥:
 sPara=/H
-gosub Cando_ÎÄ¼ş´´½¨ÈíÓ²Á´½Ó
+gosub Cando_æ–‡ä»¶åˆ›å»ºè½¯ç¡¬é“¾æ¥
 return
 
-Cando_ÎÄ¼ş´´½¨ÈíÓ²Á´½Ó:
+Cando_æ–‡ä»¶åˆ›å»ºè½¯ç¡¬é“¾æ¥:
 	SplitPath,CandySel, , , , , tempStr1
 	DriveGet, tempStr, FS, %tempStr1%
 	If (tempStr<>"NTFS") {
 		Gui, +OwnDialogs
-		MsgBox, 262192, ´ÅÅÌ¸ñÊ½²»Æ¥Åä, µ±Ç°´ÅÅÌ %tempStr1% ²»ÊÇ NTFS ÎÄ¼şÏµÍ³¸ñÊ½£¬ÎŞ·¨´´½¨ÎÄ¼şÁ´½Ó£¡
+		MsgBox, 262192, ç£ç›˜æ ¼å¼ä¸åŒ¹é…, å½“å‰ç£ç›˜ %tempStr1% ä¸æ˜¯ NTFS æ–‡ä»¶ç³»ç»Ÿæ ¼å¼ï¼Œæ— æ³•åˆ›å»ºæ–‡ä»¶é“¾æ¥ï¼
 		Return
 	}
 	Gui,9:Destroy
 	Gui,9:Default
-	Gui,Add,Text,x10 y17, Á´½ÓÃû³Æ(&N)
+	Gui,Add,Text,x10 y17, é“¾æ¥åç§°(&N)
 	Gui,Add,Edit,x90 y15 w300 vSH_Name,
-	Gui,Add,Text,x10 y48, Á´½ÓÄ¿Â¼(&P)
+	Gui,Add,Text,x10 y48, é“¾æ¥ç›®å½•(&P)
 	Gui,Add,Edit,x90 y46 w300 vSH_Path,
-	Gui,Add,Text,x10 y79, Ä¿±êÎÄ¼ş(&T)
+	Gui,Add,Text,x10 y79, ç›®æ ‡æ–‡ä»¶(&T)
 	Gui,Add,Edit,x90 y77 w300 vSHTG_Path,% CandySel
-	Gui,Add,Button,x140 y110 w100 h25 Default gSH_OK, È·¶¨(&S)
-	Gui,Add,Button,x245 y110 w100 h25 gSH_Cancel, È¡Ïû(&X)
+	Gui,Add,Button,x140 y110 w100 h25 Default gSH_OK, ç¡®å®š(&S)
+	Gui,Add,Button,x245 y110 w100 h25 gSH_Cancel, å–æ¶ˆ(&X)
 	SplitPath, CandySel, tempStr
 If(sPara="/S")
-		tempStr:="´´½¨Ö¸ÏòÎÄ¼ş [ " . tempStr . " ] µÄ·ûºÅ(Èí)Á´½Ó"
+		tempStr:="åˆ›å»ºæŒ‡å‘æ–‡ä»¶ [ " . tempStr . " ] çš„ç¬¦å·(è½¯)é“¾æ¥"
 	Else
-		tempStr:="´´½¨Ö¸ÏòÎÄ¼ş [ " . tempStr . " ] µÄÓ²Á´½Ó"
+		tempStr:="åˆ›å»ºæŒ‡å‘æ–‡ä»¶ [ " . tempStr . " ] çš„ç¡¬é“¾æ¥"
 	Gui,show,,%tempStr%
 Return
 
@@ -39,28 +39,28 @@ SH_OK:
 	Gui,Submit,NoHide
 	SH_Name:=Trim(SH_Name),SH_Path:=Trim(SH_Path,"\"),errFlag := 0
 	If (SH_Name="")
-		errFlag:=1, tempStr:="Î´ÉèÖÃÁ´½ÓÃû³Æ"
+		errFlag:=1, tempStr:="æœªè®¾ç½®é“¾æ¥åç§°"
 	If (errFlag=0) And (SH_Path="")
-		errFlag:=2, tempStr:="Î´ÉèÖÃÁ´½ÓËùÔÚÄ¿Â¼" 
+		errFlag:=2, tempStr:="æœªè®¾ç½®é“¾æ¥æ‰€åœ¨ç›®å½•" 
 	If (errFlag=0) And (RegexMatch(SH_Name, "[\\/:\*\?""<>\|]")>0)
-		errFlag:=3, tempStr:="Á´½ÓÃû³Æ²»µÃ°üº¬ÒÔÏÂÈÎÒâ×Ö·û£º\ / : * \ ? "" < > |"
+		errFlag:=3, tempStr:="é“¾æ¥åç§°ä¸å¾—åŒ…å«ä»¥ä¸‹ä»»æ„å­—ç¬¦ï¼š\ / : * \ ? "" < > |"
 	If (errFlag=0) And (FileExist(SH_Path)="")
-		errFlag:=4, tempStr:= "Á´½ÓÄ¿Â¼²»´æÔÚ"
+		errFlag:=4, tempStr:= "é“¾æ¥ç›®å½•ä¸å­˜åœ¨"
 	If (errFlag=0) And (FileExist(SHTG_Path)="") and  !InStr(FileExist(SHTG_Path), "D")
-		errFlag:=5, tempStr:= "Ä¿±êÎÄ¼ş²»´æÔÚ"
+		errFlag:=5, tempStr:= "ç›®æ ‡æ–‡ä»¶ä¸å­˜åœ¨"
 	If ((errFlag=0) And (sPara="/S")) 
 	{
 		SplitPath,SH_Path, , , , , tempStr1
 		DriveGet, tempStr, FS, %tempStr1%
 		If (tempStr<>"NTFS")
-			errFlag:=6, tempStr:= "Á´½ÓËùÔÚ´ÅÅÌ " tempStr1 " ²»ÊÇ NTFS ÎÄ¼şÏµÍ³¸ñÊ½£¬ÎŞ·¨´´½¨ÎÄ¼şÁ´½Ó"
+			errFlag:=6, tempStr:= "é“¾æ¥æ‰€åœ¨ç£ç›˜ " tempStr1 " ä¸æ˜¯ NTFS æ–‡ä»¶ç³»ç»Ÿæ ¼å¼ï¼Œæ— æ³•åˆ›å»ºæ–‡ä»¶é“¾æ¥"
 	}
 		If ((errFlag=0) And (sPara="/H")) 
 	{
 		SplitPath,SH_Path, , , , , tempStr1
 		SplitPath,CandySel, , , , , tempStr2
 		If (tempStr1 <> tempStr2)
-			errFlag:=7, tempStr:="Ó²Á´½ÓÓëÄ¿±êÎÄ¼ş²»ÔÚÍ¬Ò»ÅÌ·û£¬ÎŞ·¨´´½¨Ó²Á´½Ó"
+			errFlag:=7, tempStr:="ç¡¬é“¾æ¥ä¸ç›®æ ‡æ–‡ä»¶ä¸åœ¨åŒä¸€ç›˜ç¬¦ï¼Œæ— æ³•åˆ›å»ºç¡¬é“¾æ¥"
 	}
 	If (errFlag=0) 
 	{
@@ -81,12 +81,12 @@ SH_OK:
 				tempStr=%tempStr%
 If(sPara="/S")
 {
-				If (tempStr<>"Îª " . SH_Path . "\" . SH_Name . " <<===>> " . SHTG_Path . " ´´½¨µÄ·ûºÅÁ´½Ó")
+				If (tempStr<>"ä¸º " . SH_Path . "\" . SH_Name . " <<===>> " . SHTG_Path . " åˆ›å»ºçš„ç¬¦å·é“¾æ¥")
 					errFlag:=1
 }
 		If(sPara="/H")
 {
-				If (tempStr<>"Îª " . SH_Path . "\" . SH_Name . " <<===>> " . SHTG_Path . " ´´½¨ÁËÓ²Á´½Ó")
+				If (tempStr<>"ä¸º " . SH_Path . "\" . SH_Name . " <<===>> " . SHTG_Path . " åˆ›å»ºäº†ç¡¬é“¾æ¥")
 					errFlag:=1
 }
 			}
@@ -96,15 +96,15 @@ If(sPara="/S")
 
 		Gui, +OwnDialogs
 		If (errFlag=0)
-			MsgBox, 262208, ´´½¨ÎÄ¼şÁ´½Ó³É¹¦, % "³É¹¦´´½¨ÎÄ¼şÁ´½Ó£¡`nÁ´½Ó: " . SH_Path . "\" . SH_Name "`nÖ¸Ïò: " SHTG_Path
+			MsgBox, 262208, åˆ›å»ºæ–‡ä»¶é“¾æ¥æˆåŠŸ, % "æˆåŠŸåˆ›å»ºæ–‡ä»¶é“¾æ¥ï¼`né“¾æ¥: " . SH_Path . "\" . SH_Name "`næŒ‡å‘: " SHTG_Path
 		Else
-			MsgBox, 262192, ´íÎó, ´´½¨ÎÄ¼şÁ´½Ó´íÎó£¬Çë¼ì²éºóÖØÊÔ£¡
+			MsgBox, 262192, é”™è¯¯, åˆ›å»ºæ–‡ä»¶é“¾æ¥é”™è¯¯ï¼Œè¯·æ£€æŸ¥åé‡è¯•ï¼
 		Return
 	} 
 	Else 
 	{
 		Gui, +OwnDialogs
-		MsgBox, 262192, ´´½¨ÎÄ¼şÁ´½Ó´íÎó, %tempStr%£¡
+		MsgBox, 262192, åˆ›å»ºæ–‡ä»¶é“¾æ¥é”™è¯¯, %tempStr%ï¼
 		If errFlag In 1,3
 			GuiControl, Focus, SH_Name
 		If errFlag In 2,4,6,7

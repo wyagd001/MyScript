@@ -1,8 +1,8 @@
-; Ä£Äâ¼üÅÌ·¢ËÍ°´¼ü
+ï»¿; æ¨¡æ‹Ÿé”®ç›˜å‘é€æŒ‰é”®
 ; https://github.com/oblitum/Interception/
-; cmd ÃüÁîĞĞ¹ÜÀíÔ±È¨ÏŞÔËĞĞ°²×°Çı¶¯ BinÎÄ¼ş¼ĞÖĞ install-interception.exe /install
+; cmd å‘½ä»¤è¡Œç®¡ç†å‘˜æƒé™è¿è¡Œå®‰è£…é©±åŠ¨ Binæ–‡ä»¶å¤¹ä¸­ install-interception.exe /install
 ; https://www.autohotkey.com/boards/viewtopic.php?f=76&t=26306
-; Ê¹ÓÃ Interception µÄ¸üºÃ·½°¸ Ö§³Ö¶à¼üÅÌ¿ì½İ¼ü£¬°´¼ü·¢ËÍ
+; ä½¿ç”¨ Interception çš„æ›´å¥½æ–¹æ¡ˆ æ”¯æŒå¤šé”®ç›˜å¿«æ·é”®ï¼ŒæŒ‰é”®å‘é€
 ; https://github.com/evilC/AutoHotInterception
 ; https://www.autohotkey.com/boards/viewtopic.php?t=45307
 
@@ -11,10 +11,10 @@ Class Interception {
 	static _InitDelFunc := OnExit( ObjBindMethod(Interception, "UnloadDll") )
 
 	Init() {
-		; win7 ÏµÍ³ÏÂÃ»ÓĞÊ¹ÓÃ£¬Ö÷ÒªÓÃÓÚ win10 ¹Ø»ú, ½áÊøÈÎÎñÒ³Ãæ
+		; win7 ç³»ç»Ÿä¸‹æ²¡æœ‰ä½¿ç”¨ï¼Œä¸»è¦ç”¨äº win10 å…³æœº, ç»“æŸä»»åŠ¡é¡µé¢
 		if SubStr(A_OSVersion,1,3) != "10."
 		return
-		;this.Ensure_Admin()   ; ½Å±¾ĞèÒª¹ÜÀíÔ±È¨ÏŞ£¬µ«Ö÷½Å±¾»á×Ô¶¯»ñÈ¡£¬ÕâÀï¾Í×¢ÊÍµôÁË
+		;this.Ensure_Admin()   ; è„šæœ¬éœ€è¦ç®¡ç†å‘˜æƒé™ï¼Œä½†ä¸»è„šæœ¬ä¼šè‡ªåŠ¨è·å–ï¼Œè¿™é‡Œå°±æ³¨é‡Šæ‰äº†
 
 		this.dll := (A_PtrSize = 8) ? A_ScriptDir "\interception_x64.dll" : A_ScriptDir "\interception_x32.dll"
 		this.hModule := DllCall("LoadLibrary", "Str", this.dll, "Ptr")
@@ -37,7 +37,7 @@ Class Interception {
 		}
 }
 
-	; device Éè±¸ºÅ  ¼üÅÌ (1-10) Êó±ê (11-20)
+	; device è®¾å¤‡å·  é”®ç›˜ (1-10) é¼ æ ‡ (11-20)
 	send(key, nstroke, device:=""){
 		if !devivce
 		{

@@ -1,4 +1,4 @@
-Cando_Ğ¡Ëµ¸ÄÃû:
+ï»¿Cando_å°è¯´æ”¹å:
 	FileEncoding, % File_GetEncoding(CandySel)
 	Result := ""
 	Loop, read, % CandySel
@@ -11,12 +11,12 @@ Cando_Ğ¡Ëµ¸ÄÃû:
 	Result := ""
 Return
 
-Cando_ÎÄ¼şÃûÊ××ÖÄ¸´óĞ´:
-	Loop, Parse, CandySel_FileNameNoExt, %A_Space%_`,|;-£¡`.  
+Cando_æ–‡ä»¶åé¦–å­—æ¯å¤§å†™:
+	Loop, Parse, CandySel_FileNameNoExt, %A_Space%_`,|;-ï¼`.  
 	{  
-		; ¼ÆËã·Ö¸ô·ûµÄÎ»ÖÃ.  
+		; è®¡ç®—åˆ†éš”ç¬¦çš„ä½ç½®.  
 		Position += StrLen(A_LoopField) + 1
-		; »ñÈ¡½âÎöÑ­»·ÖĞÕÒµ½µÄ·Ö¸ô·û.  
+		; è·å–è§£æå¾ªç¯ä¸­æ‰¾åˆ°çš„åˆ†éš”ç¬¦.  
 		Delimiter := SubStr(CandySel_FileNameNoExt, Position, 1)
 		str1 := Format("{:T}", A_LoopField)
 		out := out . str1 . Delimiter 
@@ -25,12 +25,12 @@ Cando_ÎÄ¼şÃûÊ××ÖÄ¸´óĞ´:
 	out := Position := ""
 Return
 
-Cando_ÎÄ¼şÃûÂÒÂë×ªÂë:
+Cando_æ–‡ä»¶åä¹±ç è½¬ç :
 	CandySel_FileNameNoExt := UrlDecode(CandySel_FileNameNoExt)
 	FileMove, %CandySel%, %CandySel_ParentPath%\%CandySel_FileNameNoExt%.%CandySel_Ext%
 return
 
-Cando_ºÏ²¢ÎÄ±¾ÎÄ¼ş:
+Cando_åˆå¹¶æ–‡æœ¬æ–‡ä»¶:
 	loop, parse, CandySel, `n,`r
 	{
 		SplitPath, A_LoopField, , , ext, ,
@@ -41,32 +41,32 @@ Cando_ºÏ²¢ÎÄ±¾ÎÄ¼ş:
 			all_text = %all_text%%A_loopfield%`r`n`r`n%text%`r`n`r`n
 		}
 	}
-	FileAppend, %all_text%, %CandySel_ParentPath%\ºÏ²¢.txt
+	FileAppend, %all_text%, %CandySel_ParentPath%\åˆå¹¶.txt
 	all_text := text := ""
 Return
 
-Cando_ÎÄ¼şÁĞ±í:
+Cando_æ–‡ä»¶åˆ—è¡¨:
 	; dateCut := A_Now
 	; EnvAdd, dateCut, -1, days       ; sets a date -24 hours from now
-	ÁĞ±í²úÉúµÄÎÄ¼ş=%A_Temp%\ÍòÄêÊéÑıÎÄ¼şÁĞ±íÁÙÊ±ÎÄ¼ş_%A_now%.txt
+	åˆ—è¡¨äº§ç”Ÿçš„æ–‡ä»¶=%A_Temp%\ä¸‡å¹´ä¹¦å¦–æ–‡ä»¶åˆ—è¡¨ä¸´æ—¶æ–‡ä»¶_%A_now%.txt
 
 	loop, %CandySel%\*.*, 1, 1   ; change the folder name
 	{
 		;    if (A_LoopFileTimeModified >= dateCut)
 		str .= A_LoopFileFullPath "`n"
 	}
-	FileAppend, %str%, %ÁĞ±í²úÉúµÄÎÄ¼ş%
+	FileAppend, %str%, %åˆ—è¡¨äº§ç”Ÿçš„æ–‡ä»¶%
 	str := ""
-	Run, notepad.exe %ÁĞ±í²úÉúµÄÎÄ¼ş%
+	Run, notepad.exe %åˆ—è¡¨äº§ç”Ÿçš„æ–‡ä»¶%
 Return
 
-Cando_½»»»ÎÄ¼şÃû:
+Cando_äº¤æ¢æ–‡ä»¶å:
 	SwapName(CandySel)
 Return
 
 SwapName(Filelist)
 {
-	; ´«µİµÄ×Ö·û´®ÖĞµÄ»»ĞĞÊÇ»Ø³µ+»»ĞĞ
+	; ä¼ é€’çš„å­—ç¬¦ä¸²ä¸­çš„æ¢è¡Œæ˜¯å›è½¦+æ¢è¡Œ
 	StringReplace, Filelist, Filelist, `r`n, `n
 	StringSplit, File_, Filelist, `n
 	SplitPath, File_1, , FileDir, , FileNameNoExt
@@ -77,7 +77,7 @@ SwapName(Filelist)
 return
 }
 
-cando_¶àÎÄ¼ş¸´ÖÆÎÄ¼şÃû:
+cando_å¤šæ–‡ä»¶å¤åˆ¶æ–‡ä»¶å:
 	clip := ""
 	Loop, Parse, CandySel, `n,`r 
 	{
@@ -87,7 +87,7 @@ cando_¶àÎÄ¼ş¸´ÖÆÎÄ¼şÃû:
 	clipboard := clip
 return
 
-cando_¶àÎÄ¼ş¸´ÖÆÂ·¾¶:
+cando_å¤šæ–‡ä»¶å¤åˆ¶è·¯å¾„:
 	clip := ""
 	Loop, Parse, CandySel, `n,`r 
 	{
@@ -97,25 +97,25 @@ cando_¶àÎÄ¼ş¸´ÖÆÂ·¾¶:
 	clipboard:=clip
 return
 
-Cando_Éú³É¿ì½İ·½Ê½:
+Cando_ç”Ÿæˆå¿«æ·æ–¹å¼:
 	FileCreateShortcut, %CandySel%, %CandySel_ParentPath%\%CandySel_FileNameNoExt%.lnk
 Return
 
-Cando_Éú³É¿ì½İ·½Ê½µ½Ö¸¶¨Ä¿Â¼:
+Cando_ç”Ÿæˆå¿«æ·æ–¹å¼åˆ°æŒ‡å®šç›®å½•:
 	Gui,66:Destroy
 	Gui,66:Default
-	Gui, Add, Text, x10 y17, Ä¿±êÎÄ¼ş(&T)
+	Gui, Add, Text, x10 y17, ç›®æ ‡æ–‡ä»¶(&T)
 	Gui, Add, Edit, x110 y15 w300 readonly vSHLTG_Path, % CandySel
-	Gui, Add, Text, x10 y48, ¿ì½İ·½Ê½Ä¿Â¼(&P)
+	Gui, Add, Text, x10 y48, å¿«æ·æ–¹å¼ç›®å½•(&P)
 	Gui, Add, Edit, x110 y46 w300 vSHL_Path,
-	Gui, Add, CheckBox, x110 y70 w40 h30 vSHL_Desktop, ×ÀÃæ
-	Gui, Add, CheckBox, x168 y70 w78 h30 vSHL_QL, ¿ìËÙÆô¶¯À¸
-	Gui, Add, CheckBox, x260 y70 w78 h30 vSHL_Fav, ½Å±¾ÊÕ²Ø¼Ğ
-	Gui, Add, Text, x10 y110, ¿ì½İ·½Ê½Ãû³Æ(&N)
+	Gui, Add, CheckBox, x110 y70 w40 h30 vSHL_Desktop, æ¡Œé¢
+	Gui, Add, CheckBox, x168 y70 w78 h30 vSHL_QL, å¿«é€Ÿå¯åŠ¨æ 
+	Gui, Add, CheckBox, x260 y70 w78 h30 vSHL_Fav, è„šæœ¬æ”¶è—å¤¹
+	Gui, Add, Text, x10 y110, å¿«æ·æ–¹å¼åç§°(&N)
 	Gui, Add, Edit, x110 y108 w300 vSHL_Name, %CandySel_FileNameNoExt%
-	Gui, Add, Button, x220 y140 w80 h25 Default gSHL_OK, È·¶¨(&S)
-	Gui, Add, Button, x320 y140 w80 h25 g66GuiClose, È¡Ïû(&X)
-	Gui,show, , ÎªÎÄ¼ş[%CandySel_FileNameWithExt%]´´½¨¿ì½İ·½Ê½
+	Gui, Add, Button, x220 y140 w80 h25 Default gSHL_OK, ç¡®å®š(&S)
+	Gui, Add, Button, x320 y140 w80 h25 g66GuiClose, å–æ¶ˆ(&X)
+	Gui,show, , ä¸ºæ–‡ä»¶[%CandySel_FileNameWithExt%]åˆ›å»ºå¿«æ·æ–¹å¼
 Return
 
 SHL_OK:
@@ -123,15 +123,15 @@ SHL_OK:
 	Gui, Submit, NoHide
 	SHL_Name:=Trim(SHL_Name), SHL_Path:=Trim(SHL_Path,"\"), errFlag := 0
 	If (SHL_Name="")
-		errFlag:=1, tempStr:="Î´ÉèÖÃ¿ì½İ·½Ê½Ãû³Æ"
+		errFlag:=1, tempStr:="æœªè®¾ç½®å¿«æ·æ–¹å¼åç§°"
 	If (errFlag=0) And (RegexMatch(SHL_Name, "[\\/:\*\?""<>\|]")>0)
-		errFlag:=2, tempStr:="¿ì½İ·½Ê½Ãû³Æ²»µÃ°üº¬ÒÔÏÂÈÎÒâ×Ö·û£º\ / : * \ ? "" < > |"
+		errFlag:=2, tempStr:="å¿«æ·æ–¹å¼åç§°ä¸å¾—åŒ…å«ä»¥ä¸‹ä»»æ„å­—ç¬¦ï¼š\ / : * \ ? "" < > |"
 	If (errFlag=0) And (SHL_Path !="") And !InStr(FileExist(SHL_Path), "D")
-		errFlag:=3, tempStr:= "¿ì½İ·½Ê½Ä¿Â¼²»´æÔÚ"
+		errFlag:=3, tempStr:= "å¿«æ·æ–¹å¼ç›®å½•ä¸å­˜åœ¨"
 	If (errFlag=0) And (FileExist(SHLTG_Path)="")
-		errFlag:=4, tempStr:= "Ä¿±êÎÄ¼ş²»´æÔÚ"
+		errFlag:=4, tempStr:= "ç›®æ ‡æ–‡ä»¶ä¸å­˜åœ¨"
 	If (errFlag=0) And (SHL_Path="") And (SHL_Desktop=0) And (SHL_QL=0) And (SHL_Fav=0)
-		errFlag:=5, tempStr:= "¿ì½İ·½Ê½Ä¿Â¼Îª¿Õ²¢ÇÒÎ´¹´Ñ¡ÈÎÒ»Ä¿Â¼"
+		errFlag:=5, tempStr:= "å¿«æ·æ–¹å¼ç›®å½•ä¸ºç©ºå¹¶ä¸”æœªå‹¾é€‰ä»»ä¸€ç›®å½•"
 	If (errFlag=0) 
 	{
 		Gui, Destroy
@@ -153,12 +153,12 @@ SHL_OK:
 			GuiControl, Focus, SHL_Path
 		If errFlag In 4
 			GuiControl, Focus, SHLTG_Path
-		MsgBox, 262192, ´´½¨¿ì½İ·½Ê½´íÎó, %tempStr%£¡
+		MsgBox, 262192, åˆ›å»ºå¿«æ·æ–¹å¼é”™è¯¯, %tempStr%ï¼
 	}
 	errFlag:=tempStr:=SHLTG_Path:=SHL_Name:=SHL_Path:=""
 return
 
-cando_·ÅÈëÍ¬ÃûÎÄ¼ş¼Ğ:
+cando_æ”¾å…¥åŒåæ–‡ä»¶å¤¹:
   FileCreateDir,%CandySel_ParentPath%\%CandySel_FileNamenoExt%
   FileMove,%CandySel%,%CandySel_ParentPath%\%CandySel_FileNamenoExt%
 Return

@@ -1,22 +1,22 @@
-;ÊÕ²Ø¼Ğä¯ÀÀ
+ï»¿;æ”¶è—å¤¹æµè§ˆ
 IEfavorites:
 Loop, parse, A_GuiEvent, `n, `r
 {
 SetBatchLines, 3000
-;ÊÕ²Ø¼ĞÄ¿Â¼
+;æ”¶è—å¤¹ç›®å½•
 RegRead, fa, HKEY_CURRENT_USER, Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders,Favorites
 Transform,dir,Deref,%fa%
 rootdir2 = %dir%
-updatealways = 1                        ;1×Ô¶¯Ë¢ĞÂ£¬0½ûÖ¹×Ô¶¯Ë¢ĞÂ
+updatealways = 1                        ;1è‡ªåŠ¨åˆ·æ–°ï¼Œ0ç¦æ­¢è‡ªåŠ¨åˆ·æ–°
 SetTimer,ini2,500
-TrayTip,Ä¿Â¼²Ëµ¥,³õÊ¼»¯½øĞĞÖĞ,
+TrayTip,ç›®å½•èœå•,åˆå§‹åŒ–è¿›è¡Œä¸­,
 ifnotexist %A_ScriptDir%\settings\tmp\IE.txt
    gosub, createdatabase2
 
 Menu,DirMenu2,add,%rootdir2%,godir2
 Menu,DirMenu2,disable,%rootdir2%
-Menu,DirMenu2,add,-`:`:´ò¿ª Ä¿Â¼`:`:-,godir2
-;Èç¹û updatealways = 1£¬ÄÇÃ´Ã¿´Î¶¼»áÖØĞÂËÑË÷Ä¿Â¼£¬ÖØĞ´IE.txt
+Menu,DirMenu2,add,-`:`:æ‰“å¼€ ç›®å½•`:`:-,godir2
+;å¦‚æœ updatealways = 1ï¼Œé‚£ä¹ˆæ¯æ¬¡éƒ½ä¼šé‡æ–°æœç´¢ç›®å½•ï¼Œé‡å†™IE.txt
 if updatealways = 1
    gosub createdatabase2
     goto createmenu2
@@ -36,7 +36,7 @@ Loop, Read, %A_ScriptDir%\settings\tmp\IE.txt
       StringLeft,pardir,Line,%pos%
       StringReplace,dir,Line,%pardir%,
       StringReplace,dir,dir,\
-      Menu,%Line%,add,-`:`:´ò¿ª Ä¿Â¼`:`:-,godir2
+      Menu,%Line%,add,-`:`:æ‰“å¼€ ç›®å½•`:`:-,godir2
 
       if pardir =
          pardir = DirMenu2
@@ -74,14 +74,14 @@ if A_ThisMenu = DirMenu2
       run %rootdir2%\%A_ThisMenu%
 return
 
-;CMD±àÂëÒ³¸ÄÎª65001ºóÊä³öµÄÎÄ¼ş±àÂëÎªutf-8£¬ansi°æ¶ÁÈ¡ÖĞÎÄÂÒÂë
+;CMDç¼–ç é¡µæ”¹ä¸º65001åè¾“å‡ºçš„æ–‡ä»¶ç¼–ç ä¸ºutf-8ï¼Œansiç‰ˆè¯»å–ä¸­æ–‡ä¹±ç 
 createdatabase2:
    runwait, %comspec% /c dir /s /b /os /a:d "%rootdir2%" > "%A_ScriptDir%\settings\tmp\IE.txt",,hide
    runwait, %comspec% /c dir /s /b /os /a:-d "%rootdir2%" >> "%A_ScriptDir%\settings\tmp\IE.txt",,hide
 return
 
 ini2:
-   TrayTip,Ä¿Â¼²Ëµ¥,³õÊ¼»¯½øĞĞÖĞ,30
+   TrayTip,ç›®å½•èœå•,åˆå§‹åŒ–è¿›è¡Œä¸­,30
 return
 }
 return

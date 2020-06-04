@@ -1,4 +1,4 @@
-Cando_ÑÕÉ«²é¿´:
+ï»¿Cando_é¢œè‰²æŸ¥çœ‹:
 	Gui,66:Default
 	Gui,Destroy
 	Gui,+Lastfound +AlwaysOnTop
@@ -20,13 +20,13 @@ Cando_ÑÕÉ«²é¿´:
 		Color_RGB := "RGB(" Color_RGB ")"
 	}
 
-	Gui, add, text,x7 ,ÑÕÉ«´úÂë(Hex):
+	Gui, add, text,x7 ,é¢œè‰²ä»£ç (Hex):
 	Gui, Add, edit, x+10 readonly w120,%Color_Hex%
-	Gui, add, text,x7 ,ÑÕÉ«´úÂë(RGB):
+	Gui, add, text,x7 ,é¢œè‰²ä»£ç (RGB):
 	Gui, Add, edit, x+10 readonly w120,%Color_RGB%
-	Gui, add, text,x7 ,ÑÕÉ«:
+	Gui, add, text,x7 ,é¢œè‰²:
 	Gui, Add, Progress, x+10 c%Color_Hex% w170 h170,100
-	Gui,Show, w230 h230,ÑÕÉ«²é¿´
+	Gui,Show, w230 h230,é¢œè‰²æŸ¥çœ‹
 Return
 
 Cando_ColorPicker:
@@ -72,13 +72,13 @@ RGB2Hex(_decimalRGB, _delimiter="")
 	Return hexRGB
 }
 
-;Ê®½øÖÆ×ª»»ÎªÊ®Áù½øÖÆµÄº¯Êı£¬²ÎÊıÎª10½øÖÆÊıÕûÊı.
+;åè¿›åˆ¶è½¬æ¢ä¸ºåå…­è¿›åˆ¶çš„å‡½æ•°ï¼Œå‚æ•°ä¸º10è¿›åˆ¶æ•°æ•´æ•°.
 color_dec2hex(d)
 {
 SetFormat, integer, hex
 h :=d+0
-SetFormat, integer, dec ;»Ö¸´ÖÁÕı³£µÄ10½øÖÆ¼ÆËãÏ°¹ß
-h := substr(h,3)  ; È¥µôÊ®Áù½øÖÆÇ°ÃæµÄ 0x
+SetFormat, integer, dec ;æ¢å¤è‡³æ­£å¸¸çš„10è¿›åˆ¶è®¡ç®—ä¹ æƒ¯
+h := substr(h,3)  ; å»æ‰åå…­è¿›åˆ¶å‰é¢çš„ 0x
 h :="0" . h
 h := substr(h,-1)
 return h

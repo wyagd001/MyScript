@@ -1,15 +1,15 @@
-1001:
+ï»¿1001:
 	f_ToggleHidden(1)
 Return
 
-7PlusMenu_ÏÔÊ¾Òş²ØÎÄ¼ş()
+7PlusMenu_æ˜¾ç¤ºéšè—æ–‡ä»¶()
 {
-	section = ÏÔÊ¾Òş²ØÎÄ¼ş
+	section = æ˜¾ç¤ºéšè—æ–‡ä»¶
 	defaultSet=
 	( LTrim
 ID = 1001
-Name = ÇĞ»»"ÏÔÊ¾/Òş²Ø"Òş²ØÎÄ¼ş
-Description = ÇĞ»»ÏÔÊ¾Òş²ØÎÄ¼ş
+Name = åˆ‡æ¢"æ˜¾ç¤º/éšè—"éšè—æ–‡ä»¶
+Description = åˆ‡æ¢æ˜¾ç¤ºéšè—æ–‡ä»¶
 SubMenu = 7plus
 FileTypes =
 SingleFileOnly = 0

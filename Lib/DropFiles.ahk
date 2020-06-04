@@ -1,4 +1,4 @@
-/*
+﻿/*
 - RHCP - https://autohotkey.com/board/topic/41467-make-ahk-drop-files-into-other-applications/page-2
 
 Example:

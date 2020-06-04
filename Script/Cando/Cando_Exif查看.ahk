@@ -1,4 +1,4 @@
-Cando_Exif²é¿´:
+ï»¿Cando_ExifæŸ¥çœ‹:
 	Gui 66: Destroy
 	RunWait,regsvr32.exe `/s %SImageUtil%
 	Image := ComObjCreate("SImageUtil.Image")
@@ -6,74 +6,74 @@ Cando_Exif²é¿´:
 
 
 	Main := Object()
-	Main.Desc := "ÃèÊö"
-	Main.Make := "Ïà»úÖÆÔìÉÌ"
-	Main.Model := "Ïà»úĞÍºÅ"
-	Main.Ori := "·½Ïò"
-	Main.XRes := "Ë®Æ½·Ö±æÂÊ"
-	Main.YRes := "´¹Ö±·Ö±æÂÊ"
-	Main.ResUnit :=     "·Ö±æÂÊµ¥Î»"
-	Main.Software := "¹Ì¼ş°æ±¾"
-	Main.ModTime := "ĞŞ¸ÄÊ±¼ä"
-	Main.WPoint := "°×µãÉ«¶È"
-	Main.PrimChr := "Ö÷ÒªÉ«¶È"
-	Main.YCbCrCoef := "ÑÕÉ«¿Õ¼ä×ª»»¾ØÕóÏµÊı"
-	Main.YCbCrPos := "É«Ïà¶¨Î»"
-	Main.RefBW := "ºÚ°×²ÎÕÕÖµ"
-	Main.Copy := "°æÈ¨"
-	Main.ExifOffset := "×ÓIFDÆ«ÒÆÁ¿"
+	Main.Desc := "æè¿°"
+	Main.Make := "ç›¸æœºåˆ¶é€ å•†"
+	Main.Model := "ç›¸æœºå‹å·"
+	Main.Ori := "æ–¹å‘"
+	Main.XRes := "æ°´å¹³åˆ†è¾¨ç‡"
+	Main.YRes := "å‚ç›´åˆ†è¾¨ç‡"
+	Main.ResUnit :=     "åˆ†è¾¨ç‡å•ä½"
+	Main.Software := "å›ºä»¶ç‰ˆæœ¬"
+	Main.ModTime := "ä¿®æ”¹æ—¶é—´"
+	Main.WPoint := "ç™½ç‚¹è‰²åº¦"
+	Main.PrimChr := "ä¸»è¦è‰²åº¦"
+	Main.YCbCrCoef := "é¢œè‰²ç©ºé—´è½¬æ¢çŸ©é˜µç³»æ•°"
+	Main.YCbCrPos := "è‰²ç›¸å®šä½"
+	Main.RefBW := "é»‘ç™½å‚ç…§å€¼"
+	Main.Copy := "ç‰ˆæƒ"
+	Main.ExifOffset := "å­IFDåç§»é‡"
 	; XP tags
-	Main.Title := "±êÌâ"
-	Main.Comments := "±¸×¢"
-	Main.Author := "×÷Õß"
-	Main.Keywords := "±ê¼Ç"
-	Main.Subject := "Ö÷Ìâ"
+	Main.Title := "æ ‡é¢˜"
+	Main.Comments := "å¤‡æ³¨"
+	Main.Author := "ä½œè€…"
+	Main.Keywords := "æ ‡è®°"
+	Main.Subject := "ä¸»é¢˜"
 
 	Sub := Object()
-	Sub.s :=  "ÆØ¹âÊ±¼ä"
-	Sub.f := "¹âÈ¦¼¶Êı(FÖµ)"
-	Sub.prog :=   "ÆØ¹â³ÌĞò"
-	Sub.iso := "¸Ğ¹â¶È(ISO ËÙ¶È)"
-	Sub.ExifVer := "Exif °æ±¾"
-	Sub.OrigTime := "ÅÄÉãÊ±¼ä"
-	Sub.DigTime := "Êı×Ö»¯Ê±¼ä"
-	Sub.CompConfig := "Í¼Ïñ¹¹Ôì"
-	Sub.bpp := "Æ½¾ùÑ¹Ëõ±È"
-	Sub.sa := "¿ìÃÅËÙ¶È"
-	Sub.aa := "¾µÍ·¹âÈ¦"
-	Sub.ba := "ÁÁ¶È"
-	Sub.eba := "ÆØ¹â²¹³¥"
-	Sub.maa := "×î´ó¹âÈ¦"
-	Sub.dist := "Îï¾à(Ä¿±ê¾àÀë)"
-	Sub.meter := "²â¹âÄ£Ê½"
-	Sub.ls := "¹âÔ´"
-	Sub.flash := "ÉÁ¹âµÆ"
-	Sub.focal :=   "½¹¾à"
-	Sub.Maker := "ÖÆÔìÉÌÉèÖÃĞÅÏ¢"
-	Sub.User := "ÓÃ»§±ê¼Ç"
-	Sub.sTime := "ÈÕÆÚÊ±¼ä"
-	Sub.sOrigTime := "Ô­Ê¼ÈÕÆÚÊ±¼ä"
-	Sub.sDigTime := "Ô­Ê¼ÈÕÆÚÊ±¼äÊı×Ö»¯"
-	Sub.flashpix := "Flash Pix °æ±¾"
-	Sub.ColorSpace :=  "É«²ÊÄ£Ê½"
-	Sub.Width := "Í¼Æ¬¿í¶È"
-	Sub.Height := "Í¼Æ¬¸ß¶È"
-	Sub.SndFile := "ÉùÒôÎÄ¼ş"
-	Sub.ExitIntOff := "Exif »¥ÓÃÆ«ÒÆÁ¿"
-	Sub.FPXRes := "½¹Æ½ÃæË®Æ½Öá·Ö±æÂÊ"
-	Sub.FPYRes := "½¹Æ½Ãæ´¹Ö±Öá·Ö±æÂÊ"
-	Sub.FPResUnit := "½¹Æ½Ãæµ¥Î»"
-	Sub.ExpIndex := "ÆØ¹âÖ¸Êı"
-	Sub.SenseMethod := "³¡¾°·½·¨"
-	Sub.FileSource :=  "Ô´ÎÄ¼ş"
-	Sub.SceneType := "³¡¾°ÀàĞÍ"
-	Sub.CFAPat := "CFA Ä£°å"
+	Sub.s :=  "æ›å…‰æ—¶é—´"
+	Sub.f := "å…‰åœˆçº§æ•°(Få€¼)"
+	Sub.prog :=   "æ›å…‰ç¨‹åº"
+	Sub.iso := "æ„Ÿå…‰åº¦(ISO é€Ÿåº¦)"
+	Sub.ExifVer := "Exif ç‰ˆæœ¬"
+	Sub.OrigTime := "æ‹æ‘„æ—¶é—´"
+	Sub.DigTime := "æ•°å­—åŒ–æ—¶é—´"
+	Sub.CompConfig := "å›¾åƒæ„é€ "
+	Sub.bpp := "å¹³å‡å‹ç¼©æ¯”"
+	Sub.sa := "å¿«é—¨é€Ÿåº¦"
+	Sub.aa := "é•œå¤´å…‰åœˆ"
+	Sub.ba := "äº®åº¦"
+	Sub.eba := "æ›å…‰è¡¥å¿"
+	Sub.maa := "æœ€å¤§å…‰åœˆ"
+	Sub.dist := "ç‰©è·(ç›®æ ‡è·ç¦»)"
+	Sub.meter := "æµ‹å…‰æ¨¡å¼"
+	Sub.ls := "å…‰æº"
+	Sub.flash := "é—ªå…‰ç¯"
+	Sub.focal :=   "ç„¦è·"
+	Sub.Maker := "åˆ¶é€ å•†è®¾ç½®ä¿¡æ¯"
+	Sub.User := "ç”¨æˆ·æ ‡è®°"
+	Sub.sTime := "æ—¥æœŸæ—¶é—´"
+	Sub.sOrigTime := "åŸå§‹æ—¥æœŸæ—¶é—´"
+	Sub.sDigTime := "åŸå§‹æ—¥æœŸæ—¶é—´æ•°å­—åŒ–"
+	Sub.flashpix := "Flash Pix ç‰ˆæœ¬"
+	Sub.ColorSpace :=  "è‰²å½©æ¨¡å¼"
+	Sub.Width := "å›¾ç‰‡å®½åº¦"
+	Sub.Height := "å›¾ç‰‡é«˜åº¦"
+	Sub.SndFile := "å£°éŸ³æ–‡ä»¶"
+	Sub.ExitIntOff := "Exif äº’ç”¨åç§»é‡"
+	Sub.FPXRes := "ç„¦å¹³é¢æ°´å¹³è½´åˆ†è¾¨ç‡"
+	Sub.FPYRes := "ç„¦å¹³é¢å‚ç›´è½´åˆ†è¾¨ç‡"
+	Sub.FPResUnit := "ç„¦å¹³é¢å•ä½"
+	Sub.ExpIndex := "æ›å…‰æŒ‡æ•°"
+	Sub.SenseMethod := "åœºæ™¯æ–¹æ³•"
+	Sub.FileSource :=  "æºæ–‡ä»¶"
+	Sub.SceneType := "åœºæ™¯ç±»å‹"
+	Sub.CFAPat := "CFA æ¨¡æ¿"
 
 
 	Gui 66: Margin,0 0
-	Gui 66: Add, ListView, x0 y0  w600 r40  vMyLV, ÊôĞÔ|Öµ
+	Gui 66: Add, ListView, x0 y0  w600 r40  vMyLV, å±æ€§|å€¼
 	GuiControl 66: -Redraw, MyLV
-    Gui,66:Default   ;ÔÚ¶àgui£¬¶àlvµÄÇé¿öÏÂ£¬ÎªÁËÈÃlvÏÔÊ¾µ½Õâ¸öguiÉÏ£¬Õâ¸ö±ØĞëµÄ
+    Gui,66:Default   ;åœ¨å¤šguiï¼Œå¤šlvçš„æƒ…å†µä¸‹ï¼Œä¸ºäº†è®©lvæ˜¾ç¤ºåˆ°è¿™ä¸ªguiä¸Šï¼Œè¿™ä¸ªå¿…é¡»çš„
 	Gui, ListView, MyLV
 
 	For k,v in Main
@@ -87,7 +87,7 @@ Cando_Exif²é¿´:
 	GuiControl 66: +Redraw, MyLV
 	LV_ModifyCol(1,180)
 	LV_ModifyCol(2,400)
-	Gui 66: Show, , Exif ĞÅÏ¢
+	Gui 66: Show, , Exif ä¿¡æ¯
 	Image.Close()
 	;RunWait,regsvr32.exe `/s `/u %SImageUtil%
 	Return

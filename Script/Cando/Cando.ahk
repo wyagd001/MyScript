@@ -1,4 +1,4 @@
-;Cando ½Å±¾ÖĞµÄ½çÃæÍ³Ò»Ê¹ÓÃ±àºÅ66
+ï»¿;Cando è„šæœ¬ä¸­çš„ç•Œé¢ç»Ÿä¸€ä½¿ç”¨ç¼–å·66
 66GuiClose:
 66Guiescape:
 	Gui,66:Destroy
@@ -10,17 +10,17 @@
 	}
 Return
 
-Cando_±£´æµ½×ÀÃæ:
+Cando_ä¿å­˜åˆ°æ¡Œé¢:
 	FileAppend,%CandySel%,%A_Desktop%\%A_Now%.txt
 return
 
-Cando_±£´æ²¢ÔËĞĞ:
+Cando_ä¿å­˜å¹¶è¿è¡Œ:
 	FileDelete,%A_Desktop%\temp.ahk
 	FileAppend,%CandySel%`r`n,%A_Desktop%\temp.ahk
 	Run,%A_Desktop%\temp.ahk,%A_Desktop%
 Return
 
-Cando_10ÃëU°æA°æÖ÷³ÌĞò½»»»:
+Cando_10ç§’Uç‰ˆAç‰ˆä¸»ç¨‹åºäº¤æ¢:
 FileMove,% ahklu,% ahklu ".bak"
 sleep,500
 FileMove,% ahkla,% ahklu
@@ -37,7 +37,7 @@ sleep,500
 FileMove,% ahklu ".bak",% ahklu
 return
 
-Cando_10ÃëU°æBasic°æÖ÷³ÌĞò½»»»:
+Cando_10ç§’Uç‰ˆBasicç‰ˆä¸»ç¨‹åºäº¤æ¢:
 FileMove,% ahklu,% ahklu ".bak"
 sleep,800
 FileMove,% ahk,% ahklu
@@ -54,24 +54,24 @@ sleep,800
 FileMove,% ahklu ".bak",% ahklu
 return
 
-cando_Ñ¸À×ÏÂÔØ:
+cando_è¿…é›·ä¸‹è½½:
 StringGetPos,zpos,CandySel,/,R
 zpos++
 StringTrimLeft,sFile,CandySel,%zpos%
 try {
 	thunder := ComObjCreate("ThunderAgent.Agent")
-	thunder.AddTask( CandySel ;ÏÂÔØµØÖ·
-			       , sFile  ;Áí´æÎÄ¼şÃû
-			       , "N:\"  ;±£´æÄ¿Â¼
-			       , sFile  ;ÈÎÎñ×¢ÊÍ
-			       , ""  ;ÒıÓÃµØÖ·
-			       , 1 ;¿ªÊ¼Ä£Ê½
-			       , true  ;Ö»´ÓÔ­Ê¼µØÖ·ÏÂÔØ
-			       , 10 )  ;´ÓÔ­Ê¼µØÖ·ÏÂÔØÏß³ÌÊı
+	thunder.AddTask( CandySel ;ä¸‹è½½åœ°å€
+			       , sFile  ;å¦å­˜æ–‡ä»¶å
+			       , "N:\"  ;ä¿å­˜ç›®å½•
+			       , sFile  ;ä»»åŠ¡æ³¨é‡Š
+			       , ""  ;å¼•ç”¨åœ°å€
+			       , 1 ;å¼€å§‹æ¨¡å¼
+			       , true  ;åªä»åŸå§‹åœ°å€ä¸‹è½½
+			       , 10 )  ;ä»åŸå§‹åœ°å€ä¸‹è½½çº¿ç¨‹æ•°
 	thunder.CommitTasks()
 }
 Return
 
-Cando_·¢ËÍÂ·¾¶µ½¶Ô»°¿ò:
+Cando_å‘é€è·¯å¾„åˆ°å¯¹è¯æ¡†:
 ControlSetText , edit1, %CandySel%, ahk_class #32770
 return

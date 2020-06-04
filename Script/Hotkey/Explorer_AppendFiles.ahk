@@ -1,17 +1,17 @@
-; https://github.com/7plus/7plus/blob/master/Clipboard.ahk
-; ¿ì½İ¼ü¶¨ÒåÔÚ ahk_group ExplorerGroup ×ÊÔ´¹ÜÀíÆ÷ÖĞÓĞĞ§£¬×ÀÃæÎŞĞ§£¬
-; °´ÏÂ¿ì½İ¼üºó¿ÉÄÜÒª"Ë¢ĞÂ",Ë¢ĞÂÊ¹¡°Õ³Ìù¡±²Ëµ¥ÉúĞ§
-; ÓĞÊ±»áÊ§°Ü£¬Ê§°Üºó¸´ÖÆÈÎÒâÎÄ×ÖºóÖØÊÔ
+ï»¿; https://github.com/7plus/7plus/blob/master/Clipboard.ahk
+; å¿«æ·é”®å®šä¹‰åœ¨ ahk_group ExplorerGroup èµ„æºç®¡ç†å™¨ä¸­æœ‰æ•ˆï¼Œæ¡Œé¢æ— æ•ˆï¼Œ
+; æŒ‰ä¸‹å¿«æ·é”®åå¯èƒ½è¦"åˆ·æ–°",åˆ·æ–°ä½¿â€œç²˜è´´â€èœå•ç”Ÿæ•ˆ
+; æœ‰æ—¶ä¼šå¤±è´¥ï¼Œå¤±è´¥åå¤åˆ¶ä»»æ„æ–‡å­—åé‡è¯•
 ;#IfWinActive ahk_group ExplorerGroup
 ;+c::
-ÎÄ¼ş×·¼Óµ½¼ôÌù°åÖ®¸´ÖÆ:
+æ–‡ä»¶è¿½åŠ åˆ°å‰ªè´´æ¿ä¹‹å¤åˆ¶:
 	If (InFileList() && !IsRenaming())
 	{
 		files := GetSelectedFiles()
 		If(files)
 		{
 			AppendToClipboard(files)
-			CF_Traytip("×·¼Ó¸´ÖÆµ½¼ôÌù°å", files "`nÒÑ¾­×·¼Ó¸´ÖÆµ½¼ôÌù°å¡£", 3000)
+			CF_Traytip("è¿½åŠ å¤åˆ¶åˆ°å‰ªè´´æ¿", files "`nå·²ç»è¿½åŠ å¤åˆ¶åˆ°å‰ªè´´æ¿ã€‚", 3000)
 		}
 }
 	Else
@@ -19,14 +19,14 @@
 Return
 
 ;+X::
-ÎÄ¼ş×·¼Óµ½¼ôÌù°åÖ®¼ôÇĞ:
+æ–‡ä»¶è¿½åŠ åˆ°å‰ªè´´æ¿ä¹‹å‰ªåˆ‡:
 	If (InFileList() && !IsRenaming())
 	{
 		files := GetSelectedFiles()
 		If(files)
 		{
 			AppendToClipboard(files,1)
-			CF_Traytip("×·¼Ó¼ôÌùµ½¼ôÌù°å", files "`nÒÑ¾­×·¼Ó¼ôÌùµ½¼ôÌù°å¡£", 3000)
+			CF_Traytip("è¿½åŠ å‰ªè´´åˆ°å‰ªè´´æ¿", files "`nå·²ç»è¿½åŠ å‰ªè´´åˆ°å‰ªè´´æ¿ã€‚", 3000)
 		}
 	}
 	Else

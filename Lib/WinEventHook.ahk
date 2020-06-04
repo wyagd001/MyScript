@@ -1,4 +1,4 @@
-SetWinEventHook(eventMin, eventMax, hmodWinEventProc, lpfnWinEventProc, idProcess, idThread, dwFlags)
+ï»¿SetWinEventHook(eventMin, eventMax, hmodWinEventProc, lpfnWinEventProc, idProcess, idThread, dwFlags)
 {
 	return DllCall("SetWinEventHook"
 	, Uint,eventMin
@@ -14,6 +14,6 @@ UnhookWinEvent(hWinEventHook, HookProcAdr)
 {
 	DllCall( "UnhookWinEvent", Uint,hWinEventHook)
 	DllCall( "GlobalFree", UInt,HookProcAdr)  ; free up allocated memory for RegisterCallback
-	;msgbox % "³É¹¦Îª0, µ«Ç°ÖµÎª: " qw
-	; &HookProcAdr Òı·¢³ÌĞòÒì³£ÍË³ö  ¸ÄÎª HookProcAdr²»ÖªµÀÊÇ·ñÓĞÍ¬ÑùĞ§ÓÃ
+	;msgbox % "æˆåŠŸä¸º0, ä½†å‰å€¼ä¸º: " qw
+	; &HookProcAdr å¼•å‘ç¨‹åºå¼‚å¸¸é€€å‡º  æ”¹ä¸º HookProcAdrä¸çŸ¥é“æ˜¯å¦æœ‰åŒæ ·æ•ˆç”¨
 }

@@ -1,51 +1,51 @@
-Cando_×Ö·û±àÂë²é¿´:
+ï»¿Cando_å­—ç¬¦ç¼–ç æŸ¥çœ‹:
 	Gui,66:Default
 	Gui,Destroy
-	;CandySel:="¿ªÒ»¶ş²»"  
-	; ºº×Ö¼ò·±×ª»»²»È·±£³É¹¦ ÀıÈçºó(áá)¡¢Éò(c)¡¢Àï(ÑY)¡¢ ½Ü(‚Ü)¡¢·¢(°l¡¢óŒ)µÈ 
+	;CandySel:="å¼€ä¸€äºŒä¸"  
+	; æ±‰å­—ç®€ç¹è½¬æ¢ä¸ç¡®ä¿æˆåŠŸ ä¾‹å¦‚å(å¾Œ)ã€æ²ˆ(ç€‹)ã€é‡Œ(è£)ã€ æ°(å‚‘)ã€å‘(ç™¼ã€é«®)ç­‰ 
 
 	Gosub,Encode
-	Gui, add, text,x5 y5,¼òÌåºº×Ö:
+	Gui, add, text,x5 y5,ç®€ä½“æ±‰å­—:
 	Gui,add,Edit,x120 y5 w300 h20 vCcharacter,%CandySel%
-	Gui,add,button,x420 y5 w50 h20 default gviewcode,²é¿´
+	Gui,add,button,x420 y5 w50 h20 default gviewcode,æŸ¥çœ‹
 
-	Gui, add, text,x5 y35 ,ÏµÍ³Ä¬ÈÏ±àÂë(CP0):
+	Gui, add, text,x5 y35 ,ç³»ç»Ÿé»˜è®¤ç¼–ç (CP0):
 	Gui,add,Edit,x120  y35 w300 h20 vcp0,% Trim(cp0)
-	Gui,add,button,x480 y35 w60 h20 gclearedit,Çå¿ÕÁĞ±í
+	Gui,add,button,x480 y35 w60 h20 gclearedit,æ¸…ç©ºåˆ—è¡¨
 
 	Gui, add, text,x5 y+10 ,GBK(CP936):
 	Gui,add,Edit,x120 y65 w300 h20 vcp936,% Trim(cp936)
-	Gui,add,button,x420 y65 w50 h20 vcp936tochinese gTochinese,×ªÖĞÎÄ
-	Gui,add,button,x480 y65 w20 h20 vcp936todec gToDec,Ê®
-	Gui,add,button,x510 y65 w30 h20 vcp936tohex gToHex,Ê®Áù
+	Gui,add,button,x420 y65 w50 h20 vcp936tochinese gTochinese,è½¬ä¸­æ–‡
+	Gui,add,button,x480 y65 w20 h20 vcp936todec gToDec,å
+	Gui,add,button,x510 y65 w30 h20 vcp936tohex gToHex,åå…­
 
 	Gui, add, text,x5 y+10 ,GBK(CP950):
 	Gui,add,Edit,x120 y95 w300 h20 vcp950,% Trim(cp950)
-	Gui,add,button,x420 y95 w50 h20 vcp950tochinese gTochinese,×ªÖĞÎÄ
+	Gui,add,button,x420 y95 w50 h20 vcp950tochinese gTochinese,è½¬ä¸­æ–‡
 
 	Gui, add, text,x5 y+10 ,UTF-8(CP65001):
 	Gui,add,Edit,x120 y125 w300 h20 vcp65001,% Trim(cp65001)
-	Gui,add,button,x420 y125 w50 h20 vcp65001tochinese gTochinese,×ªÖĞÎÄ
+	Gui,add,button,x420 y125 w50 h20 vcp65001tochinese gTochinese,è½¬ä¸­æ–‡
 
 	Gui, add, text,x5 y+10 ,UTF-16 LE(CP1200):
 	Gui,add,Edit,x120 y155 w300 h20 vcp1200,% Trim(cp1200)
-	Gui,add,button,x420 y155 w50 h20 vcp1200tochinese gTochinese,×ªÖĞÎÄ
+	Gui,add,button,x420 y155 w50 h20 vcp1200tochinese gTochinese,è½¬ä¸­æ–‡
 
 	Gui, add, text,x5 y+10 ,UTF-16 BE(CP1201):
 	Gui,add,Edit,x120 y185 w300 h20 vcp1201,% Trim(cp1201)
-	Gui,add,button,x420 y185 w50 h20 vcp1201tochinese gTochinese,×ªÖĞÎÄ
-	Gui,add,button,x480 y185 w20 h20 vcp1201toDec gToDec,Ê®
-	Gui,add,button,x510 y185 w30 h20 vcp1201toHex gToHex,Ê®Áù
+	Gui,add,button,x420 y185 w50 h20 vcp1201tochinese gTochinese,è½¬ä¸­æ–‡
+	Gui,add,button,x480 y185 w20 h20 vcp1201toDec gToDec,å
+	Gui,add,button,x510 y185 w30 h20 vcp1201toHex gToHex,åå…­
 
-	Gui, add, text,x5 y+10 ,·±Ìåºº×Ö:
+	Gui, add, text,x5 y+10 ,ç¹ä½“æ±‰å­—:
 	Gui,add,Edit,x120 y215 w300 h20 vtrc,% trc
-	Gui,add,button,x420 y215 w50 h20 vtrctochinese gTochinese,×ª¼òÌå
+	Gui,add,button,x420 y215 w50 h20 vtrctochinese gTochinese,è½¬ç®€ä½“
 
-	Gui, add, text,x5 y+10 ,ÈÕÎÄ(CP932):
+	Gui, add, text,x5 y+10 ,æ—¥æ–‡(CP932):
 	Gui,add,Edit,x120 y245 w300 h20 vcp932,
-	Gui,add,button,x420 y245 w50 h20 vcp932tochinese gTochinese,×ªÈÕÎÄ
+	Gui,add,button,x420 y245 w50 h20 vcp932tochinese gTochinese,è½¬æ—¥æ–‡
 
-	Gui,show,,ÖĞÎÄ×Ö·û±àÂë²é¿´
+	Gui,show,,ä¸­æ–‡å­—ç¬¦ç¼–ç æŸ¥çœ‹
 Return
 
 viewcode:
@@ -220,7 +220,7 @@ Encode(Str, Encoding, Separator := " ")
 	VarSetCapacity(ObjStr, StrCap)
 	StrPut(Str, &ObjStr, Encoding)
 	Loop, % StrCap - ((encoding="utf-16"||encoding="cp1200") ? 2 : 1)
-	; StrPut ·µ»ØµÄ³¤¶ÈÖĞ°üº¬Ä©Î²µÄ×Ö·û´®½ØÖ¹·û 00 ,Òò´Ë±ØĞë¼õ 1¡£
+	; StrPut è¿”å›çš„é•¿åº¦ä¸­åŒ…å«æœ«å°¾çš„å­—ç¬¦ä¸²æˆªæ­¢ç¬¦ 00 ,å› æ­¤å¿…é¡»å‡ 1ã€‚
 	{
 		If(encoding="utf-16"||encoding="cp1200"||tmpe=1)
 		{
@@ -274,6 +274,6 @@ Encode(Str, Encoding, Separator := " ")
 Return, ObjCodes
 }
 
-; ¶ÀÁ¢ÔËĞĞ(µ÷²âÊ±)Ğè¼ÓÉÏ
+; ç‹¬ç«‹è¿è¡Œ(è°ƒæµ‹æ—¶)éœ€åŠ ä¸Š
 ;#Include *i %A_ScriptDir%\..\..\Lib\string.ahk
-;#Include *i %A_ScriptDir%\..\..\Lib\½øÖÆ×ª»».ahk
+;#Include *i %A_ScriptDir%\..\..\Lib\è¿›åˆ¶è½¬æ¢.ahk

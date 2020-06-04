@@ -1,4 +1,4 @@
-driver:
+﻿driver:
 list=%1%
 If 0=0
 DriveGet,list,List,CDROM

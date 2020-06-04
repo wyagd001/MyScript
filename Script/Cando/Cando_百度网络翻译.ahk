@@ -1,36 +1,36 @@
-; Ô´ÍøÖ·£ºhttp://thinkai.net/p/537
+ï»¿; æºç½‘å€ï¼šhttp://thinkai.net/p/537
 ; https://www.jianshu.com/p/38a65d8d3e80
 ; https://blog.csdn.net/hujingshuang/article/details/80180294
 ; https://www.jianshu.com/p/5f3177943b91
 ; https://blog.csdn.net/master_ning/article/details/81002474
 ; https://blog.csdn.net/hongquan1991/article/details/80616491
 
-Cando_°Ù¶ÈÍøÂç·­Òë:
+Cando_ç™¾åº¦ç½‘ç»œç¿»è¯‘:
 	Gui,66:Default
 	Gui,Destroy
 	res=
 	Baidu_keyword=%CandySel%
-	Baidu_ÒëÎÄ:=BaiduApi(Baidu_keyword)
-	obj := Jxon_Load(Baidu_ÒëÎÄ)
+	Baidu_è¯‘æ–‡:=BaiduApi(Baidu_keyword)
+	obj := Jxon_Load(Baidu_è¯‘æ–‡)
 	gosub baidujson
-	If Baidu_»ù±¾ÊÍÒå<>
+	If Baidu_åŸºæœ¬é‡Šä¹‰<>
 	{
 		Gui,add,Edit,x10 y10 w260 h80 vBaidu_keyword,%Baidu_keyword%
-		Gui,add,button,x270 y10 w40 h80 vtransandplay gsoundpaly2,²¥·Å
-		Gui,add,Edit,x10 y100 w300 h80 vBaidu_»ù±¾ÊÍÒå,%Baidu_»ù±¾ÊÍÒå%
-		Gui,add,Edit,x10 y190 w300 h80 vBaidu_ÍøÂçÊÍÒå,%Baidu_ÍøÂçÊÍÒå%
-		Gui,show,,°Ù¶ÈÍøÂç·­Òë
-		Baidu_ÒëÎÄ := Baidu_»ù±¾ÊÍÒå := Baidu_ÍøÂçÊÍÒå := ""
+		Gui,add,button,x270 y10 w40 h80 vtransandplay gsoundpaly2,æ’­æ”¾
+		Gui,add,Edit,x10 y100 w300 h80 vBaidu_åŸºæœ¬é‡Šä¹‰,%Baidu_åŸºæœ¬é‡Šä¹‰%
+		Gui,add,Edit,x10 y190 w300 h80 vBaidu_ç½‘ç»œé‡Šä¹‰,%Baidu_ç½‘ç»œé‡Šä¹‰%
+		Gui,show,,ç™¾åº¦ç½‘ç»œç¿»è¯‘
+		Baidu_è¯‘æ–‡ := Baidu_åŸºæœ¬é‡Šä¹‰ := Baidu_ç½‘ç»œé‡Šä¹‰ := ""
 	}
 	else
-		MsgBox,,°Ù¶ÈÍøÂç·­Òë,ÍøÂç´íÎó»ò²éÑ¯²»µ½¸Ãµ¥´ÊµÄ·­Òë¡£
+		MsgBox,,ç™¾åº¦ç½‘ç»œç¿»è¯‘,ç½‘ç»œé”™è¯¯æˆ–æŸ¥è¯¢ä¸åˆ°è¯¥å•è¯çš„ç¿»è¯‘ã€‚
 Return
 
 soundpaly2:
 	Gui, Submit, NoHide
 	if(Baidu_keyword=CandySel)
 	{
-	; ±¾µØÓïÒôÒıÇæ
+	; æœ¬åœ°è¯­éŸ³å¼•æ“
 	; spovice:=ComObjCreate("sapi.spvoice")
 	; spovice.Speak(Baidu_keyword)
 	
@@ -55,18 +55,18 @@ soundpaly2:
 	else
 	{
 		CandySel:=Baidu_keyword
-		res:=Baidu_ÒëÎÄ:=Baidu_»ù±¾ÊÍÒå:= Baidu_ÍøÂçÊÍÒå:=""
+		res:=Baidu_è¯‘æ–‡:=Baidu_åŸºæœ¬é‡Šä¹‰:= Baidu_ç½‘ç»œé‡Šä¹‰:=""
 		GuiControl, Disable, transandplay
-		Baidu_ÒëÎÄ:=BaiduApi(Baidu_keyword)
-		obj := Jxon_Load(Baidu_ÒëÎÄ)
+		Baidu_è¯‘æ–‡:=BaiduApi(Baidu_keyword)
+		obj := Jxon_Load(Baidu_è¯‘æ–‡)
 		gosub baidujson
-		If Baidu_»ù±¾ÊÍÒå<>
+		If Baidu_åŸºæœ¬é‡Šä¹‰<>
 		{
-			GuiControl, , Baidu_»ù±¾ÊÍÒå, % Baidu_»ù±¾ÊÍÒå
-			GuiControl, , Baidu_ÍøÂçÊÍÒå, % Baidu_ÍøÂçÊÍÒå
+			GuiControl, , Baidu_åŸºæœ¬é‡Šä¹‰, % Baidu_åŸºæœ¬é‡Šä¹‰
+			GuiControl, , Baidu_ç½‘ç»œé‡Šä¹‰, % Baidu_ç½‘ç»œé‡Šä¹‰
 			;spovice:=ComObjCreate("sapi.spvoice")
 			;spovice.Speak(Baidu_keyword)
-			res:=Baidu_ÒëÎÄ:=Baidu_»ù±¾ÊÍÒå:= Baidu_ÍøÂçÊÍÒå:=""
+			res:=Baidu_è¯‘æ–‡:=Baidu_åŸºæœ¬é‡Šä¹‰:= Baidu_ç½‘ç»œé‡Šä¹‰:=""
 			IfExist,%A_SCRIPTDIR%\Settings\tmp\tts.mp3
 				FileDelete,%A_SCRIPTDIR%\Settings\tmp\tts.mp3
 
@@ -117,17 +117,17 @@ else
 url := "https://fanyi.baidu.com/v2transapi?from=" slang "&to=" dlang "&query=" UrlEncode(KeyWord,"UTF-8") "&transtype=translang&simple_means_flag=3&sign=" sign "&token=" token1
 
    json := WinHttp.URLGet(url,"Charset:UTF-8",header)
-; ´íÎó´úÂë£º997£¬Ã»ÓĞcookie£» 998£¬cookie ¹ıÆÚ£»999£¬ÄÚ²¿´íÎó¡£
+; é”™è¯¯ä»£ç ï¼š997ï¼Œæ²¡æœ‰cookieï¼› 998ï¼Œcookie è¿‡æœŸï¼›999ï¼Œå†…éƒ¨é”™è¯¯ã€‚
 ;msgbox % json
     Return json
 }
 
 baidujson:
-Baidu_»ù±¾ÊÍÒå:= decodeu(obj.trans_result.data.1.dst)
+Baidu_åŸºæœ¬é‡Šä¹‰:= decodeu(obj.trans_result.data.1.dst)
 dict_result := obj.dict_result.simple_means.symbols
 if IsObject(dict_result.1)
 {
-    res .= "´Êµä½á¹û:`n"
+    res .= "è¯å…¸ç»“æœ:`n"
     for k,v in dict_result.1.parts
     {
         res .= k ". " v.part
@@ -153,11 +153,11 @@ if IsObject(dict_result.1)
 }  
 if IsObject(obj.dict_result.cizu)
 {
-    res .= "`n´Ê×é½á¹û:`n"
+    res .= "`nè¯ç»„ç»“æœ:`n"
     for k,v in obj.dict_result.cizu
-        res .= k ". " decodeu(v.fanyi) "(" decodeu(v.cz_name) ")£º" v.jx.1.jx_en " " decodeu(v.jx.1.jx_zh) "`n"
+        res .= k ". " decodeu(v.fanyi) "(" decodeu(v.cz_name) ")ï¼š" v.jx.1.jx_en " " decodeu(v.jx.1.jx_zh) "`n"
 }
-	Baidu_ÍøÂçÊÍÒå:= res
+	Baidu_ç½‘ç»œé‡Šä¹‰:= res
 return
 
 Jxon_Load(ByRef src, args*)
