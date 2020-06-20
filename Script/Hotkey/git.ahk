@@ -43,21 +43,6 @@ git:
 		Default:
 		{
 			SelectedPath := LTrim(SelectedPath,"\")
-			if FileExist("N:\资料\autohotkey 帮助\v1\" SelectedPath)
-			{
-				if WinExist("ahk_class Notepad3U")
-				{
-					WinActivate, ahk_class Notepad3U
-					DropFiles("N:\资料\autohotkey 帮助\v1\" SelectedPath, "ahk_class Notepad3U")
-				}
-				else
-				{
-					run "%notepad3%" "N:\资料\autohotkey 帮助\v1\%SelectedPath%"
-					sleep, 200
-					WinSet, AlwaysOnTop,, ahk_class Notepad3U
-				}
-			}
-			sleep 1000
 			if FileExist("N:\资料\autohotkey 帮助\v2\" SelectedPath)
 			{
 				if WinExist("ahk_class Notepad2U")
@@ -70,6 +55,21 @@ git:
 					run "%notepad2%" "N:\资料\autohotkey 帮助\v2\%SelectedPath%"
 					sleep, 200
 					WinSet, AlwaysOnTop,, ahk_class Notepad2U
+				}
+			}
+			sleep 1000
+			if FileExist("N:\资料\autohotkey 帮助\v1\" SelectedPath) && GetKeyState("Capslock" , "T")
+			{
+				if WinExist("ahk_class Notepad3U")
+				{
+					WinActivate, ahk_class Notepad3U
+					DropFiles("N:\资料\autohotkey 帮助\v1\" SelectedPath, "ahk_class Notepad3U")
+				}
+				else
+				{
+					run "%notepad3%" "N:\资料\autohotkey 帮助\v1\%SelectedPath%"
+					sleep, 200
+					WinSet, AlwaysOnTop,, ahk_class Notepad3U
 				}
 			}
 		return

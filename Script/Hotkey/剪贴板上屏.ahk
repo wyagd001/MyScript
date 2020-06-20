@@ -20,7 +20,9 @@
 	Loop, % Num
 	{
 		temp_V := ""
-		tpos:=InStr(temp_Va := cliphistoryPI[A_index], "`n")
+		temp_Va := cliphistoryPI[A_index]
+		temp_Va:=LTrim(temp_Va," `t`n`r")
+		tpos:=InStr(temp_Va, "`n")
 		temp_V := SubStr(temp_Va, 1, tpos=0?40:tpos<40?tpos-2:40) . (tpos=0?StrLen(temp_Va)<40?"":" ... ":" ... (多行)")
 		cliphistoryPIList .= A_index + CHPIFNo ". " temp_V "`n"
 	}

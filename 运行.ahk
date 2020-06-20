@@ -108,13 +108,13 @@ VarSetCapacity(work_area, 16)
 DllCall("SystemParametersInfo"
          , "uint", 0x30                                          ; SPI_GETWORKAREA
          , "uint", 0
-         , "uint", &work_area    ;结构左0右8上4下12  NumGet(work_area,8)
+         , "uint", &work_area    ;结构左0上4右8下12  NumGet(work_area,8)
          , "uint", 0 )
 
 ; 获取工作区域宽
-work_area_w := NumGet(work_area, 8) - NumGet(work_area, 0)
+work_area_w := NumGet(work_area, 8, "int") - NumGet(work_area, 0, "int")
 ; 获取工作区域高,不计算任务栏高度
-work_area_h := NumGet(work_area, 12) - NumGet(work_area, 4)
+work_area_h := NumGet(work_area, 12, "int") - NumGet(work_area, 4, "int")
 ;----------------------------------水平垂直最大化----------------------------
 
 x_x2 := work_area_w - 634
@@ -525,8 +525,6 @@ if Auto_Trayicon
 		}
 	}
 }
-else  ; 直接显示图标, 而不监控图标是否显示出来
-	Menu, Tray, Icon
 
 if Auto_FuncsIcon
 {
@@ -1113,7 +1111,7 @@ onClipboardChange:
 		tempid=0
 		If ClipPlugin_git
 		{
-			If RegExMatch(Clipboard, "^(\\|/)?(zh-cn|v1|v2)?(\\|/)?docs(\\?|/?).+\.htm$")
+			If RegExMatch(Clipboard, "^(\\|/)?(zh-cn|v1|v2)?(\\|/)?docs(\\?|/?).+\.(htm|js|css)$")
 			{
 				if IsLabel("git")
 				{
@@ -1134,7 +1132,8 @@ onClipboardChange:
 		if clipid>3
 			clipid=1
 		ClipSaved%clipid% := Clipboard
-		CF_ToolTip("剪贴板" clipid " 复制完毕.",700)
+		if Auto_ClipTip
+			CF_ToolTip("剪贴板" clipid " 复制完毕.",700)
 		if Auto_Cliphistory
 		{
 			if (writecliphistory=1) 

@@ -67,7 +67,7 @@ If (PlayListdefalut="t") || A_Args.Length()>0
 		for n, param in A_Args
 		{
 			SplitPath, param,,,ext
-			If ext in mp3,wma,wmv,wav,mpg,mid			;这是我目前已知的能用soundplay播放的格式
+			If ext in mp3,wma,wmv,wav,mpg,mid,mp4			;这是我目前已知的能用soundplay播放的格式
 				Fileappend,%param%`n, %AhkMediaListFile%
 		}
 	}
@@ -813,7 +813,7 @@ Return
 ; 菜单添加文件到列表
 MenuFileAdd:
 Gui,Submit, NoHide
-FileSelectFile, File, M,, 添加文件, 音频文件 (*.mp3; *.wma; *.wav; *.mid;)
+FileSelectFile, File, M,, 添加文件, 音频文件 (*.mp3; *.wma; *.wav; *.mid; *.mp4)
 if !File
 	return
 LV_Modify(0, "-Select")
@@ -825,7 +825,7 @@ Loop, % File0-1
 	w:=File%NextIndex%
 	mp3_loop =  %File1%\%w%
 	SplitPath, mp3_loop,,,ext, name
-	If ext in mp3,wma,wmv,wav,mpg,mid			;这是我目前已知的能用soundplay播放的格式
+	If ext in mp3,wma,wmv,wav,mpg,mid,mp4			;这是我目前已知的能用soundplay播放的格式
 	{
 	SetFormat, float ,03
 	LV_Add("Focus Select",xuhao+0.0,name,ext, mp3_loop)
@@ -847,7 +847,7 @@ Loop, %Folder%\*.*,0,1
 {
 	xuhao++
 	SplitPath, A_LoopFileFullPath,,, ext, name
-	If ext in mp3,wma,wav,mid
+	If ext in mp3,wma,wav,mid,mp4,mpg
 	{
   SetFormat, float ,03
 	LV_Add("Focus Select",xuhao+0.0, name,ext, A_LoopFileFullPath)
@@ -867,7 +867,7 @@ Loop, Parse, A_GuiEvent, `n
 {
 	xuhao++
 	SplitPath, A_LoopField,,,ext, name
-	If ext in mp3,wma,wmv,wav,mpg,mid			;这是我目前已知的能用soundplay播放的格式
+	If ext in mp3,wma,wmv,wav,mpg,mid,mp4			;这是我目前已知的能用soundplay播放的格式
 	{
 	SetFormat, float ,03
 	LV_Add("Focus Select",xuhao+0.0, name,ext, A_LoopField)

@@ -40,7 +40,7 @@ for k,v in myhotkey
 		col3_tmp:=";全局热键"
 	If k contains 特定窗口_,排除窗口_
 		col3_tmp:=";" k
-	LV_Add(InStr(v,"@")?"" : "check",k,v,col3_tmp?col3_tmp:";",A_index)
+	LV_Add(!v?"":InStr(v,"@")?"" : "check",k,v,col3_tmp?col3_tmp:";",A_index)
 }
 
 LV_ModifyCol()
@@ -193,7 +193,7 @@ Gui,Add,Radio,x26 y85 w80 h20 vbaoshilx1 glx,语音报时
 Gui,Add,Radio,x106 y85 w80 h20 vbaoshilx2 glx,整点敲钟
 
 Gui, Add, GroupBox, x230 y30 w200 h95,
-Gui,Add,CheckBox,Checked%Auto_JCTF% x236 y40 w180 h20 vAuto_JCTF,传统节日五天前提醒
+Gui,Add,CheckBox,Checked%Auto_JCTF% x236 y40 w180 h20 vAuto_JCTF,节日提醒(五天)
 Gui,Add,CheckBox,x236 y60 w180 h20 vbaoshionoff gbaoshi,开启整点报时
 Gui,Add,CheckBox,x236 y80 w180 h20 vrenwu gdingshi,开启定时任务
 Gui,Add,CheckBox,Checked%renwu2% x236 y100 w180 h20 vrenwu2 gupdategbnz,开启闹钟
@@ -323,7 +323,7 @@ Gui,Add,Button,x490 y285 g自定义运行命令_click,查看修改
 Gui,Tab,其他
 Gui,Add,CheckBox,x26 y30 w120 h20 vvAuto_DisplayMainWindow Checked%Auto_DisplayMainWindow%,启动时显示主窗口
 Gui,Add,CheckBox,x280 y30 w130 h20 vvAuto_7plusMenu Checked%Auto_7plusMenu%,资源管理器7plus菜单
-Gui,Add,CheckBox,x26 y50 w140 h20 vvAuto_Trayicon Checked%Auto_Trayicon%,启动时检测托盘图标
+Gui,Add,CheckBox,x26 y50 w180 h20 vvAuto_Trayicon Checked%Auto_Trayicon%,启动时显示托盘图标(并检测)
 Gui,Add,CheckBox,x280 y50 w160 h20 vvAuto_FuncsIcon Checked%Auto_FuncsIcon%,启动时显示额外的托盘图标
 Gui,Add,CheckBox,x44 y70 w200 h20 vvAuto_Trayicon_showmsgbox Checked%Auto_Trayicon_showmsgbox%,没有托盘图标显示重启脚本对话框
 Gui,Add,Radio,x300 y70 w40 h20 Group Checked%1FuncsIcon% vvFuncsIcon_Num,一个

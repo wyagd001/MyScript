@@ -14,7 +14,7 @@ refreshcliphistoryPI:
 	{
 		button_y:=(A_index-1)*40+5
 		button_y2:= button_y + 15
-temp_V := ""
+		temp_V := ""
 		tpos:=InStr(temp_Va := getFromTable("history", "data", "id=" CHPIFArray[A_index])[1], "`n")
 		temp_V := SubStr(temp_Va, 1, tpos=0?30:tpos<30?tpos-2:30) . (tpos=0?StrLen(temp_Va)<30?"":" ... ":" ... (多行文本)")
 
@@ -29,9 +29,10 @@ temp_V := ""
 		button_y:=(A_index + CHPIFNo - 1)*40 + 5
 		button_y2:= button_y + 15
 
-		tpos:=InStr(temp_Va:=cliphistoryPI[A_index], "`n")
+		temp_Va:=cliphistoryPI[A_index]
+		temp_Va:=LTrim(temp_Va," `t`n`r")
+		tpos:=InStr(temp_Va, "`n")
 		temp_V := SubStr(temp_Va, 1, tpos=0?30:tpos<30?tpos-2:30) . (tpos=0?StrLen(temp_Va)<30?"":" ... ":" ... (多行文本)")
-
 		Gui, Add, Button, x5 y%button_y% w400 h40 vCHPI_%A_index% gcopycliphistoryPI, % temp_V
 		Gui, Add, Text, x410 y%button_y2% w20 h20 vSCHPIF_%A_index% gSCHPIF, ☆
 		Gui, Add, Text, Cred x440 y%button_y2% w20 h20 vDCHPI2_%A_index% gDCHPI2, ×
