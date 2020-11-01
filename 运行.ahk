@@ -19,14 +19,6 @@ IfNotExist, %run_iniFile%
 	FileCopy, %A_ScriptDir%\Backups\setting.ini, %run_iniFile%
 global visable
 
-IniRead, content, %run_iniFile%, 功能开关
-Gosub, GetAllKeys
-
-; 在脚本最开头，利用Reload变通实现批量#Include
-; 自动生成AutoIncludeAll.ahk
-If Auto_Include
-	Gosub, _AutoInclude
-
 ; 开机时脚本启动后等待至60s
 ;Stime := A_TickCount
 if (A_TickCount < 60000)
@@ -43,6 +35,14 @@ If(!A_IsAdmin)
 	Else
 		MsgBox, 没有启用管理员权限
 }
+
+IniRead, content, %run_iniFile%, 功能开关
+Gosub, GetAllKeys
+
+; 在脚本的开头，利用Reload变通实现批量#Include
+; 自动生成AutoIncludeAll.ahk
+If Auto_Include
+	Gosub, _AutoInclude
 
 ; 退出脚本时，执行ExitSub，关闭自动启动的脚本、恢复窗口等等操作。
 OnExit, ExitSub
@@ -124,7 +124,7 @@ y_y2 := work_area_h - 108
 global CloseWindowList := []
 global ClosetextfileList := []
 global folder := []
-global textfile := [] 
+global textfile := []
 IniRead, content, %run_iniFile%, CloseWindowList
 CloseWindowList := StrSplit(content, "`n")
 Array_Sort(CloseWindowList)
@@ -337,7 +337,7 @@ Gui, Add, ComBoBox, x90 y10 w330 h300 +HwndhComBoBox vDir, % ComBoBoxShowItems
 ControlGet, ahMyEdit, hWnd,, Edit1, ahk_id %HGUI%
 DllCall("Shlwapi.dll\SHAutoComplete", "Ptr", ahMyEdit, "UInt", 0x1|0x10000000)  ; 只对编辑控件有效
 global hComBoBox
-global objListIDs:= Object() 
+global objListIDs:= Object()
 global del_ico:=0 ; 0= text "X", 1= icon
 global single_ico:=0
 fn := Func("List_Func").Bind(hComBoBox)
@@ -636,7 +636,7 @@ If Auto_ShutdownMonitor
 {
 	ShutdownBlock := true
 	; HKEY_CURRENT_USER, Control Panel\Desktop, AutoEndTasks, 0
-	; AutoEndTasks 值为 1, 表示关机时自动结束任务 
+	; AutoEndTasks 值为 1, 表示关机时自动结束任务
 	; AutoEndTasks 值为 0, Vista+ 关机时提示是否结束进程
 	RegWrite, REG_SZ,HKEY_CURRENT_USER, Control Panel\Desktop, AutoEndTasks, 0
 	; 调用阻止系统关机的API
@@ -752,7 +752,7 @@ translist:=IniObj(A_ScriptDir "\settings\translist.ini").翻译
 
 ;;;;;;;;;; 剪贴板  ;;;;;;;;;;;;
 
-;复制时  
+;复制时
 ;复制1→复制2→复制3→复制1
 ;粘贴时
 ;1→3→2→1
@@ -773,7 +773,7 @@ if Auto_Clip
 		else
 		{
 			global DBPATH:= A_ScriptDir . "\Settings\cliphistory.db"
-			global PREV_FILE := A_ScriptDir . "\Settings\tmp\prev.html" 
+			global PREV_FILE := A_ScriptDir . "\Settings\tmp\prev.html"
 			STORE:={}
 
 			if (!FileExist(DBPATH))
@@ -925,7 +925,7 @@ if Auto_AhkServer
 }
 ;----------网页控制电脑----------
 
-; 具有 msgbox 的代码放在脚边最后不影响其它部分 
+; 具有 msgbox 的代码放在脚边最后不影响其它部分
 
 if (Auto_JCTF or Auto_Update) and 每隔几小时结果为真(6)
 {
@@ -1106,7 +1106,7 @@ onClipboardChange:
 		CF_ToolTip("剪贴板复制出错.",700)
 	return
 	}
-	If Auto_ClipPlugin ; 
+	If Auto_ClipPlugin ;
 	{
 		tempid=0
 		If ClipPlugin_git
@@ -1136,7 +1136,7 @@ onClipboardChange:
 			CF_ToolTip("剪贴板" clipid " 复制完毕.",700)
 		if Auto_Cliphistory
 		{
-			if (writecliphistory=1) 
+			if (writecliphistory=1)
 			{
 				if StrLen(Clipboard)<1000
 				{
@@ -1265,10 +1265,13 @@ Open1:
 Return
 
 Help:
-	Run, %Ahk_Dir%\AutoHotkeyLCN_new.chm
+	Run, %ahk新版中文帮助%
 Return
 
 spy:
+if FileExist(Ahk_Dir "\WindowSpy.ahk")
+	Run, "%A_AhkPath%" "%Ahk_Dir%\WindowSpy.ahk"
+else
 	Run, %Ahk_Dir%\AU3_Spy.exe
 Return
 
@@ -1623,8 +1626,8 @@ Combo_WinEvent:
 	DllCall("User32.dll\GetComboBoxInfo", "Ptr", CtrlHwnd, "Ptr", &CB_info)
 	CB_EditID := NumGet(CB_info, 40 + A_PtrSize, "Ptr") ;48/44
 	CB_ListID := NumGet(CB_info, 40 + (2 * A_PtrSize), "Ptr") ; 56/48
-	
-	CB_EditID:=Format("0x{1:x}",CB_EditID) , CB_ListID:=Format("0x{1:x}",CB_ListID) 
+
+	CB_EditID:=Format("0x{1:x}",CB_EditID) , CB_ListID:=Format("0x{1:x}",CB_ListID)
 
 	GuiHwnd_:=CB_ListID
 	ThreadId := DllCall("GetWindowThreadProcessId", "Int", GuiHwnd_, "UInt*", PID)	; LPDWORD

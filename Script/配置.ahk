@@ -490,6 +490,22 @@ GuiControl,,renwucx,%tt%
 Return
 
 renwucs:
+	if WinExist("选项 ahk_class AutoHotkeyGUI")
+	{
+		ControlGetText, OutputVar, Edit9, 选项 ahk_class AutoHotkeyGUI
+		if OutputVar
+		renwucx := OutputVar, OutputVar := ""
+	}
+	if IsLabel(renwucx)
+	{
+		gosub % renwucx
+	return
+	}
+	if IsStringFunc(renwucx)
+	{
+		RunStringFunc(renwucx)
+	return
+	}
 run %renwucx%,,UseErrorLevel
 If ErrorLevel
 	MsgBox,,定时任务,定时任务运行失败，请检查命令是否正确。

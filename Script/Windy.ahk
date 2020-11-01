@@ -234,9 +234,9 @@ Label_Windy_RunCommand:
 	}
 	Else If (RegExMatch(Windy_Cmd, "i)^(Winfunc\|)")) ; 如果是以winfunc|开头，则是运行函数
 	{
-		if IsStingFunc(Splitted_Windy_Cmd2)
+		if IsStringFunc(Splitted_Windy_Cmd2)
 		{
-			RunStingFunc(Splitted_Windy_Cmd2)
+			RunStringFunc(Splitted_Windy_Cmd2)
 		return
 		}
 		else

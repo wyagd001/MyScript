@@ -1,4 +1,4 @@
-﻿IsStingFunc(str:="")
+﻿IsStringFunc(str:="")
 {
 	strfunc:=StrSplit(str,"(")
 	If IsFunc(strfunc[1])
@@ -7,7 +7,7 @@
 	return 0
 }
 
-RunStingFunc(str:="")
+RunStringFunc(str:="")
 {
 	strfunc:=StrSplit(str, "(", ")")
 	tempfunc:=strfunc[1]

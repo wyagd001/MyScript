@@ -16,33 +16,40 @@ EditSelectedFiles()
 	x:=ExpandEnvVars(TextEditor)
 	y:=ExpandEnvVars(ImageEditor)
 	z:=% %DefaultPlayer%
-	if(!FileExist(x))
-{
-		TrayTip,设置错误,默认文本编辑器的路径错误！,3
-return
-}
-	if(!FileExist(y))
-{
-		TrayTip,设置错误,默认图片编辑器的路径错误！,3
-return
-}
-	if(!FileExist(z))
-{
-		TrayTip,设置错误,默认音频播放器的路径错误！,3
-return
-}
-	if (files || Imagesplitfiles ||audiosplitfiles)
+	if (files || Imagesplitfiles || audiosplitfiles)
 	{
 		if files
-			run %x% %files%
+		{
+			if(!FileExist(x))
+			{
+				TrayTip,设置错误,默认文本编辑器的路径错误！,3
+				run, notepad.exe "%files%"
+			return
+			}
+			run "%x%" "%files%"
+		}
 		if Imagesplitfiles
-			run %y% %Imagesplitfiles%
+		{
+			if(!FileExist(y))
+			{
+				TrayTip,设置错误,默认图片编辑器的路径错误！,3
+			return
+			}
+			run "%y%" %Imagesplitfiles%
+		}
 		if audiosplitfiles
 		{
 			if (DefaultPlayer != "AhkPlayer")
+			{
+				if(!FileExist(z))
+				{
+					TrayTip,设置错误,默认音频播放器的路径错误！,3
+				return
+				}
 				Run "%z%" %audiosplitfiles%
+			}
 			else
-				run %A_AhkPath% "%z%" %audiosplitfiles%
+				run "%A_AhkPath%" "%z%" %audiosplitfiles%
 		}
 	}
 	else

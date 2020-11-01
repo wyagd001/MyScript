@@ -43,7 +43,7 @@ git:
 		Default:
 		{
 			SelectedPath := LTrim(SelectedPath,"\")
-			if FileExist("N:\资料\autohotkey 帮助\v2\" SelectedPath)
+			if FileExist("N:\资料\autohotkey 帮助\v2\" SelectedPath) && !GetKeyState("ScrollLock" , "T")
 			{
 				if WinExist("ahk_class Notepad2U")
 				{
@@ -56,9 +56,9 @@ git:
 					sleep, 200
 					WinSet, AlwaysOnTop,, ahk_class Notepad2U
 				}
+			return
 			}
-			sleep 1000
-			if FileExist("N:\资料\autohotkey 帮助\v1\" SelectedPath) && GetKeyState("Capslock" , "T")
+			if FileExist("N:\资料\autohotkey 帮助\v1\" SelectedPath) && GetKeyState("ScrollLock" , "T")
 			{
 				if WinExist("ahk_class Notepad3U")
 				{
@@ -71,8 +71,8 @@ git:
 					sleep, 200
 					WinSet, AlwaysOnTop,, ahk_class Notepad3U
 				}
+			return
 			}
-		return
 		}
 	}
 return

@@ -456,9 +456,9 @@ Func_RunCmd(ByRef req, ByRef res) {
 			gosub % cmd
 		return
 		}
-		if IsStingFunc(cmd)
+		if IsStringFunc(cmd)
 		{
-			RunStingFunc(cmd)
+			RunStringFunc(cmd)
 		return
 		}
 		Run,%cmd%,,UseErrorLevel
@@ -521,9 +521,9 @@ runcom(ByRef req, ByRef res){
 			gosub % command
 		return
 		}
-		if IsStingFunc(command)
+		if IsStringFunc(command)
 		{
-			RunStingFunc(command)
+			RunStringFunc(command)
 		return
 		}
 		Run,%command%,,UseErrorLevel
