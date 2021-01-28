@@ -693,24 +693,46 @@ If(tmpstr="hotkeys")
 Gui,99:ListView,hotkeysListview
 LV_Modify(FocusedRowNumber,"",Col1Text,EditRowEditCol2)
 hotkeys:=[]
+hotkeys_labels:=[]
 eqaulhotkey:=0
 LV_ColorChange()
-ControlGet,AA,List,col2,SysListView321,ahk_class AutoHotkeyGUI,选项
-loop,parse,AA,`n,`r
+ControlGet,AA,List,col1,SysListView321,ahk_class AutoHotkeyGUI,选项
+ControlGet,BB,List,col2,SysListView321,ahk_class AutoHotkeyGUI,选项
+
+loop,parse,BB,`n,`r
 	hotkeys[A_Index]:=A_LoopField
+loop,parse,AA,`n,`r
+	hotkeys_labels[A_Index]:=A_LoopField
+
 for k,v in hotkeys 
 {
 	If (v=EditRowEditCol2)
-	eqaulhotkey+=1
+	{
+		eqaulhotkey+=1
+		If eqaulhotkey=1
+		{
+			tmp_AA := hotkeys_labels[k]
+			tmp_AA_1 := k
+		}
+	}
+	If eqaulhotkey=2
+	{
+		tmp_BB := hotkeys_labels[k]
+		tmp_BB_1 := k
+		Break
+	}
 }
 If eqaulhotkey=2
 {
 	; RGB系颜色
-	LV_ColorChange(FocusedRowNumber,"0xFF0000","0xFFFFFF") 
+	LV_ColorChange(tmp_AA_1,"0xFF0000","0xFFFFFF")
+	LV_ColorChange(tmp_BB_1,"0xFF0000","0xFFFFFF")
 	LV_Modify(FocusedRowNumber,"-Select")
 	LV_Modify(FocusedRowNumber+1,"Select")
-	traytip,错误,相同快捷键已经存在,5
+	traytip,错误, 标签 %tmp_AA%(%tmp_AA_1%) 和 %tmp_BB%(%tmp_BB_1%) 具有相同的快捷键！！！,5
 	FlashTrayIcon(500,5)
+	AA := BB := tmp_AA := tmp_BB := tmp_AA_1 := tmp_BB_1 ""
+	hotkeys := hotkeys_labels := ""
 }
 }
 If(tmpstr="Plugins")

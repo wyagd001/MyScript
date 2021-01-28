@@ -577,7 +577,7 @@ f_Icons = %A_ScriptDir%\pic\foldermenu.ico
 
 IfNotExist, %FloderMenu_iniFile%	;If config file doesn't exist
 {
-	f_ErrorMsg = %f_ErrorMsg% 配置文件不要存在.`n使用默认配置文件.`n
+	f_ErrorMsg = %f_ErrorMsg% 配置文件不存在.`n使用默认配置文件.`n
 	FileCopy,%A_ScriptDir%\Backups\FloderMenu.Ini,%FloderMenu_iniFile%
 }
 
