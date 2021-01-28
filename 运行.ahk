@@ -1665,10 +1665,10 @@ return
 #include %A_ScriptDir%\Script\主窗口\切换编辑下拉列表.ahk
 #include %A_ScriptDir%\Script\主窗口\播放器和音量控制.ahk
 #include %A_ScriptDir%\Script\主窗口\combo删除按钮.ahk
+#include %A_ScriptDir%\Script\主窗口\光驱.ahk
 #include %A_ScriptDir%\Script\网页远程控制.ahk
 #Include %A_ScriptDir%\Script\Cmd.ahk
 #include %A_ScriptDir%\Script\USB.ahk
-#include %A_ScriptDir%\Script\光驱.ahk
 #include %A_ScriptDir%\Script\鼠标中键.ahk
 #include %A_ScriptDir%\Script\鼠标左键.ahk
 #include %A_ScriptDir%\Script\WinMouse.ahk
