@@ -1366,6 +1366,9 @@ ExitSub:
 	if Auto_7plusMenu
 		FileDelete, %A_Temp%\7plus\hwnd.txt
 
+	if hidewin_hwnd
+		WinShow, ahk_id %hidewin_hwnd%
+
 	if Auto_FuncsIcon
 	{
 		TrayIcon_Remove(hGui, 101)

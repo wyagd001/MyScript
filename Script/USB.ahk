@@ -17,15 +17,20 @@ If (Devs = "`r`n") {
 Traytip, 错误, 找不到可移动硬件, 10
 return
 }
-Traytip, 输入可移动磁盘盘符用以弹出磁盘, %Devs%, 10
+
+DriveGet, RDRV, List, REMOVABLE
+ StringReplace, RDRV, RDRV, A
+ StringReplace, RDRV, RDRV, B
+if (StrLen(RDRV)=1)  ; 只有一个U盘时直接弹出
+	Driveletter := RDRV ":"
+if (StrLen(RDRV)>1)  ; 两个U盘以上按下盘符字母弹出
+{
+Traytip, 直接按下可移动磁盘盘符的字母键以弹出磁盘, %Devs%, 10
 SetCapsLockState, On
 Input, Driveletter, L1
 SetCapsLockState, Off
 Traytip
 
-DriveGet, RDRV, List, REMOVABLE
- StringReplace, RDRV, RDRV, A
- StringReplace, RDRV, RDRV, B
  Loop, Parse, RDRV
   { If (Driveletter = A_LoopField)
   DevF = 1
@@ -33,6 +38,7 @@ DriveGet, RDRV, List, REMOVABLE
 If (DevF = 0){
 Traytip, Error, 找不到所输入的盘符的可移动硬件, 10
 return
+}
 }
 
 if ejecttype=1
