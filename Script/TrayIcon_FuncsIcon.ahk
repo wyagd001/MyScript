@@ -48,5 +48,6 @@ return
 }
 
 removeTi:
+sleep 500
 TrayIcon_Remove(hGui, uid)
 return

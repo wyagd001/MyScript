@@ -543,6 +543,7 @@ if Auto_FuncsIcon
 		Gosub, GetAllKeys
 		TrayIcon_Add(hGui, "OnTrayIcon", Ti_101_icon, Ti_101_tooltip)
 	}
+	content := ""
 }
 ;----------不显示托盘图标则重启脚本----------
 

@@ -379,11 +379,6 @@ Label_Candy_RunCommand:
 	Else If (Candy_Cmd_Str1 = "Cando")  ; 如果是以Cando|开头，则是运行一些内部程序，方便与你的其它脚本进行挂接
 	{
 		CandySelected := CandySel    ; 兼容以前的cando变量写法
-		if (Candy_Cmd_Str2 = "ctimer") && IsLabel(Candy_Cmd_Str3)
-		{
-			settimer, % Candy_Cmd_Str3, -300
-		return
-		}
 		If IsLabel("Cando_" . Candy_Cmd_Str2)                       ; 程序内置的别名
 			Goto % "Cando_" . Candy_Cmd_Str2
 		else If IsLabel(Candy_Cmd_Str2)                       ;  标签

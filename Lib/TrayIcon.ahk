@@ -193,6 +193,7 @@ TrayIcon_Move(idxOld, idxNew, sTray := "Shell_TrayWnd")
 ; ----------------------------------------------------------------------------------------------------------------------
 TrayIcon_Set(hWnd, uId, hIcon, hIconSmall:=0, hIconBig:=0,hTooltip:="")
 {
+    ;  NIM_MODIFY=1, NIF_ICON=2, NIF_TIP=4  NIF_Message=1
     d := A_DetectHiddenWindows
     DetectHiddenWindows, On
     ; WM_SETICON = 0x0080
@@ -206,7 +207,7 @@ TrayIcon_Set(hWnd, uId, hIcon, hIconSmall:=0, hIconBig:=0,hTooltip:="")
     NumPut( szNID, NID, 0             )
     NumPut( hWnd,  NID, A_PtrSize     )
     NumPut( uId,   NID, 2*A_PtrSize   )
-    NumPut( 2,     NID, 2*A_PtrSize+4 )
+    NumPut( 6,     NID, 2*A_PtrSize+4 )
     NumPut( hIcon, NID, 3*A_PtrSize+8 )
     StrPut(hTooltip, &NID+4*A_PtrSize+8, 128,0)
 
