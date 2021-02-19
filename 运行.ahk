@@ -795,7 +795,7 @@ else
 	hotkey,$^V,off
 ;;;;;;;;;; 剪贴板  ;;;;;;;;;;;;
 
-;快捷键打开C,D,E,F盘...设置其快捷键，loop 15循环15次，到达字母Q
+; 快捷键打开C,D,E,F盘...设置其快捷键，loop 15 循环15次，到达字母Q
 if islabel("ExploreDrive") && !InStr(myhotkey.前缀_快速打开磁盘,"@")
 {
 	Loop 15
