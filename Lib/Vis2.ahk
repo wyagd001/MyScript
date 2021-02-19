@@ -3,8 +3,8 @@
 ; Date:      2017-08-19
 ; Recent:    2018-04-04
 
-#include <Gdip_All>
-#include <JSON>
+#include <Gdip>
+#include <Class_JSON>
 
 
 ; ImageIdentify() - Label and identify objects in images.
@@ -22,14 +22,14 @@ class Vis2 {
    class ImageIdentify extends Vis2.functor {
       call(self, image:="", search:="", options:=""){
          return (image != "") ? (new Vis2.provider.GoogleCloudVision()).ImageIdentify(image, search, options)
-            : Vis2.core.returnText({"provider":(new Vis2.provider.GoogleCloudVision(search)), "tooltip":"Image Identification Tool", "splashImage":true})
+            : Vis2.core.returnText({"provider":(new Vis2.provider.GoogleCloudVision(search)), "tooltip":"图片识别工具", "splashImage":true})
       }
    }
 
    class OCR extends Vis2.functor {
       call(self, image:="", language:="", options:=""){
          return (image != "") ? (new Vis2.provider.Tesseract()).OCR(image, language, options)
-            : Vis2.core.returnText({"provider":(new Vis2.provider.Tesseract(language)), "tooltip":"Optical Character Recognition Tool", "textPreview":true})
+            : Vis2.core.returnText({"provider":(new Vis2.provider.Tesseract(language)), "tooltip":"光学字符识别工具", "textPreview":true})
       }
 
       google(){
