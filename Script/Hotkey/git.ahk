@@ -3,6 +3,8 @@ git:
 	if !SelectedPath
 		SelectedPath := GetSelText()
 	SelectedPath := StrReplace(SelectedPath, "/", "\")
+	SelectedPath := RegExReplace(SelectedPath, "docs\\(.*)=", "docs\")
+	SelectedPath := RegExReplace(SelectedPath, "(.*)\.htm(.*)", "$1.htm")
 
 	Switch  ; 需要主程序版本 1.1.31.00
 	{
@@ -15,7 +17,6 @@ git:
 				{
 					WinActivate, ahk_class Notepad3U
 					DropFiles("N:\资料\autohotkey 帮助\v1\docs\" SelectedPath, "ahk_class Notepad3U")
-				return
 				}
 				else
 					run "%notepad3%" "N:\资料\autohotkey 帮助\v1\docs\%SelectedPath%"
@@ -32,7 +33,6 @@ git:
 				{
 					WinActivate, ahk_class Notepad2U
 					DropFiles("N:\资料\autohotkey 帮助\v2\docs\" SelectedPath, "ahk_class Notepad2U")
-				return
 				}
 			else
 				run "%notepad2%" "N:\资料\autohotkey 帮助\v2\docs\%SelectedPath%"

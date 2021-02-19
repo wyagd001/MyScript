@@ -1,4 +1,9 @@
-﻿Cando_小说改名:
+﻿Cando_Mp3文件名交换:  ;   AA - BB.xxx  改名为  BB - AA.xxx
+Array := StrSplit(CandySel_FileNameNoExt, " - ")
+	FileMove, %CandySel%, % CandySel_ParentPath "\" Array[2] " - " Array[1] "." CandySel_Ext
+return
+
+Cando_小说改名:
 	FileEncoding, % File_GetEncoding(CandySel)
 	Result := ""
 	Loop, read, % CandySel

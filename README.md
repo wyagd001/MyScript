@@ -8,7 +8,7 @@ http://www.autohotkey.com/forum/topic30647.html
 2.注册表定位 -------by yonken  
 
 3.launcher -------alongside  
-http://hi.baidu.com/alongside/blog/item/1a25ed00b4156f10738b65cb.html  
+~~http://hi.baidu.com/alongside/blog/item/1a25ed00b4156f10738b65cb.html~~  
 
 4.AHK Media Player -------Fry  
 http://www.autohotkey.com/forum/topic31188.html  
@@ -55,16 +55,16 @@ http://www.autohotkey.com/forum/topic35580.html
 http://www.autohotkey.com/forum/topic18146.html  
 
 18.Ahk脚本管理器-------蓝蓝小雪  
-http://wwww.snow518.cn  
+~~http://wwww.snow518.cn~~  
 
 19.Hi, Eddy--------------Eddy  
-~~http://www.hieddy.com/~~
+~~http://www.hieddy.com/~~  
 
 20.智能重命名----------------JSLover  
 http://jslover.secsrv.net/AutoHotkey/Scripts/Rename-Manager.ahk  
 
 21.F1键修改文件属性扩展名和文件时间----------dule2859  
-http://ahkcn.net/thread-881.html
+~~http://ahkcn.net/thread-881.html~~  
 
 22.WinExplorer auto-search---------------Buddy  
 http://www.autohotkey.com/forum/topic41463.html  
@@ -76,10 +76,10 @@ http://svn.motlin.com/dev/ahk/NiftyWindows.ahk
 http://www.autohotkey.com/forum/topic32876.html  
 
 25.把你的程序钉在桌面上 - Pin2Desk-------------------------------BLooM2  
-http://ahkcn.net/thread-1456.html
+~~http://ahkcn.net/thread-1456.html~~
 
 26.一键打开当前激活窗口的所在目录-------------------星雨朝霞  
-http://ahkcn.net/thread-1709.html
+~~http://ahkcn.net/thread-1709.html~~  
 
 27.GetModuleFileNameEx--------shimanov  
 http://www.autohotkey.com/forum/topic4182-15.html  
@@ -87,20 +87,20 @@ http://www.autohotkey.com/forum/topic9000.html
 
 28.截图脚本-------------  
 http://www.autohotkey.com/forum/topic18146.html  
-http://ahk.5d6d.com/thread-2220-1-2.html  
+~~http://ahk.5d6d.com/thread-2220-1-2.html~~  
 
 29.Auto-raise and Other Stuff on Mouse Hover -----------------Lexikos  
 http://www.autohotkey.com/forum/topic22763.html  
 
 30.模仿 QT TabBar 的重命名循环变换选择功能-------------------Jameson  
-http://ahkcn.net/thread-623.html
+~~http://ahkcn.net/thread-623.html~~  
 
 31.7plus--------------------fragman  
 http://code.google.com/p/7plus/  
 https://github.com/7plus/7plus  
 
 32.JowAlert.ahk---------------wz520  
-http://ahkcn.net/thread-802.html
+~~http://ahkcn.net/thread-802.html~~  
 
 33.Run Dynamic Script... Through a Pipe!----------------Lexikos  
 http://www.autohotkey.com/forum/topic25867.html  
@@ -109,7 +109,7 @@ http://www.autohotkey.com/forum/topic25867.html
 https://github.com/aamii/Candy  
 
 35.#include 批量操作--------------feiyue  
-http://ahkcn.net/thread-6003.html  
+~~http://ahkcn.net/thread-6003.html~~  
 
 36.LV_ColorInitiate  
 https://autohotkey.com/board/topic/8463-listview-colors-for-individual-lines-eg-highlighting/  

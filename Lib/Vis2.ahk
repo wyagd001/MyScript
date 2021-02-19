@@ -3,8 +3,8 @@
 ; Date:      2017-08-19
 ; Recent:    2018-04-04
 
-#include <Gdip>
-#include <Class_JSON>
+#include <Gdip_All>
+#include <JSON>
 
 
 ; ImageIdentify() - Label and identify objects in images.
@@ -29,7 +29,7 @@ class Vis2 {
    class OCR extends Vis2.functor {
       call(self, image:="", language:="", options:=""){
          return (image != "") ? (new Vis2.provider.Tesseract()).OCR(image, language, options)
-            : Vis2.core.returnText({"provider":(new Vis2.provider.Tesseract(language)), "tooltip":"光学字符识别工具", "textPreview":true})
+            : Vis2.core.returnText({"provider":(new Vis2.provider.Tesseract(language)), "tooltip":"Optical Character Recognition Tool", "textPreview":true})
       }
 
       google(){
@@ -1979,7 +1979,7 @@ class Vis2 {
                if FileExist("Vis2_API.txt") {
                   file := FileOpen("Vis2_API.txt", "r")
                   keys := file.Read()
-                  api_key := ((___ := RegExReplace(keys, "s)^.*?GoogleCloudVision(?:\s*)=(?:\s*)([A-Za-z0-9\-]+).*$", "$1")) != keys) ? ___ : ""
+                  api_key := ((___ := RegExReplace(keys, "s)^.*?GoogleCloudVision(?:\s*)=(?:\s*)([A-Za-z0-9_\-]+).*$", "$1")) != keys) ? ___ : ""
                   file.close()
 
                   if (api_key != "")

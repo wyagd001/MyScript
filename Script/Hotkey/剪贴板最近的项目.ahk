@@ -1,5 +1,6 @@
-﻿cliphistoryPI:
-!`::
+﻿剪贴板最近的项目:
+cliphistoryPI:
+;!`::
 	IfWinExist, 剪贴板最近的项目 ahk_class AutoHotkeyGUI
 	{
 		Gui,66:Destroy
@@ -16,7 +17,7 @@ refreshcliphistoryPI:
 		button_y2:= button_y + 15
 		temp_V := ""
 		tpos:=InStr(temp_Va := getFromTable("history", "data", "id=" CHPIFArray[A_index])[1], "`n")
-		temp_V := SubStr(temp_Va, 1, tpos=0?30:tpos<30?tpos-2:30) . (tpos=0?StrLen(temp_Va)<30?"":" ... ":" ... (多行文本)")
+		temp_V := SubStr(temp_Va, 1, tpos=0?80:tpos<80?tpos-2:80) . (tpos=0?StrLen(temp_Va)<80?"":" ... ":" ... (多行文本)")
 
 		Gui, Add, Button, x5 y%button_y% w400 h40 vCHPIF_%A_index% gcopycliphistoryPIF, % temp_V
 		Gui, Add, Text, Cyellow x410 y%button_y2% w20 h20 vDCHPIF_%A_index% gDCHPIF, ★
@@ -32,7 +33,7 @@ refreshcliphistoryPI:
 		temp_Va:=cliphistoryPI[A_index]
 		temp_Va:=LTrim(temp_Va," `t`n`r")
 		tpos:=InStr(temp_Va, "`n")
-		temp_V := SubStr(temp_Va, 1, tpos=0?30:tpos<30?tpos-2:30) . (tpos=0?StrLen(temp_Va)<30?"":" ... ":" ... (多行文本)")
+		temp_V := SubStr(temp_Va, 1, tpos=0?80:tpos<80?tpos-2:80) . (tpos=0?StrLen(temp_Va)<80?"":" ... ":" ... (多行文本)")
 		Gui, Add, Button, x5 y%button_y% w400 h40 vCHPI_%A_index% gcopycliphistoryPI, % temp_V
 		Gui, Add, Text, x410 y%button_y2% w20 h20 vSCHPIF_%A_index% gSCHPIF, ☆
 		Gui, Add, Text, Cred x440 y%button_y2% w20 h20 vDCHPI2_%A_index% gDCHPI2, ×

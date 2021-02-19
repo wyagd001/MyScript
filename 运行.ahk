@@ -1112,7 +1112,7 @@ onClipboardChange:
 		tempid=0
 		If ClipPlugin_git
 		{
-			If RegExMatch(Clipboard, "^(\\|/)?(zh-cn|v1|v2)?(\\|/)?docs(\\?|/?).+\.(htm|js|css)$")
+			If RegExMatch(Clipboard, "^(\\|/)?(zh-cn|v1|v2)?(\\|/)?docs(\\?|/?).+\.(htm|js|css|ahk)")
 			{
 				if IsLabel("git")
 				{

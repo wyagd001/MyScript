@@ -721,8 +721,8 @@ Return
 !F6::
 	if caption
 	{
-		Gui, 2:-Caption
-		WinSet, ExStyle, +0x20
+		Gui, 2:+LastFound -Caption
+		WinSet, ExStyle, +0x20  ; 点击穿透
 		caption=0
 	}
 	Else
