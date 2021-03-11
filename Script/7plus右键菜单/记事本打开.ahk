@@ -1,12 +1,11 @@
 ﻿1011:
-	SetTimer,notepadopen,-200
+	SetTimer,notepadopen,-150
 Return
 
 notepadopen:
-sleep,200
 Critical,On
 Files := GetSelectedFiles()
-If !Files
+If !Files or (Files="ERROR")
 {
 	MsgBox,,,获取文件路径失败。,3
 Return

@@ -148,7 +148,7 @@ $MButton::
 		WinGetPos , , , Width,,A
 		MouseGetPos, 窗口x坐标, 窗口y坐标
 		; 指针是否在窗口标题栏按坐标来判断
-		If (窗口y坐标 <= 28) && (窗口y坐标 >= -1) && (窗口x坐标 >= -1) && (窗口x坐标 <= Width)
+		If (窗口y坐标 <= 30) && (窗口y坐标 >= -1) && (窗口x坐标 >= -1) && (窗口x坐标 <= Width)
 		{
 			; Chrome浏览器窗口点击
 			if(窗口Class = "Chrome_WidgetWin_1")

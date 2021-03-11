@@ -450,8 +450,10 @@ OnMessage(0x205, "RBUTTONUP")
 OnMessage(0x0219, "WM_DEVICECHANGE")
 ;监视ShellExtension.dll传递的消息
 if Auto_7plusMenu
+{
 	OnMessage(55555, "TriggerFromContextMenu")
-DllCall("ChangeWindowMessageFilter", "UInt", 55555, "UInt", 1)
+	DllCall("ChangeWindowMessageFilter", "UInt", 55555, "UInt", 1)
+}
 
 ;鼠标点击，原窗口缩略图拖拽移动的代码现已不用
 ;OnMessage(0x201, "WM_LBUTTONDOWN")
@@ -795,7 +797,7 @@ else
 	hotkey,$^V,off
 ;;;;;;;;;; 剪贴板  ;;;;;;;;;;;;
 
-; 快捷键打开C,D,E,F盘...设置其快捷键，loop 15 循环15次，到达字母Q
+;快捷键打开C,D,E,F盘...设置其快捷键，loop 15循环15次，到达字母Q
 if islabel("ExploreDrive") && !InStr(myhotkey.前缀_快速打开磁盘,"@")
 {
 	Loop 15

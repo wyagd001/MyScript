@@ -15,4 +15,28 @@
 		;if (class = "Progman" || class = "WorkerW")
 		Run taskmgr.exe
 	}
+if WinActive("ahk_class Chrome_WidgetWin_1") 
+{
+	if (lastyA!=lasty)
+	{
+		lastyA:=lasty
+	return
+	}
+	WinGet, state, MinMax
+	if (state != 1) {
+		Return
+	}
+	if (lasty <= 34 && lasty=lastyA){
+		if (A_ThisHotkey = A_PriorHotkey && A_TimeSincePriorHotkey < 300) {
+				Acc := Acc_ObjectFromPoint(ChildId)
+				AccRole :=Acc_GetRoleText(Acc.accRole(ChildId))
+				;tooltip % AccRole
+				if(AccRole = "文字")
+				{
+					Send, ^w  ; 关闭便签页
+				return
+				}
+		}
+}
+}
 Return
