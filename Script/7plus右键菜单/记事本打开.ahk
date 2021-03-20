@@ -3,14 +3,19 @@
 Return
 
 notepadopen:
+SetTimer, hovering, off
+hovering_off:=1
+sleep, 50
 Critical,On
 Files := GetSelectedFiles()
 If !Files or (Files="ERROR")
 {
-	MsgBox,,,获取文件路径失败。,3
+	hovering_off:=0
+	CF_ToolTip("获取文件路径失败。", 3000)
 Return
 }
 run "%TextEditor%" "%files%"
+hovering_off:=0
 Return
 
 7PlusMenu_记事本打开()

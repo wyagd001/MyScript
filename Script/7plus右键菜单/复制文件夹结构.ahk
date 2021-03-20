@@ -1,21 +1,25 @@
 ﻿1005:
-	SetTimer,copyfolderStructure,-200
+	SetTimer,copyfolderStructure,-150
 Return
 
 ;复制文件夹结构而不复制文件夹中的文件
 copyfolderStructure:
-sleep,200
+SetTimer, hovering, off
+hovering_off:=1
+sleep,50
 Critical,On
 Files := GetSelectedFiles()
-If !Files
+If !Files or (Files="ERROR")
 {
-	MsgBox,,,获取文件路径失败。,3
+	hovering_off:=0
+	CF_ToolTip("获取文件路径失败。", 3000)
 Return
 }
 Critical,Off
 
 Files:=Files . "\"
 CopyDirStructure(Files,A_Desktop,1)
+hovering_off:=0
 Return
 
 ; https://autohotkey.com/board/topic/63944-function-copydirstructure/

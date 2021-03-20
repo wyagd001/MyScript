@@ -1,5 +1,5 @@
 ﻿1013:
-SetTimer,Windy,-200
+SetTimer,Windy,-150
 Return
 
 7PlusMenu_Windy资源管理器菜单()

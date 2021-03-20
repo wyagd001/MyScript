@@ -62,19 +62,19 @@ return
 copycliphistoryPIF:  ; 复制剪贴板最近的项目收藏夹中的条目到剪贴板
 	WB_id := StrReplace(A_GuiControl , "CHPIF_", "")
 	temp_read := getFromTable("history", "data", "id=" CHPIFArray[WB_id])[1]
-	monitor=0
+	clipmonitor=0
 	try Clipboard := temp_Read
 	sleep,300
-	monitor=1
+	clipmonitor=1
 return
 
 copycliphistoryPI:  ; 复制剪贴板最近的项目中的条目到剪贴板
 	WB_id := StrReplace(A_GuiControl , "CHPI_", "")
 	temp_read := getFromTable("history", "data", "id=" cliphistoryPI_ID[WB_id])[1]
-	monitor=0
+	clipmonitor=0
 	try Clipboard := temp_Read
 	sleep,300
-	monitor=1
+	clipmonitor=1
 return
 
 DCHPIF:  ; 删除剪贴板收藏夹中的条目

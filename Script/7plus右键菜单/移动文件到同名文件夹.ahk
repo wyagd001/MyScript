@@ -1,7 +1,7 @@
 ﻿;桌面lnk文件无效(所有lnk文件都无效)
 1003:
 	;MsgBox
-	SetTimer,移动文件到同名文件夹,-200
+	SetTimer,移动文件到同名文件夹,-150
 Return
 
 ;文件移动到同名文件夹内
@@ -9,16 +9,20 @@ Return
 ;按快捷键为结果为 G:\Users\lyh\Desktop\QQ  实际为QQ.lnk
 ;#G::
 移动文件到同名文件夹:
-sleep,200
+SetTimer, hovering, off
+hovering_off:=1
+sleep, 50
 Critical,On
 Files := GetSelectedFiles()
-If !Files
+If !Files or (Files="ERROR")
 {
-	MsgBox,,,获取文件路径失败5。,3
+	hovering_off:=0
+	CF_ToolTip("获取文件路径失败。", 3000)
 	Return
 }
 Critical,Off
 
+hovering_off:=0
 Loop, Parse, files, `n,`r
 {
 	FileFullPath := A_LoopField

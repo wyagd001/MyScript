@@ -50,7 +50,7 @@ Esc::DCHPITooltip()
 
 CHPI2Screen(Num)
 {
-	global monitor, CHPIFNo, OutputWId, cliphistoryPI_ID, CHPIFArray
+	global clipmonitor, CHPIFNo, OutputWId, cliphistoryPI_ID, CHPIFArray
 	Saved_ClipBoard := ClipboardAll    ; 备份剪贴板
 	Clipboard := ""   ; 清空剪贴板
 	if (A_ThisHotkey = "Space")
@@ -68,7 +68,7 @@ CHPI2Screen(Num)
 	sleep 100
 	Clipboard:=Saved_ClipBoard
 	sleep 100
-	monitor := 1
+	clipmonitor := 1
 	DCHPITooltip()
 return
 }

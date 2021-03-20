@@ -267,11 +267,11 @@ Label_Windy_RunCommand:
 	Else If (RegExMatch(Windy_Cmd, "i)^ListitemPaste\|"))
 	;  
 	{
-		monitor := 0
+		clipmonitor := 0
 		Clipboard := RegExReplace(Windy_Cmd, "i)^ListitemPaste\|\s?")
 		sleep,200
 		send ^v
-		monitor := 1
+		clipmonitor := 1
 		return
 	}
 	Else If(RegExMatch(Windy_Cmd, "i)^(AlwaysOnTop\|)")) ; 如果是以AlwaysOnTop|开头，则是置顶当前窗体

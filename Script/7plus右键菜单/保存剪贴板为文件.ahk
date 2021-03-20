@@ -1,11 +1,16 @@
 ﻿1014:
-SetTimer,保存剪贴板为文件,-200
+SetTimer,保存剪贴板为文件,-150
 return
 
 保存剪贴板为文件:
+SetTimer, hovering, off
+hovering_off:=1
+sleep, 50
+Critical,On
 CurrentFolder:=GetCurrentFolder()
 if CurrentFolder
-PasteToPath(CurrentFolder)
+	PasteToPath(CurrentFolder)
+hovering_off:=0
 return
 
 7PlusMenu_保存剪贴板为文件()

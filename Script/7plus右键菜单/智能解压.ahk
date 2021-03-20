@@ -1,5 +1,5 @@
 ﻿1006:
-	SetTimer,smartunrar,-200
+	SetTimer,smartunrar,-150
 Return
 
 ;智能解压
@@ -8,17 +8,21 @@ Return
 ;2).压缩包内有只有1个文件（夹）时“解压”文件到压缩包所在目录的“与压缩包内的文件（夹）同名的文件（夹内）”
 ;A.rar--------File→File/Fold→Fold
 smartunrar:
-sleep,200
+SetTimer, hovering, off
+hovering_off:=1
+sleep, 50
 Critical,On
 Files := GetSelectedFiles()
-If !Files
+If !Files or (Files="ERROR")
 {
-	MsgBox,,,获取文件路径失败。,3
+	hovering_off:=0
+	CF_ToolTip("获取文件路径失败。", 3000)
 Return
 }
 
 Loop Parse, Files, `n, `r ;从 Files 中逐个获取压缩包路径。换行作分隔符，忽略头尾回车。
 	7z_smart_Unarchiver(A_LoopField)
+hovering_off:=0
 Return
 
 7PlusMenu_智能解压()

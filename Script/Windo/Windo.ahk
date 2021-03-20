@@ -12,7 +12,7 @@ Windo_保存路径到windy收藏夹:
 return
 
 Windo_括起来:
-	monitor := 0
+	clipmonitor := 0
 	Candy_Saved_ClipBoard := ClipboardAll
 	StringSplit, kql_Arr, A_ThisMenuItem, %A_Space%
 	GetSelText(0)
@@ -22,11 +22,11 @@ Windo_括起来:
 	Sleep, 500
 	Clipboard := Candy_Saved_ClipBoard    
 	Candy_Saved_ClipBoard =
-	monitor := 1
+	clipmonitor := 1
 Return
 
 Windo_首字大写:
-	monitor := 0
+	clipmonitor := 0
 	Candy_Saved_ClipBoard := ClipboardAll
 	CandySel:=GetSelText()
 	Loop, Parse, CandySel, %A_Space%_`,|;-！`.  
@@ -43,5 +43,5 @@ Windo_首字大写:
 	Sleep,500
 	Clipboard := Candy_Saved_ClipBoard
 	out :=Candy_Saved_ClipBoard:=Position:=""
-	monitor := 1
+	clipmonitor := 1
 Return

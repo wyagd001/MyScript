@@ -1,23 +1,23 @@
 ﻿Cando_变大写:
-	monitor := 0
+	clipmonitor := 0
 	Clipboard =
 	StringUpper Clipboard, CandySel
 	Send ^v
 	Clipboard := CandySel_Rich
-	monitor := 1
+	clipmonitor := 1
 Return
 
 Cando_变小写:
-	monitor := 0
+	clipmonitor := 0
 	Clipboard =
 	StringLower Clipboard, CandySel
 	Send ^v
 	Clipboard := CandySel_Rich
-	monitor := 1
+	clipmonitor := 1
 Return
 
 Cando_首字大写:
-	monitor := 0
+	clipmonitor := 0
 	;StringUpper Clipboard, CandySel, T
 	Clipboard =
 	Loop, Parse, CandySel, %A_Space%_`,|;-！`.  
@@ -33,22 +33,22 @@ Cando_首字大写:
 	Send, ^v
 	Clipboard := CandySel_Rich
 	out := Position := ""
-	monitor := 1
+	clipmonitor := 1
 Return
 
 Cando_括起来:
-	monitor := 0
+	clipmonitor := 0
 	StringSplit, kql_Arr, A_ThisMenuItem, %A_Space%
 	Clipboard := CandySel
 	send {del}{%kql_Arr1%}
 	Send,^v
 	send {%kql_Arr2%}
 	Clipboard := CandySel_Rich
-	monitor := 1
+	clipmonitor := 1
 Return
 
 Cando_等号对齐:
-	monitor := 0
+	clipmonitor := 0
 	LimitMax:=30     ;左侧超过该长度时，该行不参与对齐，该数字可自行修改
 	MaxLen:=0
 	StrSpace:=" "
@@ -88,5 +88,5 @@ Cando_等号对齐:
 	clipboard := Aligned
 	Send ^v
 	Aligned:=""
-	monitor := 1
+	clipmonitor := 1
 Return

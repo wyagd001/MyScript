@@ -3,7 +3,7 @@
 return
 
 $^V::
-	if tempid   ; 图片，文件等非文字剪贴板 直接粘贴
+	if clipnotext   ; 图片，文件等非文字剪贴板 直接粘贴
 	{
 		Send, ^{vk56}
 	return
@@ -24,31 +24,31 @@ $^V::
 	return
 	}
 
-	monitor=0
-	first+=1
+	clipmonitor=0 ; 停止监控剪贴板变化
+	ClipNOK+=1   ; 按键次数加1
 
-	if first=1
+	if ClipNOK=1
 		clipnum:=clipid
-	else if first=2
+	else if ClipNOK=2
 	{
 		clipnum:=clipid-1
 		if clipnum=0
 		clipnum = 3
 	}
-	else if first=3
+	else if ClipNOK=3
 	{
 		clipnum:=clipid+1
 		if clipnum=4
 			clipnum = 1
 	}
-	else if first=4
+	else if ClipNOK=4
 	{
 		clipnum:=4
 	}
-	else   ;  first=5
+	else   ;  ClipNOK=5
 	{
-		first=1
-		f_repeat:=1
+		ClipNOK=1
+		clipkey_repeat:=1
 		clipnum:=clipid
 	}
 
@@ -63,13 +63,13 @@ ctrlCheck:
 
 	if !GetKeyState("Ctrl")  ; 松开 Ctrl 键
 	{
-		first=0
+		ClipNOK=0
 		SetTimer, ctrlCheck, Off
 		tooltip
-		if (clipnum=clipid) & !f_repeat  ; 第一次循环中的第一项带格式复制
+		if (clipnum=clipid) & !clipkey_repeat  ; 第一次循环中的第一项带格式复制
 		{
 			Send, ^{vk56}
-			monitor=1
+			clipmonitor=1
 		return
 		}
 		else
@@ -89,8 +89,8 @@ ctrlCheck:
 			sleep,500
 			Clipboard := Old_Clipboard
 			sleep,200
-			monitor=1
-			Old_Clipboard := f_repeat := ""
+			clipmonitor=1
+			Old_Clipboard := clipkey_repeat := ""
 		}
 	}
 return
@@ -114,13 +114,13 @@ cliptip(num)
 return
 }
 
-; 脚本启动后8秒后 monitor=1
+; 脚本启动后8秒后 clipmonitor=1
 shijianCheck:
 	lt:=A_TickCount
 	if (lt-st>8000)
 	{
 		SetTimer, shijianCheck,off
-		monitor=1
+		clipmonitor=1
 		if Auto_mousetip
 			CF_ToolTip("三重剪贴板已开始工作。", 3000)
 	}

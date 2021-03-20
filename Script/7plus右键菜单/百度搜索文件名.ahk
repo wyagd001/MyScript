@@ -1,17 +1,20 @@
 ﻿;桌面lnk文件无效(所有lnk文件都无效)
 1004:
-	SetTimer,searchthefile,-200
+	SetTimer,searchthefile,-150
 Return
 
 ; 桌面lnk文件无效  Why
 ; 百度搜索文件名
 searchthefile:
-	sleep, 200
+	SetTimer, hovering, off
+	hovering_off:=1
+	sleep, 50
 	Critical, On
 	Files := GetSelectedFiles(0)
-	If !Files
+	If !Files or (Files="ERROR")
 	{
-		MsgBox,,,获取文件路径失败1。,3
+		hovering_off:=0
+		CF_ToolTip("获取文件路径失败。", 3000)
 	Return
 	}
 	Critical, Off
@@ -24,13 +27,13 @@ searchthefile:
 		{
 			Loop, Parse, files, `n, `r
 				run, http://www.baidu.com/s?wd=%A_LoopField%
-		return
 		}
-		else
+		hovering_off:=0
 		return
 	}
 	Loop, Parse, files, `n, `r
 		run, http://www.baidu.com/s?wd=%A_LoopField%
+	hovering_off:=0
 Return
 
 7PlusMenu_百度搜索文件名()

@@ -1,19 +1,22 @@
 ﻿1015:
-	SetTimer,CopyPathToClip,-200
+	SetTimer,CopyPathToClip,-150
 Return
 
 CopyPathToClip:
-	sleep, 200
+	hovering_off:=1
+	sleep, 50
 	Critical, On
 	Files := GetSelectedFiles()
-	If !Files
+	If !Files or (Files="ERROR")
 	{
-		CF_ToolTip("无法获取到文件路径。", 3000)
+		hovering_off:=0
+		CF_ToolTip("获取文件路径失败。", 3000)
 	return
 	}
 	Clipboard := Files
 	if !Auto_Clip
 	CF_ToolTip("已复制文件路径到截剪贴板。", 3000)
+	hovering_off:=0
 Return
 
 7PlusMenu_复制文件路径()

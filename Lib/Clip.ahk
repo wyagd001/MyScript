@@ -17,13 +17,14 @@
 		return x
 }
 
-; returnnum = 0 不还原剪贴板，返回复制的内容（新剪贴板）
-; returnnum = 1 还原剪贴板(剪贴板内容不变)，清空 _isFile _ClipAll，返回复制的内容
-; returnnum = 2/3/4.. 还原剪贴板，赋值 _isFile _ClipAll，返回复制的内容
-GetSelText(returnnum:=1, ByRef _isFile:="", ByRef _ClipAll:="",waittime:=0.5)
+; returntype = 0 不还原剪贴板(剪贴板为新复制的文本)
+; returntype = 1 还原剪贴板(剪贴板内容不变)，清空 _isFile _ClipAll
+; returntype = 2/3/4.. 还原剪贴板，赋值 _isFile _ClipAll
+; 返回值  返回复制的内容
+GetSelText(returntype:=1, ByRef _isFile:="", ByRef _ClipAll:="", waittime:=0.5)
 {
-	global monitor
-	monitor := (returnnum = 0) ? 1 : 0
+	global clipmonitor
+	clipmonitor := (returntype = 0) ? 1 : 0
 	Saved_ClipBoard := ClipboardAll    ; 备份剪贴板
 	Clipboard=    ; 清空剪贴板
 	Send, ^c
@@ -33,12 +34,13 @@ GetSelText(returnnum:=1, ByRef _isFile:="", ByRef _ClipAll:="",waittime:=0.5)
 	{
 		Clipboard:=Saved_ClipBoard
 		sleep 100
-		monitor := 1
+		clipmonitor := 1
+		Saved_ClipBoard:=""
 	Return
 	}
-	If(returnnum=0)
+	If(returntype=0)
 	Return Clipboard
-	else If(returnnum=1)
+	else If(returntype=1)
 		_isFile := _ClipAll := ""
 	else
 	{
@@ -49,7 +51,8 @@ GetSelText(returnnum:=1, ByRef _isFile:="", ByRef _ClipAll:="",waittime:=0.5)
 
 	Clipboard := Saved_ClipBoard  ; 还原粘贴板
 	sleep 200
-	monitor := 1
+	clipmonitor := 1
+	Saved_ClipBoard:=""
 	return ClipSel
 }
 

@@ -691,7 +691,10 @@ if !是否检测
 
 ;----------开启鼠标自动激活功能----------
 If(Auto_Raise=1)
+{
+	hovering_off:=0
 	SetTimer, hovercheck, 100
+}
 
 ;当某些窗口存在时，鼠标悬停功能直接返回
 Loop, parse, DisHover, `,
@@ -763,7 +766,7 @@ translist:=IniObj(A_ScriptDir "\settings\translist.ini").翻译
 ;3→2→1→3
 if Auto_Clip
 {
-	first := f_repeat := clipid := monitor := 0
+	ClipNOK := clipkey_repeat := clipid := clipmonitor := 0
 	writecliphistory := 1
 	Array_Cliphistory:=[]
 	st:=A_TickCount
@@ -1099,7 +1102,7 @@ onClipboardChange:
 	return
 	if A_IsPaused ; 脚本暂停时返回
 	return
-	if !monitor  ; 按下^V时返回
+	if !clipmonitor  ; 按下^V时返回
 	return
 	ClipWait, 1, 1 ; 等待剪贴板
 	if !clipboard
@@ -1111,7 +1114,7 @@ onClipboardChange:
 	}
 	If Auto_ClipPlugin ;
 	{
-		tempid=0
+		clipnotext=0
 		If ClipPlugin_git
 		{
 			If RegExMatch(Clipboard, "^(\\|/)?(zh-cn|v1|v2)?(\\|/)?docs(\\?|/?).+\.(htm|js|css|ahk)")
@@ -1128,7 +1131,7 @@ onClipboardChange:
 	}
 	if GetClipboardFormat(1)=1  ; 剪贴板中的内容是文本
 	{
-		tempid=0
+		clipnotext=0
 		if(ClipSaved%clipid%=Clipboard)
 		return
 		clipid+=1
@@ -1164,7 +1167,7 @@ onClipboardChange:
 		}
 	}
 	else ; 剪贴板中的内容是图片或文件等非文本内容
-		tempid=1
+		clipnotext=1
 return
 
 EmptyMem(PID="AHK Rocks"){

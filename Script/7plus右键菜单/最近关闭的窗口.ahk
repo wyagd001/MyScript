@@ -1,5 +1,5 @@
 ﻿1007:
-	Sleep,500
+	Sleep,100
 	If CloseWindowList.Length()
 	{
 		if(GetKeyState("Shift"))
