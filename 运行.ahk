@@ -892,7 +892,7 @@ Loop, 4
 ;=========热键设置=========
 
 ;---------鼠标增强空格预览的热键-----------
-if !Auto_mouseclick
+if !Auto_mouseclick && !Auto_Raise
 	hotkey,~LButton,off
 if !Auto_midmouse
 	hotkey,$MButton,off

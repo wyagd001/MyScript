@@ -296,6 +296,7 @@ Label_Candy_RunCommand:
 		StringReplace, Candy_Cmd, Candy_Cmd, {File:linktarget}, %CandySel_LinkTarget%, All                      ; lnk的目标
 	}
 	CandyCmd_RepStr := Object("{File:ext}"          ,CandySel_Ext
+                           ,"{File:nameext}"      ,CandySel_FileNameWithExt
                            ,"{File:name}"         ,CandySel_FileNameNoExt
                            ,"{File:parentpath}"   ,CandySel_ParentPath
                            ,"{File:parentname}"   ,CandySel_ParentName
@@ -412,7 +413,8 @@ Label_Candy_RunCommand:
 	}
 	Else If (Candy_Cmd_Str1="Run")     ; 其后面要带命令行，即使操作对象是被选中的文件，也不能省略
 	{
-		Run, %Candy_Cmd_Str2% , %Candy_Cmd_Str3%, %Candy_Cmd_Str4% UseErrorLevel         ; 1:程序  2:工作目录 3:状态
+		Run, %Candy_Cmd_Str2%, %Candy_Cmd_Str3%, %Candy_Cmd_Str4% UseErrorLevel         ; 1:程序  2:工作目录 3:状态
+		;Tooltip % Candy_Cmd_Str2 "`n" Candy_Cmd_Str3 "`n" Candy_Cmd_Str4 "`n" ErrorLevel
 		If (ErrorLevel = "Error")               ; 如果运行出错的话
 			Goto Label_Candy_ErrorHandle
 	}

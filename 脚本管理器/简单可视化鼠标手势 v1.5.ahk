@@ -6,6 +6,30 @@
 #NoEnv
 #NoTrayIcon
 #SingleInstance, force
+Menu, Tray, Icon, shell32.dll, 15
+SysGet, MWA, MonitorWorkArea
+WMAwidth := MWARight - MWALeft
+WMAHeight := MWABottom - MWATop
+
+start_01() {
+  static init:=start_01()
+  SetTitleMatchMode, 2  ;//匹配部分标题
+  GroupAdd, MyBrowser, 360安全浏览器
+  GroupAdd, MyBrowser, 360极速浏览器
+  GroupAdd, MyBrowser, 搜狗高速浏览器
+  GroupAdd, MyBrowser, 世界之窗浏览器
+  GroupAdd, MyBrowser, 2345加速浏览器
+  GroupAdd, MyBrowser, GreenBrowser
+  GroupAdd, MyBrowser, Firefox
+  GroupAdd, MyBrowser, Chrome
+  GroupAdd, MyBrowser, ahk_class IEFrame
+  GroupAdd, MyBrowser, ahk_class 360se5_Frame
+  GroupAdd, MyBrowser, ahk_class 360se6_Frame
+  GroupAdd, MyBrowser, ahk_class Chrome_WidgetWin_1
+  GroupAdd, MyBrowser, ahk_class ShockwaveFlashFullScreen
+  GroupAdd, MyBrowser, ahk_class QQBrowser_WidgetWin_1
+}
+
 SetWinDelay -1
 SetBatchLines, -1
 CoordMode, Mouse
@@ -18,7 +42,7 @@ tip:= { 0 : 0
   , "右" : "窗口_右(快捷键)"
   , "下上":"窗口_置顶"
   , "下右":"窗口_关闭"
-  , "右下" : "切换输入法"
+  , "右下" : "输入法中英切换"
   , "右下左" : "退出鼠标手势"
   , "右下左上" : "重启鼠标手势"
   , "右下左上右" : "重启鼠标手势"
@@ -40,13 +64,13 @@ else
 return
 
 左:
-sleep 100
-send #{Numpad4}
+if(h_class!="Progman" && h_class!="Shell_TrayWnd")
+WinMove, ahk_id %h_id%,, 0, 0, WMAwidth / 2, WMAHeight
 return
 
 右:
-sleep 100
-send #{Numpad6}
+if(h_class!="Progman" && h_class!="Shell_TrayWnd")
+WinMove, ahk_id %h_id%,, WMAwidth / 2, 0, WMAwidth / 2, WMAHeight
 return
 
 下上:
@@ -59,12 +83,7 @@ if(h_class="Progman" || h_class="Shell_TrayWnd")
   WinClose ahk_class Progman
 if(h_class!="Shell_TrayWnd")
   PostMessage, 0x112, 0xF060,,, ahk_id %h_id%
-;msgbox % h_id
 return
-
-;p::
-;msgbox % WinExist("A")
-;return
 
 右下:
 send {shift}
@@ -77,32 +96,11 @@ ExitApp
 右下左上右:
 reload
 
-start_01() {
-  static init:=start_01()
-  SetTitleMatchMode, 2  ;//匹配部分标题
-  GroupAdd, MyBrowser, 360安全浏览器
-  GroupAdd, MyBrowser, 360极速浏览器
-  GroupAdd, MyBrowser, 搜狗高速浏览器
-  GroupAdd, MyBrowser, 世界之窗浏览器
-  GroupAdd, MyBrowser, 2345加速浏览器
-  GroupAdd, MyBrowser, GreenBrowser
-  GroupAdd, MyBrowser, Firefox
-  GroupAdd, MyBrowser, Chrome
-  GroupAdd, MyBrowser, ahk_class IEFrame
-  GroupAdd, MyBrowser, ahk_class 360se5_Frame
-  GroupAdd, MyBrowser, ahk_class 360se6_Frame
-  GroupAdd, MyBrowser, ahk_class Chrome_WidgetWin_1
-  GroupAdd, MyBrowser, ahk_class ShockwaveFlashFullScreen
-  GroupAdd, MyBrowser, ahk_class QQBrowser_WidgetWin_1
-}
-
 #If !WinActive("ahk_group MyBrowser")
 RButton::
 显示画板(), 轨迹:=方向:=上次方向:="", arr:=[]
 MouseGetPos, x1, y1, h_id
 WinGetClass, h_class, ahk_id %h_id%
-WinActivate, ahk_id %h_id%
-WinWaitActive, ahk_id %h_id%
 While GetKeyState("RButton", "P")
 {
   Sleep, 10

@@ -14,8 +14,10 @@ If !Files or (Files="ERROR")
 	CF_ToolTip("获取文件路径失败。", 3000)
 Return
 }
+
 run "%TextEditor%" "%files%"
 hovering_off:=0
+Critical,Off
 Return
 
 7PlusMenu_记事本打开()

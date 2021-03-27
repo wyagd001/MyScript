@@ -19,7 +19,7 @@ If !Files or (Files="ERROR")
 	CF_ToolTip("获取文件路径失败。", 3000)
 Return
 }
-
+Critical,Off
 Loop Parse, Files, `n, `r ;从 Files 中逐个获取压缩包路径。换行作分隔符，忽略头尾回车。
 	7z_smart_Unarchiver(A_LoopField)
 hovering_off:=0
