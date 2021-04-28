@@ -19,45 +19,34 @@ Return
 
 GetCurrentFolder()
 {
-	global MuteClipboardList,newfolder
-	newfolder=
-	If (WinActive("ahk_group ExplorerGroup"))
+	global MuteClipboardList, newfolder
+	newfolder =
+	If WinActive("ahk_group ccc")
 	{
-		hWnd:=WinExist("A")
-		Return ShellFolder(hWnd,1)
-	}
-	If (WinActive("ahk_group DesktopGroup"))
-		Return %A_Desktop%
-	isdg := IsDialog()
-	If (isdg=1) ;No Support for old dialogs for now
-	{
-		ControlGetText, text , ToolBarWindow322, A
-		dgpath:=SubStr(text,InStr(text," "))
-		dgpath = %dgpath%
+		isdg := IsDialog()
+		If (isdg=0)
+		Return ShellFolder(,1)
+		Else If (isdg=1) ;No Support for old dialogs for now
+		{
+			ControlGetText, text , ToolBarWindow322, A
+			dgpath:=SubStr(text, InStr(text," "))
+			dgpath = %dgpath%
 		Return dgpath
-	}
-	Else If (isdg=2)
-	{
-		newfolder=types2
+		}
+		Else If (isdg=2)
+		{
+			newfolder=types2
 		Return 0
+		}
 	}
 Return 0
 }
 
 ShellNavigate(sPath, bExplore=False, hWnd=0)
 {
-	tmm := A_TitleMatchMode
-	SetTitleMatchMode, RegEx
-	If hWnd || (hWnd :=	WinExist("ahk_class (?:Cabinet|Explore)WClass"))
+	If (window := Explorer_GetWindow(hwnd))
 	{
-		SetTitleMatchMode, %tmm%
-		For window in ComObjCreate("Shell.Application").Windows
-		{
-			If (window.hWnd = hWnd)
-				window.Navigate2[sPath]
-		}
-		Until (window.hWnd = hWnd)
-
+		window.Navigate2[sPath]
 	}
 	Else If bExplore
 		ComObjCreate("Shell.Application").Explore[sPath]
@@ -70,12 +59,15 @@ Returntype=2 具有焦点的选中项
 Returntype=3 所有选中项
 Returntype=4 当前文件夹下所有项目
 */
-ShellFolder(hWnd=0,returntype=0,onlyname=0)
+ShellFolder(hWnd=0, returntype=1, onlyname=0)
 {
 	If !(window := Explorer_GetWindow(hwnd))
-		Return ErrorLevel := "ERROR"
+		Return 0
+
 	If (window="desktop")
 	{
+		If (returntype=1)
+		return A_Desktop
 		If (returntype=2) or (returntype=3)
 			selection=1
 		If (returntype=4)
@@ -149,88 +141,81 @@ ShellFolder(hWnd=0,returntype=0,onlyname=0)
 
 SelectFiles(Select,Clear=1,Deselect=0,MakeVisible=1,focus=1, hWnd=0)
 {
-	If (hWnd||(hWnd:=WinActive("ahk_class CabinetWClass"))||(hWnd:=WinActive("ahk_class ExploreWClass")))
+	If (window := Explorer_GetWindow(hwnd)) && (window != "desktop")
 	{
 		SplitPath, Select, Select ;Make sure only names are used
-		for Item in ComObjCreate("Shell.Application").Windows
+		doc:=window.Document
+		value:=!(Deselect = 1)
+		value1:=!(Deselect = 1)+(focus = 1)*16+(MakeVisible = 1)*8
+		count := doc.Folder.Items.Count
+		If(Clear = 1)
 		{
-			If (Item.hwnd = hWnd)
+			If(count > 0)
 			{
-				doc:=Item.Document
-				value:=!(Deselect = 1)
-				value1:=!(Deselect = 1)+(focus = 1)*16+(MakeVisible = 1)*8
-				count := doc.Folder.Items.Count
-				If(Clear = 1)
-				{
-					If(count > 0)
-					{
-						item := doc.Folder.Items.Item(0)
-						doc.SelectItem(item,4)
-						doc.SelectItem(item,0)
-					}
-				}
-				If(!IsObject(Select))
-					Select := ToArray(Select)
-				items := Array()
-				itemnames := Array()
-				Loop % count
-				{
-					index := A_Index
-					while(true)
-					{
-						item := doc.Folder.Items.Item(index - 1)
-						itemname := item.Name
-						If(itemname != "")
-						{
-							; outputdebug itemname %itemname%
-							break
-						}
-						Sleep 10
-					}
-					items.Push(item)
-					itemnames.Push(itemname)
-         ;FileAppend,%itemname%`n,%A_desktop%\123.txt
-				}
-        ererer:=Select.Length()
-				Loop % Select.Length()
-				{
-					index := A_Index
-					filter := Select[A_Index]
-					If(filter)
-					{
-						If(InStr(filter, "*"))
-						{
-							filter := "\Q" CF_StringReplace(filter, "*", "\E.*\Q", 1) "\E"
-							filter := strTrim(filter,"\Q\E")
-							Loop % items.Length()
-							{
-                
-								If(RegexMatch(itemnames[A_Index],"i)" filter))
-								{
-									doc.SelectItem(items[A_Index], index=1 ? value1 : value)
-									index++
-								}
-							}
-						}
-						Else
-						{
-							Loop % items.Length()
-							{
-								If(itemnames[A_Index]=filter)
-								{
-									doc.SelectItem(items[A_Index], index=1 ? value1 : value)
-									index++
-									break
-								}
-							}
-						}
-					}
-				}
-				Return
+				item := doc.Folder.Items.Item(0)
+				doc.SelectItem(item,4)
+				doc.SelectItem(item,0)
 			}
 		}
+		If(!IsObject(Select))
+			Select := ToArray(Select)
+		items := Array()
+		itemnames := Array()
+		Loop % count
+		{
+			index := A_Index
+			while(true)
+			{
+				item := doc.Folder.Items.Item(index - 1)
+				itemname := item.Name
+				If(itemname != "")
+				{
+					; outputdebug itemname %itemname%
+				break
+				}
+				Sleep 10
+			}
+			items.Push(item)
+			itemnames.Push(itemname)
+			;FileAppend,%itemname%`n,%A_desktop%\123.txt
+		}
+		ererer:=Select.Length()
+		Loop % Select.Length()
+		{
+			index := A_Index
+			filter := Select[A_Index]
+			If(filter)
+			{
+				If(InStr(filter, "*"))
+				{
+					filter := "\Q" CF_StringReplace(filter, "*", "\E.*\Q", 1) "\E"
+					filter := strTrim(filter,"\Q\E")
+					Loop % items.Length()
+					{
+						If(RegexMatch(itemnames[A_Index],"i)" filter))
+						{
+							doc.SelectItem(items[A_Index], index=1 ? value1 : value)
+							index++
+						}
+					}
+				}
+				Else
+				{
+					Loop % items.Length()
+					{
+						If(itemnames[A_Index]=filter)
+						{
+							doc.SelectItem(items[A_Index], index=1 ? value1 : value)
+							index++
+						break
+						}
+					}
+				}
+			}
+		}
+		Return
 	}
-	Else If(hWnd:=WinActive("ahk_group DesktopGroup") && A_PtrSize)
+	Else If(window = "desktop")
 	{
 		SplitPath, Select,,,, Select
 		SendStr(Select)  ;A版，U版兼容
@@ -452,22 +437,24 @@ GetFocusedControl()
 }
 
 RefreshExplorer()
-{
-	hwnd:=WinExist("A")
-	If (WinActive("ahk_group ExplorerGroup"))
+{ ; by teadrinker on D437 @ tiny.cc/refreshexplorer
+	local Windows := ComObjCreate("Shell.Application").Windows
+	Windows.Item(ComObject(0x13, 8)).Refresh()
+	for Window in Windows
+		if (Window.Name != "Internet Explorer")
+			Window.Refresh()
+	Else If(IsDialog())
 	{
-		for Item in ComObjCreate("Shell.Application").Windows
+		WinGet, w_WinIDs, List, ahk_class #32770
+		Loop, %w_WinIDs%
 		{
-			If (Item.hwnd = hWnd)
-			{
-				Item.Refresh()
-				Send {F5}
-				Return
-			}
+			w_WinID := w_WinIDs%A_Index%
+			ControlGet, w_CtrID, Hwnd,, SHELLDLL_DefView1, ahk_id %w_WinID%
+			ControlGet, w_CtrID, Hwnd,, SHELLDLL_DefView1, ahk_id %w_WinID%
+			ControlClick, DirectUIHWND2, ahk_id %w_WinID%,,,, NA x1 y30
+			SendMessage, 0x111, 0x7103,,, ahk_id %w_CtrID%
 		}
 	}
-	Else If(IsDialog())
-		Send {F5}
 	Else
 		Send {F5}
 }
@@ -731,18 +718,19 @@ Explorer_GetPath(hwnd="")
 
 Explorer_GetWindow(hwnd="")
 {
+    static shell := ComObjCreate("Shell.Application")
     ; thanks to jethrow for some pointers here
-    WinGet, process, processName, % "ahk_id" hwnd := hwnd? hwnd:WinExist("A")
+    WinGet, process, processName, % "ahk_id" hwnd := (hwnd ? hwnd : WinExist("A"))
     WinGetClass class, ahk_id %hwnd%
 
     If (process!="explorer.exe")
         Return
     If (class ~= "(Cabinet|Explore)WClass")
     {
-        for window in ComObjCreate("Shell.Application").Windows
+        for window in shell.Windows
            If (window.hwnd==hwnd)
                Return window
-     }
+    }
     Else If (class ~= "Progman|WorkerW")
         Return "desktop" ; desktop found
 } 
@@ -937,6 +925,17 @@ CoTaskMemFree(pv)
 
 
 /*
+typedef struct _SHFILEOPSTRUCTA {
+  HWND         hwnd;
+  UINT         wFunc;
+  PCZZSTR      pFrom;
+  PCZZSTR      pTo;
+  FILEOP_FLAGS fFlags;
+  BOOL         fAnyOperationsAborted;
+  LPVOID       hNameMappings;
+  PCSTR        lpszProgressTitle;
+} SHFILEOPSTRUCTA, *LPSHFILEOPSTRUCTA;
+
 fileO:
 FO_MOVE   := 0x1
 FO_COPY   := 0x2

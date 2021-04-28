@@ -44,7 +44,7 @@
 
 TrayIcon_GetInfo(sExeName := "")
 {
-	DetectHiddenWindows, % (Setting_A_DetectHiddenWindows := A_DetectHiddenWindows) ? "On" :
+	DetectHiddenWindows, % (BackUp_DetectHiddenWindows := A_DetectHiddenWindows) ? "On" :
 	oTrayIcon_GetInfo := {}
 	For key, sTray in ["NotifyIconOverflowWindow", "Shell_TrayWnd"]
 	{
@@ -102,7 +102,7 @@ TrayIcon_GetInfo(sExeName := "")
 		DllCall("VirtualFreeEx", Ptr, hProc, Ptr, pRB, UPtr, 0, Uint, 0x8000)
 		DllCall("CloseHandle", Ptr, hProc)
 	}
-	DetectHiddenWindows, %Setting_A_DetectHiddenWindows%
+	DetectHiddenWindows, %BackUp_DetectHiddenWindows%
 	Return oTrayIcon_GetInfo
 }
 
@@ -118,7 +118,7 @@ TrayIcon_GetInfo(sExeName := "")
 TrayIcon_Hide(IDcmd, sTray := "Shell_TrayWnd", bHide:=True)
 {
 	sTray := sTray = 0 ?  "NotifyIconOverflowWindow" : "Shell_TrayWnd"
-	DetectHiddenWindows, % (Setting_A_DetectHiddenWindows := A_DetectHiddenWindows) ? "On" :
+	DetectHiddenWindows, % (BackUp_DetectHiddenWindows := A_DetectHiddenWindows) ? "On" :
 	idxTB := TrayIcon_GetTrayBar()
 	; win10 v2004 64bit 隐藏托盘时 idxTB 返回 3, 
 	; NotifyIconOverflowWindow 中隐藏的图标所在区域为 ToolbarWindow321，未隐藏的图标在ToolbarWindow323
@@ -127,7 +127,7 @@ TrayIcon_Hide(IDcmd, sTray := "Shell_TrayWnd", bHide:=True)
 	idxTB := sTray = "NotifyIconOverflowWindow" ? 1 : idxTB  ; 适用于 win10 v2004 64bit 隐藏托盘图标
 	SendMessage, 0x404, IDcmd, bHide, ToolbarWindow32%idxTB%, ahk_class %sTray% ; TB_HIDEBUTTON
 	SendMessage, 0x1A, 0, 0, , ahk_class %sTray%
-	DetectHiddenWindows, %Setting_A_DetectHiddenWindows%
+	DetectHiddenWindows, %BackUp_DetectHiddenWindows%
 }
 
 ; ----------------------------------------------------------------------------------------------------------------------
@@ -140,12 +140,12 @@ TrayIcon_Hide(IDcmd, sTray := "Shell_TrayWnd", bHide:=True)
 TrayIcon_Delete(idx, sTray := "Shell_TrayWnd")
 {
 	sTray := sTray = 0 ?  "NotifyIconOverflowWindow" : "Shell_TrayWnd"
-	DetectHiddenWindows, % (Setting_A_DetectHiddenWindows := A_DetectHiddenWindows) ? "On" :
+	DetectHiddenWindows, % (BackUp_DetectHiddenWindows := A_DetectHiddenWindows) ? "On" :
 	idxTB := TrayIcon_GetTrayBar()
 	idxTB := sTray = "NotifyIconOverflowWindow" ? 1 : idxTB
 	SendMessage, 0x416, idx, 0, ToolbarWindow32%idxTB%, ahk_class %sTray% ; TB_DELETEBUTTON
 	SendMessage, 0x1A, 0, 0, , ahk_class %sTray%
-	DetectHiddenWindows, %Setting_A_DetectHiddenWindows%
+	DetectHiddenWindows, %BackUp_DetectHiddenWindows%
 }
 
 ; ----------------------------------------------------------------------------------------------------------------------
@@ -172,11 +172,11 @@ TrayIcon_Remove(hWnd, uID)
 TrayIcon_Move(idxOld, idxNew, sTray := "Shell_TrayWnd")
 {
 	sTray := sTray = 0 ?  "NotifyIconOverflowWindow" : "Shell_TrayWnd"
-	DetectHiddenWindows, % (Setting_A_DetectHiddenWindows := A_DetectHiddenWindows) ? "On" :
+	DetectHiddenWindows, % (BackUp_DetectHiddenWindows := A_DetectHiddenWindows) ? "On" :
 	idxTB := TrayIcon_GetTrayBar()
 	idxTB := sTray = "NotifyIconOverflowWindow" ? 1 : idxTB
 	SendMessage, 0x452, idxOld, idxNew, ToolbarWindow32%idxTB%, ahk_class %sTray% ; TB_MOVEBUTTON
-	DetectHiddenWindows, %Setting_A_DetectHiddenWindows%
+	DetectHiddenWindows, %BackUp_DetectHiddenWindows%
 }
 
 ; ----------------------------------------------------------------------------------------------------------------------
@@ -194,14 +194,14 @@ TrayIcon_Move(idxOld, idxNew, sTray := "Shell_TrayWnd")
 TrayIcon_Set(hWnd, uId, hIcon, hIconSmall:=0, hIconBig:=0,hTooltip:="")
 {
     ;  NIM_MODIFY=1, NIF_ICON=2, NIF_TIP=4  NIF_Message=1
-    d := A_DetectHiddenWindows
+    BackUp_DetectHiddenWindows := A_DetectHiddenWindows
     DetectHiddenWindows, On
     ; WM_SETICON = 0x0080
     If ( hIconSmall ) 
         SendMessage, 0x0080, 0, hIconSmall,, ahk_id %hWnd%
     If ( hIconBig )
         SendMessage, 0x0080, 1, hIconBig,, ahk_id %hWnd%
-    DetectHiddenWindows, %d%
+    DetectHiddenWindows, %BackUp_DetectHiddenWindows%
 
     VarSetCapacity(NID, szNID := ((A_IsUnicode ? 2 : 1) * 384 + A_PtrSize*5 + 40),0)
     NumPut( szNID, NID, 0             )
@@ -221,7 +221,7 @@ TrayIcon_Set(hWnd, uId, hIcon, hIconSmall:=0, hIconBig:=0,hTooltip:="")
 ; ----------------------------------------------------------------------------------------------------------------------
 TrayIcon_GetTrayBar(Tray:="Shell_TrayWnd")
 {
-	DetectHiddenWindows, % (Setting_A_DetectHiddenWindows := A_DetectHiddenWindows) ? "On" :
+	DetectHiddenWindows, % (BackUp_DetectHiddenWindows := A_DetectHiddenWindows) ? "On" :
 	WinGet, ControlList, ControlList, ahk_class %Tray%
 	RegExMatch(ControlList, "(?<=ToolbarWindow32)\d+(?!.*ToolbarWindow32)", nTB)
 	Loop, %nTB%
@@ -234,7 +234,7 @@ TrayIcon_GetTrayBar(Tray:="Shell_TrayWnd")
 		idxTB := A_Index
 		Break
 	}
-	DetectHiddenWindows, %Setting_A_DetectHiddenWindows%
+	DetectHiddenWindows, %BackUp_DetectHiddenWindows%
 	Return  idxTB
 }
 
@@ -260,7 +260,7 @@ TrayIcon_GetHotItem()
 ; ----------------------------------------------------------------------------------------------------------------------
 TrayIcon_Button(sExeName, sButton := "L", bDouble := false, index := 1)
 {
-	DetectHiddenWindows, % (Setting_A_DetectHiddenWindows := A_DetectHiddenWindows) ? "On" :
+	DetectHiddenWindows, % (BackUp_DetectHiddenWindows := A_DetectHiddenWindows) ? "On" :
 	WM_MOUSEMOVE	  = 0x0200
 	WM_LBUTTONDOWN	  = 0x0201   ; 513
 	WM_LBUTTONUP	  = 0x0202     ; 514
@@ -284,7 +284,7 @@ TrayIcon_Button(sExeName, sButton := "L", bDouble := false, index := 1)
 		PostMessage, msgID, uID, %sButton%DOWN, , ahk_id %hWnd%
 		PostMessage, msgID, uID, %sButton%UP, , ahk_id %hWnd%
 	}
-	DetectHiddenWindows, %Setting_A_DetectHiddenWindows%
+	DetectHiddenWindows, %BackUp_DetectHiddenWindows%
 	return
 }
 
@@ -466,7 +466,7 @@ TrayIcon_loadIcon(pPath, pSize=32){
 		idx := Substr( pPath, j+1), pPath := SubStr( pPath, 1, j-1)
 
 	DllCall("PrivateExtractIcons"
-            ,"str",pPath,"int",idx,"int",pSize,"int", pSize
+            ,"str",pPath,"int",idx-1,"int",pSize,"int", pSize
             ,"uint*",hIcon,"uint*",0,"uint",1,"uint",0,"int")
 
 	return hIcon

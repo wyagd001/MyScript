@@ -1,98 +1,98 @@
 ﻿gui_clipHistory:
-	gui_History()
+gui_History()
 return
 
 $^V::
-	if clipnotext   ; 图片，文件等非文字剪贴板 直接粘贴
-	{
-		Send, ^{vk56}
-	return
-	}
-	if !ClipSaved1   ; 脚本启动时的剪贴板 直接粘贴
-	{
-		Send, ^{vk56}
-	return
-	}
-	if (Clipboard!=ClipSaved%clipid%)   ; 脚本未记录的剪贴板 直接粘贴
-	{
-		Send, ^{vk56}
-	return
-	}
-	if GetKeyState("CapsLock", "T")    ; CapsLock 打开时直接复制  连续复制相同的内容时打开
-	{
-		Send, ^{vk56}
-	return
-	}
+if clipnotext   ; 图片，文件等非文字剪贴板 直接粘贴
+{
+	Send, ^{vk56}
+return
+}
+if !ClipSaved1   ; 脚本启动时的剪贴板 直接粘贴
+{
+	Send, ^{vk56}
+return
+}
+if (Clipboard!=ClipSaved%clipid%)   ; 脚本未记录的剪贴板 直接粘贴
+{
+	Send, ^{vk56}
+return
+}
+if GetKeyState("CapsLock", "T")    ; CapsLock 打开时直接复制  连续复制相同的内容时打开
+{
+	Send, ^{vk56}
+return
+}
 
-	clipmonitor=0 ; 停止监控剪贴板变化
-	ClipNOK+=1   ; 按键次数加1
+clipmonitor=0 ; 停止监控剪贴板变化
+ClipNOK+=1   ; 按键次数加1
 
-	if ClipNOK=1
-		clipnum:=clipid
-	else if ClipNOK=2
-	{
-		clipnum:=clipid-1
-		if clipnum=0
+if ClipNOK=1
+	clipnum:=clipid
+else if ClipNOK=2
+{
+	clipnum:=clipid-1
+	if clipnum=0
 		clipnum = 3
-	}
-	else if ClipNOK=3
-	{
-		clipnum:=clipid+1
-		if clipnum=4
-			clipnum = 1
-	}
-	else if ClipNOK=4
-	{
-		clipnum:=4
-	}
-	else   ;  ClipNOK=5
-	{
-		ClipNOK=1
-		clipkey_repeat:=1
-		clipnum:=clipid
-	}
+}
+else if ClipNOK=3
+{
+	clipnum:=clipid+1
+	if clipnum=4
+		clipnum = 1
+}
+else if ClipNOK=4
+{
+	clipnum:=4
+}
+else   ;  ClipNOK=5
+{
+	ClipNOK=1
+	clipkey_repeat:=1
+	clipnum:=clipid
+}
 
-	st1:=A_TickCount
-	SetTimer, ctrlCheck, 50
+st1:=A_TickCount
+SetTimer, ctrlCheck, 50
 return
 
 ctrlCheck:
-	lt1:=A_TickCount
-	if lt1-st1>300
-		cliptip(clipnum)
+lt1:=A_TickCount
+if lt1-st1>300
+	cliptip(clipnum)
 
-	if !GetKeyState("Ctrl")  ; 松开 Ctrl 键
+if !GetKeyState("Ctrl")  ; 松开 Ctrl 键
+{
+	ClipNOK=0
+	SetTimer, ctrlCheck, Off
+	tooltip
+	if (clipnum=clipid) & !clipkey_repeat  ; 第一次循环中的第一项带格式复制
 	{
-		ClipNOK=0
-		SetTimer, ctrlCheck, Off
-		tooltip
-		if (clipnum=clipid) & !clipkey_repeat  ; 第一次循环中的第一项带格式复制
-		{
-			Send, ^{vk56}
-			clipmonitor=1
-		return
-		}
+		Send, ^{vk56}
+		clipmonitor=1
+	return
+	}
+	else
+	{
+		BackUp_ClipBoard := ClipboardAll
+			
+		if clipnum!=4
+			Clipboard := ClipSaved%clipnum%
 		else
 		{
-			Old_Clipboard := ClipboardAll
-			
-			if clipnum!=4
-				Clipboard := ClipSaved%clipnum%
-			else
-			{
-				Clipboard := ClipSaved%clipid% "`r`n"
-				Clipboard .= ((tmp_v:=clipid-1) != 0 ? ClipSaved%tmp_v% : ClipSaved3) . "`r`n"
-				Clipboard .= (tmp_v:=clipid+1) != 4 ? ClipSaved%tmp_v% : ClipSaved1
-			}
-			sleep,200
-			Send, ^{vk56}
-			sleep,500
-			Clipboard := Old_Clipboard
-			sleep,200
-			clipmonitor=1
-			Old_Clipboard := clipkey_repeat := ""
+			Clipboard := ClipSaved%clipid% "`r`n"
+			Clipboard .= ((Tmp_Val:=clipid-1) != 0 ? ClipSaved%Tmp_Val% : ClipSaved3) . "`r`n"
+			Clipboard .= (Tmp_Val:=clipid+1) != 4 ? ClipSaved%Tmp_Val% : ClipSaved1
 		}
+		sleep,200
+		Send, ^{vk56}
+		sleep,500
+		Clipboard := BackUp_ClipBoard
+		sleep,200
+		clipmonitor=1
+		BackUp_ClipBoard := clipkey_repeat := ""
 	}
+}
 return
 
 cliptip(num)
@@ -116,14 +116,14 @@ return
 
 ; 脚本启动后8秒后 clipmonitor=1
 shijianCheck:
-	lt:=A_TickCount
-	if (lt-st>8000)
-	{
-		SetTimer, shijianCheck,off
-		clipmonitor=1
-		if Auto_mousetip
-			CF_ToolTip("三重剪贴板已开始工作。", 3000)
-	}
+lt:=A_TickCount
+if (lt-st>8000)
+{
+	SetTimer, shijianCheck,off
+	clipmonitor=1
+	if Auto_mousetip
+		CF_ToolTip("三重剪贴板已开始工作。", 3000)
+}
 return
 
 migrateHistory(){
@@ -131,7 +131,7 @@ migrateHistory(){
 	createHisTable()
 	DB.Exec("BEGIN TRANSACTION")
 	;API.showTip("Moving history files to database. This process may take some time.")
-;addHistoryText("qqqqqqq", A_Now)
+
 	DB.Exec("COMMIT TRANSACTION")
 	;API.removeTip()
 }
@@ -139,19 +139,19 @@ migrateHistory(){
 createHisTable(){
 ; creates the History Table if it doesnt exist
 ; called by the migrateHistory function
-	q = 
-	(
-		CREATE TABLE if not exists history `(
-		id	INTEGER PRIMARY KEY AUTOINCREMENT,
-		data 	TEXT,
-		type	INTEGER,
-		fileid 	TEXT,
-		time	TEXT,
-		size 	INTEGER
-		`)
-	)
-	if !DB.Exec(q)
-    MsgBox, 16, SQLite错误, % "消息:`t" . DB.ErrorMsg . "`n代码:`t" . DB.ErrorCode
+q = 
+(
+	CREATE TABLE if not exists history `(
+	id	INTEGER PRIMARY KEY AUTOINCREMENT,
+	data 	TEXT,
+	type	INTEGER,
+	fileid 	TEXT,
+	time	TEXT,
+	size 	INTEGER
+	`)
+)
+if !DB.Exec(q)
+	MsgBox, 16, SQLite错误, % "消息:`t" . DB.ErrorMsg . "`n代码:`t" . DB.ErrorCode
 }
 
 addHistoryText(data, timestamp){
@@ -200,14 +200,13 @@ gui_History(){
 	local selected_row, thisguisize
 	hst_genWt := 750
 	;2_3_sort are the vars storing how cols are sorted , 1 means in Sort ; 0 means SortDesc
+	history_w=750
+	h=560
 
 	Gui, History:new
 	Gui, Color, F6F8E1
 	Gui, Margin, 7, 7
-	Gui, +Resize +MinSize500x300
-
-history_w=750
-h=500
+	Gui, +Resize +MinSize540x300
 
 	Gui, Add, Button, h23 Section Default	 ghistory_ButtonPreview vhistory_ButtonPreview	, 预览(&P)
 	Gui, Add, Button, x+6 ys h23			vhistory_ButtonDelete	ghistory_ButtonDelete, 删除(&T)
@@ -217,9 +216,13 @@ h=500
 	Gui, Add, Edit, ys  	ghistory_SearchBox	vhistory_SearchBox
 	Gui, Font, s9, Courier New
 	Gui, Font, s9, Consolas
-	Gui, Add, ListView, % "xs+1 HWNDhistoryLV vhistoryLV ghistoryprew LV0x4000 h430 w" (history_w ? history_w-20 : hst_genWt-25), 剪贴板内容|时间|大小(B)|其他
+	Gui, Add, Button, xs+1 h23 ghistoryCleanup, 删除180天前的数据
+	Gui, Add, Button, x+50 h23 ghistorylenclean, 删除字符长度小于8的行
+	Gui, Add, Button, x+50 h23 ghistoryVacuum, 删除空闲页
+	Gui, Add, Button, x+50 h23 ghistoryRemoveduplicate, 删除重复条目
+	Gui, Add, ListView, % "xs+1 HWNDhistoryLV vhistoryLV ghistoryLV LV0x4000 h430 w" (history_w ? history_w-20 : hst_genWt-25), 剪贴板内容|时间|大小(B)|其他
 
-	Gui, Add, StatusBar
+	Gui, Add, StatusBar, xs+1 ys+10
 	Gui, Font
 	GuiControl, Focus, history_SearchBox
 
@@ -241,7 +244,7 @@ h=500
 		GuiControl, focus, history_SearchBox
 	}
 	else
-		Gui, History:Show,% ( x ? "x" x " y" y : "" ) " w" (history_w?history_w:hst_genWt) " h" (h?h:500), 剪贴板历史
+		Gui, History:Show,% ( x ? "x" x " y" y : "" ) " w" (history_w?history_w:hst_genWt) " h" (h?h:540), 剪贴板历史
 
 	WinWaitActive, 剪贴板历史
 	WinGetPos, x, y
@@ -252,6 +255,7 @@ h=500
 	GuiControl, Move, history_SearchBox, % "w" (thisguisize- history_Searchboxx - 21) 		;7,7 for outer border, 7 for inner border
 	return
 }
+
 /**
  * updates the clipboard history window list wrt search filter
  * @param  {String}  crit    search filter
@@ -316,15 +320,24 @@ historyGuiSize:
 		SendMessage, 0x1000+29, 2,	0, SysListView321, 剪贴板历史
 		w3 := ErrorLevel
 
-		GuiControl, Move, historyLV, % "w" (gui_w - 15) " h" (gui_h - 65)     ;+20 H in no STatus Bar
+		GuiControl, Move, historyLV, % "w" (gui_w - 15) " h" (gui_h - 95)     ;+20 H in no STatus Bar
 		LV_ModifyCol(1, gui_w-15-w2-w3-25) 				;gui_w - x  where   x  =  width of all cols + 25
 		GuiControl, Move, history_SearchBox, % " w" (gui_w - (history_SearchBoxx ?  history_SearchBoxx : hst_genWt-300)  -7) ; 7 for innermargin
 	}
 	return
 
-historyprew:
+historyLV:
+Gui, History:Default
 If A_GuiEvent = DoubleClick 
 gosub,history_ButtonPreview
+else if (A_GuiEvent == "ColClick")
+	{
+		LV_SortArrow(historyLV, A_EventInfo)
+		, what_sort := A_EventInfo
+		, Tmp_Val := %what_sort%_sort 				;retrieve currrent col value
+		, 2_sort := 3_sort := 0					;change all cols values
+		, how_sort := %what_sort%_sort := ! (Tmp_Val) 			;update real current col value
+	}
 return
 
 history_ButtonPreview:
@@ -340,8 +353,8 @@ return
 }
 	LV_GetText(clip_id, v, 4)
 		data := getFromTable("history", "data", "id=" clip_id)
-		clip_data := data[1]
-		genHTMLforPreview(clip_data)
+		clipdata := data[1]
+		genHTMLforPreview(clipdata)
 		gui_Clip_Preview(PREV_FILE, history_searchbox)
 	return
 
@@ -368,7 +381,6 @@ gui_Clip_Preview(path, searchBox="", owner="History")
 			ComObjConnect(prev_handle, new ActiveXEvent) 				;do this only when the previous one succeeds
 		}
 		try prev_handle.Navigate( preview.path )
-
 
 	Gui, Font, s11
 	Gui, Add, Button, % "x5 y+10 h27 gbutton_Copy_To_Clipboard Default vprev_copybtn Section", 复制到剪贴板
@@ -432,15 +444,15 @@ button_Copy_to_Clipboard:
  */
 previewGuiClose:
 previewGuiEscape:
-	Gui, % preview.owner ":-Disabled"
-	Gui, Preview:Destroy
-	prev_handle := ""
-	prev_document := ""
-	return
+Gui, % preview.owner ":-Disabled"
+Gui, Preview:Destroy
+prev_handle := ""
+prev_document := ""
+return
 
 history_ButtonDelete:
-	history_ButtonDelete()
-	return
+history_ButtonDelete()
+return
 
 /**
  * deletes selected rows from history
@@ -479,33 +491,33 @@ deleteHistoryById(id){
  * button event to delete all history
  */
 history_ButtonDeleteAll:
-	Gui, +OwnDialogs
-	MsgBox, 257, 删除重置,确定要删除剪贴板历史记录的数据库，重新开始记录吗？
-	IfMsgBox, OK
-	{
-db.closedb()
-filedelete,%DBPATH%
-DB.OpenDB(DBPATH)
-migrateHistory()
-		; 直接删除数据库文件，最方便。减小硬盘占用
-		;execSql("Truncate TABLE history")  ; 测试未能正确执行，无效果
-		;execSql("drop TABLE history")   ; 磁盘占用减小，再次添加条目报错
-		;execSql("delete from history")  ; 删除所有条目，磁盘占用变化不大(数据内容未删除)
-		historyUpdate()
-		history_UpdateSTB()
-	}
-	return
+Gui, +OwnDialogs
+MsgBox, 257, 删除重置, 确定要删除剪贴板历史记录的数据库，重新开始记录吗？
+IfMsgBox, OK
+{
+	db.closedb()
+	filedelete, %DBPATH%
+	DB.OpenDB(DBPATH)
+	migrateHistory()
+	; 直接删除数据库文件，最方便。减小硬盘占用
+	;execSql("Truncate TABLE history")  ; 测试未能正确执行(在 SQLite 中，并没有 TRUNCATE TABLE 命令)，无效果
+	;execSql("drop TABLE history")   ; 磁盘占用减小，再次添加条目报错
+	;execSql("delete from history")  ; 删除所有条目，磁盘占用变化不大(数据内容未删除)
+	historyUpdate()
+	history_UpdateSTB()
+}
+return
 
 /**
  * label triggered when search box contents are changed and then updates the list
  */
 history_SearchBox:
-	Critical, On
-	Gui, History:Default
-	Gui, History:Submit, NoHide
-	historyUpdate(history_SearchBox, 0, history_partial)
-	LV_ModifyCol(what_sort?what_sort:2, how_sort ? "Sort" : "SortDesc") 		;sort column correctly
-	return
+Critical, On
+Gui, History:Default
+Gui, History:Submit, NoHide
+historyUpdate(history_SearchBox, 0, history_partial)
+LV_ModifyCol(what_sort?what_sort:2, how_sort ? "Sort" : "SortDesc") 		;sort column correctly
+return
 
 /*
 SuperInstr()
@@ -573,15 +585,15 @@ previewSearch:
  * preview gui resize handler
  */
 PreviewGuiSize:
-	if (A_EventInfo != 1)
-	{
-		gui_w := A_GuiWidth , gui_h := A_GuiHeight
-		GuiControl, move, preview_search, % "x" gui_w-160 " y" gui_h-30
-		GuiControl, move, prev_findtxt, % "x" gui_w- (prev_findtxtw ? prev_findtxtw+167 : 210) " y" gui_h-30
-		GuiControl, move, prev_copybtn, % "y" gui_h-32
-			GuiControl, move, prev_handle, % "w" gui_w " h" gui_h-42
-	}
-	return
+if (A_EventInfo != 1)
+{
+	gui_w := A_GuiWidth , gui_h := A_GuiHeight
+	GuiControl, move, preview_search, % "x" gui_w-160 " y" gui_h-30
+	GuiControl, move, prev_findtxt, % "x" gui_w- (prev_findtxtw ? prev_findtxtw+167 : 210) " y" gui_h-30
+	GuiControl, move, prev_copybtn, % "y" gui_h-32
+	GuiControl, move, prev_handle, % "w" gui_w " h" gui_h-42
+}
+return
 
 ; by Jethrow
 ; Helps in copy and paste in Shell Explorer
@@ -614,8 +626,8 @@ history_MenuPreview:
 	return
 
 history_clipboard:
-  writecliphistory=0
-	hhhh:=history_clipboard()
+	writecliphistory=0
+	history_clipboard()
 return
 
 /**
@@ -693,10 +705,39 @@ mIboxbuttonCancel:
 historyCleanup(){
 ;Cleans history in bunch
 	local Row
-	if !ini_DaysToStore                    ;Dont delete old data
-		return
 
-	q := "select id from history where (strftime('%s', date('now', '-" ini_DaysToStore " days')) - strftime('%s', time)) > 0"
+	q := "select id from history where (strftime('%s', date('now', '-180 days')) - strftime('%s', time)) > 0"
+	recs := ""
+	if (!DB.Query(q, recs))
+		msgbox % "Error history cleanup `n " DB.ErrorMsg "`n" DB.ErrorCode "`n" q
+
+	DB.Exec("BEGIN TRANSACTION")
+	while ( recs.Next(Row) > 0 )
+	{
+		deleteHistoryById(Row[1])
+	}
+	DB.Exec("COMMIT TRANSACTION")
+}
+
+historyRemoveduplicate()
+{
+q := "delete from history where rowid not in(select max(rowid) from history group by data)"
+	if (!DB.Exec(q))
+		msgbox % "Error Remove duplicate `n " DB.ErrorMsg "`n" DB.ErrorCode "`n" q
+}
+
+historyVacuum()
+{
+q := "VACUUM history"
+	if (!DB.Exec(q))
+		msgbox % "Error Remove duplicate `n " DB.ErrorMsg "`n" DB.ErrorCode "`n" q
+}
+
+historylenclean()
+{
+	local Row
+
+	q := "select id from history where LENGTH(data)<8"
 	recs := ""
 	if (!DB.Query(q, recs))
 		msgbox % "Error history cleanup `n " DB.ErrorMsg "`n" DB.ErrorCode "`n" q

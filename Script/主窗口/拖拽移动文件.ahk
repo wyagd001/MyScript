@@ -1,5 +1,5 @@
 ﻿GuiDropFiles_Begin:
-	CoverControl(hComBoBox)
+	CoverControl(h_MG_ComBoBox)
 Return
 
 GuiDropFiles_End:
@@ -8,7 +8,7 @@ GuiDropFiles_End:
 	If GuiDropFiles_FileFullPath
 	{
 		MouseGetPos,,,,hwnd,2
-		If hwnd in %hComBoBox%,%hComBoBoxEdit%
+		If hwnd in %h_MG_ComBoBox%,%h_MG_Edit%
 			Gosub ShowFileFullPath
 		Else
 		{
@@ -59,8 +59,8 @@ movedropfile:
 	IfInString, FileNameNoExt, foo_
 	{
 		;文件名类似 foo_lick_1.0.3.zip  的移动到 H:\foobar2000 v1.1.x\foo_lick
-		StringGetPos, v_pos, FileNameNoExt, _, 1
-		StringLeft, FileNameNoExt, FileNameNoExt, %v_pos%
+		StringGetPos, Tmp_Pos, FileNameNoExt, _, 1
+		StringLeft, FileNameNoExt, FileNameNoExt, %Tmp_Pos%
 
 		TargetFile = H:\foobar2000 v1.1.x\%FileNameNoExt%\%FileName%
 		IfNotExist, H:\foobar2000 v1.1.x\%FileNameNoExt%

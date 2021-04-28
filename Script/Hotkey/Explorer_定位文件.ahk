@@ -47,7 +47,7 @@ searchInExplorer() {
     Gui, 5:Margin,0,0
     Gui, 5:+Owner +AlwaysOnTop -Caption
     Gui, 5:Add, Edit, x0 y0 h25 w600 vInput gInputEvent hwndhInput
-    Gui, 5:Add, ListView, x0 y+0 w600 vList gListEvent hwndhList Hide -Hdr AltSubmit,%A_Space%
+    Gui, 5:Add, ListView, x0 y+0 h400 w600 vList gListEvent hwndhList Hide -Hdr AltSubmit,%A_Space%
     Gui, 5:Show, Center
 
 WaitForKey:
@@ -55,8 +55,9 @@ WaitForKey:
     ; Retrieve the control, which currently has the focus
     ; (according ControlGetFocus page in AHK manual)
     ;---------------------------------------------------------------------------
-    VarSetCapacity(hInputDec, 65, 0)
-    DllCall("msvcrt\_i64toa", Int64, hInput, Str, hInputDec, Int, 10)
+    ;VarSetCapacity(hInputDec, 65, 0)
+    ; 十六进制数字转十进制   得到10进制字符串  以00结尾的字符串 例如 0xFF  得到 3235 3500
+    ;DllCall("msvcrt\_i64toa", Int64, hInput, Str, hInputDec, Int, 10)
     GuiThreadInfoSize = 48
     VarSetCapacity(GuiThreadInfo, GuiThreadInfoSize)
     NumPut(GuiThreadInfoSize, GuiThreadInfo, 0)
@@ -64,20 +65,20 @@ WaitForKey:
         hFocused := NumGet(GuiThreadInfo, 12)
     Else
         hFocused = 0
-
+;CF_tooltip(hFocused " || " hInput,3000)
     ;---------------------------------------------------------------------------
     ; Wait until user pressed ENTER, ESC or DOWN key
     ;---------------------------------------------------------------------------
-    Input, key,V, {Enter}{Esc}{Down}
+    Input, keyf,V, {Enter}{Esc}{Down}
 
     ;---------------------------------------------------------------------------
     ; For DOWN the cursor jumps down into the search list
     ;---------------------------------------------------------------------------
     If (ErrorLevel = "EndKey:Down")
     {
-        If  (hFocused = hInputDec)
+						;CF_tooltip(hFocused,3000)
+        If  (hFocused = hInput)
             SendInput {Tab}{Down}
-
         ;---------------------------------------------------------------------------
         ; Go wait for the next key if DOWN is pressed
         ;---------------------------------------------------------------------------
@@ -92,9 +93,22 @@ WaitForKey:
     ;---------------------------------------------------------------------------
     ; ENTER also shows the selected file in another explorer window
     ;---------------------------------------------------------------------------
-    If (ErrorLevel = "EndKey:Enter") AND SelectedFile
-        Run, % "explorer.exe /select," . Clipboard . "\" . SelectedFile
+    If (ErrorLevel = "EndKey:Enter") AND (SelectedFile or keyf)
+    {
+       ;tooltip
+       ;Run, % "explorer.exe /select," . Clipboard . "\" . SelectedFile
+       if SelectedFile && (SelectedFile != " ")
+{
+;CF_tooltip(keyf " |111| " SelectedFile,3000)
+         SelectFiles(SelectedFile)
+}
+       else if keyf
+{
+         SelectFiles(keyf)
+;       CF_tooltip(keyf " |222| " SelectedFile,3000)
+}
 
+    }
     ;---------------------------------------------------------------------------
     ; Restore the clipboard and return
     ;---------------------------------------------------------------------------
@@ -126,10 +140,19 @@ InputEvent:
         ; Resize list control height according to the number of found files
         ;---------------------------------------------------------------------------
         LV_ModifyCol(1,"AutoHdr")
+        LV_Modify(1, "Focus")
         h1 := LV_GetCount() * 25
-        h2 := h1 + 25
+        if h1 < 400
+				{
+          h2 := h1 + 25
+				}
+        else
+				{
+          h1 := 400
+          h2 := 430
+				}
         GuiControl, Move, List, h%h1%
-        Gui, 5:Show, Center h%h2%
+        Gui, 5:Show, h%h2% ;, Center h%h2%
     Return
 
     ;---------------------------------------------------------------------------

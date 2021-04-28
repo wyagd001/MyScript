@@ -1,7 +1,7 @@
 ﻿; 命令函数化
-CF_FileRead(filename){
-	fileread, hfile, %filename%
-Return hfile
+CF_FileRead(sfile){
+	fileread, FileR_TFC, %sfile%
+Return FileR_TFC
 }
 
 CF_IniRead(ini, sec, key := "", default := ""){
@@ -61,4 +61,16 @@ RemoveTraytip:
 		Menu Tray, Icon
 	}
 return
+}
+
+CF_GetDriveFS(sfile){
+SplitPath, sfile, , , , , sDrive
+DriveGet, DFS, FS, %sDrive%
+return DFS
+}
+
+CF_FolderIsEmpty(sfolder){
+Loop, Files, %sfolder%\*.*, FD
+	return 0
+return 1
 }

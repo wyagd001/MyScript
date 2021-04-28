@@ -99,6 +99,8 @@ oaInsertBefore(obj, key, prm*)
     return r
 }
 
+; https://www.autohotkey.com/boards/viewtopic.php?style=17&t=4416
+
 /*
 有内容并非;开头 (条件A)? 开头为[并结束为](条件B)?段:有等号(条件C)?f[段,键]=值:f[段,键]=空:空
 
@@ -114,7 +116,11 @@ oaInsertBefore(obj, key, prm*)
 有等号：f[段,键]=值
 没等号：f[段,键]=空
 */
-
+/*
+参数
+d：ini文件或文本
+n：存储ini的对象
+*/
 IniObj(d,byref n:=""){
 	If d:=Trim(InStr(d,"`n") ? d : CF_FileRead(d)," `t`r`n")
 	{

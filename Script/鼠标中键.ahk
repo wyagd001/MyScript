@@ -1,9 +1,10 @@
 ﻿;鼠标中键增强
 $MButton::
-	;MouseGetPos, lastx, lasty
+	MouseGetPos, lastx, lasty
 	MouseGetPos,,,UID,ClassNN ; 获取指针下窗口的 UID 和 ClassNN
 	WinGetClass,窗口Class,ahk_id %UID% ; 根据 UID 获得窗口类名
 	CoordMode, Mouse, Relative
+	stophovering(2)
 
 	; 魔兽争霸自动加血
 	IfWinActive,Warcraft III
@@ -52,7 +53,7 @@ $MButton::
 	}
 
 	; 任务栏自动关闭窗口
-	If (窗口Class = "Shell_TrayWnd") ;指针是否在任务栏上
+	If (窗口Class = "Shell_TrayWnd") ; 指针是否在任务栏上
 	{
 		KeyIsDown := GetKeyState("Capslock" , "T")
 		if KeyIsDown
@@ -74,14 +75,20 @@ $MButton::
 				;WinWait,ahk_class DV2ControlHost
 				;Sleep,200 ;中文输入法状态下，有延迟才能成功
 				;SendEvent,{Up}{enter};如果是任务栏上，为关闭选择的程序
-				Send {Shift down}
-				click right
-				If(!IsContextMenuActive())
-					sleep 50
-				Send {Shift up}
-				sleep,30
-				SendEvent {up}{enter}
-				sleep,500
+
+				if (h_id := TTLib.GetTrackedButtonWindow())
+				PostMessage, 0x112, 0xF060,,, ahk_id %h_id%
+				else
+				{
+					Send {Shift down}
+					click right
+					If(!IsContextMenuActive())
+						sleep 50
+					Send {Shift up}
+					sleep,30
+					SendEvent {c}
+					sleep,100
+				}
 			return
 			}
 		}

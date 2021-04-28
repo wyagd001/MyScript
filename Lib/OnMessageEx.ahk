@@ -3,7 +3,7 @@
     Static Functions := {}
     
     ;determine whether this is an on-message call 
-    FunctionName := params.1, OnMessage := True, DHW := A_DetectHiddenWindows
+    FunctionName := params.1, OnMessage := True, BackUp_DetectHiddenWindows := A_DetectHiddenWindows
     DetectHiddenWindows, ON
     if ObjMaxIndex(params) <> 3            ;if the number of optional parameters are not three
         OnMessage := False                
@@ -11,7 +11,7 @@
         OnMessage := False                
     else if !WinExist("ahk_id " params.3)    ;if the third parameter is not an existing Hwnd of a window/control
         OnMessage := False                
-    DetectHiddenWindows, % DHW
+    DetectHiddenWindows, % BackUp_DetectHiddenWindows
     
     if !OnMessage {    
     ;if the function is manually called,

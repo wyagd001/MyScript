@@ -10,8 +10,8 @@ IfWinActive,ahk_Group ccc
 	keywait LShift
 
 	;Send, ^c    ; 这里的 c 不能写成大写 C  大写C 为发送^+c
-	Temp_Value:=GetSelText()
-	Loop, Parse, Temp_Value, `n, `r
+	Tmp_Val:=GetSelText()
+	Loop, Parse, Tmp_Val, `n, `r
 		FileFullPath=%A_LoopField%
 	Splitpath,FileFullPath,Filename,Filepath
 

@@ -101,6 +101,6 @@ IniWrite(){
 	    IniWrite, %x%, %run_iniFile%, FastFolders, Fast_Folder%i%
 	    IniWrite, %y%, %run_iniFile%, FastFolders, Fast_FolderTitle%i%
 }
-IniRead, content, %run_iniFile%,FastFolders
-Gosub, GetAllKeys
+IniRead, IniR_Tmp_Str, %run_iniFile%,FastFolders
+Gosub, _GetAllKeys
 }

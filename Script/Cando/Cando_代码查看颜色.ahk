@@ -8,9 +8,9 @@
 			RegExMatch(CandySel,"i)rgb\(?(\s*\d+\s*),(\s*\d+\s*),(\s*\d+\s*)\)",m)
 		else
 			RegExMatch(CandySel,"i)(\s*\d+\s*),(\s*\d+\s*),(\s*\d+\s*)",m)
-		SetFormat, Integer, % (f := A_FormatInteger) = "D" ? "H" : f 
+		SetFormat, Integer, % (BackUp_FmtInt := A_FormatInteger) = "D" ? "H" : BackUp_FmtInt 
 		StringReplace, Color_Hex, CandySel, %m%, %	RegExReplace(RegExReplace(m1+0 m2+0 m3+0,"0x(.)(?=$|0x)", "0$1"), "0x") 
-		SetFormat, Integer, %f%
+		SetFormat, Integer, %BackUp_FmtInt%
 		Color_RGB := CandySel
 	}
 	else
@@ -60,6 +60,7 @@ RGB2Hex(_decimalRGB, _delimiter="")
 	If _delimiter =
 		_delimiter = ,
 	weight = 16
+	BackUp_FmtInt := A_FormatInteger
 	SetFormat Integer, Hex
 	color := 0x1000000
 	Loop Parse, _decimalRGB, %_delimiter%
@@ -68,7 +69,7 @@ RGB2Hex(_decimalRGB, _delimiter="")
 		weight -= 8
 	}
 	StringTrimLeft hexRGB, color, 3
-	SetFormat Integer, D
+	SetFormat Integer, %BackUp_FmtInt%
 	Return hexRGB
 }
 

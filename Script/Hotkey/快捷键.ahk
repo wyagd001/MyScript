@@ -8,10 +8,10 @@ return
 
 暂时隐藏窗口:
 ;#Space::
-WinGet, active_id, ID, A
-WinHide, ahk_id %active_id%
+WinGet, Tmp_ActiveWin_id, ID, A
+WinHide, ahk_id %Tmp_ActiveWin_id%
 Sleep, 4000
-WinShow, ahk_id %active_id%
+WinShow, ahk_id %Tmp_ActiveWin_id%
 return
 
 关闭显示器并锁定电脑:

@@ -39,17 +39,17 @@ SaveDesktopIconsPositions:
 		;MsgBox, 无法保存桌面图标，请重试！
 	Return
 	}
-	FileRead, read_coords, %SaveDeskIcons_inifile%
+	FileRead, FileR_coords, %SaveDeskIcons_inifile%
  
-	if (read_coords != coords)
+	if (FileR_coords != coords)
 	{
 		if 每隔几小时结果为真(12)
-			FileAppend, %read_coords%, *%A_ScriptDir%\settings\tmp\SaveDeskIcons_%A_Now%.ini, UTF-16
+			FileAppend, %FileR_coords%, *%A_ScriptDir%\settings\tmp\SaveDeskIcons_%A_Now%.ini, UTF-16
 		FileDelete, %SaveDeskIcons_inifile%
 		FileAppend, %coords%, *%SaveDeskIcons_inifile%, UTF-16
 	}
 
-	read_coords := coords := ""
+	FileR_coords := coords := ""
 	IfExist, %SaveDeskIcons_inifile%
 	{
 		Menu, addf, Enable, 恢复桌面图标
@@ -59,11 +59,11 @@ SaveDesktopIconsPositions:
 Return
 
 RestoreDesktopIconsPositions:
-	FileRead, coords, %SaveDeskIcons_inifile%
-	if (coords != "")
+	FileRead, FileR_coords, %SaveDeskIcons_inifile%
+	if (FileR_coords != "")
 	{
-		DeskIcons(coords)
-		coords := ""
+		DeskIcons(FileR_coords)
+		FileR_coords := ""
 	}
 	Else
 		MsgBox, 没有读取到配置文件，请保存桌面图标后，再重试。
@@ -75,7 +75,7 @@ DeskIcons(coords := "")
 	static MEM_COMMIT := 0x1000, PAGE_READWRITE := 0x04, MEM_RELEASE := 0x8000
 	static LVM_GETITEMPOSITION := 0x00001010, LVM_SETITEMPOSITION := 0x0000100F, WM_SETREDRAW := 0x000B
 
-	tempDetect := A_DetectHiddenWindows
+	BackUp_DetectHiddenWindows := A_DetectHiddenWindows
 	DetectHiddenWindows, Off
 	ControlGet, hwWindow, HWND,, SysListView321, ahk_class Progman
 	if !hwWindow ; #D mode
@@ -126,7 +126,7 @@ DeskIcons(coords := "")
 		}
 	}
 	DllCall("CloseHandle", "Ptr", hProcess)
-	DetectHiddenWindows, % tempDetect
+	DetectHiddenWindows, % BackUp_DetectHiddenWindows
 	Critical, Off
 return ret
 }

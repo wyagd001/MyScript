@@ -1034,10 +1034,10 @@ AHKsock_RegisterAsyncSelect(iSocket, fFlags = 43, sFunction = "AHKsock_AsyncSele
     Static hwnd := False
     
     If Not hwnd { ;Use the main AHK window
-        A_DetectHiddenWindowsOld := A_DetectHiddenWindows
+        BackUp_DetectHiddenWindows := A_DetectHiddenWindows
         DetectHiddenWindows, On
         WinGet, hwnd, ID, % "ahk_pid " DllCall("GetCurrentProcessId") " ahk_class AutoHotkey"
-        DetectHiddenWindows, %A_DetectHiddenWindowsOld%
+        DetectHiddenWindows, %BackUp_DetectHiddenWindows%
     }
     
     iMsg := iMsg ? iMsg : AHKsock_Settings("Message")

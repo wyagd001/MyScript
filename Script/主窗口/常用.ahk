@@ -1,4 +1,4 @@
-﻿changyong:
+﻿MG_changyong:
 Menu, f_Folders, Add, &C:\, C:\
 Menu, f_Folders, Add, &D:\, D:\
 Menu, f_Folders, Add, &E:\, E:\

@@ -6,6 +6,8 @@
 #NoEnv
 #NoTrayIcon
 #SingleInstance, force
+;  输入级别设置为 2，不响应下面的自身发送的右键(SendLevel 1)。能影响其他脚本中 SendLevel 为 0 的右键热键。
+#InputLevel 2
 Menu, Tray, Icon, shell32.dll, 15
 SysGet, MWA, MonitorWorkArea
 WMAwidth := MWARight - MWALeft
@@ -13,15 +15,6 @@ WMAHeight := MWABottom - MWATop
 
 start_01() {
   static init:=start_01()
-  SetTitleMatchMode, 2  ;//匹配部分标题
-  GroupAdd, MyBrowser, 360安全浏览器
-  GroupAdd, MyBrowser, 360极速浏览器
-  GroupAdd, MyBrowser, 搜狗高速浏览器
-  GroupAdd, MyBrowser, 世界之窗浏览器
-  GroupAdd, MyBrowser, 2345加速浏览器
-  GroupAdd, MyBrowser, GreenBrowser
-  GroupAdd, MyBrowser, Firefox
-  GroupAdd, MyBrowser, Chrome
   GroupAdd, MyBrowser, ahk_class IEFrame
   GroupAdd, MyBrowser, ahk_class 360se5_Frame
   GroupAdd, MyBrowser, ahk_class 360se6_Frame
@@ -65,12 +58,22 @@ return
 
 左:
 if(h_class!="Progman" && h_class!="Shell_TrayWnd")
-WinMove, ahk_id %h_id%,, 0, 0, WMAwidth / 2, WMAHeight
+{
+  WinGet, state, MinMax, ahk_id %h_id%
+  if (state = 1)
+    WinRestore, ahk_id %h_id%
+  WinMove, ahk_id %h_id%,, 0, 0, WMAwidth / 2, WMAHeight
+}
 return
 
 右:
 if(h_class!="Progman" && h_class!="Shell_TrayWnd")
-WinMove, ahk_id %h_id%,, WMAwidth / 2, 0, WMAwidth / 2, WMAHeight
+{
+  WinGet, state, MinMax, ahk_id %h_id%
+  if (state = 1)
+    WinRestore, ahk_id %h_id%
+  WinMove, ahk_id %h_id%,, WMAwidth / 2, 0, WMAwidth / 2, WMAHeight
+}
 return
 
 下上:
@@ -132,6 +135,7 @@ ToolTip
 清空(), 更新(), 隐藏画板()
 if (轨迹="")
 {
+  SendLevel 1
   Click, R
   return
 }

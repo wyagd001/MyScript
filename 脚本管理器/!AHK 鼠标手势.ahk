@@ -38,17 +38,7 @@ Loop %n%
 
 	instructions=%instructions%%A_Index%.%A_Tab%%LoopAct%%A_Tab%%LoopName%`n`n
 }
-instructions=`n%instructions%`n`n注意:`n`n其中第1,2点针对的窗口`n(包括控件)都是 鼠标手势起始点下的窗口,`n而不是 当前激活的窗口,动作被触发后也`n不会激活目标窗口!`n`n`n游否`nzhangz.music@qq.com
-
-TrayminOpen:
-SetWinDelay, 0
-SetFormat, Integer, D
-CoordMode, Mouse, Screen
-DetectHiddenWindows On
-hAHK:=WinExist("ahk_class AutoHotkey ahk_pid " . DllCall("GetCurrentProcessId"))
-ShellHook:=DllCall("RegisterWindowMessage","str","SHELLHOOK")
-DllCall("RegisterShellHookWindow","Uint",hAHK)
-OnExit, TrayminClose
+instructions=`n%instructions%`n`n注意:`n`n其中第1,2点针对的窗口`n(包括控件)都是鼠标手势起始点下的窗口,`n而不是 当前激活的窗口,动作被触发后也`n不会激活目标窗口!`n`n`n游否`nzhangz.music@qq.com
 
 Menu, Tray, Icon,shell32.dll,15
 ;Menu,tray,NoStandard
@@ -59,32 +49,9 @@ Menu,tray,add
 Menu,tray,add,退出,GuiClose
 Return
 
-TrayminClose:
-DllCall("DeregisterShellHookWindow","Uint",hAHK)
-WinTraymin(0,-1)
-OnExit
-ExitApp
-
 RButton::
 MouseGetPos TX,TY,UMWID,UMC
-SendMessage, 0x84,, ( TY << 16 )|TX,, ahk_id %UMWID%
-WM_NCHITTEST_Result =%ErrorLevel%
 
-; WM_NCHITTEST
-If	WM_NCHITTEST_Result = 8
-{
-	WinTraymin(h)
-Return
-}
-
-If WM_NCHITTEST_Result in 2,3,9,20; in titlebar enclosed area - top of window
-    {
-    WinMinimize A
-    Return
-    }
-
-else
-{
 Loop
 {
 	MouseGetPos TXX,TYY
@@ -133,9 +100,6 @@ sendinput, {Browser_Forward}
 GestureList=
 ;~ GroupAdd a
 Return
-}
-Return
-
 
 instructions:
 MsgBox,,鼠标手势说明,%instructions%
@@ -233,55 +197,4 @@ identify()
 	Gesture%Count%:="D"
 	If ((YY<0) And (Abs(YY)>Abs(XX)*2))
 	Gesture%Count%:="U"
-}
-
-WM_SHELLHOOKMESSAGE(wParam, lParam, nMsg)
-{
-	Critical
-	If	nMsg=1028
-	{
-		If	wParam=1028
-			Return
-		Else If	(lParam=0x201||lParam=0x205||lParam=0x207)
-			WinTraymin(wParam,3)
-	}
-	Else If	(wParam=1||wParam=2)
-		WinTraymin(lParam,wParam)
-	Return	0
-}
-
-WinTraymin(hWnd = "", nFlags = "")
-{
-	Local	h, ni, fi, uid, pid, hProc, sClass
-	Static	nMsg, nIcons:=0
-	nMsg ? "" : OnMessage(nMsg:=1028,"WM_SHELLHOOKMESSAGE")
-	NumPut(hAHK,NumPut(VarSetCapacity(ni,444,0),ni))
-	If Not	nFlags
-	{
-		If Not	((hWnd+=0)||hWnd:=DllCall("GetForegroundWindow"))||((h:=DllCall("GetWindow","Uint",hWnd,"Uint",4))&&DllCall("IsWindowVisible","Uint",h)&&!hWnd:=h)||!(VarSetCapacity(sClass,15),DllCall("GetClassNameA","Uint",hWnd,"str",sClass,"Uint",VarSetCapacity(sClass)+1))||sClass=="Shell_TrayWnd"||sClass=="Progman"
-		Return
-		OnMessage(ShellHook,"")
-		WinMinimize,	ahk_id %hWnd%
-		WinHide,	ahk_id %hWnd%
-		Sleep,	100
-		OnMessage(ShellHook,"WM_SHELLHOOKMESSAGE")
-		uID:=uID_%hWnd%,uID ? "" : (uID_%hWnd%:=uID:=++nIcons=nMsg ? ++nIcons : nIcons)
-		hIcon_%uID% ? "" : (VarSetCapacity(fi,352,0),DllCall("GetWindowThreadProcessId","Uint",hWnd,"UintP",pid),DllCall("psapi\GetModuleFileNameExA","Uint",hProc:=DllCall("kernel32\OpenProcess","Uint",0x410,"int",0,"Uint",pid),"Uint",0,"Uint",&fi+12,"Uint",260),DllCall("kernel32\CloseHandle","Uint",hProc),DllCall("shell32\SHGetFileInfoA","Uint",&fi+12,"Uint",0,"Uint",&fi,"Uint",352,"Uint",0x101),hIcon_%uID%:=NumGet(fi)),DllCall("GetWindowTextA","Uint",hWnd,"Uint",NumPut(hIcon_%uID%,NumPut(nMsg,NumPut(1|2|4,NumPut(uID,ni,8)))),"int",64)
-		Return	hWnd_%uID%:=DllCall("shell32\Shell_NotifyIconA","Uint",hWnd_%uID% ? 1 : 0,"Uint",&ni) ? hWnd : DllCall("ShowWindow","Uint",hWnd,"int",5)*0
-	}
-	Else If	nFlags > 0
-	{
-		If	(nFlags=3&&uID:=hWnd)
-			If	WinExist("ahk_id " . hWnd:=hWnd_%uID%)
-			{
-				WinShow,	ahk_id %hWnd%
-				WinRestore,	ahk_id %hWnd%
-			}
-			Else	nFlags:=2
-		Else	uID:=uID_%hWnd%
-		Return	uID ? (hWnd_%uID% ? (DllCall("shell32\Shell_NotifyIconA","Uint",2,"Uint",NumPut(uID,ni,8)-12),hWnd_%uID%:="") : "",nFlags==2&&hIcon_%uID% ? (DllCall("DestroyIcon","Uint",hIcon_%uID%),hIcon_%uID%:="") : "") : ""
-	}
-	Else
-		Loop, % nIcons
-			hWnd_%A_Index% ? (DllCall("shell32\Shell_NotifyIconA","Uint",2,"Uint",NumPut(A_Index,ni,8)-12),DllCall("ShowWindow","Uint",hWnd_%A_Index%,"int",5),hWnd_%A_Index%:="") : "",hIcon_%A_Index% ? (DllCall("DestroyIcon","Uint",hIcon_%A_Index%),hIcon_%A_Index%:="") : ""
 }

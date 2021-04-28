@@ -9,7 +9,7 @@
 ; Eject() : For Removable storage devices
 ; https://www.autohotkey.com/boards/viewtopic.php?f=6&t=4491
 
-弹出U盘:
+MG_弹出U盘:
 Devs =  `r`n
 DevF = 0
 Gosub, DeviceList

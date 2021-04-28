@@ -13,21 +13,21 @@ return
 
 Windo_括起来:
 	clipmonitor := 0
-	Candy_Saved_ClipBoard := ClipboardAll
+	BackUp_ClipBoard := ClipboardAll
 	StringSplit, kql_Arr, A_ThisMenuItem, %A_Space%
 	GetSelText(0)
 	send {del}{%kql_Arr1%}
 	Send,^v
 	send {%kql_Arr2%}
 	Sleep, 500
-	Clipboard := Candy_Saved_ClipBoard    
-	Candy_Saved_ClipBoard =
+	Clipboard := BackUp_ClipBoard    
+	BackUp_ClipBoard =
 	clipmonitor := 1
 Return
 
 Windo_首字大写:
 	clipmonitor := 0
-	Candy_Saved_ClipBoard := ClipboardAll
+	BackUp_ClipBoard := ClipboardAll
 	CandySel:=GetSelText()
 	Loop, Parse, CandySel, %A_Space%_`,|;-！`.  
 	{  
@@ -41,7 +41,7 @@ Windo_首字大写:
 	Clipboard :=out  
 	Send,^v
 	Sleep,500
-	Clipboard := Candy_Saved_ClipBoard
-	out :=Candy_Saved_ClipBoard:=Position:=""
+	Clipboard := BackUp_ClipBoard
+	out := BackUp_ClipBoard := Position :=""
 	clipmonitor := 1
 Return

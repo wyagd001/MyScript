@@ -4,23 +4,24 @@ IniRead,filetp,%run_iniFile%,截图,filetp
 IniRead,num,%run_iniFile%,ContextMenu,num
 IniRead,LoginPass,%run_iniFile%,serverConfig,LoginPass
 
-IniRead, content, %run_iniFile%,常规
-Gosub, GetAllKeys
-IniRead, content, %run_iniFile%,功能开关
-Gosub, GetAllKeys
-IniRead, content, %run_iniFile%,自动激活
-Gosub, GetAllKeys
-IniRead, content, %run_iniFile%,时间
-Gosub, GetAllKeys
-IniRead content,%run_iniFile%,AudioPlayer
-Gosub, GetAllKeys
-content:=""
+IniRead, IniR_Tmp_Str, %run_iniFile%, 常规
+Gosub, _GetAllKeys
+IniRead, IniR_Tmp_Str, %run_iniFile%, 功能开关
+Gosub, _GetAllKeys
+IniRead, IniR_Tmp_Str, %run_iniFile%, 自动激活
+Gosub, _GetAllKeys
+IniRead, IniR_Tmp_Str, %run_iniFile%, 时间
+Gosub, _GetAllKeys
+IniRead, IniR_Tmp_Str, %run_iniFile%, AudioPlayer
+Gosub, _GetAllKeys
+IniR_Tmp_Str := ""
 
 IniRead, otherProgram,%run_iniFile%,otherProgram
 
 Gui,99:Default
 Gui,+LastFound
 Gui,Destroy
+Gui,+hwndh_sg
 Gui,Add,Button,x370 y335 w70 h30 gwk,确定
 Gui,Add,Button,x450 y335 w70 h30 g99GuiClose Default,取消
 Gui,Add,Tab,x-4 y1 w640 h330 ,快捷键|Plugins|常规|自动激活|7Plus菜单|整点报时|播放器|运行|其他|关于
@@ -28,7 +29,7 @@ Gui,Add,Tab,x-4 y1 w640 h330 ,快捷键|Plugins|常规|自动激活|7Plus菜单|
 Gui,Tab,快捷键
 Gui,Add,text,x10 y30 w550,注意:#表示Win,!表示Alt,+表示Shift,^表示Ctrl,Space表示空格键,Up表示向上箭头,~表示按键原功能不会被屏蔽，*表示有其它键同时按下时快捷键仍然生效
 
-Gui,Add,ListView,x10 y60 w570 h245 vhotkeysListview ghotkeysListview checked Grid -Multi +NoSortHdr -LV0x10 -LV0x10 +LV0x4000 +AltSubmit,快捷键标签|快捷键|适用窗口|序号
+Gui,Add,ListView,x10 y60 w570 h245 vhotkeysListview ghotkeysListview hwndh_SG_hotkeyLv checked Grid -Multi +NoSortHdr -LV0x10 -LV0x10 +LV0x4000 +AltSubmit,快捷键标签|快捷键|适用窗口|序号
 LoadLV_dis_Label := 1
 sleep 100
 Gui,listview,hotkeysListview 
@@ -49,11 +50,11 @@ LV_Modify(1,"Select")
 LV_Modify(1,"Focus")
 LV_Modify(1,"Vis")
 
-LV_ColorInitiate(99)
+LV_Color_Initiate(99, h_SG_hotkeyLv)
 LoadLV_dis_Label := 0
 sleep,500
 Gui,Tab,Plugins
-Gui,Add,ListView,x10 y30 w570 h245 vPluginsListview ghotkeysListview Grid -Multi -LV0x10 +LV0x4000 +AltSubmit,名称|快捷键|其他调用方法|序号
+Gui,Add,ListView,x10 y30 w570 h245 vPluginsListview ghotkeysListview hwndh_SG_PluginsLv Grid -Multi -LV0x10 +LV0x4000 +AltSubmit,名称|快捷键|其他调用方法|序号
 Gosub, Load_PluginsList
 Gui,Add,Button,x10 y280 w80 h30 gEdit_PluginsHotkey,编辑菜单(&E)
 Gui,Add,Button,x90 y280 w80 h30 gLoad_PluginsList,刷新菜单(&R)
@@ -175,7 +176,7 @@ If(Auto_Raise=1){
 }
 
 Gui,Tab,7Plus菜单
-Gui,Add,ListView,x10 y30 r12 w570 h245 v7pluslistview Grid -Multi -LV0x10 Checked AltSubmit g7plusListView,激活|ID  |菜单名称|文件名
+Gui,Add,ListView,x10 y30 r12 w570 h245 v7pluslistview hwndh_SG_7plusLv Grid -Multi -LV0x10 Checked AltSubmit g7plusListView,激活|ID  |菜单名称|文件名
 LV_ModifyCol(2, "Integer")
 ;如果窗口含有多个 ListView 控件,默认情况下函数操作于最近添加的那个. 要改变这种情况,请指定 Gui,ListView,ListViewName
 Gosub, Load_7PlusMenusList
@@ -324,10 +325,10 @@ Gui,Tab,其他
 Gui,Add,CheckBox,x26 y30 w120 h20 vvAuto_DisplayMainWindow Checked%Auto_DisplayMainWindow%,启动时显示主窗口
 Gui,Add,CheckBox,x280 y30 w130 h20 vvAuto_7plusMenu Checked%Auto_7plusMenu%,资源管理器7plus菜单
 Gui,Add,CheckBox,x26 y50 w180 h20 vvAuto_Trayicon Checked%Auto_Trayicon%,启动时显示托盘图标(并检测)
-Gui,Add,CheckBox,x280 y50 w160 h20 vvAuto_FuncsIcon Checked%Auto_FuncsIcon%,启动时显示额外的托盘图标
+Gui,Add,CheckBox,x280 y50 w200 h20 vvAuto_FuncsIcon Checked%Auto_FuncsIcon%,启动时显示额外的托盘图标数量
 Gui,Add,CheckBox,x44 y70 w200 h20 vvAuto_Trayicon_showmsgbox Checked%Auto_Trayicon_showmsgbox%,没有托盘图标显示重启脚本对话框
 Gui,Add,Radio,x300 y70 w40 h20 Group Checked%1FuncsIcon% vvFuncsIcon_Num,一个
-Gui,Add,Radio,x350 y70 w40 h20  Checked%2FuncsIcon%,二个
+Gui,Add,Radio,x350 y70 w40 h20  Checked%2FuncsIcon%,两个
 Gui,Add,CheckBox,x26 y90 w180 h20 vvAuto_ShutdownMonitor Checked%Auto_ShutdownMonitor%,监视关机使用传统关机对话框
 Gui,Add,CheckBox,x26 y110 w80 h20 vvAuto_PasteAndOpen Checked%Auto_PasteAndOpen%,粘贴并打开
 Gui,Add,CheckBox,x26 y130 w180 h20 vvAuto_Clip Checked%Auto_Clip%,三重剪贴板(文本复制时记录)
@@ -630,12 +631,12 @@ if LoadLV_dis_Label   ; 载入列表时禁用列表的标签，直接返回
 return
 If(A_GuiControl="hotkeysListview")
 {
-	tmpstr=hotkeys
+	Tmp_ListV=hotkeys
 	Gui,99:ListView,hotkeysListview
 }
 If(A_GuiControl="PluginsListview")
 {
-	tmpstr=Plugins
+	Tmp_ListV=Plugins
 	Gui,99:ListView,PluginsListview
 }
 If(A_GuiEvent = "I")
@@ -671,9 +672,9 @@ FocusedRowNumber:=0
 FocusedRowNumber := LV_GetNext(0,"F")
 LV_GetText(Col1Text,FocusedRowNumber,1) 
 LV_GetText(Col2Text,FocusedRowNumber,2)
-If(tmpstr="hotkeys")
+If(Tmp_ListV="hotkeys")
 Gui,EditRow:Add,Text,x6 y9,标 签: %Col1Text%
-If(tmpstr="Plugins")
+If(Tmp_ListV="Plugins")
 Gui,EditRow:Add,Text,x6 y9,插 件: %Col1Text%
 
 Gui,EditRow:Add,Text,x6 y37,快捷键:
@@ -688,20 +689,20 @@ EditRowButtonOK:        ;Same as the AddRowButtonOK label above except for the L
 Gui,EditRow:Submit,NoHide
 gosub,CloseChildGui
 
-If(tmpstr="hotkeys")
+If(Tmp_ListV="hotkeys")
 {
 Gui,99:ListView,hotkeysListview
 LV_Modify(FocusedRowNumber,"",Col1Text,EditRowEditCol2)
 hotkeys:=[]
 hotkeys_labels:=[]
 eqaulhotkey:=0
-LV_ColorChange()
-ControlGet,AA,List,col1,SysListView321,ahk_class AutoHotkeyGUI,选项
-ControlGet,BB,List,col2,SysListView321,ahk_class AutoHotkeyGUI,选项
+;LV_Color_Change()
+ControlGet,Tmp_Str_AllLabels,List,col1,SysListView321,ahk_class AutoHotkeyGUI,选项
+ControlGet,Tmp_Str_AllKeys,List,col2,SysListView321,ahk_class AutoHotkeyGUI,选项
 
-loop,parse,BB,`n,`r
+loop,parse,Tmp_Str_AllKeys,`n,`r
 	hotkeys[A_Index]:=A_LoopField
-loop,parse,AA,`n,`r
+loop,parse,Tmp_Str_AllLabels,`n,`r
 	hotkeys_labels[A_Index]:=A_LoopField
 
 for k,v in hotkeys 
@@ -711,31 +712,31 @@ for k,v in hotkeys
 		eqaulhotkey+=1
 		If eqaulhotkey=1
 		{
-			tmp_AA := hotkeys_labels[k]
-			tmp_AA_1 := k
+			Tmp_Key_A := hotkeys_labels[k]
+			Tmp_Key_AIndex := k
 		}
 	}
 	If eqaulhotkey=2
 	{
-		tmp_BB := hotkeys_labels[k]
-		tmp_BB_1 := k
+		Tmp_Key_B := hotkeys_labels[k]
+		Tmp_Key_BIndex := k
 		Break
 	}
 }
 If eqaulhotkey=2
 {
 	; RGB系颜色
-	LV_ColorChange(tmp_AA_1,"0xFF0000","0xFFFFFF")
-	LV_ColorChange(tmp_BB_1,"0xFF0000","0xFFFFFF")
-	LV_Modify(FocusedRowNumber,"-Select")
-	LV_Modify(FocusedRowNumber+1,"Select")
-	traytip,错误, 标签 %tmp_AA%(%tmp_AA_1%) 和 %tmp_BB%(%tmp_BB_1%) 具有相同的快捷键！！！,5
+	LV_Color_Change(Tmp_Key_AIndex,"0xFF0000","0xFFFFFF")
+	LV_Color_Change(Tmp_Key_BIndex,"0xFF0000","0xFFFFFF")
+	LV_Modify(FocusedRowNumber, "-Select")
+	LV_Modify(FocusedRowNumber+1, "Select")
+	traytip,错误, 标签 %Tmp_Key_A%(%Tmp_Key_AIndex%) 和 %Tmp_Key_B%(%Tmp_Key_BIndex%) 具有相同的快捷键！！！,5
 	FlashTrayIcon(500,5)
-	AA := BB := tmp_AA := tmp_BB := tmp_AA_1 := tmp_BB_1 ""
+	Tmp_Str_AllLabels := Tmp_Str_AllKeys := Tmp_Key_A := Tmp_Key_AIndex := Tmp_Key_B := Tmp_Key_BIndex := ""
 	hotkeys := hotkeys_labels := ""
 }
 }
-If(tmpstr="Plugins")
+If(Tmp_ListV="Plugins")
 {
 Gui,99:ListView,PluginsListview
 LV_Modify(FocusedRowNumber,"",Col1Text,EditRowEditCol2)
@@ -797,14 +798,14 @@ Return
 Edit_PluginsHotkey:
 Gui,99:ListView,Pluginslistview
 FocusedRowNumber:=0
-FocusedRowNumber := LV_GetNext(0,"F")
+FocusedRowNumber := LV_GetNext(0, "F")
 If not FocusedRowNumber
 {
 	CF_ToolTip("未选中编辑行!",3000)
 	Return
 }
 else{
-tmpstr=Plugins
+Tmp_ListV=Plugins
 gosub, Edithotkey
 }
 Return
@@ -1001,6 +1002,7 @@ LV_ModifyCol(2, "Sort")
 GuiControl,+redraw,7pluslistview
 sleep 400
 LoadLV_dis_Label := 0 ; 列表载入完成，变量设置为 1
+Gui,99:ListView,%h_SG_hotkeyLv%
 Return
 
 daps:
@@ -1023,18 +1025,18 @@ Return
 wk:
 Gui,Submit,NoHide
 
-ControlGet,AA,List,,SysListView321,ahk_class AutoHotkeyGUI,选项
-StringReplace, AA, AA, `t;, `n;, all
-StringReplace, AA, AA, `t, =, all
-hotkeycontent:="[快捷键]" . "`n" . AA
+ControlGet,Tmp_Str,List,,SysListView321,ahk_class AutoHotkeyGUI,选项
+StringReplace, Tmp_Str, Tmp_Str, `t;, `n;, all ; 替换 "`t;" 为 "`n;"
+StringReplace, Tmp_Str, Tmp_Str, `t, =, all
+hotkeycontent:="[快捷键]" . "`n" . Tmp_Str
 for k,v in IniObj(hotkeycontent,OrderedArray()).快捷键
 	IniWrite,%v%,%run_iniFile%,快捷键,%k%
 
 IniDelete, %run_iniFile%, Plugins
-ControlGet,AA,List,,SysListView322,ahk_class AutoHotkeyGUI,选项
-StringReplace, AA, AA, `t;, `n;, all
-StringReplace, AA, AA, `t, =, all
-hotkeycontent:="[Plugins]" . "`n" . AA
+ControlGet,Tmp_Str,List,,SysListView322,ahk_class AutoHotkeyGUI,选项
+StringReplace, Tmp_Str, Tmp_Str, `t;, `n;, all
+StringReplace, Tmp_Str, Tmp_Str, `t, =, all
+hotkeycontent:="[Plugins]" . "`n" . Tmp_Str
 for k,v in IniObj(hotkeycontent,OrderedArray()).Plugins
 	IniWrite,%v%,%run_iniFile%,Plugins,%k%
 
@@ -1144,63 +1146,6 @@ Return
 
 99GuiClose:
 99GuiEscape:
-LV_ColorChange()
+LV_Color_unload()
 Gui,Destroy
 Return
-
-LV_ColorInitiate(Gui_Number=1,Control="") ; initiate listview color change procedure 
-{ 
-	global hw_LV_ColorChange 
-	If Control =
-		Control = SysListView321
-	Gui,%Gui_Number%:+Lastfound 
-	Gui_ID := WinExist() 
-	ControlGet,hw_LV_ColorChange,HWND,,%Control%,ahk_id %Gui_ID% 
-	OnMessage( 0x4E,"WM_NOTIFY" ) 
-} 
-
-LV_ColorChange(Index="",TextColor="",BackColor="") ; change specific line's color or reset all lines
-{ 
-	global 
-	If Index = 
-		Loop,% LV_GetCount() 
-			LV_ColorChange(A_Index) 
-	Else
-	{ 
-		Line_Color_%Index%_Text := TextColor 
-		Line_Color_%Index%_Back := BackColor 
-		WinSet,Redraw,,ahk_id %hw_LV_ColorChange% 
-	} 
-}
-
-; 禁止调整列表中列的宽度，行文字变色
-WM_NOTIFY( p_w,p_l,p_m )
-{ 
-	local draw_stage,Current_Line,Index
-	Critical
-
-	Static HDN_BEGINTRACKA = -306,HDN_BEGINTRACKW = -326,HDN_DIVIDERDBLCLICK = -320
-	;Code := -(~NumGet(p_l+0,8))-1
-	Code :=NumGet(p_l + (A_PtrSize * 2),0,"Int")
-	If (Code = HDN_BEGINTRACKA) || (Code = HDN_BEGINTRACKW)|| (Code = HDN_BEGINTRACKW)
-		Return True
-	If ( NumGet( p_l+0,0,"Uint") = hw_LV_ColorChange ){ 
-		If ( Code = -12 ) {                            ; NM_CUSTOMDRAW 
-			draw_stage := NumGet(p_l+0,A_PtrSize * 3,"Uint") 
-			If ( draw_stage = 1 )                                                 ; CDDS_PREPAINT 
-				Return,0x20                                                      ; CDRF_NOTIFYITEMDRAW 
-			Else If ( draw_stage = 0x10000|1 ){                                   ; CDDS_ITEM 
-				Current_Line := NumGet( p_l+0,A_PtrSize * 5+16,"Uint")+1 
-				LV_GetText(Index,Current_Line,4) 
-				If (Line_Color_%Index%_Text != ""){
-					NumPut( BGR(Line_Color_%Index%_Text),p_l+0,A_PtrSize * 8+16,"Uint")   ; foreground 
-					NumPut( BGR(Line_Color_%Index%_Back),p_l+0,A_PtrSize * 8+16+4,"Uint")   ; background 
-				}
-			}
-		}
-	}
-}
-
-BGR(i) {
-   Return, (i & 0xff) << 16 | (i & 0xffff) >> 8 << 8 | i >> 16
-}

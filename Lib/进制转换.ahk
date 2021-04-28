@@ -1,18 +1,18 @@
 ﻿hex2dec(h)
 {
-	oldfrmt := A_FormatInteger
+	BackUp_FmtInt := A_FormatInteger
 	SetFormat, integer, dec
-	d :=h+0
-	SetFormat, IntegerFast, %oldfrmt% 
+	d := h+0
+	SetFormat, IntegerFast, %BackUp_FmtInt% 
 return d
 } 
 
 dec2hex(d)
 {
-	oldfrmt := A_FormatInteger
+	BackUp_FmtInt := A_FormatInteger
 	SetFormat, integer, H
-	h :=d+0
-	SetFormat, IntegerFast, %oldfrmt%
+	h := d+0
+	SetFormat, IntegerFast, %BackUp_FmtInt%
 return h
 }
 

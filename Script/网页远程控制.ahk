@@ -545,14 +545,14 @@ Func_music(ByRef req, ByRef res) {
     } else if (musicAction == "prev") {
         gosub GB1_down_up
     }else if (musicAction == "start") {
-        gosub OpenAudioPlayer
+        gosub MG_OpenAudioPlayer
     }
     res.status := 200
 }
 
 startaudioplayer(ByRef req, ByRef res){
 Msg(, "打开播放器")
-gosub OpenAudioPlayer
+gosub MG_OpenAudioPlayer
 	Index(req, res)
 }
 

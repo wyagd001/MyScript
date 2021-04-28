@@ -1,7 +1,7 @@
 ﻿Cando_A-B交换:  ;   AA - BB.xxx  改名为  BB - AA.xxx
-Tmp_Array := StrSplit(CandySel_FileNameNoExt, " - ")
-	FileMove, %CandySel%, % CandySel_ParentPath "\" Tmp_Array[2] " - " Tmp_Array[1] "." CandySel_Ext
-Tmp_Array:=""
+Tmp_Arr := StrSplit(CandySel_FileNameNoExt, " - ")
+	FileMove, %CandySel%, % CandySel_ParentPath "\" Tmp_Arr[2] " - " Tmp_Arr[1] "." CandySel_Ext
+Tmp_Arr := ""
 return
 
 Cando_多文件A-B交换:
@@ -12,9 +12,9 @@ return
 File_SwapAB(filename)
 {
 SplitPath, filename, , CandySel_ParentPath, CandySel_Ext, CandySel_FileNameNoExt
-Tmp_Array := StrSplit(CandySel_FileNameNoExt, " - ")
-	FileMove, %filename%, % CandySel_ParentPath "\" Tmp_Array[2] " - " Tmp_Array[1] "." CandySel_Ext
-Tmp_Array:=""
+Tmp_Arr := StrSplit(CandySel_FileNameNoExt, " - ")
+	FileMove, %filename%, % CandySel_ParentPath "\" Tmp_Arr[2] " - " Tmp_Arr[1] "." CandySel_Ext
+Tmp_Arr := ""
 }
 
 Cando_小说改名:
@@ -65,10 +65,10 @@ Cando_文件列表:
 Return
 
 Cando_交换文件名:
-	Files_SwapName(CandySel)
+	Files_TwoFilesSwapName(CandySel)
 Return
 
-Files_SwapName(Filelist)
+Files_TwoFilesSwapName(Filelist)
 {
 	; 传递的字符串中的换行是回车+换行
 	StringReplace, Filelist, Filelist, `r`n, `n
@@ -82,21 +82,12 @@ return
 }
 
 cando_多文件复制文件名:
-	clip := ""
+	Tmp_Val := ""
 	Loop, Parse, CandySel, `n,`r 
 	{
 		SplitPath, A_LoopField, outfilename
-		clip .= (clip = "" ? "" : "`r`n") outfilename
+		Tmp_Val .= (Tmp_Val = "" ? "" : "`r`n") outfilename
 	}
-	clipboard := clip
-return
-
-cando_多文件复制路径:
-	clip := ""
-	Loop, Parse, CandySel, `n,`r 
-	{
-		SplitPath, A_LoopField, outfilename
-		clip .= (clip = "" ? "" : "`r`n") outfilename
-	}
-	clipboard:=clip
+	clipboard := Tmp_Val
+	Tmp_Val := ""
 return

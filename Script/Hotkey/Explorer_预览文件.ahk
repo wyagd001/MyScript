@@ -3,6 +3,20 @@ $Space::
 gosub PreWWinGuiClose
 return
 
+F2::
+ControlGet, Tmp_Val, Selected,, Edit1
+if !Tmp_Val
+return
+SplitPath, Prew_File,, Prew_File_ParentPath, Prew_File_Ext
+FileMove, % Prew_File, % Prew_File_ParentPath "\" Tmp_Val "." Prew_File_Ext
+return
+
+del::
+MsgBox,4,删除提示,确定要把文件放入回收站吗？`n`n%Prew_File%
+IfMsgBox Yes
+FileRecycle,%Prew_File%
+return
+
 #ifWinActive ahk_Group ccc
 $Space::
 ;tooltip % A_Cursor " - " IsRenaming()
@@ -12,28 +26,28 @@ if(A_Cursor="IBeam") or IsRenaming()
  send {space}
  return
 }
-Files := ""
-Files := ShellFolder(0,2)
-if !Files or f_IsFolder(Files)
+Prew_File := ""
+Prew_File := ShellFolder(0,2)
+if !Prew_File or f_IsFolder(Prew_File)
 {
  send {space}
  return
 }
-SplitPath,Files,,,Files_Ext
-if(Files_Ext="")
+SplitPath,Prew_File,,,Prew_File_Ext
+if(Prew_File_Ext="")
 {
  send {space}
  return
 }
-Candy_Cmd:=SkSub_Regex_IniRead(Candy_ProFile_Ini, "FilePrew", "i)(^|\|)" Files_Ext "($|\|)")
+Candy_Cmd:=SkSub_Regex_IniRead(Candy_ProFile_Ini, "FilePrew", "i)(^|\|)" Prew_File_Ext "($|\|)")
 if Candy_Cmd
 {
-GUI, PreWWin:Destroy
-GUI, PreWWin:Default
-GUI, PreWWin:+hwndmyguihwnd
-GroupAdd, MyPreWWinGroup, ahk_id %myguihwnd%
-If IsLabel("Cando_" . Candy_Cmd . "_prew")
-	Gosub % "Cando_" .  Candy_Cmd . "_prew"
+	GUI, PreWWin:Destroy
+	GUI, PreWWin:Default
+	GUI, PreWWin:+hwndh_PrewGui
+	GroupAdd, MyPreWWinGroup, ahk_id %h_PrewGui%
+	If IsLabel("Cando_" . Candy_Cmd . "_prew")
+		Gosub % "Cando_" .  Candy_Cmd . "_prew"
 } 
 return
 #ifWinActive
@@ -42,14 +56,14 @@ PreWWinGuiEscape:
 PreWWinGuiClose:
 if gif_prew
 {
-hgif1.Pause()
-sleep,500
-hgif1 := ""
-gif_prew:=0
+	hgif1.Pause()
+	sleep, 500
+	hgif1 := ""
+	gif_prew:=0
 return
 }
-if Tmp_value
-Tmp_value:=""
+if Tmp_Val
+	Tmp_Val := ""
 Gui,PreWWin:Destroy
 ;if prewpToken
 ;{
@@ -59,7 +73,7 @@ Gui,PreWWin:Destroy
 return
 
 PreWWinGuiSize:
-GuiControl, Move, displayArea, x0 y0 w%A_GuiWidth% h%A_GuiHeight%
+GuiControl, Move, displayArea, % "x0 y0 w" A_GuiWidth " h" (A_GuiHeight-28)
 GuiControl, Move, WMP,x0 y0 w%A_GuiWidth% h%A_GuiHeight%
 return
 
@@ -80,7 +94,26 @@ return
 
 Cando_html_prew:
 gosub,IE_Open
-WB.Navigate(Files)
+WB.Navigate(Prew_File)
+return
+
+; https://open.wps.cn/docs/office
+Cando_wps_prew:
+if !(oWord := ComObjCreate("kWPS.Application"))
+return
+oWord.Visible := false 
+oWord.Documents.Open(Prew_File)
+Tmp_Str := oWord.ActiveDocument.range(0,1000).text
+oWord.Quit()
+Tmp_Str := StrReplace(Tmp_Str, "`r", "`r`n")
+Gui, +ReSize +MinSize800x540
+Gui, Add, Edit, w800 h520 Multi ReadOnly vdisplayArea,%Tmp_Str%
+Gui,PreWWin:Show, w800 h540 Center, % Prew_File " - 文件预览"
+Tmp_Str := ""
+return
+
+Cando_xls_prew:
+run, "%A_AhkPath%" "%A_ScriptDir%\Plugins\输出excel数据到GUI.ahk" "%Prew_File%"
 return
 
 IE_Open:
@@ -96,12 +129,12 @@ TranslateAccelerator := NumGet( NumGet( pipa+0 ) + 5*A_PtrSize )
 OnMessage( 0x0100, "WM_KeyPress" ) ; WM_KEYDOWN 
 OnMessage( 0x0101, "WM_KeyPress" ) ; WM_KEYUP   
 
-Gui, PreWWin:Show ,,% Files " - 文件预览"
+Gui, PreWWin:Show ,,% Prew_File " - 文件预览"
 return
 
 autoopenpdf:
 WinWaitActive,ahk_class #32770,,1000
-ControlSetText, edit1, %Files%, ahk_class #32770
+ControlSetText, edit1, %Prew_File%, ahk_class #32770
 sleep,100
 send {enter}
 return
@@ -152,8 +185,8 @@ Static Vars := "hWnd | nMsg | wParam | lParam | A_EventInfo | A_GuiX | A_GuiY"
 Cando_music_prew:
 Gui, +LastFound +Resize
 Gui, Add, ActiveX, x0 y0 w0 h0 vWMP, WMPLayer.OCX
-WMP.Url := files
-Gui, PreWWin:Show, w500 h300 Center,% Files " - 文件预览"
+WMP.Url := Prew_File
+Gui, PreWWin:Show, w500 h300 Center,% Prew_File " - 文件预览"
 return
 
 Cando_pic_prew:
@@ -161,7 +194,7 @@ if !prewpToken
 prewpToken := Gdip_Startup()        
 GUI, +AlwaysOnTop +Owner
 Gui, Margin, 0, 0
-pBitmap:=Gdip_CreateBitmapFromFile(files)
+pBitmap:=Gdip_CreateBitmapFromFile(Prew_File)
 WidthO  :=Gdip_GetImageWidth(pBitmap)
 HeightO := Gdip_GetImageHeight(pBitmap)
 Gdip_DisposeImage(pBitmap)
@@ -169,16 +202,16 @@ Propor  := (A_ScreenHeight/HeightO < A_ScreenWidth/WidthO ? A_ScreenHeight/Heigh
 Propor:=Propor > 1?1:Propor
 	hW  := Floor(WidthO * Propor)
 	hH := Floor(HeightO * Propor)
-Gui, Add, Picture,w%hw% h%hh%, %files%
-Gui,PreWWin: Show,  Center, % Files " - 文件预览"
+Gui, Add, Picture,w%hw% h%hh%, %Prew_File%
+Gui,PreWWin: Show,  Center, % Prew_File " - 文件预览"
 return
 
 /*
 Cando_rar_prew:
-textvalue:= cmdSilenceReturn("for /f ""eol=- skip=8 tokens=5*"" `%a in ('D:\Progra~1\Tool\WinRAR\unRAR.exe l -c- " """" files """') do @echo `%a `%b")
+textvalue:= cmdSilenceReturn("for /f ""eol=- skip=8 tokens=5*"" `%a in ('D:\Progra~1\Tool\WinRAR\unRAR.exe l -c- " """" Prew_File """') do @echo `%a `%b")
 Gui, +ReSize
 Gui, Add, Edit, w800 h600 ReadOnly vdisplayArea,
-Gui,PreWWin: Show, AutoSize Center, % Files " - 文件预览"
+Gui,PreWWin: Show, AutoSize Center, % Prew_File " - 文件预览"
 GuiControl,, displayArea,%textvalue%
 textvalue=
 return
@@ -190,56 +223,56 @@ Cando_rar_prew:
 		msgbox 7z 变量未设置，请在选项→运行→自定义短语中添加。`n例如: 7z=G:\Program Files\7z\7z.exe
 	return
 	}
-	textvalue:= cmdSilenceReturn("for /f ""skip=12 tokens=5,* eol=-"" `%a in ('^;""" 7z """ ""l"" " """" files """') do @echo `%a `%b")
-	;msgbox % textvalue
-	Loop, parse, textvalue, `n, `r
+	Tmp_Str := cmdSilenceReturn("for /f ""skip=12 tokens=5,* eol=-"" `%a in ('^;""" 7z """ ""l"" " """" Prew_File """') do @echo `%a `%b")
+	;msgbox % Tmp_Str
+	Loop, parse, Tmp_Str, `n, `r
 	{
-		Tmp_val:=trim(A_LoopField)
-		if (tmp_pos:=instr(Tmp_val, " "))
+		Tmp_FileName:=trim(A_LoopField)
+		if (Tmp_Pos:=instr(Tmp_FileName, " "))
 		{
-			StringTrimLeft, Tmp_val2, Tmp_val, % tmp_pos
-			if (Tmp_val2 = "Name") or (Tmp_val2 = "folders")
+			StringTrimLeft, Tmp_V, Tmp_FileName, % Tmp_Pos
+			if (Tmp_V = "Name") or (Tmp_V = "folders")
 				continue
-			if RegExMatch(Tmp_val,"^[0-9]+\s")  ; 不能正确得到7z压缩包中以数字空格开头的文件名
-				Tmp_value .= Tmp_val2 "`n"
+			if RegExMatch(Tmp_FileName,"^[0-9]+\s")  ; 不能正确得到7z压缩包中以数字空格开头的文件名
+				Tmp_Val .= Tmp_V "`n"
 			else
-				Tmp_value .= Tmp_val "`n"
+				Tmp_Val .= Tmp_FileName "`n"
 		}
 		else
-			if Tmp_val
-				Tmp_value .= A_LoopField "`n"
+			if Tmp_FileName
+				Tmp_Val .= A_LoopField "`n"
 	}
-Sort, Tmp_value
+Sort, Tmp_Val
 Gui, +ReSize
 ImageListID := IL_Create(5)  ; 创建初始容量为 5 个图标的图像列表.
 Loop 5  ; 加载一些标准系统图标到图像列表中.
     IL_Add(ImageListID, "shell32.dll", A_Index)
 Gui, Add, TreeView,r30 w800 h580 ImageList%ImageListID%
 Gui, Add, button,gtree2text,显示文本
-AddBranchesToTree(Tmp_value)
+AddBranchesToTree(Tmp_Val)
 
-Gui,PreWWin: Show, AutoSize Center, % Files " - 文件预览"
-;GuiControl,, displayArea, %Tmp_value%
-textvalue:=Tmp_val:=""
+Gui,PreWWin: Show, AutoSize Center, % Prew_File " - 文件预览"
+;GuiControl,, displayArea, %Tmp_Val%
+Tmp_Str := Tmp_FileName := ""
 return
 
 tree2text:
 Gui,66:Default 
-Gui, Add, Edit, w600 h300 ReadOnly,%Files%`n%Tmp_value%
-Gui show, AutoSize Center, % Files " - 文件预览"
+Gui, Add, Edit, w600 h300 ReadOnly,%Prew_File%`n%Tmp_Val%
+Gui show, AutoSize Center, % Prew_File " - 文件预览"
 return
 
 cmdSilenceReturn(command){
-	CMDReturn:=""
-	cmdFN:="RunAnyCtrlCMD.log"
+	FileR_CMDReturn := ""
+	cmdFN := "RunAnyCtrlCMD.log"
 	try{
     fullCommand = %ComSpec% /c "%command% >> %cmdFN%"
 		RunWait, %fullCommand%, %A_Temp%, Hide
 
-		FileRead, CMDReturn, %A_Temp%\%cmdFN%
-		FileDelete,%A_Temp%\%cmdFN%
+		FileRead, FileR_CMDReturn, %A_Temp%\%cmdFN%
+		FileDelete, %A_Temp%\%cmdFN%
 	}catch{}
-return  CMDReturn
+return  FileR_CMDReturn
 }
 
 ; 来源网址: https://autohotkey.com/board/topic/39809-script-to-open-list-of-filesfolders-in-treeview/
@@ -314,53 +347,55 @@ build_tree:
 
 Cando_gif_prew:
 if !prewpToken
-prewpToken := Gdip_Startup()
+	prewpToken := Gdip_Startup()
 GUI, -Caption +AlwaysOnTop +Owner
 Gui, Margin, 0, 0
-pBitmap:=Gdip_CreateBitmapFromFile(files)
+pBitmap:=Gdip_CreateBitmapFromFile(Prew_File)
 Gdip_GetImageDimensions(pBitmap, width, height)
 Gui, Add, Picture,w%width% h%height% 0xE hwndhwndGif1
 Gdip_DisposeImage(pBitmap)
-hgif1 := new Gif(Files, hwndGif1)
-Gui,PreWWin: Show, AutoSize Center, % Files " - 文件预览"
+hgif1 := new Gif(Prew_File, hwndGif1)
+Gui,PreWWin: Show, AutoSize Center, % Prew_File " - 文件预览"
 hgif1.Play()
 gif_prew:=true
 return
 
 Cando_text_prew:
-File_Encode := File_GetEncoding(files)
-FileGetSize, File_Size, % files
+File_Encode := File_GetEncoding(Prew_File)
+FileGetSize, File_Size, % Prew_File
 FileEncoding, % File_Encode
-	if (File_Size > 102400) && ((File_Encode = "CP936") or (File_Encode = "UTF-8-RAW"))
-	{
-		FileReadLine, LineVar, % files, 1
+if (File_Size > 102400) && ((File_Encode = "CP936") or (File_Encode = "UTF-8-RAW"))
+{
+	FileReadLine, LineVar, % Prew_File, 1
 		MsgBox, 36, 选择源文件的编码ANSI/UTF-8, 文件第一行内容: %LineVar%`n当前使用编码为: %File_Encode%`n文本正常显示点击"是"，否则点击"否"。, 2
-		IfMsgBox, No
-		{
-			File_Encode := (File_Encode = "CP936") ? "UTF-8" : "CP936"
-			FileEncoding, % File_Encode
-		}
-		IfMsgBox, yes
-			File_Encode := (File_Encode = "CP936") ? "CP936" : "UTF-8"
+	IfMsgBox, No
+	{
+		File_Encode := (File_Encode = "CP936") ? "UTF-8" : "CP936"
+		FileEncoding, % File_Encode
 	}
-
-if TF_CountLines(files)>100
-{
-Loop, Read,% files
-{
-textvalue .= A_LoopReadLine "`n"
-if a_index >100
-break
+	IfMsgBox, yes
+		File_Encode := (File_Encode = "CP936") ? "CP936" : "UTF-8"
 }
+
+if TF_CountLines(Prew_File)>100
+{
+	Loop, Read, % Prew_File
+	{
+		FileR_TFC .= A_LoopReadLine "`n"
+		if a_index >100
+		break
+	}
 }
 else
-FileRead,textvalue,%files%
+	FileRead, FileR_TFC, %Prew_File%
 FileEncoding
-Gui, +ReSize
-Gui, Add, Edit, w800 h600 ReadOnly vdisplayArea,
-Gui,PreWWin: Show, AutoSize Center, % Files " - 文件预览"
-GuiControl,, displayArea,%textvalue%
-textvalue := File_Encode := File_Size := ""
+Gui, +ReSize +MinSize800x540
+Gui, Add, Edit, w800 Multi ReadOnly vdisplayArea,
+Gui, Add, StatusBar,, 快捷键: 1. 选中文字后按 F2 以选中文字重命名文件. 2. Del 删除文件. 
+Gui,PreWWin:Show, w800 h540 Center, % Prew_File " - 文件预览"
+GuiControl,, displayArea, %FileR_TFC%
+;GuiControl, Move, displayArea, x0 y0 w800 h510
+FileR_TFC := File_Encode := File_Size := ""
 return
 
 ; https://www.autohotkey.com/boards/viewtopic.php?p=112572

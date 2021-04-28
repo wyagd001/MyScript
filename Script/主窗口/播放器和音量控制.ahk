@@ -41,7 +41,7 @@ Oldvolimage := volimage
 }
 Return
 
-OpenAudioPlayer:
+MG_OpenAudioPlayer:
 ;编辑脚本时，判断会出错
 DetectHiddenWindows On
 SetTitleMatchMode 2
@@ -55,7 +55,7 @@ Else Run,% %DefaultPlayer%  ;,,UseErrorLevel
 ;gosub 检测
 Return
 
-foo_httpcontrol_click:
+MG_foo_httpcontrol_click:
 Run %A_ScriptDir%\Plugins\foo_httpcontrol.ahk
 Return
 
@@ -161,12 +161,12 @@ Process,Close,itunes.exe
 gosub 检测
 Return
 
-VolumeC:
+MG_SetVolume:
 Gui, Submit, NoHide
 SoundSet,%VSlider%,master
 Return
 
-mute:
+MG_mute:
 Send {Volume_Mute}
 gosub 检测
 Return
@@ -174,13 +174,13 @@ Return
 DPlayer:
 If(A_ThisMenuItem=DefaultPlayer)
 {
-Gosub,OpenAudioPlayer
+	Gosub, MG_OpenAudioPlayer
 Return
 }
 menu,audioplayer,Check,%A_ThisMenuItem%
 menu,audioplayer,unCheck,%DefaultPlayer%
 DefaultPlayer := A_ThisMenuItem
-Gosub,OpenAudioPlayer
+Gosub, MG_OpenAudioPlayer
 Gosub,检测
 IniWrite,%A_ThisMenuItem%, %run_iniFile%,常规, DefaultPlayer
 Return

@@ -1,5 +1,5 @@
 ﻿; 主窗口打开按钮运行输入的命令，网址，程序
-openbutton:
+MG_openbutton:
 	Gui, Submit, NoHide
 
 	If !dir  ; dir为空返回
@@ -97,7 +97,7 @@ openbutton:
 			{
 				If OpenButton_Cmd_Str3
 				{
-					q:=% UrlDecode(OpenButton_Cmd_Str3)          ;默认使用UTF-8编码转换
+					q:= UrlDecode(OpenButton_Cmd_Str3)          ;默认使用UTF-8编码转换
 					settimer,sendq,-1000
 				Return
 				}
@@ -105,7 +105,7 @@ openbutton:
 				{  ;复制到剪贴板的字符串使用GBK编码转换
 					If Clipboard
 					{
-						q:=% UrlDecode(Clipboard,CP936)
+						q:= UrlDecode(Clipboard,CP936)
 						settimer,sendq,-1000
 					Return
 					}
@@ -116,7 +116,7 @@ openbutton:
 			{
 				If OpenButton_Cmd_Str3
 				{
-					q:=% UrlEncode(OpenButton_Cmd_Str3)      ;默认使用UTF-8编码转换
+					q:= UrlEncode(OpenButton_Cmd_Str3)      ;默认使用UTF-8编码转换
 					settimer,sendq,-1000
 				Return
 				}
@@ -124,7 +124,7 @@ openbutton:
 				{  ;复制到剪贴板的字符串使用GBK编码转换
 					If Clipboard
 					{
-						q:=% UrlEncode(Clipboard,CP936)
+						q:= UrlEncode(Clipboard,CP936)
 						settimer,sendq,-1000
 					Return
 					}
@@ -133,37 +133,38 @@ openbutton:
 			}
 			Else If (OpenButton_Cmd_Str2="10→16")
 			{
-				q:=% dec2hex(OpenButton_Cmd_Str3)
+				q := dec2hex(OpenButton_Cmd_Str3)
 				settimer,sendq,-1000
 			Return
 			}
 			Else If (OpenButton_Cmd_Str2="16→10")
 			{
-				q:=% hex2dec(OpenButton_Cmd_Str3)
-				settimer,sendq,-2000
+				OpenButton_Cmd_Str3 := InStr(OpenButton_Cmd_Str3, "0x") ? OpenButton_Cmd_Str3 : "0x" OpenButton_Cmd_Str3
+				q := hex2dec(OpenButton_Cmd_Str3)
+				settimer,sendq,-1000
 			Return
 			}
 			Else If (OpenButton_Cmd_Str2="农历→公历")
 			{
-				q:=% Date_GetDate(OpenButton_Cmd_Str3)
+				q:= Date_GetDate(OpenButton_Cmd_Str3)
 				settimer,sendq,-1000
 			Return
 			}
 			Else If (OpenButton_Cmd_Str2="公历→农历")
 			{
-				q:=% Date_GetLunarDate(OpenButton_Cmd_Str3?OpenButton_Cmd_Str3:A_YYYY A_MM A_DD)
+				q:= Date_GetLunarDate(OpenButton_Cmd_Str3?OpenButton_Cmd_Str3:A_YYYY A_MM A_DD)
 				settimer,sendq,-1000
 			Return
 			}
 			Else If (OpenButton_Cmd_Str2="简→繁")
 			{
-				q:=% jzf(OpenButton_Cmd_Str3)
+				q:= jzf(OpenButton_Cmd_Str3)
 				settimer,sendq,-1000
 			Return
 			}
 			Else If (OpenButton_Cmd_Str2="繁→简")
 			{
-				q:=% fzj(OpenButton_Cmd_Str3)
+				q:= fzj(OpenButton_Cmd_Str3)
 				settimer,sendq,-1000
 			Return
 			}
@@ -206,17 +207,17 @@ openbutton:
 		{
 			Run,% %Dir%,,UseErrorLevel
 			If ErrorLevel
-				temp_Error = 1
+				MG_OpenButton_RunNull = 1
 		}
 		Else 
-			temp_Error = 1
+			MG_OpenButton_RunNull = 1
 	}
-	if temp_Error
+	if MG_OpenButton_RunNull
 		gosub g_search
 Return
 
 g_search:
-	temp_Error = 0
+	MG_OpenButton_RunNull = 0
 	msgbox,3,搜索引擎选择,百度搜索点"是"，google点"否"
 	Ifmsgbox yes     
 		Run http://www.baidu.com/s?wd=%Dir% 

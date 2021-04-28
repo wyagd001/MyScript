@@ -1,6 +1,7 @@
 ﻿~LButton::
 CoordMode, Mouse, Screen
 MouseGetPos, lastx, lasty, id
+stophovering(2)
 if !Auto_mouseclick
 return
 WinGetClass, Class, ahk_id %id%

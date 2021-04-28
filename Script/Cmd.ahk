@@ -1,4 +1,5 @@
-﻿;CMD中右键复制，右键粘贴
+﻿; CMD中右键复制，右键粘贴
+;#c::
 命令提示符:
 CurrentFolder:=GetCurrentFolder()
 if(CurrentFolder)

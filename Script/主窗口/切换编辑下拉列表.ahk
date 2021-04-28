@@ -4,8 +4,8 @@ sleep,200
 GuiControlGet, EditContent,,dir
 if EditContent=@
 {
-Temp_ComboBoxShowItems:="@ExeAhk@|@Cmd@|@Proxy@|@regedit@|@转换@UrlDecode@|@转换@UrlEncode@|@转换@10→16@|@转换@16→10@|@转换@农历→公历@|@转换@公历→农历@|@转换@简→繁@|@转换@繁→简@"
-GuiControl, , dir, |%Temp_ComboBoxShowItems%
+Tmp_ComboBoxShowItems:="@ExeAhk@|@Cmd@|@Proxy@|@regedit@|@转换@UrlDecode@|@转换@UrlEncode@|@转换@10→16@|@转换@16→10@|@转换@农历→公历@|@转换@公历→农历@|@转换@简→繁@|@转换@繁→简@"
+GuiControl, , dir, |%Tmp_ComboBoxShowItems%
 changeComboBox=1
 send @
 settimer,huifu_ComboBox,-40000
@@ -17,14 +17,14 @@ sleep,200
 GuiControlGet, EditContent,,dir
 if EditContent=#
 {
-Temp_ComboBoxShowItems=
+Tmp_ComboBoxShowItems=
 Loop, Files, %A_ScriptDir%\favorites\*.*,FR
 {
-	SplitPath,A_LoopFileName, , , , temp1
-	Temp_ComboBoxShowItems.= temp1 "|"
+	SplitPath,A_LoopFileName, , , , Tmp_Val
+	Tmp_ComboBoxShowItems.= Tmp_Val "|"
 }
-Sort, Temp_ComboBoxShowItems,D|
-GuiControl, , dir, |%Temp_ComboBoxShowItems%
+Sort, Tmp_ComboBoxShowItems,D|
+GuiControl, , dir, |%Tmp_ComboBoxShowItems%
 changeComboBox=1
 favorites_link=1
 settimer,huifu_ComboBox,-40000

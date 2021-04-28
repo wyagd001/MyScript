@@ -24,12 +24,12 @@ if Candy_Cmd_Str3
 		msgbox 错误，文件夹不存在！
 	return
 	}
-	if !FolderIsEmpty(Candy_Cmd_Str3)
+	if !CF_FolderIsEmpty(Candy_Cmd_Str3)
 	{
 		msgbox 错误，文件夹不为空！
 	return
 	}
-	if !FileIsNTFS(Candy_Cmd_Str3)
+	if (CF_GetDriveFS(Candy_Cmd_Str3)!="NTFS")
 	{
 		msgbox 文件夹所在分区不是 NTFS 文件系统格式！
 	return
@@ -47,26 +47,26 @@ else
 	Gui,66:Destroy
 	Gui,66:Default
 	Gui, Add, Text, x10 y17, 目标文件夹(&T)：
-	Gui, Add, Edit, x100 y15 h40 w350 vSHLTG_Path
-	Gui, Add, Button, x280 y60 w80 h25 Default gPMF_OK, 确定(&S)
+	Gui, Add, Edit, x100 y15 h40 w350 vPMTF_TGPath
+	Gui, Add, Button, x280 y60 w80 h25 Default gPMTF_OK, 确定(&S)
 	Gui, Add, Button, x370 y60 w80 h25 g66GuiClose, 取消(&X)
 	Gui,show, , 挂载分区[%CandySel%]到NTFS分区的空文件夹
 }
 return
 
-PMF_OK:
+PMTF_OK:
 Gui,66:Default
 gui, submit, hide
-if !SHLTG_Path
+if !PMTF_TGPath
 return
-if !FileIsNTFS(SHLTG_Path)
+if (CF_GetDriveFS(PMTF_TGPath)!="NTFS")
 {
 	msgbox 文件夹所在分区不是 NTFS 文件系统格式！
 return
 }
-if !FileExist(SHLTG_Path)
-	FileCreateDir, % SHLTG_Path
-if !FolderIsEmpty(SHLTG_Path)
+if !FileExist(PMTF_TGPath)
+	FileCreateDir, % PMTF_TGPath
+if !CF_FolderIsEmpty(PMTF_TGPath)
 {
 	msgbox 错误，文件夹不为空！
 return
@@ -74,7 +74,7 @@ return
 VolumeName := GetVolumeNameForVolumeMountPoint(CandySel)
 If VolumeName
 {
-	if !SetVolumeMountPoint(SHLTG_Path, VolumeName)
+	if !SetVolumeMountPoint(PMTF_TGPath, VolumeName)
 		msgbox 挂载分区出现错误`nErrorLevel: %ErrorLevel%`nA_LastError: %A_LastError%`n
 }
 return
@@ -100,106 +100,30 @@ Cando_取消文件夹挂载的分区:
 DefineDosDevice(CandySel)
 return
 
+Cando_读取硬盘扇区:
+msgbox % readSector(Candy_Cmd_Str3)
+return
 
-/*
-q::
-;DefineDosDevice("N:")
-;DefineDosDevice("N:","Z:")
-
-;MsgBox % QueryDosDevice("N:")
-;msgbox % GetVolumeNameForVolumeMountPoint("Z:\")
-
-您可以通过使用SetVolumeMountPoint函数为本地卷分配一个驱动器号（例如，X:），前提是没有卷已经分配给该驱动器号。如果本地卷已经有一个驱动器号，那么SetVolumeMountPoint将失败。要处理这种情况，首先使用DeleteVolumeMountPoint函数删除驱动器代号。示例代码请参见编辑驱动器号分配。
-
-系统支持每个卷最多支持一个驱动器字母。因此，您不能让C:\和F:\代表同一个卷。
-*/
-
-DefineDosDevice(sDevice, sPath = "")
+; 格式化分区时产生的分区序列号(卷序列号, 磁盘序列号, VolumeId)
+; 等同于 DriveGet, OutputVar, Serial, C:
+; 获取 8 个字符长度的分区序列号
+; 不同的是本函数在分区为 NTFS 格式时获取 16 个字符长度的分区序列号
+Cando_GetVolumeId:
+hVolume := Trim(CandySel, "\")
+Tmp_Str := readSector(hVolume)
+if (Tmp_Val:=CF_GetDriveFS(CandySel)="NTFS")  ; NTFS格式
 {
-	sDevice := RTrim(sDevice, " \")
-	sPath := RTrim(sPath, " \")
-	Return DllCall("DefineDosDevice", "Uint", sPath ? 0 : 1|2, "str", sDevice, "str", sPath)
+	Tmp_Str := SubStr(Tmp_Str, 145, 16)
+	msgbox % Format("{:16X}", _byteswap_uint64("0x" Tmp_Str))
 }
-
-/*
-    Retrieves information about the specified MS-DOS device.
-    Parameters:
-        DeviceName:
-            An MS-DOS device name string specifying the target of the query.
-            This parameter can be a path or string like "\\?\Volume{xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx}\".
-            If this parameter is an empty string, the function will return a list of all existing MS-DOS device names.
-    Return value:
-        If the function succeeds, the return value is an Array with one or more strings.
-        - The first string stored into the Array is the current mapping for the device.
-        - The other strings represent undeleted prior mappings for the device.
-        If the function fails, the return value is zero. A_LastError contains a system error code.
-*/
-QueryDosDevice(sDevice = "")
+else if (Tmp_Val="FAT32")
 {
-	sDevice := RTrim(sDevice, " \")
-	VarSetCapacity(sPath, 256, 0)
-	Size := DllCall("QueryDosDevice", "UPtr", sDevice ? &sDevice : 0, "UPtr", &sPath, "Uint", 256)
-	Name := "", List := [], Ptr := &sPath
-; Size the number of bytes comprising the formatted return Value.
-;   on whether PATHS/PATH contain Unicode characters. It CAN happen that
-;   calling QueryDosDeviceW("E:") returns "25: \Device\Harddiskvolume3" and
-;   calling QueryDosDeviceW("V:") returns "34: \??\E:\bin\apps" because the
-;   \??\ prefix implies a Unicode string.
-
-	if !Size && Errorlevel  
-	return 0
-	while StrLen(Name := StrGet(Ptr))
-	{
-		;msgbox % Ptr " - " Name " - " StrPut(Name, "UTF-16")
-		List.Push(Name) , Ptr := Ptr+StrPut(Name, "UTF-16")*2
-	}
-Return List
-} ; https://docs.microsoft.com/en-us/windows/win32/api/fileapi/nf-fileapi-querydosdevicew
-
-GetVolumeNameForVolumeMountPoint(pl)
+	Tmp_Str := SubStr(Tmp_Str, 135, 8)
+	msgbox % Format("{:08X}", _byteswap_uint32("0x" Tmp_Str))
+}
+else
 {
-	pl := RTrim(pl, " \")
-	pl := pl "\"
-	VarSetCapacity(VolumeName, 100, 0)
-	hl:=dllcall("Kernel32.dll\GetVolumeNameForVolumeMountPoint", "Str", pl, "Str", VolumeName, "Uint", 100, "Int")
-	if hl && !ErrorLevel
-	return VolumeName
-	else
-	return 0
+	DriveGet, Tmp_Val, Serial, hVolume
+	msgbox % Tmp_Val
 }
-
-DeleteVolumeMountPoint(pl)
-{
-	pl := RTrim(pl, " \")
-	pl := pl "\"
-	hl:=dllcall("Kernel32.dll\DeleteVolumeMountPoint", "Str", pl)
-	if hl && !ErrorLevel
-	return 1
-	else
-	return 0
-}
-
-SetVolumeMountPoint(pl, VolumeName)
-{
-	pl := RTrim(pl, " \")
-	pl := pl "\"
-	hl:=dllcall("Kernel32.dll\SetVolumeMountPoint", "Str", pl, "Str", VolumeName)
-	if hl && !ErrorLevel
-	return 1
-	else
-	return 0
-}
-
-FolderIsEmpty(fpath){
-	Loop, Files, %fpath%\*.*, FD
-		return 0
-	return 1
-}
-
-FileIsNTFS(fpath){
-SplitPath, fpath, , , , , OutDrive
-DriveGet, FType, FS, %OutDrive%
-If (FType<>"NTFS")
-	return 0
-return 1
-}
+return

@@ -25,11 +25,11 @@ IME_IsENG()
 if !IME_Get()
 return true
 
-temp_Val:=IME_GetConvMode(_mhwnd())
-;msgbox % temp_Val
-if temp_Val=0
+Tmp_Val:=IME_GetConvMode(_mhwnd())
+;msgbox % Tmp_Val
+if Tmp_Val=0
 return true
-else if (temp_Val=1024)
+else if (Tmp_Val=1024)
 return true
 else 
 return false
@@ -395,7 +395,7 @@ IME_GetConvMode(WinTitle="A")   {
 /*
 ; 测试时 搜狗的全半角切换快捷键关闭时,不能切换到搜狗的全角
 w::
-tooltip % IME_SetConvMode(1)
+tooltip % IME_SetConvMode(0)
 return
 */
 

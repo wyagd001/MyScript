@@ -1,5 +1,5 @@
 ﻿;收藏夹浏览
-IEfavorites:
+MG_IEfavorites:
 Loop, parse, A_GuiEvent, `n, `r
 {
 SetBatchLines, 3000

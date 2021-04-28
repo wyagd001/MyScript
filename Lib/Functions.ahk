@@ -76,12 +76,12 @@ RunScript(script, WaitResult:="false")
 {
 	static test_ahk := A_AhkPath,
 	shell := ComObjCreate("WScript.Shell")
-	tempworkdir:= A_WorkingDir
+	BackUp_WorkingDir:= A_WorkingDir
 	SetWorkingDir %A_ScriptDir%
 	exec := shell.Exec(chr(34) test_ahk chr(34) " /ErrorStdOut *")
 	exec.StdIn.Write(script)
 	exec.StdIn.Close()
-	SetWorkingDir %tempworkdir%
+	SetWorkingDir %BackUp_WorkingDir%
 	if WaitResult
 		return exec.StdOut.ReadAll()
 	else 
@@ -131,4 +131,23 @@ CreateNamedPipe(Name, OpenMode=3, PipeMode=0, MaxInstances=255)
 	ptr := A_PtrSize ? "Ptr" : "UInt"
 Return DllCall("CreateNamedPipe","str","\\.\pipe\" Name,"uint",OpenMode
         ,"uint",PipeMode,"uint",MaxInstances,"uint",0,"uint",0,ptr,0,ptr,0)
+}
+
+JEE_RunGetStdOut(vTarget, vSize:="")
+{
+	DetectHiddenWindows, On
+	vComSpec := A_ComSpec ? A_ComSpec : ComSpec
+	Run, % vComSpec,, Hide, vPID
+	WinWait, % "ahk_pid " vPID
+	DllCall("kernel32\AttachConsole", UInt,vPID)
+	oShell := ComObjCreate("WScript.Shell")
+	oExec := oShell.Exec(vTarget)
+	vStdOut := ""
+	if !(vSize = "")
+		VarSetCapacity(vStdOut, vSize)
+	while !oExec.StdOut.AtEndOfStream
+		vStdOut := oExec.StdOut.ReadAll()
+	DllCall("kernel32\FreeConsole")
+	Process, Close, % vPID
+	return vStdOut
 }

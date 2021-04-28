@@ -1,16 +1,14 @@
-﻿driver:
-list=%1%
-If 0=0
-DriveGet,list,List,CDROM
-Loop,Parse,list
+﻿MG_OpenCD:
+DriveGet, CdList, List, CDROM
+Loop, Parse, CdList
 {
-  if A_GuiControl =openCD
-{
-     Drive,Eject,%A_LoopField%:
-}
-  else 
-{
- Drive,Eject,%A_LoopField%:,1
-}
+	if A_GuiControl = openCD
+	{
+		Drive, Eject, %A_LoopField%:
+	}
+	else 
+	{
+		Drive, Eject, %A_LoopField%:, 1
+	}
 }
 return

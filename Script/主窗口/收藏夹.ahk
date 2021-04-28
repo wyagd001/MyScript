@@ -1,4 +1,4 @@
-﻿addfavorites:
+﻿MG_addfavorites:
 	Loop, parse, A_GuiEvent, `n, `r
 	{
 		Gui, Submit, NoHide
@@ -32,7 +32,7 @@
 	}
 return
 
-showfavorites:
+MG_showfavorites:
 	myfavmenu := FolderMenu(A_ScriptDir "\Favorites", "lnk","收藏夹",0,2,1,1)
 	Menu, % myfavmenu, show
 	Menu, % myfavmenu, delete

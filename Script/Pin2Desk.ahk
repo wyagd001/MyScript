@@ -2,14 +2,13 @@
 ;+MButton::
 Pin2Desk:
 	WinGetClass,WinClass,A
-;msgbox % WinClass
 	If WinClass In Progman,Manager,Shell_TrayWnd,WorkerW
 		Return
  if !WinClass
   Return
  	WinGet,vWinID,ID,ahk_class Shell_TrayWnd
 	MouseGetPos,MouseX,MouseY,WinID
-if (vWinID=WinID)
+if (vWinID=WinID) 
 return
 	If StrAr_Find(ToggleList,WinID)
 	{
@@ -131,10 +130,10 @@ Loop, parse,DeskGroup,`|
 
 	IfWinNotExist,ahk_id %A_LoopField%
 	{
-		temp1:=DeskGroup_%ActDeskNum%
+		Tmp_Val := DeskGroup_%ActDeskNum%
 		DeskGroup_%ActDeskNum%:=StrAr_DeletElement(DeskGroup_%ActDeskNum%,A_LoopField,1)
-		temp:=DeskGroup_%ActDeskNum%
-; 		MsgBox NoExist[%A_LoopField%]`n%temp1%`n%temp%
+		Tmp_V := DeskGroup_%ActDeskNum%
+; 		MsgBox NoExist[%A_LoopField%]`n%Tmp_Val%`n%Tmp_V%
 	}
 	WinShow,ahk_id %A_LoopField%
 }
@@ -148,7 +147,6 @@ Loop 4
 MenuName=虚拟桌面 %ActDeskNum%
 Menu,SigleMenu,Check,%MenuName%
 ; ToolTip % DeskGroup_%ActDeskNum%
-
 Return
 
 SubHandler:  ;激活菜单窗体
@@ -230,8 +228,8 @@ Gosub,HotKeyAct
 Return
 
 SendActiveToDesktop:
-StringRight,TempStr,A_thishotkey,1
-SendActiveToDesktop(TempStr)
+StringRight,SendDeskNum,A_thishotkey,1
+SendActiveToDesktop(SendDeskNum)
 Return
 
 ;^!f1::SendActiveToDesktop(1)

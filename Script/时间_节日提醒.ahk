@@ -18,14 +18,14 @@ JCTF:
 	}
 	else
 	{
-		temp_array := StrSplit(Trim(CTFData), ["=", "`n"])
+		Tmp_Arr := StrSplit(Trim(CTFData), ["=", "`n"])
 		CTFArray := {}, i := 0
-		Loop % temp_array.length()/2
+		Loop % Tmp_Arr.length()/2
 		{
-			currentLoopIterationIniKeyName := temp_array[++i]
-			CTFArray[currentLoopIterationIniKeyName] := temp_array[++i]
+			currentLoopIterationIniKeyName := Tmp_Arr[++i]
+			CTFArray[currentLoopIterationIniKeyName] := Tmp_Arr[++i]
 		}
-		temp_array :=CTFData :=""
+		Tmp_Arr := CTFData :=""
 	}
 
 	for k,v in CTFArray
@@ -107,14 +107,14 @@ JCTF:
 		{
 			IniRead, CFData, %run_iniFile%, 公历节日
 		}
-		temp_array := StrSplit(Trim(CFData), ["=", "`n"])
+		Tmp_Arr := StrSplit(Trim(CFData), ["=", "`n"])
 		CFArray := {}, i := 0
-		Loop % temp_array.length()/2
+		Loop % Tmp_Arr.length()/2
 		{
-			currentLoopIterationIniKeyName := temp_array[++i]
-			CFArray[currentLoopIterationIniKeyName] := temp_array[++i]
+			currentLoopIterationIniKeyName := Tmp_Arr[++i]
+			CFArray[currentLoopIterationIniKeyName] := Tmp_Arr[++i]
 		}
-		temp_array := CFData := ""
+		Tmp_Arr := CFData := ""
 	}
 
 	for k,v in CFArray

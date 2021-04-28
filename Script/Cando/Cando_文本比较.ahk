@@ -5,10 +5,10 @@
 		if Candy_isFile
 		{
 			FileEncoding, % File_GetEncoding(CandySel)
-			fileread, default2, %CandySel%
+			fileread, FileR_TFC2, %CandySel%
 			FileEncoding
 			GuiControl,, textfile2, %CandySel%
-			t2.SetText(default2)
+			t2.SetText(FileR_TFC2)
 		}
 		else
 		{
@@ -27,12 +27,12 @@
 		if Candy_isFile
 		{
 			FileEncoding, % File_GetEncoding(CandySel)
-			fileread, default1, %CandySel%
+			fileread, FileR_TFC1, %CandySel%
 			FileEncoding
-			textfile1:=CandySel
+			textfile1 := CandySel
 		}
 		else
-			textfile1:=""
+			textfile1 := ""
 		Menu, ContextMenu, deleteall
 		Menu, ContextMenu, Add, 撤消, RichEdit_Undo
 		Menu, ContextMenu, Add, 重做, RichEdit_Redo
@@ -42,7 +42,7 @@
 		Menu, ContextMenu, Add, 粘贴, RichEdit_Paste
 		Menu, ContextMenu, Add
 		Menu, ContextMenu, Add, 全选, RichEdit_SelAll
-		twidth := 600, bwidth := 150, bwidth2 := 100, opts := "x5 y30 r40 0x100000 gMessageHandler"
+		twidth := 600, bwidth := 150, opts := "x5 y30 r40 0x100000 gMessageHandler"
 		Gui, Add,text ,,%textfile1%
 		Gui, Add,text, x610 yp w600 vtextfile2, 
 		t1 := new RichEdit(66, opts " w" twidth)
@@ -51,18 +51,18 @@
 		t2.SetEventMask(["SELCHANGE"])
 		Gui, Add, Button, Default w%bwidth% x520 gcompare, 比较/更新
 		Gui, Add,text, x700 yp+10 h25,模式：
-		Gui, Add, Radio, x740 yp-8 h25 gsub Group vcompmode,字
-		Gui, Add, Radio, x790 yp h25 gsub, 连字
-		Gui, Add, Radio, x860 yp h25 gsub Checked,行
+		Gui, Add, Radio, x740 yp-8 h25 gsub_compmode Group vcompmode,字
+		Gui, Add, Radio, x790 yp h25 gsub_compmode, 连字
+		Gui, Add, Radio, x860 yp h25 gsub_compmode Checked,行
 		Gui, Add, Statusbar
 		SB_SetParts(610)
 		gui show,, 文字比较
 		gosub UpdateSBText
 		if Candy_isFile
 		{
-			if (strlen(default1) > 10000)
+			if (strlen(FileR_TFC1) > 10000)
 				GuiControl, Disable, compmode
-			t1.SetText(default1)
+			t1.SetText(FileR_TFC1)
 		}
 		else
 		{
@@ -73,7 +73,7 @@
 	}
 return
 
-sub:
+sub_compmode:
 	Gui Submit, NoHide
 	if (strlen(t1.GetText()) < 10000) && (strlen(t2.GetText()) < 10000)
 		GuiControl, enable, compmode
@@ -388,7 +388,7 @@ WatchScrollBar:
 	}
 	IfWinNotExist,ahk_id %GuiID%
 	{
-		t1 := t2 := default1 := default2 := ""
+		t1 := t2 := FileR_TFC1 := FileR_TFC2 := ""
 		SetTimer, WatchScrollBar, off
 	}
 return

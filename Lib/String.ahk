@@ -1,10 +1,10 @@
 ﻿; wString		转换后得到的unicode字串
-; sString		待转换字串
-; CP				待转换字串sString的代码页
+; mString		待转换字串
+; CP				待转换字串mString的代码页
 ; 返回值		转换后得到的unicode字串,wString的地址
 ; 该函数映射一个字符串 (MultiByteStr) 到一个宽字符 (unicode UTF-16) 的字符串 (WideCharStr)。
-; 由该函数映射的字符串没必要是多字节字符组。
-; &sString 传入的是地址，所以 sString 变量不能直接传入地址
+; 由该函数映射的字符串不一定是多字节字符组。
+; &mString 传入的是地址，所以 sString 变量不能直接传入地址
 /* 
 ; A版运行例子
 pp=中文
@@ -12,18 +12,18 @@ Ansi2Unicode(qq,pp,936) ; 正确
 Ansi2Unicode(qq,&pp,936) ; 错误
 */
 ;cp=65001 UTF-8   cp=0 default to ANSI code page
-Ansi2Unicode(ByRef wString, ByRef sString,  CP = 0)
+Ansi2Unicode(ByRef wString, ByRef mString, CP = 0)
 {
-	nSize := DllCall("MultiByteToWideChar", "Uint", CP, "Uint", 0, "Uint", &sString, "int",  -1, "Uint", 0, "int", 0)
+	nSize := DllCall("MultiByteToWideChar", "Uint", CP, "Uint", 0, "Uint", &mString, "int",  -1, "Uint", 0, "int", 0)
 	VarSetCapacity(wString, nSize * 2,0)
-	DllCall("MultiByteToWideChar", "Uint", CP, "Uint", 0, "Uint", &sString, "int",  -1, "Uint", &wString, "int", nSize)
+	DllCall("MultiByteToWideChar", "Uint", CP, "Uint", 0, "Uint", &mString, "int",  -1, "Uint", &wString, "int", nSize)
 Return	&wString
 }
 
-; wString		待转换的unicode字串  
-; sString		转换后得到的字串
-; CP				转换后得到的字串sString的代码页，例如 CP=65001，转换得到的字串就是UTF8的字符串
-; 返回值		转换后得到的字串sString
+; wString		待转换的unicode字串  ByRef  按址传值，因为unicode中常有以00结尾的字符，按值传字符串可能截断
+; mString		转换后得到的字串
+; CP				转换后得到的字串 mString 的代码页，例如 CP=65001，转换得到的字串就是UTF8的字符串
+; 返回值		转换后得到的字串 mString
 ; 该函数映射一个宽字符串 (unicode UTF-16) 到一个新的字符串
 ; 把宽字符串 (unicode UTF-16) 转换成指定代码页的新字符串
 ; &wString 传入的是地址，所以wString变量不能直接传入地址
@@ -33,37 +33,37 @@ qq=中文
 Unicode2Ansi(qq,pp,936) ; 正确
 Unicode2Ansi(&qq,pp,936) ; 错误
 */
-Unicode2Ansi(ByRef wString,ByRef sString,  CP = 0)
+Unicode2Ansi(ByRef wString, ByRef mString,  CP = 0)
 {
 	nSize := DllCall("WideCharToMultiByte", "Uint", CP, "Uint", 0, "Uint", &wString, "int", -1, "Uint", 0, "int",  0, "Uint", 0, "Uint", 0)
-	VarSetCapacity(sString, nSize)
-	DllCall("WideCharToMultiByte", "Uint", CP, "Uint", 0, "Uint", &wString, "int", -1, "str", sString, "int", nSize, "Uint", 0, "Uint", 0)
-	Return	sString
+	VarSetCapacity(mString, nSize, 0)
+	DllCall("WideCharToMultiByte", "Uint", CP, "Uint", 0, "Uint", &wString, "int", -1, "str", mString, "int", nSize, "Uint", 0, "Uint", 0)
+	Return	mString
 }
 
-; Unicode2Ansi pString → sString
-; pString 是地址变量，需直接传入地址
+; Unicode2Ansi wString → mString
+; wString 是地址变量，需直接传入地址
 /* 
 ; 例
 pp=中文
 Ansi4Unicode(&pp)
 */
-Ansi4Unicode(pString, nSize = "")
+Ansi4Unicode(wString, nSize = "")
 {
 	If (nSize = "")
-		nSize:=DllCall("kernel32\WideCharToMultiByte", "Uint", 0, "Uint", 0, "Uint", pString, "int", -1, "Uint", 0, "int",  0, "Uint", 0, "Uint", 0)
-	VarSetCapacity(sString, nSize)
-	DllCall("kernel32\WideCharToMultiByte", "Uint", 0, "Uint", 0, "Uint", pString, "int", -1, "str", sString, "int", nSize + 1, "Uint", 0, "Uint", 0)
-Return	sString
+		nSize:=DllCall("kernel32\WideCharToMultiByte", "Uint", 0, "Uint", 0, "Uint", wString, "int", -1, "Uint", 0, "int",  0, "Uint", 0, "Uint", 0)
+	VarSetCapacity(mString, nSize)
+	DllCall("kernel32\WideCharToMultiByte", "Uint", 0, "Uint", 0, "Uint", wString, "int", -1, "str", mString, "int", nSize + 1, "Uint", 0, "Uint", 0)
+Return	mString
 }
 
-; Ansi2Unicode  sString → wString
-Unicode4Ansi(ByRef wString, sString, nSize = "")
+; Ansi2Unicode  mString → wString
+Unicode4Ansi(ByRef wString, mString, nSize = "")
 {
 	If (nSize = "")
-		nSize:=DllCall("kernel32\MultiByteToWideChar", "Uint", 0, "Uint", 0, "Uint", &sString, "int", -1, "Uint", 0, "int", 0)
+		nSize:=DllCall("kernel32\MultiByteToWideChar", "Uint", 0, "Uint", 0, "Uint", &mString, "int", -1, "Uint", 0, "int", 0)
 	VarSetCapacity(wString, nSize * 2 + 1)
-	DllCall("kernel32\MultiByteToWideChar", "Uint", 0, "Uint", 0, "Uint", &sString, "int", -1, "Uint", &wString, "int", nSize + 1)
+	DllCall("kernel32\MultiByteToWideChar", "Uint", 0, "Uint", 0, "Uint", &mString, "int", -1, "Uint", &wString, "int", nSize + 1)
 Return	&wString
 }
 
@@ -74,7 +74,7 @@ Return	&wString
 UrlEncode(Url, Enc = "UTF-8")
 {
 	StrPutVar(Url, Var, Enc)
-	f := A_FormatInteger
+	BackUp_FmtInt := A_FormatInteger
 	SetFormat, IntegerFast, H
 	Loop
 	{
@@ -88,7 +88,7 @@ UrlEncode(Url, Enc = "UTF-8")
 		Else
 			Res .= "%" . SubStr(Code + 0x100, -1)
 	}
-	SetFormat, IntegerFast, %f%
+	SetFormat, IntegerFast, %BackUp_FmtInt%
 Return, Res
 }
 
@@ -317,7 +317,7 @@ autohotkey.com/board/topic/15831-convert-string-to-hex/?p=102873
 */
 StringToHex(String)
 {
-	formatInteger := A_FormatInteger 	;Save the current Integer format
+	BackUp_FmtInt := A_FormatInteger 	;Save the current Integer format
 	SetFormat, Integer, Hex ; Set the format of integers to their Hex value
 	
 	;Parse the String
@@ -327,7 +327,7 @@ StringToHex(String)
 		StringTrimLeft, CharHex, CharHex, 2 ; Comment out the following line to leave the '0x' intact
 		HexString .= CharHex ;. " "     ; Build the return string
 	}
-	SetFormat, Integer,% formatInteger ; Set the integer format to what is was prior to the call
+	SetFormat, Integer,% BackUp_FmtInt ; Set the integer format to what is was prior to the call
 	
 	HexString = %HexString% ; Remove blankspaces	
 Return HexString

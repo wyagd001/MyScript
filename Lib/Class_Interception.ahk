@@ -11,7 +11,7 @@ Class Interception {
 	static _InitDelFunc := OnExit( ObjBindMethod(Interception, "UnloadDll") )
 
 	Init() {
-		; win7 系统下没有使用，主要用于 win10 关机, 结束任务页面
+		; win7 系统下没有使用，主要用于 win10 关机结束任务页面模拟硬件输入
 		if SubStr(A_OSVersion,1,3) != "10."
 		return
 		;this.Ensure_Admin()   ; 脚本需要管理员权限，但主脚本会自动获取，这里就注释掉了

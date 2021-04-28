@@ -1,59 +1,59 @@
 ﻿; recieve window message about windows creation and etc
-ShellWM(wp,lp)
+ShellWM(wp, lp)
 {
 	;static wm := {1:"CREATED",2:"DESTROYED",4:"ACTIVATED",6:"REDRAW"}
 	if (wp = 1 || wp = 4)
 	{
-		if folder.HasKey(lp) or textfile.HasKey(lp)
+		if folder_Arr.HasKey(lp) or textfile_Arr.HasKey(lp)
 			return
 		WinGet,ProcessName,ProcessName,ahk_id %lp%
 		if ProcessName = explorer.exe
 		{
-			folder.InsertAt(lp,{cmd:GetShellFolderPath()})
+			folder_Arr.InsertAt(lp, {cmd: ShellFolder(lp, 1)})
 		}
 		else if ProcessName in notepad.exe,notepad2.exe,notepad3.exe  ; 程序列表中不能有空格
 		{
-			textfile.InsertAt(lp,{cmd:GetTextFilePath(ProcessName,lp)})
+			textfile_Arr.InsertAt(lp, {cmd: GetTextFilePath(ProcessName,lp)})
 		}
 	}
 	else if (wp = 2)
 	{
-		if folder.HasKey(lp)
+		if folder_Arr.HasKey(lp)
 		{
-			if folder[lp].cmd
+			if folder_Arr[lp].cmd
 			{
-				CloseWindowList.Push(folder[lp].cmd)
-				IniWrite,% folder[lp].cmd, %run_iniFile%,路径设置, LastClosewindow
-				Array_removeDuplicates(CloseWindowList)
-				if CloseWindowList.Length() >= 11
-				CloseWindowList.RemoveAt(1)
-				Array_writeToINI(CloseWindowList,"CloseWindowList",run_iniFile)
-				Array_WriteMenuToINI(CloseWindowList,"menu", A_ScriptDir "\Settings\Windy\主窗体\CloseWindowList.ini")
+				CloseWindowList_Arr.Push(folder_Arr[lp].cmd)
+				IniWrite, % folder_Arr[lp].cmd, %run_iniFile%,路径设置, LastClosewindow
+				Array_removeDuplicates(CloseWindowList_Arr)
+				if CloseWindowList_Arr.Length() >= 11
+				CloseWindowList_Arr.RemoveAt(1)
+				Array_writeToINI(CloseWindowList_Arr, "CloseWindowList", run_iniFile)
+				Array_WriteMenuToINI(CloseWindowList_Arr, "menu", A_ScriptDir "\Settings\Windy\主窗体\CloseWindowList.ini")
 			}
-			folder.Remove(lp)
+			folder_Arr.Remove(lp)
 		}
-		else if textfile.HasKey(lp)
+		else if textfile_Arr.HasKey(lp)
 		{
-			if textfile[lp].cmd
+			if textfile_Arr[lp].cmd
 			{
-				ClosetextfileList.Push(textfile[lp].cmd)
-				Array_removeDuplicates(ClosetextfileList)
-				if ClosetextfileList.Length() >= 11
-				ClosetextfileList.RemoveAt(1)
-				Array_writeToINI(ClosetextfileList,"ClosetextfileList",run_iniFile)
-				Array_WriteMenuToINI(ClosetextfileList,"menu", A_ScriptDir "\Settings\Windy\主窗体\closetextfilelist.ini")
+				ClosetextfileList_Arr.Push(textfile_Arr[lp].cmd)
+				Array_removeDuplicates(ClosetextfileList_Arr)
+				if ClosetextfileList_Arr.Length() >= 11
+				ClosetextfileList_Arr.RemoveAt(1)
+				Array_writeToINI(ClosetextfileList_Arr, "ClosetextfileList", run_iniFile)
+				Array_WriteMenuToINI(ClosetextfileList_Arr, "menu", A_ScriptDir "\Settings\Windy\主窗体\closetextfile_Arrlist.ini")
 			}
-			textfile.Remove(lp)
+			textfile_Arr.Remove(lp)
 		}
 	}
 	else if (wp = 6)
 	{
 		WinGet,ProcessName,ProcessName,ahk_id %lp%
-		if folder.HasKey(lp)
-			folder[lp].cmd := GetShellFolderPath(lp)
-    else if textfile.HasKey(lp)
+		if folder_Arr.HasKey(lp)
+			folder_Arr[lp].cmd := ShellFolder(lp, 1)
+    else if textfile_Arr.HasKey(lp)
 		{
-     textfile[lp].cmd := GetTextFilePath(ProcessName,lp)
+     textfile_Arr[lp].cmd := GetTextFilePath(ProcessName,lp)
 		}
 
 	}
@@ -62,8 +62,8 @@ ShellWM(wp,lp)
 GetTextFilePath(ProcessName,hwnd)
 {
 	sleep,2000
-	WinGetTitle,_Title,ahk_id %hwnd%
-	WinGet pid, pid,ahk_id %hwnd%
+	WinGetTitle, _Title, ahk_id %hwnd%
+	WinGet pid, pid, ahk_id %hwnd%
 	if (ProcessName = "notepad.exe")
 	{
 		If(_Title="无标题 - 记事本")
@@ -117,42 +117,25 @@ commandline_notepad(hpid)
 	}
 }
 
-; retrieve folder path in the specified shell browser. If hwnd is omitted, get hwnd of activated window
-GetShellFolderPath(hwnd=0)
-{
-	static shell := ComObjCreate("Shell.Application")
-	if !hwnd
-		hwnd := WinExist("A")
-	for k in shell.windows
-	{
-		if (k.hwnd = hwnd)
-		{
-			if (k.Document.Folder.Self)
-				return k.Document.Folder.Self.Path
-		}
-	}
-	return explorer.exe
-}
-
 CloseWindowListMenuShow:
-	menu, CloseWindowListMenu,add,最近关闭窗口列表,nul
+	menu, CloseWindowListMenu, add, 最近关闭窗口列表, nul
 	Menu, CloseWindowListMenu, disable, 最近关闭窗口列表
 	Menu, CloseWindowListMenu, add
-	loop, % CloseWindowList.Length()
+	loop, % CloseWindowList_Arr.Length()
 	{
-		AddItem("CloseWindowListMenu",CloseWindowList[CloseWindowList.Length() +1 - a_index],CloseWindowList.Length() +1 - a_index)
+		AddItem("CloseWindowListMenu", CloseWindowList_Arr[CloseWindowList_Arr.Length() + 1 - a_index], CloseWindowList_Arr.Length() +1 - a_index)
 	}
 	menu CloseWindowListMenu, show
 	Menu, CloseWindowListMenu, DeleteAll
 return
 
 ClosetextfileListMenuShow:
-	menu, ClosetextfileListMenu,add,最近关闭文本文件列表,nul
+	menu, ClosetextfileListMenu,add, 最近关闭文本文件列表, nul
 	Menu, ClosetextfileListMenu, disable, 最近关闭文本文件列表
 	Menu, ClosetextfileListMenu, add
-	loop, % ClosetextfileList.Length()
+	loop, % ClosetextfileList_Arr.Length()
 	{
-		AddItem2("ClosetextfileListMenu",ClosetextfileList[ClosetextfileList.Length() +1 - a_index],ClosetextfileList.Length() +1 - a_index)
+		AddItem2("ClosetextfileListMenu", ClosetextfileList_Arr[ClosetextfileList_Arr.Length() +1 - a_index], ClosetextfileList_Arr.Length() + 1 - a_index)
 	}
 	menu ClosetextfileListMenu, show
 	Menu, ClosetextfileListMenu, DeleteAll
@@ -183,17 +166,17 @@ AddItem2(argMenu, argPath,index)
 
 
 ItemRun:
-	run % "explorer.exe " CloseWindowList[CloseWindowList.Length() + 3 - A_ThisMenuItemPos]
-	CloseWindowList.RemoveAt(CloseWindowList.Length() + 3 - A_ThisMenuItemPos)
+	run % "explorer.exe " CloseWindowList_Arr[CloseWindowList_Arr.Length() + 3 - A_ThisMenuItemPos]
+	CloseWindowList_Arr.RemoveAt(CloseWindowList_Arr.Length() + 3 - A_ThisMenuItemPos)
 return
 
 ItemRun2:
 	MouseGetPos,,,textediter_id
 	WinGet, textediter_ProcessPath,ProcessPath,Ahk_ID %textediter_id%
 	textediter_ProcessPath:=textediter_ProcessPath ? textediter_ProcessPath : "notepad.exe"
-	;msgbox % textediter_ProcessPath " """ ClosetextfileList[ClosetextfileList.Length() + 3 - A_ThisMenuItemPos] """"
-	run % textediter_ProcessPath " """ ClosetextfileList[ClosetextfileList.Length() + 3 - A_ThisMenuItemPos] """"
-	ClosetextfileList.RemoveAt(ClosetextfileList.Length() + 3 - A_ThisMenuItemPos)
+	;msgbox % textediter_ProcessPath " """ ClosetextfileList_Arr[ClosetextfileList_Arr.Length() + 3 - A_ThisMenuItemPos] """"
+	run % textediter_ProcessPath " """ ClosetextfileList_Arr[ClosetextfileList_Arr.Length() + 3 - A_ThisMenuItemPos] """"
+	ClosetextfileList_Arr.RemoveAt(ClosetextfileList_Arr.Length() + 3 - A_ThisMenuItemPos)
 return
 
 Array_WriteMenuToINI(InputArray,sectionINI, fileName)

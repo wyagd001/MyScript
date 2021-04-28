@@ -11,7 +11,7 @@
 	{
 		_hFile := FileOpen(aInFile, "r")
 		_hFile.Position := 2
-		_hFile.RawRead(textvalue, _hFile.length)
+		_hFile.RawRead(FileR_TFRaw, _hFile.length)
 		aInLen := _hFile.length - 2
 		_hFile.Close()
 	}
@@ -32,7 +32,7 @@
 					return
 			}
 		}
-		FileRead, textvalue, %aInFile%
+		FileRead, FileR_TFC, %aInFile%
 		FileEncoding
 	}
 
@@ -56,17 +56,17 @@
 		if (aInCp = "CP1201")
 		{
 			LCMAP_BYTEREV := 0x800
-			cch:=DllCall( "LCMapStringW", UInt,0, UInt,LCMAP_BYTEREV, Str,textvalue, UInt,-1, Str,0, UInt,0)
+			cch:=DllCall( "LCMapStringW", UInt,0, UInt,LCMAP_BYTEREV, Str,FileR_TFRaw, UInt,-1, Str,0, UInt,0)
 			VarSetCapacity(LE, cch * 2)
-			DllCall( "LCMapStringW", UInt,0, UInt,LCMAP_BYTEREV, Str,textvalue, UInt,cch, Str,LE, UInt,cch)
+			DllCall( "LCMapStringW", UInt,0, UInt,LCMAP_BYTEREV, Str,FileR_TFRaw, UInt,cch, Str,LE, UInt,cch)
 			FileAppend, %LE%, % aOutFile, % aOutCp
-			textvalue := LE := ""
+			FileR_TFRaw := LE := ""
 		return
 		}
 		else
 		{
-			FileAppend, %textvalue%, % aOutFile, % aOutCp
-			textvalue := ""
+			FileAppend, %FileR_TFC%, % aOutFile, % aOutCp
+			FileR_TFC := ""
 		return
 		}
 	}
@@ -75,17 +75,17 @@
 		if (aInCp = "CP1201")
 		{
 			LCMAP_BYTEREV := 0x800
-			cch:=DllCall( "LCMapStringW", UInt,0, UInt,LCMAP_BYTEREV, Str,textvalue, UInt,-1, Str,0, UInt,0)
+			cch:=DllCall( "LCMapStringW", UInt,0, UInt,LCMAP_BYTEREV, Str,FileR_TFRaw, UInt,-1, Str,0, UInt,0)
 			VarSetCapacity(LE, cch * 2)
-			DllCall( "LCMapStringW", UInt,0, UInt,LCMAP_BYTEREV, Str,textvalue, UInt,cch, Str,LE, UInt,cch)
+			DllCall( "LCMapStringW", UInt,0, UInt,LCMAP_BYTEREV, Str,FileR_TFRaw, UInt,cch, Str,LE, UInt,cch)
 			FileAppend, %LE%, % aOutFile, % aOutCp
-			textvalue := LE := ""
+			FileR_TFRaw := LE := ""
 		return
 		}
 		else
 		{
-			FileAppend, %textvalue%, % aOutFile, % aOutCp
-			textvalue := ""
+			FileAppend, %FileR_TFC%, % aOutFile, % aOutCp
+			FileR_TFC := ""
 		return
 		}
 	}
@@ -94,17 +94,17 @@
 		if (aInCp = "CP1201")
 		{
 			LCMAP_BYTEREV := 0x800
-			cch:=DllCall( "LCMapStringW", UInt,0, UInt,LCMAP_BYTEREV, Str,textvalue, UInt,-1, Str,0, UInt,0)
+			cch:=DllCall( "LCMapStringW", UInt,0, UInt,LCMAP_BYTEREV, Str,FileR_TFRaw, UInt,-1, Str,0, UInt,0)
 			VarSetCapacity(LE, cch * 2)
-			DllCall( "LCMapStringW", UInt,0, UInt,LCMAP_BYTEREV, Str,textvalue, UInt,cch, Str,LE, UInt,cch)
+			DllCall( "LCMapStringW", UInt,0, UInt,LCMAP_BYTEREV, Str,FileR_TFRaw, UInt,cch, Str,LE, UInt,cch)
 			FileAppend, %LE%, % aOutFile, % aOutCp
-			textvalue := LE := ""
+			FileR_TFRaw := LE := ""
 		return
 		}
 		else
 		{
-			FileAppend, %textvalue%, % aOutFile, % aOutCp
-			textvalue := ""
+			FileAppend, %FileR_TFC%, % aOutFile, % aOutCp
+			FileR_TFC := ""
 		return
 		}
 	}
@@ -113,17 +113,17 @@
 		if (aInCp = "CP1201")
 		{
 			LCMAP_BYTEREV := 0x800
-			cch:=DllCall( "LCMapStringW", UInt,0, UInt,LCMAP_BYTEREV, Str,textvalue, UInt,-1, Str,0, UInt,0)
+			cch:=DllCall( "LCMapStringW", UInt,0, UInt,LCMAP_BYTEREV, Str,FileR_TFRaw, UInt,-1, Str,0, UInt,0)
 			VarSetCapacity(LE, cch * 2)
-			DllCall( "LCMapStringW", UInt,0, UInt,LCMAP_BYTEREV, Str,textvalue, UInt,cch, Str,LE, UInt,cch)
+			DllCall( "LCMapStringW", UInt,0, UInt,LCMAP_BYTEREV, Str,FileR_TFRaw, UInt,cch, Str,LE, UInt,cch)
 			FileAppend, %LE%, % aOutFile, % aOutCp
-			textvalue := LE := ""
+			FileR_TFRaw := LE := ""
 		return
 		}
 		else
 		{
-			FileAppend, %textvalue%, % aOutFile, % aOutCp
-			textvalue := ""
+			FileAppend, %FileR_TFC%, % aOutFile, % aOutCp
+			FileR_TFC := ""
 		return
 		}
 	}
@@ -134,21 +134,21 @@
 			_hFile := FileOpen(aOutFile, "w")
 			MCode(code, "FEFF")
 			_hFile.RawWrite(code, 2)
-			_hFile.RawWrite(textvalue, aInLen)
-			textvalue := ""
+			_hFile.RawWrite(FileR_TFRaw, aInLen)
+			FileR_TFRaw := ""
 		return
 		}
 		else
 		{
 			LCMAP_BYTEREV := 0x800
-			cch:=DllCall( "LCMapStringW", UInt,0, UInt,LCMAP_BYTEREV, Str,textvalue, UInt,-1, Str,0, UInt,0)
+			cch:=DllCall( "LCMapStringW", UInt,0, UInt,LCMAP_BYTEREV, Str,FileR_TFC, UInt,-1, Str,0, UInt,0)
 			VarSetCapacity(BE, cch * 2)
-			DllCall( "LCMapStringW", UInt,0, UInt,LCMAP_BYTEREV, Str,textvalue, UInt,cch, Str,BE, UInt,cch)
+			DllCall( "LCMapStringW", UInt,0, UInt,LCMAP_BYTEREV, Str,FileR_TFC, UInt,cch, Str,BE, UInt,cch)
 			_hFile := FileOpen(aOutFile, "w")
 			MCode(code, "FEFF")
 			_hFile.RawWrite(code, 2)
 			_hFile.RawWrite(BE, cch * 2-2)
-			textvalue := BE := ""
+			FileR_TFC := BE := ""
 		return
 		}
 	}

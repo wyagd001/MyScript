@@ -1,4 +1,23 @@
-﻿GetBrowserURL_hK()
+﻿; https://autohotkey.com/boards/viewtopic.php?f=6&t=3702
+
+GetActiveBrowserURL(sClass, WithProtocol:=1) {
+	static ModernBrowsers, LegacyBrowsers,OtherBrowsers
+ModernBrowsers := "ApplicationFrameWindow,Chrome_WidgetWin_0,Chrome_WidgetWin_1,Maxthon3Cls_MainFrm,MozillaWindowClass,Slimjet_WidgetWin_1,360se6_Frame,QQBrowser_WidgetWin_1"
+LegacyBrowsers := "IEFrame,OperaWindowClass"
+OtherBrowsers := "AuroraMainFrame"
+	if !sclass
+		WinGetClass, sClass, A
+	If sClass In % ModernBrowsers
+		Return GetBrowserURL_ACC(sClass, WithProtocol)
+	Else If sClass In % LegacyBrowsers
+		Return GetBrowserURL_DDE(sClass) ; empty string if DDE not supported (or not a browser)
+	Else If sClass In % OtherBrowsers
+		Return GetBrowserURL_hK()
+	Else
+		Return ""
+}
+
+GetBrowserURL_hK()
 {
 	Send, ^l
 	sleep,300
@@ -33,8 +52,11 @@ GetBrowserURL_DDE(sClass) {
 	Return sWindowInfo2
 }
 
+; 由类获取窗口id，在检测隐藏窗口开启时，可能会得不到正确的窗口id
 GetBrowserURL_ACC(sClass, WithProtocol:=1) {
 	global nWindow, accAddressBar
+	BackUp_DetectHiddenWindows := A_DetectHiddenWindows
+	DetectHiddenWindows, Off
 	If (nWindow != WinExist("ahk_class " sClass)) ; reuses accAddressBar if it's the same window
 	{
 		nWindow := WinExist("ahk_class " sClass)
@@ -42,10 +64,19 @@ GetBrowserURL_ACC(sClass, WithProtocol:=1) {
 	}
 	Try sURL := accAddressBar.accValue(0)
 	If (sURL == "") {
-		WinGet, nWindows, List, % "ahk_class " sClass ; In case of a nested browser window as in the old CoolNovo (TO DO: check if still needed)
+		WinGet, nWindows, List, % "ahk_class " sClass ; In case of a nested browser window as in the old CoolNovo
 		If (nWindows > 1) {
-			accAddressBar := GetAddressBar(Acc_ObjectFromWindow(nWindows2))
-			Try sURL := accAddressBar.accValue(0)
+			loop % nWindows {
+				Tmp_nWindows := nWindows%A_index%
+				if (Tmp_nWindows = nWindow)
+					continue
+				accAddressBar := GetAddressBar(Acc_ObjectFromWindow(Tmp_nWindows))
+				Try sURL := accAddressBar.accValue(0)
+				if (sURL !=""){
+					;msgbox % "1" sURL "1"
+					break
+				}
+			}
 		}
 	}
 
@@ -53,6 +84,17 @@ GetBrowserURL_ACC(sClass, WithProtocol:=1) {
 		sURL := WithProtocol ? "http://" sURL : sURL
 	If (sURL == "")
 		nWindow := -1 ; Don't remember the window if there is no URL
+	DetectHiddenWindows, % BackUp_DetectHiddenWindows
+	Return sURL
+}
+
+GetBrowserURL_ACC_byhwnd(hwnd := 0){
+	if !hwnd
+		hwnd := WinExist("A")
+	accAddressBar := GetAddressBar(Acc_ObjectFromWindow(hwnd))
+	Try sURL := accAddressBar.accValue(0)
+	If (sURL == "")
+	return 0
 	Return sURL
 }
 
@@ -61,13 +103,16 @@ GetBrowserURL_ACC(sClass, WithProtocol:=1) {
 
 GetAddressBar(accObj) {
 	Try If ((accObj.accRole(0) == 42) and IsURL(accObj.accValue(0)))
-		Return accObj
+	Return accObj
 
 	Try If ((accObj.accRole(0) == 42) and IsURL("http://" accObj.accValue(0))) ; Modern browsers omit "http://"
 		Return accObj
 
+	Try If ((accObj.accRole(0) == 42) and IsURL("file://" accObj.accValue(0))) ; Modern browsers omit "file://"
+	Return accObj
+
 	Try If ((accObj.accRole(0) == 42) and InStr( accObj.accValue(0),":/"))
-		Return accObj
+	Return accObj
 
 	For nChild, accChild in Acc_Children(accObj)
 		If IsObject(accAddressBar := GetAddressBar(accChild))

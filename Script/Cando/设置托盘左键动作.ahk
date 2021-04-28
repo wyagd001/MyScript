@@ -1,29 +1,29 @@
-Cando_EditTi:
+ï»¿Cando_EditTi:
 IniRead, Candy_Cmd, %run_iniFile%, % uid, Ti_%uid%_leftClick
 IniRead, TiTooltip, %run_iniFile%, % uid, Ti_%uid%_tooltip
 IniRead, IconfileAndNum, %run_iniFile%, % uid, Ti_%uid%_Icon
 Array := StrSplit(Candy_Cmd, "|")
 Gui,66:Default
 Gui,Destroy
-Gui, Add, Text, x10 y10 w200 h20 , ÍĞÅÌÍ¼±êÎÄ¼ş£¨¸ñÊ½Îª Â·¾¶:±àºÅ£©
+Gui, Add, Text, x10 y10 w200 h20 , æ‰˜ç›˜å›¾æ ‡æ–‡ä»¶ï¼ˆæ ¼å¼ä¸º è·¯å¾„:ç¼–å·ï¼‰
 gui, add, picture, vicon x210 y1,% Ti_%uid%_icon
-Gui, Add, Edit, x10 y30 w400 h20 vIconfileAndNum gload, % IconfileAndNum
-Gui, Add, Text, x10 y60 w200 h20 , ÍĞÅÌÌáÊ¾ÎÄ×Ö
+Gui, Add, Edit, x10 y30 w400 h20 vIconfileAndNum gload_icon, % IconfileAndNum
+Gui, Add, Text, x10 y60 w200 h20 , æ‰˜ç›˜æç¤ºæ–‡å­—
 Gui, Add, Edit, x10 y80 w400 h20 vTiTooltip, % TiTooltip
 
-Gui, Add, Text, x10 y110 w80 h20 , ×ó¼ü¶¯×÷Ñ¡Ôñ
+Gui, Add, Text, x10 y110 w80 h20 , å·¦é”®åŠ¨ä½œé€‰æ‹©
 Gui, Add, DropDownList, x10 y130 w100 h100 vinterface gupdate_cmd, Cando|Keys|Menu|Run|RunCanfunc
-Gui, Add, Text, x10 y160 w120 h20 , ²ÎÊı/ÎÄ¼ş/ÃüÁî/±êÇ©
+Gui, Add, Text, x10 y160 w120 h20 , å‚æ•°/æ–‡ä»¶/å‘½ä»¤/æ ‡ç­¾
 Gui, Add, Edit, x10 y180 w400 h20 vvars gupdate_cmd,% Array[2] Array[3] 
-Gui, Add, Text, x10 y210 w120 h20, ÅäÖÃ
+Gui, Add, Text, x10 y210 w120 h20, é…ç½®
 Gui, Add, Edit, x10 y230 w400 h40 vcmd ReadOnly
 
-Gui, Add, Button, x300 y280 w60 h30 gwriteini,È·ÈÏ
-Gui, Add, Button, x360 y280 w60 h30 g66GuiClose,È¡Ïû
+Gui, Add, Button, x300 y280 w60 h30 gwriteini,ç¡®è®¤
+Gui, Add, Button, x360 y280 w60 h30 g66GuiClose,å–æ¶ˆ
 
-Gui Show, ,%uid% Í¼±ê×ó¼ü¶¯×÷±à¼­
+Gui Show, ,%uid% å›¾æ ‡å·¦é”®åŠ¨ä½œç¼–è¾‘
 GuiControl, ChooseString, interface, % Array[1]
-gosub load
+gosub load_icon
 gosub update_cmd
 Return
 
@@ -34,19 +34,19 @@ update_cmd:
 	guicontrol,, cmd, % cmd
 Return
 
-load:
+load_icon:
 gui, submit, nohide
 StringGetPos, Num, IconfileAndNum, :, R1
 if (Num=1) or  (Num=-1)
-tmpstr := "*icon1 " IconfileAndNum
+Tmp_Str := "*icon1 " IconfileAndNum
 else
 {
 Iconfile:=SubStr(IconfileAndNum, 1, Num)
-IconNum:=SubStr(IconfileAndNum, Num+2) + 1
-tmpstr := "*icon" IconNum " " Iconfile
+IconNum:=SubStr(IconfileAndNum, Num+2)
+Tmp_Str := "*icon" IconNum " " Iconfile
 }
-;tooltip % Num "`n" tmpstr
-guicontrol,, icon, % tmpstr
+;tooltip % Num "`n" Tmp_Str
+guicontrol,, icon, % Tmp_Str
 guicontrol, show, icon
 return
 

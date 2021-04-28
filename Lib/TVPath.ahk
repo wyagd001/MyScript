@@ -1,4 +1,4 @@
-﻿; 注册表打开时跳转到相应条目 主窗口_OpenButton.ahk
+﻿; 注册表打开时跳转到相应条目 主窗口\OpenButton.ahk
 ; 复制注册表相应条目路径  注册表.ahk
 
 ; https://autohotkey.com/boards/viewtopic.php?t=5999

@@ -9,7 +9,7 @@ Return
 }
 Else
 {
-V := ClipboardAll
+BackUp_ClipBoard := ClipboardAll
 Clipboard :=
 ;复制
 Send, +{Home}^c
@@ -17,12 +17,12 @@ Send, +{Home}^c
 ;Send, +{Home}^x
 ClipWait, 0.5
 StringReplace, Clipboard, Clipboard,==,,all
-q:=% ZTrim( Eval(Clipboard) )
+Tmp_Val := ZTrim( Eval(Clipboard) )
 ;是否保留公式
 ;Send, {end}=
-SendInput,%q%
-Clipboard := V
-q:=V:=""
+SendInput, %Tmp_Val%
+Clipboard := BackUp_ClipBoard
+Tmp_Val := BackUp_ClipBoard := ""
 }
 Return
 ;#IfWinActive

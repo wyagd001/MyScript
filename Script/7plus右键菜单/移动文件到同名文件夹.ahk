@@ -1,7 +1,6 @@
 ﻿;桌面lnk文件无效(所有lnk文件都无效)
 1003:
-	;MsgBox
-	SetTimer,移动文件到同名文件夹,-150
+SetTimer, 移动文件到同名文件夹, -150
 Return
 
 ;文件移动到同名文件夹内
@@ -9,29 +8,25 @@ Return
 ;按快捷键为结果为 G:\Users\lyh\Desktop\QQ  实际为QQ.lnk
 ;#G::
 移动文件到同名文件夹:
-SetTimer, hovering, off
-hovering_off:=1
 sleep, 50
 Critical,On
 Files := GetSelectedFiles()
-If !Files or (Files="ERROR")
+If !Files
 {
-	hovering_off:=0
 	CF_ToolTip("获取文件路径失败。", 3000)
 	Return
 }
 Critical,Off
 
-hovering_off:=0
 Loop, Parse, files, `n,`r
 {
 	FileFullPath := A_LoopField
-	SplitPath,FileFullPath,FileName,FilePath,FileExtension,FileNameNoExt
+	SplitPath, FileFullPath, FileName, FilePath, FileExtension, FileNameNoExt
 	creatfolder = %FilePath%\%FileNameNoExt%
 	IfNotExist %creatfolder%
 	{
-		FileCreateDir,%creatfolder%
-		FileMove,%FileFullPath%,%creatfolder%
+		FileCreateDir, %creatfolder%
+		FileMove, %FileFullPath%, %creatfolder%
 	}
 	else
 	{
@@ -68,17 +63,17 @@ Return
 	section = 移动文件到同名文件夹
 	defaultSet=
 	( LTrim
-ID = 1003
-Name = File(s)2Folder(s)
-Description = 移动文件到同名文件夹(支持多文件)
-SubMenu = 7plus
-FileTypes = *
-SingleFileOnly = 0
-Directory = 0
-DirectoryBackground = 0
-Desktop = 0
-showmenu = 1
+		ID = 1003
+		Name = File(s)2Folder(s)
+		Description = 移动文件到同名文件夹(支持多文件)
+		SubMenu = 7plus
+		FileTypes = *
+		SingleFileOnly = 0
+		Directory = 0
+		DirectoryBackground = 0
+		Desktop = 0
+		showmenu = 1
 	)
-IniWrite, % defaultSet, % 7PlusMenu_ProFile_Ini, % section
+	IniWrite, % defaultSet, % 7PlusMenu_ProFile_Ini, % section
 return
 }

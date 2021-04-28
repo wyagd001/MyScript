@@ -13,17 +13,11 @@ SetWinDelay, 0
 SetTitleMatchMode 2
 ; 设置鼠标的坐标模式为相对于整个屏幕的坐标模式
 CoordMode, Mouse, Screen
-
-global run_iniFile := A_ScriptDir "\settings\setting.ini"
-IfNotExist, %run_iniFile%
-	FileCopy, %A_ScriptDir%\Backups\setting.ini, %run_iniFile%
-global visable
-
+; 退出脚本时，执行ExitSub，关闭自动启动的脚本、恢复窗口等等操作。
+OnExit, ExitSub
 ; 开机时脚本启动后等待至60s
-;Stime := A_TickCount
 if (A_TickCount < 60000)
 	sleep, % (60000 - A_TickCount)
-
 ; 管理员权限
 If(!A_IsAdmin)
 {
@@ -36,18 +30,20 @@ If(!A_IsAdmin)
 		MsgBox, 没有启用管理员权限
 }
 
-IniRead, content, %run_iniFile%, 功能开关
-Gosub, GetAllKeys
+;========变量读取和设置开始========
+global run_iniFile := A_ScriptDir "\settings\setting.ini"
+IfNotExist, %run_iniFile%
+	FileCopy, %A_ScriptDir%\Backups\setting.ini, %run_iniFile%
+global visable
 
-; 在脚本的开头，利用Reload变通实现批量#Include
-; 自动生成AutoIncludeAll.ahk
+IniRead, IniR_Tmp_Str, %run_iniFile%, 功能开关
+Gosub, _GetAllKeys
+
+; 在脚本的开头，利用 Reload 变通实现批量 #Include
+; 自动生成 AutoIncludeAll.ahk
 If Auto_Include
 	Gosub, _AutoInclude
 
-; 退出脚本时，执行ExitSub，关闭自动启动的脚本、恢复窗口等等操作。
-OnExit, ExitSub
-
-;========变量设置开始========
 FileReadLine, AppVersion, %A_ScriptDir%\version.txt, 1
 AppVersion := Trim(AppVersion)
 AppTitle = 拖拽移动文件到目标文件夹(自动重命名)
@@ -101,14 +97,14 @@ Splitpath,A_AhkPath,Ahk_FileName,Ahk_Dir
 ; 检测系统版本
 ; 版本号>6  Vista7为真(1)
 RegRead, Vista7, HKLM, SOFTWARE\Microsoft\Windows NT\CurrentVersion, CurrentVersion
-global Vista7 := Vista7 >= 6.0.7
+global Vista7 := (Vista7 >= 6)
 
 ;---------水平垂直最大化---------
 VarSetCapacity(work_area, 16)
 DllCall("SystemParametersInfo"
-         , "uint", 0x30                                          ; SPI_GETWORKAREA
+         , "uint", 0x30      ; SPI_GETWORKAREA
          , "uint", 0
-         , "uint", &work_area    ;结构左0上4右8下12  NumGet(work_area,8)
+         , "uint", &work_area    ; 结构左0 上4 右8 下12  NumGet(work_area,8)
          , "uint", 0 )
 
 ; 获取工作区域宽
@@ -121,17 +117,17 @@ x_x2 := work_area_w - 634
 y_y2 := work_area_h - 108
 
 ; 最近关闭的资源管理器窗口
-global CloseWindowList := []
-global ClosetextfileList := []
-global folder := []
-global textfile := []
-IniRead, content, %run_iniFile%, CloseWindowList
-CloseWindowList := StrSplit(content, "`n")
-Array_Sort(CloseWindowList)
+global CloseWindowList_Arr := []
+global ClosetextfileList_Arr := []
+global folder_Arr := []
+global textfile_Arr := []
+IniRead, IniR_Tmp_Str, %run_iniFile%, CloseWindowList
+CloseWindowList_Arr := StrSplit(IniR_Tmp_Str, "`n")
+Array_Sort(CloseWindowList_Arr)
 
-IniRead, content, %run_iniFile%, ClosetextfileList
-ClosetextfileList := StrSplit(content, "`n")
-Array_Sort(ClosetextfileList)
+IniRead, IniR_Tmp_Str, %run_iniFile%, ClosetextfileList
+ClosetextfileList_Arr := StrSplit(IniR_Tmp_Str, "`n")
+Array_Sort(ClosetextfileList_Arr)
 
 ; Candy，Windy
 global szMenuIdx := {}      ; 菜单用1
@@ -147,27 +143,27 @@ IniRead, filetp, %run_iniFile%, 截图, filetp
 IniRead, screenshot_path, %run_iniFile%, 截图, 截图保存目录
 IniRead, TargetFolder, %run_iniFile%, 路径设置, TargetFolder
 
-IniRead, content, %run_iniFile%, 缩为标题栏
-Gosub, GetAllKeys
+IniRead, IniR_Tmp_Str, %run_iniFile%, 缩为标题栏
+Gosub, _GetAllKeys
 
-IniRead, content, %run_iniFile%, 自动显示隐藏窗口
-Gosub, GetAllKeys
+IniRead, IniR_Tmp_Str, %run_iniFile%, 自动显示隐藏窗口
+Gosub, _GetAllKeys
 
-IniRead, content, %run_iniFile%, 常规
-Gosub, GetAllKeys
+IniRead, IniR_Tmp_Str, %run_iniFile%, 常规
+Gosub, _GetAllKeys
 
-IniRead, content, %run_iniFile%, 功能模式选择
-Gosub, GetAllKeys
+IniRead, IniR_Tmp_Str, %run_iniFile%, 功能模式选择
+Gosub, _GetAllKeys
 
-IniRead, content, %run_iniFile%, 自动激活
-Gosub, GetAllKeys
+IniRead, IniR_Tmp_Str, %run_iniFile%, 自动激活
+Gosub, _GetAllKeys
 
-IniRead, content, %run_iniFile%,时间
-Gosub, GetAllKeys
+IniRead, IniR_Tmp_Str, %run_iniFile%,时间
+Gosub, _GetAllKeys
 
 ; 读取自定义的程序
-IniRead, content, %run_iniFile%, otherProgram
-Gosub, GetAllKeys
+IniRead, IniR_Tmp_Str, %run_iniFile%, otherProgram
+Gosub, _GetAllKeys
 
 If TargetFolder
 {
@@ -190,8 +186,8 @@ If LastClosewindow
 ;----------窗口缩略图----------
 If Auto_MiniMizeOn
 {
-	IniRead, content, %run_iniFile%, 窗口缩略图
-	Gosub, GetAllKeys
+	IniRead, IniR_Tmp_Str, %run_iniFile%, 窗口缩略图
+	Gosub, _GetAllKeys
 
 	MiniMizeNum = 50
 	ffw := fw-5 ; 缩略图窗口里的图片宽
@@ -207,18 +203,18 @@ If Auto_MiniMizeOn
 }
 ;----------窗口缩略图----------
 
-IniRead, content, %run_iniFile%, FastFolders
-Gosub, GetAllKeys
+IniRead, IniR_Tmp_Str, %run_iniFile%, FastFolders
+Gosub, _GetAllKeys
 
-IniRead content, %run_iniFile%, AudioPlayer
-loop, parse, content, `n
+IniRead IniR_Tmp_Str, %run_iniFile%, AudioPlayer
+loop, parse, IniR_Tmp_Str, `n
 {
-	Temp_key := RegExReplace(A_LoopField, "=.*?$")
-	Temp_Val := RegExReplace(A_LoopField, "^.*?=")
-	%Temp_key% = %Temp_Val%
-	menu, audioplayer, add, %Temp_key%, DPlayer
+	Tmp_Key := RegExReplace(A_LoopField, "=.*?$")
+	Tmp_Val := RegExReplace(A_LoopField, "^.*?=")
+	%Tmp_key% = %Tmp_Val%
+	menu, audioplayer, add, %Tmp_key%, DPlayer
 }
-Temp_key := Temp_Val := content := ""
+Tmp_Key := Tmp_Val := IniR_Tmp_Str := ""
 ;=========读取配置文件结束=========
 
 ;=========托盘菜单绘制=========
@@ -331,40 +327,40 @@ Else
 
 ; 图形界面的"绘制"
 ; 窗口  +无最小化按钮（任务栏无按钮）
-Gui,  +HwndHGUI +ToolWindow
+Gui, +HwndHGUI +ToolWindow
 Gui, Add, Text, x1 y10 w90 h20 +Center, 目标/运行:
-Gui, Add, ComBoBox, x90 y10 w330 h300 +HwndhComBoBox vDir, % ComBoBoxShowItems
-ControlGet, ahMyEdit, hWnd,, Edit1, ahk_id %HGUI%
-DllCall("Shlwapi.dll\SHAutoComplete", "Ptr", ahMyEdit, "UInt", 0x1|0x10000000)  ; 只对编辑控件有效
-global hComBoBox
+Gui, Add, ComBoBox, x90 y10 w330 h300 +Hwndh_MG_ComBoBox vDir, % ComBoBoxShowItems
+ControlGet, h_MG_Edit, hWnd,, Edit1, ahk_id %HGUI%
+DllCall("Shlwapi.dll\SHAutoComplete", "Ptr", h_MG_Edit, "UInt", 0x1|0x10000000)  ; 只对编辑控件有效
+global h_MG_ComBoBox
 global objListIDs:= Object()
 global del_ico:=0 ; 0= text "X", 1= icon
 global single_ico:=0
-fn := Func("List_Func").Bind(hComBoBox)
-GuiControl, +g, % hComBoBox, % fn
-Gui, Add, Button, x425 y10 gselectfile, &.
-Gui, Add, Button, x445 y10 gselectfolder, 选择(&S)
-Gui, Add, Button, x500 y10 default gopenbutton, 打开(&O)
-Gui, Add, Button, x555 y10 gabout, 关于(&A)
-Gui, Add, Button,x445 y35  gaddfavorites, 加入收藏
-Gui, Add, Button,x515 y35  gshowfavorites, >
-Gui, Add, Button,x555 y35 gliebiao, 列表(&L)
-Gui, Add, Picture, x90 y35 w16 h16 gOpenAudioPlayer vpicture, %image%
+fn := Func("List_Func").Bind(h_MG_ComBoBox)
+GuiControl, +g, % h_MG_ComBoBox, % fn
+Gui, Add, Button, x425 y10 gMG_selectfile, &.
+Gui, Add, Button, x445 y10 gMG_selectfolder, 选择(&S)
+Gui, Add, Button, x500 y10 default gMG_openbutton, 打开(&O)
+Gui, Add, Button, x555 y10 gMG_about, 关于(&A)
+Gui, Add, Button,x445 y35  gMG_addfavorites, 加入收藏
+Gui, Add, Button,x515 y35  gMG_showfavorites, >
+Gui, Add, Button,x555 y35 gMG_liebiao, 列表(&L)
+Gui, Add, Picture, x90 y35 w16 h16 gMG_OpenAudioPlayer vpicture, %image%
 AddGraphicButton(1,"x108","y32","h21","w40","GB1", A_ScriptDir . "\pic\MusicControl\prev.bmp",A_ScriptDir . "\pic\MusicControl\h_prev.bmp" ,A_ScriptDir . "\pic\MusicControl\d_prev.bmp")
 AddGraphicButton(1,"x147","y32","h21","w40","GB2", A_ScriptDir . "\pic\MusicControl\pause.bmp",A_ScriptDir . "\pic\MusicControl\h_pause.bmp" ,A_ScriptDir . "\pic\MusicControl\d_pause.bmp")
 AddGraphicButton(1,"x186","y32","h21","w40","GB3", A_ScriptDir . "\pic\MusicControl\next.bmp",A_ScriptDir . "\pic\MusicControl\h_next.bmp" ,A_ScriptDir . "\pic\MusicControl\d_next.bmp")
 AddGraphicButton(1,"x225","y32","h21","w40","GB4", A_ScriptDir . "\pic\MusicControl\close.bmp",A_ScriptDir . "\pic\MusicControl\h_close.bmp" ,A_ScriptDir . "\pic\MusicControl\d_close.bmp")
-Gui, Add, Picture, x285 y35 w16 h16 gmute vvol, %volimage%
-Gui, Add, Slider, x300 y35 w100 h20 vVSlider Range0-100 gVolumeC
+Gui, Add, Picture, x285 y35 w16 h16 gMG_mute vvol, %volimage%
+Gui, Add, Slider, x300 y35 w100 h20 vVSlider Range0-100 gMG_SetVolume
 Gui, Add, Text, x10 y30 cblue, 光驱
 Gui, Add, Text, x10 y45 cblue, USB
-Gui, Add, Text, x40 y30 cgreen vopenCD gdriver, 开
-Gui, Add, Text, x40 y45 cgreen g弹出U盘, 弹出
-Gui, Add, Text, x60 y30 cgreen gdriver, 关
-Gui, Add, Text, x10 y64 cgreen gchangyong, 常用
-Gui, Add, Text, x100 y64 cgreen gDesktoplnk, 桌面
-Gui, Add, Text, x200 y64 cgreen vfhc gfoo_httpcontrol_click, Foo_HttpControl
-Gui, Add, Text, x340 y64 cgreen gIEfavorites, IE收藏夹
+Gui, Add, Text, x40 y30 cgreen vopenCD gMG_OpenCD, 开
+Gui, Add, Text, x40 y45 cgreen gMG_弹出U盘, 弹出
+Gui, Add, Text, x60 y30 cgreen gMG_OpenCD, 关
+Gui, Add, Text, x10 y64 cgreen gMG_changyong, 常用
+Gui, Add, Text, x100 y64 cgreen gMG_Desktoplnk, 桌面
+Gui, Add, Text, x200 y64 cgreen vfhc gMG_foo_httpcontrol_click, Foo_HttpControl
+Gui, Add, Text, x340 y64 cgreen gMG_IEfavorites, IE收藏夹
 
 ;----------音量----------
 SoundGet,vol_Master
@@ -458,10 +454,9 @@ if Auto_7plusMenu
 ;鼠标点击，原窗口缩略图拖拽移动的代码现已不用
 ;OnMessage(0x201, "WM_LBUTTONDOWN")
 
-;拖拽文件窗口执行函数
+; 拖拽文件窗口执行函数
 GuiDropFiles.config(HGUI, "GuiDropFiles_Begin", "GuiDropFiles_End")
-;拖拽到ComboBox或Edit1控件上不复制文件
-ControlGet,hComboBoxEdit,hWnd,,Edit1,ahk_id %HGUI%
+; 拖拽到 ComboBox 或 Edit1 控件上时不复制文件
 ;=========图形界面的"绘制"2=========
 
 ;----------不显示托盘图标则重启脚本----------
@@ -532,20 +527,20 @@ if Auto_FuncsIcon
 {
 	if (FuncsIcon_Num=2)
 	{
-		IniRead, content, %run_iniFile%, 101
-		Gosub, GetAllKeys
+		IniRead, IniR_Tmp_Str, %run_iniFile%, 101
+		Gosub, _GetAllKeys
 		TrayIcon_Add(hGui, "OnTrayIcon", Ti_101_icon, Ti_101_tooltip)
-		IniRead, content, %run_iniFile%, 102
-		Gosub, GetAllKeys
+		IniRead, IniR_Tmp_Str, %run_iniFile%, 102
+		Gosub, _GetAllKeys
 		TrayIcon_Add(hGui, "OnTrayIcon", Ti_102_icon, Ti_102_tooltip)
 	}
 	else
 	{
-		IniRead, content, %run_iniFile%, 101
-		Gosub, GetAllKeys
+		IniRead, IniR_Tmp_Str, %run_iniFile%, 101
+		Gosub, _GetAllKeys
 		TrayIcon_Add(hGui, "OnTrayIcon", Ti_101_icon, Ti_101_tooltip)
 	}
-	content := ""
+	IniR_Tmp_Str := ""
 }
 ;----------不显示托盘图标则重启脚本----------
 
@@ -606,8 +601,7 @@ if Auto_7plusMenu
 ;----------7plus右键菜单----------
 
 ;----------监视窗口创建关闭消息：7plus右键菜单之重新打开关闭的窗口 Windo菜单----------
-IniRead,CloseWindowList_showmenu,%run_iniFile%,1007,showmenu
-if CloseWindowList_showmenu
+if Auto_LogClosewindows
 {
 	DllCall("RegisterShellHookWindow","uint",hGui)
 	OnMessage(DllCall("RegisterWindowMessageW","str","SHELLHOOK"),"ShellWM")
@@ -643,12 +637,12 @@ If Auto_ShutdownMonitor
 	; AutoEndTasks 值为 0, Vista+ 关机时提示是否结束进程
 	RegWrite, REG_SZ,HKEY_CURRENT_USER, Control Panel\Desktop, AutoEndTasks, 0
 	; 调用阻止系统关机的API
-	Temp_Value:=DllCall("User32.dll\ShutdownBlockReasonCreate", "uint", hGui, "wstr", A_ScriptFullPath " 正在运行, 是否确定关机？")
-	if !Temp_Value
+	Tmp_Val:=DllCall("User32.dll\ShutdownBlockReasonCreate", "uint", hGui, "wstr", A_ScriptFullPath " 正在运行, 是否确定关机？")
+	if !Tmp_Val
 		CF_ToolTip("ShutdownBlockReasonCreate 创建失败！错误码： " A_LastError,3000)
 	; 关机时第一个响应，若要使脚本成为最后一个要终止的进程，将 "0x4FF" 改为 "0x0FF".
-	Temp_Value :=DllCall("kernel32.dll\SetProcessShutdownParameters", UInt, 0x4FF, UInt, 0)
-	if !Temp_Value
+	Tmp_Val :=DllCall("kernel32.dll\SetProcessShutdownParameters", UInt, 0x4FF, UInt, 0)
+	if !Tmp_Val
 		CF_ToolTip("SetProcessShutdownParameters 失败！", 3000)
 	; 监视关机对话框的选择
 	HookProcAdr2 := RegisterCallback( "HookProc", "F" )
@@ -692,6 +686,7 @@ if !是否检测
 ;----------开启鼠标自动激活功能----------
 If(Auto_Raise=1)
 {
+	Hotkey, ~RButton, , P1
 	hovering_off:=0
 	SetTimer, hovercheck, 100
 }
@@ -1094,80 +1089,81 @@ FreeAppMem:
 Return
 
 onClipboardChange:
-	if !Auto_Clip  ;关闭剪贴板监控时返回
-	return
-	timeDiff := A_TickCount - lastClipboardTime
-	lastClipboardTime := A_TickCount
-	if (timeDiff < 200)  ; 两次复制间的时间太短返回
-	return
-	if A_IsPaused ; 脚本暂停时返回
-	return
-	if !clipmonitor  ; 按下^V时返回
-	return
-	ClipWait, 1, 1 ; 等待剪贴板
-	if !clipboard
-	return
-	if ErrorLevel
+if !Auto_Clip  ;关闭剪贴板监控时返回
+return
+timeDiff := A_TickCount - lastClipboardTime
+lastClipboardTime := A_TickCount
+if (timeDiff < 200)  ; 两次复制间的时间太短返回
+return
+if A_IsPaused ; 脚本暂停时返回
+return
+if !clipmonitor  ; clipmonitor为零时返回
+return
+ClipWait, 1, 1 ; 等待剪贴板
+if !clipboard
+return
+if ErrorLevel
+{
+	CF_ToolTip("剪贴板复制出错.",700)
+return
+}
+If Auto_ClipPlugin ;
+{
+	clipnotext=0
+	If ClipPlugin_git
 	{
-		CF_ToolTip("剪贴板复制出错.",700)
-	return
-	}
-	If Auto_ClipPlugin ;
-	{
-		clipnotext=0
-		If ClipPlugin_git
+		If RegExMatch(Clipboard, "^(\\|/)?(zh-cn|v1|v2)?(\\|/)?docs(\\?|/?).+\.(htm|js|css|ahk)")
 		{
-			If RegExMatch(Clipboard, "^(\\|/)?(zh-cn|v1|v2)?(\\|/)?docs(\\?|/?).+\.(htm|js|css|ahk)")
+			gitlabel := "git"  ;  git标签不存在时,不会报错
+			if IsLabel(gitlabel)
 			{
-				if IsLabel("git")
-				{
-					SelectedPath := Clipboard
-					gosub git
-					Clipboard := ClipSaved%clipid%
-				return
-				}
+				SelectedPath := Clipboard
+				gosub %gitlabel%  ;  git标签不存在时,不会报错
+				Clipboard := ClipSaved%clipid%
+			return
 			}
 		}
 	}
-	if GetClipboardFormat(1)=1  ; 剪贴板中的内容是文本
+}
+if GetClipboardFormat(1)=1  ; 剪贴板中的内容是文本
+{
+	clipnotext=0
+	if(ClipSaved%clipid%=Clipboard)
+	return
+	clipid+=1
+	if clipid>3
+		clipid=1
+	ClipSaved%clipid% := Clipboard
+	if Auto_ClipTip
+		CF_ToolTip("剪贴板" clipid " 复制完毕.",700)
+	if Auto_Cliphistory
 	{
-		clipnotext=0
-		if(ClipSaved%clipid%=Clipboard)
+		if (writecliphistory=1)
+		{
+			if StrLen(Clipboard)<1000
+			{
+				for k,v in Array_Cliphistory
+					if (v=Clipboard)
+						return
+				Array_Cliphistory.Push(Clipboard)
+				if Array_Cliphistory.Length() > 15
+					Array_Cliphistory.RemoveAt(1)
+			}
+			;if(ClipSaved1 = ClipSaved2) or (ClipSaved2 = ClipSaved3) or (ClipSaved1 = ClipSaved3)
+			;return
+			addHistoryText(Clipboard, A_Now)
+			;CF_ToolTip("剪贴板" clipid " 以写入数据库.",700)
 		return
-		clipid+=1
-		if clipid>3
-			clipid=1
-		ClipSaved%clipid% := Clipboard
-		if Auto_ClipTip
-			CF_ToolTip("剪贴板" clipid " 复制完毕.",700)
-		if Auto_Cliphistory
+		}
+		else
 		{
-			if (writecliphistory=1)
-			{
-				if StrLen(Clipboard)<1000
-				{
-					for k,v in Array_Cliphistory
-						if (v=Clipboard)
-							return
-					Array_Cliphistory.Push(Clipboard)
-					if Array_Cliphistory.Length() > 15
-						Array_Cliphistory.RemoveAt(1)
-				}
-				;if(ClipSaved1 = ClipSaved2) or (ClipSaved2 = ClipSaved3) or (ClipSaved1 = ClipSaved3)
-				;return
-				addHistoryText(Clipboard, A_Now)
-				;CF_ToolTip("剪贴板" clipid " 以写入数据库.",700)
-			return
-			}
-			else
-			{
-				writecliphistory=1
-			return
-			}
+			writecliphistory=1
+		return
 		}
 	}
-	else ; 剪贴板中的内容是图片或文件等非文本内容
-		clipnotext=1
+}
+else ; 剪贴板中的内容是图片或文件等非文本内容
+	clipnotext=1
 return
 
 EmptyMem(PID="AHK Rocks"){
@@ -1177,29 +1173,29 @@ EmptyMem(PID="AHK Rocks"){
 	DllCall("CloseHandle", "Int", h)
 }
 
-selectfile:
-	FileSelectFile,tt,,,选择文件
-	GuiControl,, Dir, %tt%
-	GuiControl,choose,dir,%tt%
-	GuiControl, -default,&.
-	GuiControl, +default,打开(&O)
+MG_selectfile:
+FileSelectFile,tt,,,选择文件
+GuiControl,, Dir, %tt%
+GuiControl,choose,dir,%tt%
+GuiControl, -default,&.
+GuiControl, +default,打开(&O)
 Return
 
-selectfolder:
-	FileSelectFolder,tmpDir,,,选择目录
-	;设置选择目录的路径为下拉列表的一个项目
-	GuiControl,, Dir, %tmpDir%
-	;选中下拉列表中的条目
-	GuiControl,choose,dir,%tmpDir%
-	;事件没有提交 dir为空 所以TargetFolder := Dir无效
-	If tmpDir
-	{
-		TargetFolder := tmpDir
-		IniWrite,%TargetFolder%, %run_iniFile%,路径设置, TargetFolder
-		TrayTip,移动文件,目标文件夹设置为 %TargetFolder% 。
-	}
-	GuiControl, -default,选择(&S)
-	GuiControl, +default,打开(&O)
+MG_selectfolder:
+FileSelectFolder,tmpDir,,,选择目录
+; 设置选择目录的路径为下拉列表的一个项目
+GuiControl,, Dir, %tmpDir%
+; 选中下拉列表中的条目
+GuiControl,choose,dir,%tmpDir%
+; 事件没有提交 dir为空 所以TargetFolder := Dir无效
+If tmpDir
+{
+	TargetFolder := tmpDir
+	IniWrite,%TargetFolder%, %run_iniFile%,路径设置, TargetFolder
+	TrayTip,移动文件,目标文件夹设置为 %TargetFolder% 。
+}
+GuiControl, -default,选择(&S)
+GuiControl, +default,打开(&O)
 Return
 
 选项:
@@ -1209,7 +1205,7 @@ Return
 		Gosub,option
 Return
 
-about:
+MG_about:
 	IfWinExist,ahk_class AutoHotkeyGUI,选项
 	{
 		WinActivate,ahk_class AutoHotkeyGUI,选项
@@ -1224,46 +1220,46 @@ about:
 Return
 
 Gui_Context_Menu:
-	winget,Gui_wid,id,a
+winget,Gui_wid,id,a
 ; Dock to Screen Edge entries
-	Menu, Gui_Dock_Windows, Add, Left, Gui_Dock_Windows
-	Menu, Gui_Dock_Windows, Add, Right, Gui_Dock_Windows
-	Menu, Gui_Dock_Windows, Add, Top, Gui_Dock_Windows
-	Menu, Gui_Dock_Windows, Add, Bottom, Gui_Dock_Windows
-	Menu, Gui_Dock_Windows, Add
-	Menu, Gui_Dock_Windows, Add, Corner - Top Left, Gui_Dock_Windows
-	Menu, Gui_Dock_Windows, Add, Corner - Top Right, Gui_Dock_Windows
-	Menu, Gui_Dock_Windows, Add, Corner - Bottom Left, Gui_Dock_Windows
-	Menu, Gui_Dock_Windows, Add, Corner - Bottom Right, Gui_Dock_Windows
-	Menu, Gui_Dock_Windows, Add
-	Menu, Gui_Dock_Windows, Add, Un-Dock, Gui_Un_Dock_Window
-	IfNotInString, Gui_Dock_Windows_List,%Gui_wid%
-		Menu, Gui_Dock_Windows, Disable, Un-Dock
-	Else
-	{
-		Menu, Gui_Dock_Windows, Disable, Left
-		Menu, Gui_Dock_Windows, Disable, Right
-		Menu, Gui_Dock_Windows, Disable, Top
-		Menu, Gui_Dock_Windows, Disable, Bottom
-		Menu, Gui_Dock_Windows, Disable, Corner - Top Left
-		Menu, Gui_Dock_Windows, Disable, Corner - Top Right
-		Menu, Gui_Dock_Windows, Disable, Corner - Bottom Left
-		Menu, Gui_Dock_Windows, Disable, Corner - Bottom Right
-		If (Edge_Dock_Position_%Gui_wid% !="") ; produces error If doesn't exist
-			Menu, Gui_Dock_Windows, Check, % Edge_Dock_Position_%Gui_wid%
-	}
+Menu, Gui_Dock_Windows, Add, Left, Gui_Dock_Windows
+Menu, Gui_Dock_Windows, Add, Right, Gui_Dock_Windows
+Menu, Gui_Dock_Windows, Add, Top, Gui_Dock_Windows
+Menu, Gui_Dock_Windows, Add, Bottom, Gui_Dock_Windows
+Menu, Gui_Dock_Windows, Add
+Menu, Gui_Dock_Windows, Add, Corner - Top Left, Gui_Dock_Windows
+Menu, Gui_Dock_Windows, Add, Corner - Top Right, Gui_Dock_Windows
+Menu, Gui_Dock_Windows, Add, Corner - Bottom Left, Gui_Dock_Windows
+Menu, Gui_Dock_Windows, Add, Corner - Bottom Right, Gui_Dock_Windows
+Menu, Gui_Dock_Windows, Add
+Menu, Gui_Dock_Windows, Add, Un-Dock, Gui_Un_Dock_Window
+IfNotInString, Gui_Dock_Windows_List,%Gui_wid%
+	Menu, Gui_Dock_Windows, Disable, Un-Dock
+Else
+{
+	Menu, Gui_Dock_Windows, Disable, Left
+	Menu, Gui_Dock_Windows, Disable, Right
+	Menu, Gui_Dock_Windows, Disable, Top
+	Menu, Gui_Dock_Windows, Disable, Bottom
+	Menu, Gui_Dock_Windows, Disable, Corner - Top Left
+	Menu, Gui_Dock_Windows, Disable, Corner - Top Right
+	Menu, Gui_Dock_Windows, Disable, Corner - Bottom Left
+	Menu, Gui_Dock_Windows, Disable, Corner - Bottom Right
+	If (Edge_Dock_Position_%Gui_wid% !="") ; produces error If doesn't exist
+		Menu, Gui_Dock_Windows, Check, % Edge_Dock_Position_%Gui_wid%
+}
 
-	Menu, ConfigMenu1, Add, &Dock to Edge, :Gui_Dock_Windows
-	Menu, ConfigMenu1, Add
-	Menu, ConfigMenu1, Add, 附加功能, :addf
-	Menu, ConfigMenu1, Add, 检查更新(&U)`t, Update
-	Menu, ConfigMenu1, Add, 选项(&O)`t, 选项
-	Menu, ConfigMenu1, Add
-	Menu, ConfigMenu1, Add, 重启脚本(&R)`t, 重启脚本
-	Menu, ConfigMenu1, Add, 退出(&X)`t, Menu_Tray_Exit
-	Menu, ConfigMenu1, Show
-	Menu, Gui_Dock_Windows,deleteall
-	Menu, ConfigMenu1,deleteall
+Menu, ConfigMenu1, Add, &Dock to Edge, :Gui_Dock_Windows
+Menu, ConfigMenu1, Add
+Menu, ConfigMenu1, Add, 附加功能, :addf
+Menu, ConfigMenu1, Add, 检查更新(&U)`t, Update
+Menu, ConfigMenu1, Add, 选项(&O)`t, 选项
+Menu, ConfigMenu1, Add
+Menu, ConfigMenu1, Add, 重启脚本(&R)`t, 重启脚本
+Menu, ConfigMenu1, Add, 退出(&X)`t, Menu_Tray_Exit
+Menu, ConfigMenu1, Show
+Menu, Gui_Dock_Windows,deleteall
+Menu, ConfigMenu1,deleteall
 Return
 
 Open1:
@@ -1369,141 +1365,129 @@ Menu_Tray_Exit:
 Return
 
 ExitSub:
-	if Auto_7plusMenu
-		FileDelete, %A_Temp%\7plus\hwnd.txt
+; ComBoBox 条目删除图标
+UnhookWinEvent(hWinEventHook3, HookProcAdr3)
 
-	if hidewin_hwnd
-		WinShow, ahk_id %hidewin_hwnd%
-
-	if Auto_FuncsIcon
+DetectHiddenWindows On
+; 退出子脚本
+Loop, %scriptCount%
+{
+	thisScript := scripts%A_index%0
+	If scripts%A_index%1 = 1  ; 已打开
 	{
-		TrayIcon_Remove(hGui, 101)
-		TrayIcon_Remove(hGui, 102)
+		WinClose %thisScript% - AutoHotkey
 	}
-
-	; ComBoBox 条目图标
-	UnhookWinEvent(hWinEventHook3, HookProcAdr3)
-
-; 释放监视关机的资源
-	if Auto_ShutdownMonitor
-	{
-		DllCall("ShutdownBlockReasonDestroy", UInt, hGui)
-		UnhookWinEvent(hWinEventHook2, HookProcAdr2)
-		;msgbox,0
-	}
-
-	if CloseWindowList_showmenu
-	{
-		DllCall("DeregisterShellHookWindow","uint",hGui)
-		;msgbox,1
 }
 
-	If !Auto_smartchooserbrowser
-	{
-		delahkurl()
-		;msgbox,2
-	}
+if Auto_7plusMenu
+	FileDelete, %A_Temp%\7plus\hwnd.txt
+
+if hidewin_hwnd
+	WinShow, ahk_id %hidewin_hwnd%
+
+if Auto_FuncsIcon
+{
+	TrayIcon_Remove(hGui, 101)
+	TrayIcon_Remove(hGui, 102)
+}
+
+; 释放监视关机的资源
+if Auto_ShutdownMonitor
+{
+	DllCall("ShutdownBlockReasonDestroy", UInt, hGui)
+	UnhookWinEvent(hWinEventHook2, HookProcAdr2)
+}
+
+if Auto_LogClosewindows
+{
+	DllCall("DeregisterShellHookWindow","uint",hGui)
+}
+
+If !Auto_smartchooserbrowser
+{
+	delahkurl()
+}
 
 ; 还原缩为缩略图的窗口
-	If Auto_MiniMizeOn
-	{
-		WinGet, id, list,ahk_class AutoHotkeyGUI
+DetectHiddenWindows Off
+If Auto_MiniMizeOn
+{
+	WinGet, id, list,ahk_class AutoHotkeyGUI
 
-		Loop,%id%
-		{
-			this_id := id%A_Index%
-			WinGetTitle, this_title, ahk_id %this_id%
-			;FileAppend,%this_title%`n,%A_Desktop%\123.txt
-			StringSplit, data, this_title,*
-			Title2MiniMize:=data1
+	Loop,%id%
+	{
+		this_id := id%A_Index%
+		WinGetTitle, this_title, ahk_id %this_id%
+		;FileAppend,%this_title%`n,%A_Desktop%\123.txt
+		StringSplit, data, this_title,*
+		Title2MiniMize:=data1
+		if Title2MiniMize
 			Winshow, ahk_id %Title2MiniMize%
-		}
-		;msgbox,3
 	}
+}
 
 ; 还原pin2desk钉住的窗口
-	If ToggleList
+If ToggleList
+{
+	Loop, parse,ToggleList,`|
 	{
-		Loop, parse,ToggleList,`|
-		{
-			WinShow,ahk_id %A_LoopField%
-			DllCall("SetParent", "UInt", A_LoopField, "UInt", 0)
-			;WinSet, Style, +0xC00000, ahk_id %A_LoopField%
-			WinSet,Region,,ahk_id %A_LoopField%
-			ToggleList:=StrAr_DeletElement(ToggleList,A_LoopField,1)
-		}
-		;msgbox,4
+		WinShow,ahk_id %A_LoopField%
+		DllCall("SetParent", "UInt", A_LoopField, "UInt", 0)
+		;WinSet, Style, +0xC00000, ahk_id %A_LoopField%
+		WinSet,Region,,ahk_id %A_LoopField%
+		ToggleList:=StrAr_DeletElement(ToggleList,A_LoopField,1)
 	}
+}
 
 ; 还原虚拟桌面隐藏的窗口
-	DetectHiddenWindows Off
-	Loop, %numDesktops%
-		ShowHideWindows(A_Index, true)
-	;msgbox,5
+Loop, %numDesktops%
+	ShowHideWindows(A_Index, true)
 
 ; 是否隐藏了桌面图标，是的话还原
-	If hidedektopicon
+If hidedektopicon
+{
+	ControlGet, HWND, Hwnd,, SysListView321, ahk_class Progman
+	If HWND =
 	{
-		ControlGet, HWND, Hwnd,, SysListView321, ahk_class Progman
-		If HWND =
-		{
-			DetectHiddenWindows Off
-			ControlGet, HWND, Hwnd,, SysListView321, ahk_class WorkerW
-			WinShow, ahk_id %HWND%
-		}
-		;msgbox,6
+		ControlGet, HWND, Hwnd,, SysListView321, ahk_class WorkerW
+		WinShow, ahk_id %HWND%
 	}
+}
 
-	DetectHiddenWindows On
-;退出子脚本
-	Loop, %scriptCount%
-	{
-		thisScript := scripts%A_index%0
-		If scripts%A_index%1 = 1  ; 已打开
-		{
-			WinClose %thisScript% - AutoHotkey
-			scripts%A_index%1 = 0
-
-			StringRePlace menuName, thisScript, .ahk
-		}
-	}
-	;msgbox,7
-
-	If md5type=1
-	{
-		DllCall("FreeLibrary", "Ptr", hModule_Md5)
-		;msgbox,8
-	}
+If md5type=1
+{
+	DllCall("FreeLibrary", "Ptr", hModule_Md5)
+}
 
 ; 释放粘贴并打开的资源
-	If Auto_PasteAndOpen
-	{
-		WinShow,ahk_class Shell_TrayWnd
-		WinShow,开始 ahk_class Button
-		WinActivate,ahk_class Shell_TrayWnd
-		;msgbox,6
-		UnhookWinEvent(hWinEventHook, HookProcAdr)
-		;msgbox,9
-	}
+If Auto_PasteAndOpen
+{
+	WinShow,ahk_class Shell_TrayWnd
+	WinShow,开始 ahk_class Button
+	WinActivate,ahk_class Shell_TrayWnd
+	UnhookWinEvent(hWinEventHook, HookProcAdr)
+}
 
-	if prewpToken
-	{
-		Gdip_ShutDown(prewpToken)
-		;msgbox,10
-	}
+if prewpToken
+{
+	Gdip_ShutDown(prewpToken)
+}
 
-	if Auto_Cliphistory
+if Auto_Cliphistory
+{
+	if IsObject(DB)
 	{
-		if IsObject(DB)
-		{
-			DB.CloseDb()
-			DB := ""
-		}
+		DB.CloseDb()
+		DB := ""
 	}
+}
 
-	SoundPlay ,%A_ScriptDir%\Sound\Windows Error.wav
-	sleep,300
-	ExitApp
+if TTLib.get_Init()
+	TTLib.UnloadFromExplorer(), TTLib.Uninit()
+
+SoundPlay ,%A_ScriptDir%\Sound\Windows Error.wav
+sleep,300
+ExitApp
 Return
 
 ;退出动画
@@ -1589,47 +1573,17 @@ cSigleMenu:
 	Ctrl_#32770:="SysListView321"
 Return
 
-GetAllKeys:
-	Loop, Parse, content, `n
+_GetAllKeys:
+	Loop, Parse, IniR_Tmp_Str, `n
 	{
 		StringSplit, data, A_LoopField, =
 		%data1%:=data2
   }
 return
 
-_AutoInclude:
-	f = %A_ScriptDir%\Script\AutoInclude.ahk
-	FileRead, fs, %f%
-
-; 批量#Include，要包含所有脚本的目录
-	s=
-	Auto_IncludePath = %A_ScriptDir%\Script\Cando
-	Loop, %Auto_IncludePath%\*.ahk
-		s.="#Include *i %A_ScriptDir%\Script\Cando\" A_LoopFileName "`n"
-	Auto_IncludePath = %A_ScriptDir%\Script\Windo
-	Loop, %Auto_IncludePath%\*.ahk
-		s.="#Include *i %A_ScriptDir%\Script\Windo\" A_LoopFileName "`n"
-	Auto_IncludePath = %A_ScriptDir%\Script\Hotkey
-	Loop, %Auto_IncludePath%\*.ahk
-		s.="#Include *i %A_ScriptDir%\Script\Hotkey\" A_LoopFileName "`n"
-	Auto_IncludePath = %A_ScriptDir%\Script\7plus右键菜单
-	Loop, %Auto_IncludePath%\*.ahk
-		s.="#Include *i %A_ScriptDir%\Script\7plus右键菜单\" A_LoopFileName "`n"
-	if RegExReplace(fs,"\s+") != RegExReplace(s,"\s+")
-	{
-		FileDelete, %f%
-		FileAppend, %s%, %f%, UTF-8
-		msgbox,,脚本重启,自动 Include 的文件发生了变化，点击"确定"后重启脚本，应用更新。
-		IfMsgBox OK
-			Reload
-	}
-	fs:=s:=Auto_IncludePath:=f:=""
-;---------------------------------
-Return
-
 Combo_WinEvent:
 ; EVENT_OBJECT_REORDER:= 0x8004, EVENT_OBJECT_FOCUS:= 0x8005, EVENT_OBJECT_SELECTION:= 0x8006
-	CtrlHwnd:=hComBoBox
+	CtrlHwnd := h_MG_ComBoBox
 	VarSetCapacity(CB_info, 40 + (3 * A_PtrSize), 0)
 	NumPut(40 + (3 * A_PtrSize), CB_info, 0, "UInt")
 	DllCall("User32.dll\GetComboBoxInfo", "Ptr", CtrlHwnd, "Ptr", &CB_info)
@@ -1639,10 +1593,11 @@ Combo_WinEvent:
 	CB_EditID:=Format("0x{1:x}",CB_EditID) , CB_ListID:=Format("0x{1:x}",CB_ListID)
 
 	GuiHwnd_:=CB_ListID
+	; 获取到线程号 ThreadId 和进程号 PID
 	ThreadId := DllCall("GetWindowThreadProcessId", "Int", GuiHwnd_, "UInt*", PID)	; LPDWORD
 	HookProcAdr3:=RegisterCallback("WinProcCallback")
 	hWinEventHook3:=SetWinEventHook(0x8006, 0x8006, 0, HookProcAdr3, PID, ThreadId, 0)
-	objListIDs[CB_ListID]:=hComBoBox
+	objListIDs[CB_ListID]:=h_MG_ComBoBox
 return
 
 Plugins_Run:
@@ -1655,6 +1610,36 @@ Plugins_Run:
 		}
 	}
 return
+
+_AutoInclude:
+	File_AutoInclude = %A_ScriptDir%\Script\AutoInclude.ahk
+	FileRead, FileR_TFC, %file_AutoInclude%
+
+; 批量 #Include，批量处理要自动包含的目录下的所有 ahk 文件
+	Tmp_Str=
+	Auto_IncludePath = Script\Cando
+	Loop, %A_ScriptDir%\%Auto_IncludePath%\*.ahk
+		Tmp_Str.="#Include *i %A_ScriptDir%\" Auto_IncludePath "\" A_LoopFileName "`n"
+	Auto_IncludePath = Script\Windo
+	Loop, %A_ScriptDir%\%Auto_IncludePath%\*.ahk
+		Tmp_Str.="#Include *i %A_ScriptDir%\" Auto_IncludePath "\" A_LoopFileName "`n"
+	Auto_IncludePath = Script\Hotkey
+	Loop, %A_ScriptDir%\%Auto_IncludePath%\*.ahk
+		Tmp_Str.="#Include *i %A_ScriptDir%\" Auto_IncludePath "\" A_LoopFileName "`n"
+	Auto_IncludePath = Script\7plus右键菜单
+	Loop, %A_ScriptDir%\%Auto_IncludePath%\*.ahk
+		Tmp_Str.="#Include *i %A_ScriptDir%\" Auto_IncludePath "\" A_LoopFileName "`n"
+	if RegExReplace(FileR_TFC,"\s+") != RegExReplace(Tmp_Str,"\s+")
+	{
+		FileDelete, %File_AutoInclude%
+		FileAppend, %Tmp_Str%, %File_AutoInclude%, UTF-8
+		msgbox,,脚本重启,自动 Include 的文件发生了变化，点击"确定"后重启脚本，应用更新。
+		IfMsgBox OK
+			Reload
+	}
+	FileR_TFC:=Tmp_Str:=Auto_IncludePath:=File_AutoInclude:=""
+;---------------------------------
+Return
 
 #include %A_ScriptDir%\Script\脚本管理器.ahk
 #include %A_ScriptDir%\Script\配置.ahk
@@ -1703,6 +1688,7 @@ return
 #include %A_ScriptDir%\Lib\Explorer.ahk
 #include %A_ScriptDir%\Lib\Menu.ahk
 #include %A_ScriptDir%\Lib\Window.ahk
+#include %A_ScriptDir%\Lib\WinApi.ahk
 #include %A_ScriptDir%\Lib\Class_RichEdit.ahk
 #include %A_ScriptDir%\Lib\ProcessMemory.ahk
 #include %A_ScriptDir%\Lib\WinEventHook.ahk
@@ -1715,6 +1701,8 @@ return
 #Include %A_ScriptDir%\Lib\进制转换.ahk
 #Include %A_ScriptDir%\Lib\string.ahk
 #include %A_ScriptDir%\lib\AHKhttp.ahk
+#include %A_ScriptDir%\Lib\GetBrowserURL.ahk
 #include %A_ScriptDir%\Script\TrayIcon_FuncsIcon.ahk
 #include <AHKsock>
+#include <TTLib>
 #include *i %A_ScriptDir%\Script\AutoInclude.ahk

@@ -1,5 +1,5 @@
 ﻿;目标文件夹的文件列表
-liebiao:
+MG_liebiao:
 	if !TargetFolder or !FileExist(TargetFolder)
 	{
 		TargetFolder=
