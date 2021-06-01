@@ -214,8 +214,8 @@ gui_History(){
 	Gui, Add, Text, x+35 ys+5 					vhistory_SearchText, 搜索过滤(&F)
 	Gui, Add, Checkbox, x+10 ys+5 Checked%history_partial% vhistory_partial ghistory_SearchBox, 部分(&R)
 	Gui, Add, Edit, ys  	ghistory_SearchBox	vhistory_SearchBox
-	Gui, Font, s9, Courier New
-	Gui, Font, s9, Consolas
+	;Gui, Font, s9, Courier New
+	;Gui, Font, s9, Consolas
 	Gui, Add, Button, xs+1 h23 ghistoryCleanup, 删除180天前的数据
 	Gui, Add, Button, x+50 h23 ghistorylenclean, 删除字符长度小于8的行
 	Gui, Add, Button, x+50 h23 ghistoryVacuum, 删除空闲页

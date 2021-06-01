@@ -5,7 +5,7 @@ $MButton::
 	WinGetClass,窗口Class,ahk_id %UID% ; 根据 UID 获得窗口类名
 	CoordMode, Mouse, Relative
 	stophovering(2)
-
+  settimer, jkMbutton, -3000
 	; 魔兽争霸自动加血
 	IfWinActive,Warcraft III
 	{
@@ -77,7 +77,15 @@ $MButton::
 				;SendEvent,{Up}{enter};如果是任务栏上，为关闭选择的程序
 
 				if (h_id := TTLib.GetTrackedButtonWindow())
-				PostMessage, 0x112, 0xF060,,, ahk_id %h_id%
+        {
+          PostMessage, 0x112, 0xF060,,, ahk_id %h_id%
+          CoordMode, Mouse, Screen
+          mousegetpos, Tmp_X, Tmp_Y
+          sleep 200
+          mousemove, % Tmp_X+10, % Tmp_Y
+          sleep 200
+          mousemove, % Tmp_X, % Tmp_Y
+        }
 				else
 				{
 					Send {Shift down}
@@ -186,7 +194,6 @@ $MButton::
 	Return
 	}
 
-
 	; 未激活窗口先点击激活
 	send {click}
 	WinGetPos , , , Width,, A
@@ -200,6 +207,10 @@ $MButton::
 	else
 		Send, {MButton}
 	CoordMode, Mouse, Screen
+return
+
+jkMbutton:
+Send {Mbutton up}
 return
 
 WatchCursor2:
@@ -386,7 +397,6 @@ PerformWheel(bUp, wheelcount)
 	}
 Return
 }
-
 
 isSpecialWin()
 {

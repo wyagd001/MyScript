@@ -142,6 +142,8 @@ IniRead, 询问, %run_iniFile%, 截图, 询问
 IniRead, filetp, %run_iniFile%, 截图, filetp
 IniRead, screenshot_path, %run_iniFile%, 截图, 截图保存目录
 IniRead, TargetFolder, %run_iniFile%, 路径设置, TargetFolder
+if !FileExist(screenshot_path)
+  FileCreateDir % screenshot_path
 
 IniRead, IniR_Tmp_Str, %run_iniFile%, 缩为标题栏
 Gosub, _GetAllKeys
@@ -451,6 +453,9 @@ if Auto_7plusMenu
 	DllCall("ChangeWindowMessageFilter", "UInt", 55555, "UInt", 1)
 }
 
+if Auto_tsk_UpdateMenu
+  OnMessage(0x404, "AHK_NOTIFYICON")
+
 ;鼠标点击，原窗口缩略图拖拽移动的代码现已不用
 ;OnMessage(0x201, "WM_LBUTTONDOWN")
 
@@ -461,7 +466,7 @@ GuiDropFiles.config(HGUI, "GuiDropFiles_Begin", "GuiDropFiles_End")
 
 ;----------不显示托盘图标则重启脚本----------
 ; 等待至开机后100s，可根据需要设置，使托盘图标可以显示出来
-if Auto_Trayicon
+if Auto_Trayicon && WinExist("ahk_class Shell_TrayWnd")
 {
 	While (100000 - A_TickCount) > 0
 		sleep,100

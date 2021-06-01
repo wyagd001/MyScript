@@ -50,7 +50,7 @@ LoadIntoExplorer()
 		}
 		else
 		{
-			fileappend % "tmp_val: " tmp_val "`n", %A_desktop%\log.txt
+			;fileappend % "tmp_val: " tmp_val "`n", %A_desktop%\log.txt
 			This.UnloadFromExplorer()
 		return 0
 		}
@@ -68,41 +68,42 @@ GetTrackedButtonWindow()
 	if !this._Init
 	{
 		this.Init()
+    ;fileappend % "_Init: " this._Init "`n",%A_desktop%\log.txt
 		if !this._Init
 		return 0
 	}
 	if !This._LoadInto
 	{
 		this.LoadIntoExplorer()
+    ;fileappend % "_LoadInto: " this._LoadInto "`n",%A_desktop%\log.txt
 		if !this._LoadInto
 	return 0
 	}
-
+  Critical
 	; 返回 1 表示成功
 	tmp_val := DllCall(this.TTLibdll "\TTLib_ManipulationStart")
-	;fileappend % "tmp_val: " tmp_val "`n",%A_desktop%\log.txt
 	if (tmp_val!=1)
 	{
-		DllCall(this.TTLibdll "\TTLib_UnloadFromExplorer")
+    ;fileappend % "tmp_val: " tmp_val "`n",%A_desktop%\log.txt
+    DllCall(this.TTLibdll "\TTLib_ManipulationEnd")
+		this.UnloadFromExplorer()
 	return 0
 	}
 	hTaskbar := DllCall(this.TTLibdll "\TTLib_GetMainTaskbar")
 	;fileappend % "hTaskbar: " hTaskbar "`n",%A_desktop%\log.txt
-	if !(hTaskbar)
+	if !hTaskbar
 	{
-		;DllCall(this.TTLibdll "\TTLib_UnloadFromExplorer")
+		DllCall(this.TTLibdll "\TTLib_ManipulationEnd")
 	return 0
 	}
-	; 
 	hTrackedButton:=DllCall(this.TTLibdll "\TTLib_GetTrackedButton", "uint", hTaskbar)
-	;fileappend % "hTrackedButton: " hTrackedButton "`n",%A_desktop%\log.txt
-	if !(hTrackedButton)
+	;fileappend % "hTrackedButton: " hTrackedButton "`n", %A_desktop%\log.txt
+	if !hTrackedButton
 	{
-		;DllCall(this.TTLibdll "\TTLib_UnloadFromExplorer")
+		DllCall(this.TTLibdll "\TTLib_ManipulationEnd")
 	return 0
 	}
-	else
-		h_id := DllCall(this.TTLibdll "\TTLib_GetButtonWindow", "uint", hTrackedButton)
+	h_id := DllCall(this.TTLibdll "\TTLib_GetButtonWindow", "uint", hTrackedButton)
 	;fileappend % "h_id: " h_id "`n",%A_desktop%\log.txt
 	DllCall(this.TTLibdll "\TTLib_ManipulationEnd")
 	;DllCall(this.TTLibdll "\TTLib_UnloadFromExplorer")
@@ -129,26 +130,26 @@ GetActiveButtonWindow()
 	;fileappend % "tmp_val: " tmp_val "`n",%A_desktop%\log.txt
 	if (tmp_val!=1)
 	{
-		DllCall(this.TTLibdll "\TTLib_UnloadFromExplorer")
+    DllCall(this.TTLibdll "\TTLib_ManipulationEnd")
+		this.UnloadFromExplorer()
 	return 0
 	}
 	hTaskbar := DllCall(this.TTLibdll "\TTLib_GetMainTaskbar")
 	;fileappend % "hTaskbar: " hTaskbar "`n",%A_desktop%\log.txt
-	if !(hTaskbar)
+	if !hTaskbar
 	{
-		;DllCall(this.TTLibdll "\TTLib_UnloadFromExplorer")
+		DllCall(this.TTLibdll "\TTLib_ManipulationEnd")
 	return 0
 	}
 	; 
 	hActiveButton:=DllCall(this.TTLibdll "\TTLib_GetActiveButton", "uint", hTaskbar)
 	;fileappend % "hActiveButton: " hActiveButton "`n",%A_desktop%\log.txt
-	if !(hActiveButton)
+	if !hActiveButton
 	{
-		;DllCall(this.TTLibdll "\TTLib_UnloadFromExplorer")
+		DllCall(this.TTLibdll "\TTLib_ManipulationEnd")
 	return 0
 	}
-	else
-		h_id := DllCall(this.TTLibdll "\TTLib_GetButtonWindow", "uint", hActiveButton)
+	h_id := DllCall(this.TTLibdll "\TTLib_GetButtonWindow", "uint", hActiveButton)
 	;fileappend % "h_id: " h_id "`n",%A_desktop%\log.txt
 	DllCall(this.TTLibdll "\TTLib_ManipulationEnd")
 	;DllCall(this.TTLibdll "\TTLib_UnloadFromExplorer")
@@ -174,15 +175,22 @@ GetActiveButtonGroupAppid()
 	tmp_val := DllCall(this.TTLibdll "\TTLib_ManipulationStart")
 	if (tmp_val!=1)
 	{
-		DllCall(this.TTLibdll "\TTLib_UnloadFromExplorer")
+    DllCall(this.TTLibdll "\TTLib_ManipulationEnd")
+		this.UnloadFromExplorer()
 	return 0
 	}
 	hTaskbar := DllCall(this.TTLibdll "\TTLib_GetMainTaskbar")
-	if !(hTaskbar)
+	if !hTaskbar
 	{
+    DllCall(this.TTLibdll "\TTLib_ManipulationEnd")
 	return 0
 	}
 	hActiveButtonGroup := DllCall(this.TTLibdll "\TTLib_GetActiveButtonGroup", "Uint", hTaskbar)
+  if !hActiveButtonGroup
+	{
+		DllCall(this.TTLibdll "\TTLib_ManipulationEnd")
+	return 0
+	}
 	varsetcapacity(hButtonGroupAppid, 256)
 	size := DllCall(this.TTLibdll "\TTLib_GetButtonGroupAppId", "Uint", hActiveButtonGroup, "Str", hButtonGroupAppid, "Uint", 256)
 	DllCall(this.TTLibdll "\TTLib_ManipulationEnd")

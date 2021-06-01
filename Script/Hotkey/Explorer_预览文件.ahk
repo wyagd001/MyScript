@@ -80,7 +80,7 @@ return
 ; 详情  https://github.com/mozilla/pdf.js
 Cando_pdf_prew:
 	gosub,IE_Open
-	WB.Navigate("https://wyagd001.github.io/pdfjs/es5/web/viewer.html?file=blank.pdf")  ; 老版浏览器
+	WB.Navigate("https://wyagd001.github.io/pdfjs/es5/web/viewer.html?file=blank.pdf")  ; IE浏览器
 	WBStartTime := A_TickCount
 	loop 
 	{

@@ -134,7 +134,7 @@ Label_Candy_DrawMenu:
 		Candy_Firstline_Icon := CF_IniRead(run_iniFile,uid:=SubStr(CandyMenu_FirstItem,6), "Ti_" uid "_icon")
 		if ipos:=InStr(Candy_Firstline_Icon,":")
 		{
-			icon_idx := SubStr(Candy_Firstline_Icon,ipos+1)+1
+			icon_idx := SubStr(Candy_Firstline_Icon,ipos+1)
 			Candy_Firstline_Icon := SubStr(Candy_Firstline_Icon,1,ipos-1)
 		}
 	}

@@ -1,5 +1,6 @@
 ﻿; 模拟键盘发送按键
 ; https://github.com/oblitum/Interception/
+; 首次使用需要安装驱动
 ; cmd 命令行管理员权限运行安装驱动 Bin文件夹中 install-interception.exe /install
 ; https://www.autohotkey.com/boards/viewtopic.php?f=76&t=26306
 ; 使用 Interception 的更好方案 支持多键盘快捷键，按键发送
@@ -19,6 +20,7 @@ Class Interception {
 		this.dll := (A_PtrSize = 8) ? A_ScriptDir "\interception_x64.dll" : A_ScriptDir "\interception_x32.dll"
 		this.hModule := DllCall("LoadLibrary", "Str", this.dll, "Ptr")
 		this.context := DllCall(this.dll . "\interception_create_context")
+;msgbox % this.context 
 		Return True
 	}
 

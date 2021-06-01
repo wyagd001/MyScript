@@ -5,29 +5,13 @@
 
 	if (Event = "L")
 	{
-		if uid=101
-		{
-			FuncsIcon_ClickRun(101,"L")
+		FuncsIcon_ClickRun(uid,"L")
 		return
-		}
-		else if uid=102
-		{
-			FuncsIcon_ClickRun(102,"L")
-		return
-		}
 	}
 	if (Event = "R")
 	{
-		if uid=101
-		{
-			FuncsIcon_ClickRun(101,"R")
+		FuncsIcon_ClickRun(uid,"R")
 		return
-		}
-		else if uid=102
-		{
-			FuncsIcon_ClickRun(102,"R")
-		return
-		}
 	}
 }
 

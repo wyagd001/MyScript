@@ -35,7 +35,7 @@
 ShutdownDialog:
 ;sendplay {esc}
 ;DllCall("AbortSystemShutdown", "Str", 0)
-if SubStr(A_OSVersion,1,3) = "10."
+if SubStr(A_OSVersion,1,3) = "10."   ; 需安装驱动
 {
    sleep 2000
    Interception.send("Esc", 1)

@@ -325,10 +325,11 @@ Gui,Tab,其他
 Gui,Add,CheckBox,x26 y30 w120 h20 vvAuto_DisplayMainWindow Checked%Auto_DisplayMainWindow%,启动时显示主窗口
 Gui,Add,CheckBox,x280 y30 w130 h20 vvAuto_7plusMenu Checked%Auto_7plusMenu%,资源管理器7plus菜单
 Gui,Add,CheckBox,x26 y50 w180 h20 vvAuto_Trayicon Checked%Auto_Trayicon%,启动时显示托盘图标(并检测)
-Gui,Add,CheckBox,x280 y50 w200 h20 vvAuto_FuncsIcon Checked%Auto_FuncsIcon%,启动时显示额外的托盘图标数量
+Gui,Add,CheckBox,x280 y50 w190 h20 vvAuto_FuncsIcon Checked%Auto_FuncsIcon%,启动时显示额外的托盘图标数量
 Gui,Add,CheckBox,x44 y70 w200 h20 vvAuto_Trayicon_showmsgbox Checked%Auto_Trayicon_showmsgbox%,没有托盘图标显示重启脚本对话框
 Gui,Add,Radio,x300 y70 w40 h20 Group Checked%1FuncsIcon% vvFuncsIcon_Num,一个
 Gui,Add,Radio,x350 y70 w40 h20  Checked%2FuncsIcon%,两个
+Gui,Add,CheckBox,x280 y90 w210 h20 vvAuto_tsk_UpdateMenu Checked%Auto_tsk_UpdateMenu%,右键托盘图标更新脚本管理器子菜单
 Gui,Add,CheckBox,x26 y90 w180 h20 vvAuto_ShutdownMonitor Checked%Auto_ShutdownMonitor%,监视关机使用传统关机对话框
 Gui,Add,CheckBox,x26 y110 w80 h20 vvAuto_PasteAndOpen Checked%Auto_PasteAndOpen%,粘贴并打开
 Gui,Add,CheckBox,x26 y130 w180 h20 vvAuto_Clip Checked%Auto_Clip%,三重剪贴板(文本复制时记录)
@@ -1062,6 +1063,7 @@ IniWrite,% vAuto_FuncsIcon,%run_iniFile%,功能开关,Auto_FuncsIcon
 IniWrite,% vAuto_midmouse,%run_iniFile%,功能开关,Auto_midmouse
 IniWrite,% vAuto_Spacepreview,%run_iniFile%,功能开关,Auto_Spacepreview
 IniWrite,% vAuto_AhkServer,%run_iniFile%,功能开关,Auto_AhkServer
+IniWrite,% vAuto_tsk_UpdateMenu,%run_iniFile%,功能开关,Auto_tsk_UpdateMenu
 IniWrite,% vLoginPass,%run_iniFile%,serverConfig,LoginPass
 
 IniWrite,%txt%,%run_iniFile%,常规,txt

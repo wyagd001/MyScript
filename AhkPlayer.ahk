@@ -201,8 +201,8 @@ Return
 
 UpdateMediaLib:
 	Count = 0
-	tempV:=""
-	filelistarray:={}
+	Tmp_Val := ""
+	filelistarray := {}
 	FileDelete, %AhkMediaLibFile%
 	Loop, %AhkMediaLib%\*.*, 0,1
 	{
@@ -213,14 +213,14 @@ UpdateMediaLib:
 			Continue
 		else
 		{
-			tempV .= a_loopfilefullpath "`n"
+			Tmp_Val .= a_loopfilefullpath "`n"
 			filelistarray[a_loopfilefullpath]:=1
 			Count++
 		}
 	}
-	FileAppend, % tempV, %AhkMediaLibFile%
+	FileAppend, % Tmp_Val, %AhkMediaLibFile%
 	updateMlib()
-	tempV:=""
+	Tmp_Val := ""
 	Count -= 1
 	IniWrite, %Count%, %run_iniFile%, AhkPlayer, Count
 	CF_ToolTip("更新媒体库完毕!		",2500)
@@ -306,11 +306,11 @@ StarPlay:
 Gplay:
 if (mp3!="位置")
 {
-FileRead, tempV, %historyFile%
+FileRead, Tmp_Val, %historyFile%
 file := FileOpen(historyFile, "w", "UTF-16")
-file.Write(mp3 "`r`n" tempV)
+file.Write(mp3 "`r`n" Tmp_Val)
 file.close()
-tempV:=""
+Tmp_Val := ""
 }
 	hSound := MCI_Open(Mp3, "myfile")
 	SetTimer UpdateSlider,off
@@ -332,11 +332,11 @@ Gplay2:
 	IniWrite, %mp3%, %run_iniFile%, AhkPlayer, Mp3Playing
 if (mp3!="位置")
 {
-FileRead, tempV, %historyFile%
+FileRead, Tmp_Val, %historyFile%
 file := FileOpen(historyFile, "w", "UTF-16")
-file.Write(mp3 "`r`n" tempV)
+file.Write(mp3 "`r`n" Tmp_Val)
 file.close()
-tempV:=""
+Tmp_Val := ""
 }
 	if (PlayListdefalut="t") && (PlayRandom = "f")
 		Iniwrite, %PlaylistIndex%, %run_iniFile%,AhkPlayer, PlaylistIndex
@@ -388,7 +388,7 @@ Gui, Add,Picture,x+1 yp-1 gprev,%A_ScriptDir%\pic\AhkPlayer\prev.bmp
 Gui, Add,Picture,x+1 yp-10 gMyPause vpausepic,%A_ScriptDir%\pic\AhkPlayer\play.bmp
 Gui, Add,Picture,x+1 yp+10 gnext,%A_ScriptDir%\pic\AhkPlayer\next.bmp
 Gui, Add,Picture, x+10 yp w32 h32 gmute vvol, %A_ScriptDir%\pic\vol.ico
-Gui, Add,Slider, x+1 yp+10 w100 h20 vVSlider Range0-100 +ToolTip  gVolumeC
+Gui, Add,Slider, x+1 yp+10 w100 h20 vVSlider Range0-100 +ToolTip  gSetVolume
 Gui, font,cred bold s24,Verdana
 Gui, Add, text, x+5 yp-15  vLrcS  gLrcShow ,Lrc
 Gui, font
@@ -473,7 +473,7 @@ ToolTipMP3:
 }
 Return
 
-PlayfromList: 
+PlayfromList:
 	FileReadLine, Mp3, %AhkMediaLibFile%, %PlayIndex%
 	If hSound
 		MCI_Close(hSound)
@@ -806,7 +806,7 @@ Gosub,Updatevolume
 GUIControl Focus,Stop
 Return
 
-VolumeC:
+SetVolume:
 VA_SetVolume(VSlider)
 Return
 
