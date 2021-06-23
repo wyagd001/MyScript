@@ -18,6 +18,6 @@ return
 GEN_QR_CODE(string,file:="")
 {
   sFile := strlen(file) ? file : A_Temp "\" A_NowUTC ".png"
-  DllCall( A_ScriptDir "\" (A_PtrSize=8 ? "quricol64.dll" : "quricol32.dll") "\GeneratePNG","str", sFile , "str", string, "int", 4, "int", 2, "int", 0)
+  DllCall( A_ScriptDir "\Dll\" (A_PtrSize=8 ? "quricol64.dll" : "quricol32.dll") "\GeneratePNG","str", sFile , "str", string, "int", 4, "int", 2, "int", 0)
   Return sFile
 }

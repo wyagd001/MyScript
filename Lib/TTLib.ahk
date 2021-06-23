@@ -1,5 +1,5 @@
 ﻿Class TTLib {
-Static TTLibdll := A_ScriptDir . (A_PtrSize=8 ? "\TTLib64.dll" : "\TTLib32.dll")
+Static TTLibdll := A_ScriptDir . (A_PtrSize=8 ? "\Dll\TTLib64.dll" : "\Dll\TTLib32.dll")
 
 get_Init()
 {
@@ -98,6 +98,8 @@ GetTrackedButtonWindow()
 	}
 	hTrackedButton:=DllCall(this.TTLibdll "\TTLib_GetTrackedButton", "uint", hTaskbar)
 	;fileappend % "hTrackedButton: " hTrackedButton "`n", %A_desktop%\log.txt
+  if !hTrackedButton
+    hTrackedButton:=DllCall(this.TTLibdll "\TTLib_GetActiveButton", "uint", hTaskbar)
 	if !hTrackedButton
 	{
 		DllCall(this.TTLibdll "\TTLib_ManipulationEnd")

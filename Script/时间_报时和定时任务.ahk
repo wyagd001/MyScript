@@ -7,7 +7,7 @@ http://www.ahkcn.net/thread-629.html
 实时报时:
   SoundPlay, %A_ScriptDir%\Sound\domisodo.wav, Wait
   JA_VoiceAlert()
-  return
+ return
 
 renwu:
 If  (A_Hour = rh && A_Min= rm)
@@ -23,7 +23,7 @@ Return
 renwu2:
 loop 5
 {
-If  (A_Hour A_Min = rh%A_index% )
+If (A_Hour A_Min = rh%A_index%) or (A_Hour ":" A_Min = rh%A_index%)
 {
 	xqArray := {"星期一": 1, "星期二": 2,  "星期三": 3,  "星期四": 4,  "星期五": 5,  "星期六": 6,  "星期日": 7}
 xqdsArray := StrSplit(xq%A_index%)

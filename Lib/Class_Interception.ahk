@@ -17,7 +17,7 @@ Class Interception {
 		return
 		;this.Ensure_Admin()   ; 脚本需要管理员权限，但主脚本会自动获取，这里就注释掉了
 
-		this.dll := (A_PtrSize = 8) ? A_ScriptDir "\interception_x64.dll" : A_ScriptDir "\interception_x32.dll"
+		this.dll := A_ScriptDir "\Dll\" (A_PtrSize = 8) ? "interception_x64.dll" : "interception_x32.dll"
 		this.hModule := DllCall("LoadLibrary", "Str", this.dll, "Ptr")
 		this.context := DllCall(this.dll . "\interception_create_context")
 ;msgbox % this.context 

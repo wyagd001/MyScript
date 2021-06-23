@@ -4,7 +4,8 @@ if !Splitted_Windy_Cmd4
 try Application.run("'" Application.ActiveWorkbook.FullName "'!" Splitted_Windy_Cmd3)
 else
 try Application.run("'" Application.ActiveWorkbook.FullName "'!" Splitted_Windy_Cmd3, Splitted_Windy_Cmd4)
-ObjRelease(&Application)
+;ObjRelease(&Application)  ; 退出et需要释放，否则et不会退出，如果释放，再次调用发送错误，无效内存地址
+Application:=""
 ;Application.ActiveWorkbook.run("!模块1.二合一函数")
 ;Application.ActiveSheet.run("!模块1.二合一函数")
 ;tooltip % "'" Application.ActiveWorkbook.FullName "'!模块1.二合一函数"

@@ -13,11 +13,10 @@ SetWinDelay, 0
 SetTitleMatchMode 2
 ; 设置鼠标的坐标模式为相对于整个屏幕的坐标模式
 CoordMode, Mouse, Screen
-; 退出脚本时，执行ExitSub，关闭自动启动的脚本、恢复窗口等等操作。
-OnExit, ExitSub
-; 开机时脚本启动后等待至60s
-if (A_TickCount < 60000)
-	sleep, % (60000 - A_TickCount)
+
+; 开机时脚本启动后等待至70s
+if (A_TickCount < 70000)
+	sleep, % (70000 - A_TickCount)
 ; 管理员权限
 If(!A_IsAdmin)
 {
@@ -25,10 +24,16 @@ If(!A_IsAdmin)
 		params .= " " (InStr(%A_Index%, " ") ? """" %A_Index% """" : %A_Index%)
 	uacrep := DllCall("shell32\ShellExecute", uint, 0, str, "RunAs", str, A_AhkPath, str, """" A_ScriptFullPath """" params, str, A_WorkingDir, int, 1)
 	If(uacrep = 42) ; UAC Prompt confirmed, application may Run as admin
+  {
 		Tooltip, 成功启用管理员权限
+    exitapp
+  }
 	Else
 		MsgBox, 没有启用管理员权限
 }
+
+; 退出脚本时，执行ExitSub，关闭自动启动的脚本、恢复窗口等等操作。
+OnExit, ExitSub
 
 ;========变量读取和设置开始========
 global run_iniFile := A_ScriptDir "\settings\setting.ini"
@@ -593,7 +598,7 @@ gui_ww = 0
 
 ;----------计算文件MD5模式选择----------
 If md5type=1
-	hModule_Md5 := DllCall("LoadLibrary", "str", A_ScriptDir "\MD5Lib.dll")
+	hModule_Md5 := DllCall("LoadLibrary", "str", A_ScriptDir "\Dll\MD5Lib.dll")
 ;----------计算文件MD5模式选择----------
 
 ;----------7plus右键菜单----------
@@ -663,7 +668,7 @@ If Auto_ShutdownMonitor
 Gosub, Combo_WinEvent
 
 ;----------整点报时功能----------
-If baoshionoff
+If baoshionoff  ; 整点报时
 {
 	If baoshilx
 		SetTimer, JA_VoiceCheckTime, 1000
@@ -671,14 +676,14 @@ If baoshionoff
 		SetTimer, JA_JowCheckTime, 1000
 }
 
-If renwu
+If renwu  ; 定时任务
 	SetTimer, renwu, 30000
 
-If renwu2
+If renwu2  ; 闹钟
 	SetTimer, renwu2, 30000
 ;----------整点报时功能----------
 
-;----------鼠标提示----------
+;----------鼠标提示(半成品)----------
 If Auto_mousetip
 	SetTimer,aaa,2000
 ;----------鼠标提示----------

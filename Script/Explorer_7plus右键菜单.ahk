@@ -54,7 +54,7 @@ RegisterShellExtension(Silent=1)
 {
 	If(Vista7)
 	{
-		uacrep := DllCall("shell32\ShellExecute", uint, 0, str, "RunAs", str, "regsvr32", str, "/s """ A_ScriptDir "\" (A_PtrSize=8 ? "ShellExtension_x64.dll" : "ShellExtension_x32.dll") """", str, A_ScriptDir, int, 1)
+		uacrep := DllCall("shell32\ShellExecute", uint, 0, str, "RunAs", str, "regsvr32", str, "/s """ A_ScriptDir "\Dll\" (A_PtrSize=8 ? "ShellExtension_x64.dll" : "ShellExtension_x32.dll") """", str, A_ScriptDir, int, 1)
 		If(uacrep = 42) ; UAC Prompt confirmed, application may run as admin
 		{
 			If(!Silent)
@@ -64,14 +64,14 @@ RegisterShellExtension(Silent=1)
 			MsgBox , % "无法安装右键菜单外壳扩展," (A_PtrSize=8 ? "ShellExtension_x64.dll" : "ShellExtension_x32.dll") "文件无法注册. 请授予管理员权限!"
 	}
 	Else ; XP
-		run regsvr32 "%A_ScriptDir%\ShellExtension_x32.dll"
+		run regsvr32 "%A_ScriptDir%\Dll\ShellExtension_x32.dll"
 }
 
 UnregisterShellExtension(Silent=1)
 {
 	If(Vista7)
 {
-		uacrep := DllCall("shell32\ShellExecute", uint, 0, str, "RunAs", str, "regsvr32", str, "/s /u """ A_ScriptDir "\" (A_PtrSize=8 ? "ShellExtension_x64.dll" : "ShellExtension_x32.dll") """", str, A_ScriptDir, int, 1)
+		uacrep := DllCall("shell32\ShellExecute", uint, 0, str, "RunAs", str, "regsvr32", str, "/s /u """ A_ScriptDir "\Dll\" (A_PtrSize=8 ? "ShellExtension_x64.dll" : "ShellExtension_x32.dll") """", str, A_ScriptDir, int, 1)
 		If(uacrep = 42) ;UAC Prompt confirmed, application may run as admin
 		{
 			If(!Silent)
@@ -81,5 +81,5 @@ UnregisterShellExtension(Silent=1)
 			MsgBox % "无法卸载右键菜单外壳扩展," (A_PtrSize=8 ? "ShellExtension_x64.dll" : "ShellExtension_x32.dll") "文件无法卸载. 请授予管理员权限!"
 }
 	Else
-		run regsvr32 /u "%A_ScriptDir%\ShellExtension_x32.dll"
+		run regsvr32 /u "%A_ScriptDir%\Dll\ShellExtension_x32.dll"
 }

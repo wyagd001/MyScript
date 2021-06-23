@@ -81,9 +81,10 @@ $MButton::
           PostMessage, 0x112, 0xF060,,, ahk_id %h_id%
           CoordMode, Mouse, Screen
           mousegetpos, Tmp_X, Tmp_Y
-          sleep 200
-          mousemove, % Tmp_X+10, % Tmp_Y
-          sleep 200
+          sleep 100
+Send {Blind}{vkFF}
+          mousemove, % Tmp_X + 1, % Tmp_Y - 1
+          sleep 100
           mousemove, % Tmp_X, % Tmp_Y
         }
 				else

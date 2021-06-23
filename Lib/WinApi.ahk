@@ -1,4 +1,4 @@
-﻿_byteswap_uint64(num)
+﻿_byteswap_uint64(num) ; 需要 msvcr100.dll
 {
 return dllcall("msvcr100\_byteswap_uint64", "UInt64", Num, "UInt64")
 }
@@ -22,7 +22,6 @@ Local Q, F := VarSetCapacity(Q,520,0)
   DllCall("shell32\PathYetAnotherMakeUniqueName","Str",Q, "Str",Q, "Ptr",0, "Ptr",F)
 Return A_IsUnicode ? Q : StrGet(&Q, "UTF-16")
 }
-
 
 
 ; 删除文件，成功时返回非零值，失败返回0.
@@ -91,7 +90,7 @@ VarSetCapacity(OVERLAPPED, 20, 0)
 NumPut(ldword, OVERLAPPED, 8, "UInt")
 NumPut(hdword, OVERLAPPED, 12, "UInt")
 
-response := DllCall("ReadFile", "UInt", hFile, "UInt", &MySector, "UInt", 512, "UInt *", BytesRead, "UInt", &OVERLAPPED)
+response := DllCall("ReadFile", "UInt", hFile, "UInt", &MySector, "UInt", 512, "UInt *", BytesToRead, "UInt", &OVERLAPPED)
 response := DllCall("CloseHandle", "UInt", hFile)
 
 	i = 0 

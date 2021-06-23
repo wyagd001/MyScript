@@ -111,13 +111,15 @@ return
 Cando_GetVolumeId:
 hVolume := Trim(CandySel, "\")
 Tmp_Str := readSector(hVolume)
-if (Tmp_Val:=CF_GetDriveFS(CandySel)="NTFS")  ; NTFS格式
+Tmp_Val := CF_GetDriveFS(CandySel)
+if (Tmp_Val="NTFS")  ; NTFS格式
 {
 	Tmp_Str := SubStr(Tmp_Str, 145, 16)
 	msgbox % Format("{:16X}", _byteswap_uint64("0x" Tmp_Str))
 }
 else if (Tmp_Val="FAT32")
 {
+  ;msgbox % Tmp_Str
 	Tmp_Str := SubStr(Tmp_Str, 135, 8)
 	msgbox % Format("{:08X}", _byteswap_uint32("0x" Tmp_Str))
 }

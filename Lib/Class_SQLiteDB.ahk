@@ -39,7 +39,7 @@ Class SQLiteDB {
    ; BaseClass - SQLiteDB base class
    ; ===================================================================================================================
       Static Version := ""
-      Static _SQLiteDLL := A_ScriptDir . (A_PtrSize=8 ? "\sqlite3_x64.dll" : "\sqlite3_x32.dll")
+      Static _SQLiteDLL := A_ScriptDir . (A_PtrSize=8 ? "\Dll\sqlite3_x64.dll" : "\Dll\sqlite3_x32.dll")
       Static _RefCount := 0
       Static _MinVersion := "3.6"
    ; ===================================================================================================================
