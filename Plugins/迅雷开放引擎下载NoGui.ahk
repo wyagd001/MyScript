@@ -8,13 +8,13 @@
 ;
 ;
 SplitPath,A_ScriptDir,,ParentDir
-SetWorkingDir %ParentDir%
+SetWorkingDir %ParentDir%\Dll\Xlode
 
 #NoEnv
 SendMode Input
 ;SetWorkingDir %A_ScriptDir%  ;
 #Include %A_ScriptDir%\..\Lib\String.ahk
-Menu, Tray, Icon,pic\thunder.ico
+Menu, Tray, Icon, %A_ScriptDir%\..\pic\thunder.ico
 OnExit,stop
 Chars=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/
 

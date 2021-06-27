@@ -10,13 +10,13 @@
 ;
 ;
 SplitPath,A_ScriptDir,,ParentDir
-SetWorkingDir %ParentDir%
+SetWorkingDir %ParentDir%\Dll\Xlode
 
 #NoEnv
 SendMode Input
 ;SetWorkingDir %A_ScriptDir%  ;
 #Include %A_ScriptDir%\..\Lib\String.ahk
-Menu, Tray, Icon,pic\thunder.ico
+Menu, Tray, Icon, %A_ScriptDir%\..\pic\thunder.ico
 Chars=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/
 
 sUrl = %1%
@@ -28,7 +28,7 @@ Status=下载未开始
 Percent=0
 sp=0
 Gui, Add, Text, x12 y20 w80 h25 , 下载链接：
-Gui, Add, Edit, x80 y20 w310 h25 vsUrl gsUrl2sFlie,%sUrl%
+Gui, Add, Edit, x80 y20 w310 h25 vsUrl gsUrl2sFile,%sUrl%
 Gui, Add, Text, x12 y50 w80 h25 , 保存路径：
 Gui, Add, Edit, x80 y50 w310 h25 vsFolder, G:\Users\lyh\Desktop
 Gui, Add, Button, x390 y50 w50 h25 gSelectFolder, 浏览
@@ -94,9 +94,12 @@ GuiControl,,sFile,%NAE%
 news:= "`n`n文件 " . NAE . " 已下载完成!"
 }
 
-;加载dll
+; 加载dll, 需要的文件 XLDownload.dll、msvcp71.dll、msvcr71.dll、zlib1.dll 
+; 如果缺少文件，无法加载dll ，错误代码 126（无法找到指定路径）
 hModule := DllCall("LoadLibrary", "str", "XLDownload.dll")
-Rtn1:=DllCall("XLDownload\XLInitDownloadEngine")
+;msgbox % hModule " - " ErrorLevel  " - " A_LastError
+Rtn1:=DllCall("XLDownload.dll\XLInitDownloadEngine")
+;msgbox % hModule " - " Rtn1
 
 
 ;下载
@@ -213,7 +216,7 @@ GuiControl,,sysj,%sysj% 分
 Return
 
 ;monitorurl:
-sUrl2sFlie:
+sUrl2sFile:
 GuiControlGet,surl,,sUrl
 GuiControlGet,sFolder,,sFolder
 IfInString, sUrl, thunder://

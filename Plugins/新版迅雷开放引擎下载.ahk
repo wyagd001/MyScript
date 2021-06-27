@@ -25,7 +25,7 @@ Status=等待开始
 Percent=0
 sp=0
 Gui, Add, Text, x12 y20 w80 h25 , 下载链接：
-Gui, Add, Edit, x80 y20 w310 h25 vsUrl gsUrl2sFlie,%sUrl%
+Gui, Add, Edit, x80 y20 w310 h25 vsUrl gsUrl2sFile,%sUrl%
 Gui, Add, Button, x390 y20 w60 h25 gxunlei,迅雷下载
 Gui, Add, Text, x12 y50 w80 h25 , 保存路径：
 Gui, Add, Edit, x80 y50 w310 h25 vsFolder, N:\
@@ -69,7 +69,7 @@ xunlei:
 	Gui, Submit, NoHide
 	If !hModule
 	{
-		hModule:=DllCall("LoadLibrary", "str", "xldl.dll")
+		hModule:=DllCall("LoadLibrary", "str", "Dll\xldl.dll", "Ptr")
 		DllCall("xldl\XL_Init")
 	}
 	qq:=DllCall("xldl\XL_CreateTaskByThunder","str",sUrl,"str",sFile,"str",0,"str",0,"str",0)
@@ -86,10 +86,13 @@ xunlei:
 			       , true  ;只从原始地址下载
 			       , 10 )  ;从原始地址下载线程数
 			thunder.CommitTasks()
+      return
 		}
 		Catch, e {
-			MsgBox, 抱歉，您未安装迅雷或Dll文件没有注册。
+			MsgBox, 抱歉，您未安装迅雷或Dll文件没有注册，启动迅雷失败。
+      return
 		}
+    MsgBox, 抱歉，不能加载Dll文件。
 	}
 Return
 
@@ -132,8 +135,9 @@ DownLoad:
 	; 加载dll
 	If !hModule
 	{
-		hModule := DllCall("LoadLibrary", "str", "xldl.dll")
+		hModule := DllCall("LoadLibrary", "str", "Dll\xldl.dll")
 		Rtn1:=DllCall("xldl\XL_Init")
+    ;msgbox % hModule " - " Rtn1
 	}
 	; 下载参数
 	DownTaskParam =""
@@ -146,7 +150,7 @@ DownLoad:
 
 	TaskID:=DllCall("xldl\XL_CreateTask","int",&DownTaskParam,"Cdecl")
 	qq1:=DllCall("xldl\XL_StartTask","int",TaskID)
-
+  ;msgbox % TaskID " - " qq1
 	GuiControl,disable,ButtonDownLoad
 	GuiControl,disable,openfile
 	GuiControl,enable,openpath
@@ -245,7 +249,7 @@ Query:
 Return
 
 ;monitorurl:
-sUrl2sFlie:
+sUrl2sFile:
 	GuiControlGet,surl,,sUrl
 	GuiControlGet,sFolder,,sFolder
 	IfInString, sUrl, thunder://
