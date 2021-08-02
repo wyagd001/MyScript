@@ -18,7 +18,7 @@
 	else
 	{
 		FileEncoding, % aInCp
-		if (InStr(aInCp, "CP")) or (aInCp = "UTF-8-RAW")   ;  例如  CP936、CP1252、UTF-8-RAW
+		if (InStr(aInCp, "CP936")) or (aInCp = "UTF-8-RAW")   ;  考虑  CP936、UTF-8-RAW
 		{
 			FileReadLine, LineVar, % aInFile, 1
 			MsgBox, 36, 选择源文件的编码, 文件第一行内容: %LineVar%`n当前使用编码为: %aInCp%`n文本正常显示点击"是"，否则点击"否"。

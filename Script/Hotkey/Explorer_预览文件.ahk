@@ -4,17 +4,34 @@ gosub PreWWinGuiClose
 return
 
 F2::
-ControlGet, Tmp_Val, Selected,, Edit1
-if !Tmp_Val
+ControlGet, Tmp_V, Selected,, Edit1
+if !Tmp_V
+{
+try {
+GUI, PreWWin:Default
+Tmp_id := TV_GetSelection()
+TV_GetText(Tmp_V, Tmp_id)
+SplitPath, Tmp_V, , , , Tmp_V
+}
+}
+if !Tmp_V
 return
 SplitPath, Prew_File,, Prew_File_ParentPath, Prew_File_Ext
-FileMove, % Prew_File, % Prew_File_ParentPath "\" Tmp_Val "." Prew_File_Ext
+FileMove, % Prew_File, % Prew_File_ParentPath "\" Tmp_V "." Prew_File_Ext
 return
 
 del::
 MsgBox,4,删除提示,确定要把文件放入回收站吗？`n`n%Prew_File%
 IfMsgBox Yes
 FileRecycle,%Prew_File%
+return
+
+F5::
+run, %Prew_File%
+return
+
+F6::
+run, % notepad2 " " Prew_File
 return
 
 #ifWinActive ahk_Group ccc
@@ -88,7 +105,7 @@ Cando_pdf_prew:
 		Sleep, 500
 	}
 	Until (wb.Document.Readystate = "Complete") or WBElapsedTime>5000
-	settimer,autoopenpdf,-1500
+	settimer,autoopenpdf,-1500  ; 模拟选择文件
 	wb.document.getElementById("openFile").click()
 return
 
@@ -97,6 +114,16 @@ gosub,IE_Open
 WB.Navigate(Prew_File)
 return
 
+Cando_wps_prew:
+Tmp_Str := xd2txlib.ExtractText(Prew_File)
+Gui, +ReSize +MinSize800x540
+Gui, Add, Edit, w800 h520 Multi ReadOnly vdisplayArea, %Tmp_Str%
+Gui,PreWWin:Show, w800 h540 Center, % Prew_File " - 文件预览"
+sendmessage, 0xB1, -1, -1, Edit1, 文件预览
+Tmp_Str := ""
+return
+
+/*
 ; https://open.wps.cn/docs/office
 Cando_wps_prew:
 if !(oWord := ComObjCreate("kWPS.Application"))
@@ -111,6 +138,7 @@ Gui, Add, Edit, w800 h520 Multi ReadOnly vdisplayArea,%Tmp_Str%
 Gui,PreWWin:Show, w800 h540 Center, % Prew_File " - 文件预览"
 Tmp_Str := ""
 return
+*/
 
 Cando_xls_prew:
 run, "%A_AhkPath%" "%A_ScriptDir%\Plugins\输出excel数据到GUI.ahk" "%Prew_File%"
@@ -120,14 +148,14 @@ IE_Open:
 if tipGui_Init
 	TipsState(0)
 Gui, +ReSize
-Gui Add, ActiveX,xm w1050 h800 vWB, Shell.Explorer
+Gui Add, ActiveX, xm w1050 h800 vWB, Shell.Explorer
 WB.silent := true
 ComObjConnect(WB, WB_events)
 IOleInPlaceActiveObject_Interface := "{00000117-0000-0000-C000-000000000046}"
-pipa := ComObjQuery( WB, IOleInPlaceActiveObject_Interface )
-TranslateAccelerator := NumGet( NumGet( pipa+0 ) + 5*A_PtrSize )
-OnMessage( 0x0100, "WM_KeyPress" ) ; WM_KEYDOWN 
-OnMessage( 0x0101, "WM_KeyPress" ) ; WM_KEYUP   
+pipa := ComObjQuery(WB, IOleInPlaceActiveObject_Interface)
+TranslateAccelerator := NumGet(NumGet(pipa+0) + 5*A_PtrSize)
+OnMessage(0x0100, "WM_KeyPress") ; WM_KEYDOWN 
+OnMessage(0x0101, "WM_KeyPress") ; WM_KEYUP   
 
 Gui, PreWWin:Show ,,% Prew_File " - 文件预览"
 return
@@ -223,24 +251,19 @@ Cando_rar_prew:
 		msgbox 7z 变量未设置，请在选项→运行→自定义短语中添加。`n例如: 7z=G:\Program Files\7z\7z.exe
 	return
 	}
-	Tmp_Str := cmdSilenceReturn("for /f ""skip=12 tokens=5,* eol=-"" `%a in ('^;""" 7z """ ""l"" " """" Prew_File """') do @echo `%a `%b")
+	Tmp_Str := cmdSilenceReturn("for /f ""skip=12 tokens=6,* eol=-"" `%a in ('^;""" 7z """ ""l"" " """" Prew_File """') do @echo `%a `%b")
 	;msgbox % Tmp_Str
+	StringReplace, Tmp_Str, Tmp_Str, `n, `n, UseErrorLevel
+	Tmp_Lines :=  ErrorLevel
+	Tmp_Val := ""
 	Loop, parse, Tmp_Str, `n, `r
 	{
+		if (A_Index = 1) or (A_Index >= Tmp_Lines)
+			continue
 		Tmp_FileName:=trim(A_LoopField)
-		if (Tmp_Pos:=instr(Tmp_FileName, " "))
-		{
-			StringTrimLeft, Tmp_V, Tmp_FileName, % Tmp_Pos
-			if (Tmp_V = "Name") or (Tmp_V = "folders")
-				continue
-			if RegExMatch(Tmp_FileName,"^[0-9]+\s")  ; 不能正确得到7z压缩包中以数字空格开头的文件名
-				Tmp_Val .= Tmp_V "`n"
-			else
-				Tmp_Val .= Tmp_FileName "`n"
-		}
-		else
-			if Tmp_FileName
-				Tmp_Val .= A_LoopField "`n"
+		if (Tmp_FileName="")
+			continue
+		Tmp_Val .= Tmp_FileName "`n"
 	}
 Sort, Tmp_Val
 Gui, +ReSize
@@ -249,14 +272,15 @@ Loop 5  ; 加载一些标准系统图标到图像列表中.
     IL_Add(ImageListID, "shell32.dll", A_Index)
 Gui, Add, TreeView,r30 w800 h580 ImageList%ImageListID%
 Gui, Add, button,gtree2text,显示文本
+Gui, Add, StatusBar,, 快捷键: 1. 选中项目后按 F2 以选中项目重命名文件. 2. Del 删除文件. 3. F5 运行. 4. F6 编辑.
 AddBranchesToTree(Tmp_Val)
-
 Gui,PreWWin: Show, AutoSize Center, % Prew_File " - 文件预览"
 ;GuiControl,, displayArea, %Tmp_Val%
-Tmp_Str := Tmp_FileName := ""
+Tmp_Str := Tmp_FileName := Tmp_Lines := ""
 return
 
 tree2text:
+GUI,66:Destroy
 Gui,66:Default 
 Gui, Add, Edit, w600 h300 ReadOnly,%Prew_File%`n%Tmp_Val%
 Gui show, AutoSize Center, % Prew_File " - 文件预览"
@@ -391,11 +415,17 @@ else
 FileEncoding
 Gui, +ReSize +MinSize800x540
 Gui, Add, Edit, w800 Multi ReadOnly vdisplayArea,
-Gui, Add, StatusBar,, 快捷键: 1. 选中文字后按 F2 以选中文字重命名文件. 2. Del 删除文件. 
+Gui, Add, StatusBar,, 快捷键: 1. 选中文字后按 F2 以选中文字重命名文件. 2. Del 删除文件. 3. F5 运行. 4. F6 编辑.
 Gui,PreWWin:Show, w800 h540 Center, % Prew_File " - 文件预览"
 GuiControl,, displayArea, %FileR_TFC%
 ;GuiControl, Move, displayArea, x0 y0 w800 h510
 FileR_TFC := File_Encode := File_Size := ""
+return
+
+Cando_md_html_prew:
+FileCopy, % Prew_File, % A_ScriptDir "\html\html-markdown-preview\apidoc.md", true
+gosub,IE_Open
+WB.Navigate(A_ScriptDir "\html\html-markdown-preview\index.html")
 return
 
 ; https://www.autohotkey.com/boards/viewtopic.php?p=112572

@@ -285,3 +285,9 @@ CandyLast:
 Run_Candylast := 1
 gosub Candy
 return
+
+/*
+q::
+ Interception.send("a", 1)
+return
+*/

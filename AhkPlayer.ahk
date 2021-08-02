@@ -67,7 +67,7 @@ If (PlayListdefalut="t") || A_Args.Length()>0
 		for n, param in A_Args
 		{
 			SplitPath, param,,,ext
-			If ext in mp3,wma,wmv,wav,mpg,mid,mp4			;这是我目前已知的能用soundplay播放的格式
+			If ext in mp3,wma,wmv,wav,mpg,mid,mp4,m4a			;这是我目前已知的能用soundplay播放的格式
 				Fileappend,%param%`n, %AhkMediaListFile%
 		}
 	}
@@ -382,7 +382,7 @@ Gui, Add,Button, x+5 yp h20 grefreshList,返回列表
 Gui, Add,Button, x+5 yp h20 gFindToList,追加到列表
 
 Gui, Add,ListView ,xm Grid w600 h400 gListView Count5000 vListView Altsubmit, 序号|曲名|类型|位置|创建时间|上次播放|大小|播放次数
-Gui, Add,Slider,xm w600 h25 +Disabled -ToolTip vSlider gSlider AltSubmit
+Gui, Add,Slider,xm w600 h25 +Disabled -ToolTip vSlider page1 gSlider AltSubmit
 Gui, Add,Picture,xm+150 y+10 vstop gStop,%A_ScriptDir%\pic\AhkPlayer\stop.bmp
 Gui, Add,Picture,x+1 yp-1 gprev,%A_ScriptDir%\pic\AhkPlayer\prev.bmp
 Gui, Add,Picture,x+1 yp-10 gMyPause vpausepic,%A_ScriptDir%\pic\AhkPlayer\play.bmp
@@ -803,7 +803,7 @@ Return
 mute:
 Send {Volume_Mute}
 Gosub,Updatevolume
-GUIControl Focus,Stop
+;GUIControl Focus,Stop
 Return
 
 SetVolume:
@@ -813,7 +813,7 @@ Return
 ; 菜单添加文件到列表
 MenuFileAdd:
 Gui,Submit, NoHide
-FileSelectFile, File, M,, 添加文件, 音频文件 (*.mp3; *.wma; *.wav; *.mid; *.mp4)
+FileSelectFile, File, M,, 添加文件, 音频文件 (*.mp3; *.wma; *.wav; *.mid; *.mp4; *.m4a)
 if !File
 	return
 LV_Modify(0, "-Select")
@@ -825,7 +825,7 @@ Loop, % File0-1
 	w:=File%NextIndex%
 	mp3_loop =  %File1%\%w%
 	SplitPath, mp3_loop,,,ext, name
-	If ext in mp3,wma,wmv,wav,mpg,mid,mp4			;这是我目前已知的能用soundplay播放的格式
+	If ext in mp3,wma,wmv,wav,mpg,mid,mp4,m4a			;这是我目前已知的能用soundplay播放的格式
 	{
 	SetFormat, float ,03
 	LV_Add("Focus Select",xuhao+0.0,name,ext, mp3_loop)
@@ -847,7 +847,7 @@ Loop, %Folder%\*.*,0,1
 {
 	xuhao++
 	SplitPath, A_LoopFileFullPath,,, ext, name
-	If ext in mp3,wma,wav,mid,mp4,mpg
+	If ext in mp3,wma,wav,mid,mp4,mpg,m4a
 	{
   SetFormat, float ,03
 	LV_Add("Focus Select",xuhao+0.0, name,ext, A_LoopFileFullPath)
@@ -867,7 +867,7 @@ Loop, Parse, A_GuiEvent, `n
 {
 	xuhao++
 	SplitPath, A_LoopField,,,ext, name
-	If ext in mp3,wma,wmv,wav,mpg,mid,mp4			;这是我目前已知的能用soundplay播放的格式
+	If ext in mp3,wma,wmv,wav,mpg,mid,mp4,m4a			;这是我目前已知的能用soundplay播放的格式
 	{
 	SetFormat, float ,03
 	LV_Add("Focus Select",xuhao+0.0, name,ext, A_LoopField)
@@ -1341,18 +1341,37 @@ run,%TTPlayer% " %mp3%"
 return
 
 Slider:
-	Gui,Submit,NoHide
-	SetTimer,CheckStatus,off
-	if(GetKeyState("LButton"))
-	{
+;Gui,Submit,NoHide
+SetTimer,CheckStatus,off
+if (A_GuiEvent = 2) or (A_GuiEvent = 3)
+{
+pass_GuiEvent := 0
+return
+}
+else if (A_GuiEvent = 0) or (A_GuiEvent = 1) or (A_GuiEvent = 5)
+{
+    pass_GuiEvent := (A_GuiEvent = 5)?0:1
 		MCI_ToHHMMSS2(Len*(Slider/100),thh,tmm,tss)
 		if (lhh=0)
 			CF_ToolTip(tmm ":" tss, 2000)
 		else
 			CF_ToolTip(thh ":" tmm ":" tss, 2000)
-	}
-	else
-	{
+}
+else if (A_GuiEvent = "Normal")
+{
+  if !pass_GuiEvent
+{
+  MouseGetPos, Slider_x
+  Slider := (Slider_x-20)*100/580
+  GUIControl,,Slider,% Slider
+}
+		MCI_ToHHMMSS2(Len*(Slider/100),thh,tmm,tss)
+		if (lhh=0)
+			CF_ToolTip(tmm ":" tss, 2000)
+		else
+			CF_ToolTip(thh ":" tmm ":" tss, 2000)
+
+
 		if hSound
 		{
 			Status:=MCI_Status(hSound)
@@ -1379,11 +1398,11 @@ Slider:
 				if Status=Paused
 					MCI_Pause(hSound)
 			}
-
     ;-- Reset focus
+      if !pass_GuiEvent
 			GUIControl Focus,Stop
 		}
-	}
+}
 	SetTimer,CheckStatus,on
 Return
 

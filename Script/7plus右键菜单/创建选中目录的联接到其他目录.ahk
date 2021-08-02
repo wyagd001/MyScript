@@ -16,7 +16,7 @@ Return
 }
 Critical, Off
 SplitPath, Files, , , , , Tmp_Drive
-If !(FileInNTFS(Files))
+If (CF_GetDriveFS(Files)!="NTFS")
 {
 	Gui, +OwnDialogs
 	MsgBox, 262192, 磁盘格式不匹配, 当前磁盘 %Tmp_Drive% 不是 NTFS 文件系统格式，无法创建目录联接！
@@ -69,13 +69,13 @@ If (errFlag = 0) And (FileExist(SHSL_TGPath) = "")
 If ((errFlag = 0) And (sPara = "/SRC")) 
 {
 	SplitPath, SHSL_Path, , , , , Tmp_Drive
-	If !(FileInNTFS(SHSL_Path))
+	If (CF_GetDriveFS(SHSL_Path)!="NTFS")
 		errFlag := 7, Tmp_Str := "联接所在磁盘 " Tmp_Drive " 不是 NTFS 文件系统格式，无法创建目录联接"
 }
 If ((errFlag = 0) And (sPara = "/DES")) 
 {
 	SplitPath, SHSL_TGPath, , , , , Tmp_Drive
-	If !(FileInNTFS(SHSL_TGPath))
+	If (CF_GetDriveFS(SHSL_TGPath)!="NTFS")
 		errFlag := 8, Tmp_Str := "联接目录所在磁盘 " Tmp_Drive " 不是 NTFS 文件系统格式，无法创建目录联接"
 }
 If (errFlag=0)

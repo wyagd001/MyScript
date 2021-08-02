@@ -76,15 +76,27 @@ $MButton::
 				;Sleep,200 ;中文输入法状态下，有延迟才能成功
 				;SendEvent,{Up}{enter};如果是任务栏上，为关闭选择的程序
 
+        if !(h_id := TTLib.GetTrackedButtonWindow())
+        {
+          ;SendEvent,{Click}
+          CoordMode, Mouse, Screen
+          mousegetpos, Tmp_X, Tmp_Y
+          sleep 32
+          ;Send {Blind}{vkFF}
+          mousemove, % Tmp_X + 2, % Tmp_Y - 2
+          sleep 32
+          mousemove, % Tmp_X, % Tmp_Y
+          sleep 200
+        }
 				if (h_id := TTLib.GetTrackedButtonWindow())
         {
           PostMessage, 0x112, 0xF060,,, ahk_id %h_id%
           CoordMode, Mouse, Screen
           mousegetpos, Tmp_X, Tmp_Y
-          sleep 100
-Send {Blind}{vkFF}
-          mousemove, % Tmp_X + 1, % Tmp_Y - 1
-          sleep 100
+          sleep 32
+          ;Send {Blind}{vkFF}
+          mousemove, % Tmp_X + 2, % Tmp_Y - 2
+          sleep 32
           mousemove, % Tmp_X, % Tmp_Y
         }
 				else

@@ -6,6 +6,8 @@ notepadopen:
 sleep, 50
 Critical,On
 Files := GetSelectedFiles()
+if !Files and lastexplorerhwnd
+Files := GetSelectedFiles(,lastexplorerhwnd)
 If !Files
 {
 	CF_ToolTip("获取文件路径失败。", 3000)

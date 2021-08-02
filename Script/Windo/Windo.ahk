@@ -11,6 +11,11 @@ Windo_保存路径到windy收藏夹:
 	iniwrite,%Windy_CurWin_FolderPath%,%A_ScriptDir%\Settings\Windy\主窗体\windy_Fav.ini,menu,%menuname%
 return
 
+Windo_窗口快捷方式:
+CandySel := Windy_CurWin_Fullpath
+gosub Cando_生成快捷方式到指定目录
+return
+
 Windo_括起来:
 	clipmonitor := 0
 	BackUp_ClipBoard := ClipboardAll
@@ -45,3 +50,15 @@ Windo_首字大写:
 	out := BackUp_ClipBoard := Position :=""
 	clipmonitor := 1
 Return
+
+Windo_TaskKill:
+if (Splitted_Windy_Cmd3="clipcopypath")
+{
+Tmp_Val := instr(Clipboard, ".exe") ? Clipboard : Clipboard ".exe"
+Run, %ComSpec% /k taskkill /im %Tmp_Val% /F,,hide
+}
+else if Splitted_Windy_Cmd3
+Run, %ComSpec% /c taskkill /im %Splitted_Windy_Cmd3% /F,,hide
+else
+Run, %ComSpec% /c taskkill /im %Windy_CurWin_ProcName% /F,,hide
+return

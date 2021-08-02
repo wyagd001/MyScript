@@ -26,6 +26,7 @@ If(!A_IsAdmin)
 	If(uacrep = 42) ; UAC Prompt confirmed, application may Run as admin
   {
 		Tooltip, 成功启用管理员权限
+    Auto_FirstRun := 1
     exitapp
   }
 	Else
@@ -1375,6 +1376,9 @@ Menu_Tray_Exit:
 Return
 
 ExitSub:
+if Auto_FirstRun
+  ExitApp
+
 ; ComBoBox 条目删除图标
 UnhookWinEvent(hWinEventHook3, HookProcAdr3)
 
@@ -1494,6 +1498,9 @@ if Auto_Cliphistory
 
 if TTLib.get_Init()
 	TTLib.UnloadFromExplorer(), TTLib.Uninit()
+
+if xd2txlib.get_Init()
+  xd2txlib.Uninit()
 
 SoundPlay ,%A_ScriptDir%\Sound\Windows Error.wav
 sleep,300
@@ -1708,11 +1715,12 @@ Return
 #include %A_ScriptDir%\Lib\Class_JSON.ahk
 #include %A_ScriptDir%\Lib\Class_WinHttp.ahk
 #include %A_ScriptDir%\Lib\Class_Interception.ahk
+#include %A_ScriptDir%\Lib\Class_TTLib.ahk
+#include %A_ScriptDir%\Lib\Class_xd2txlib.ahk
 #Include %A_ScriptDir%\Lib\进制转换.ahk
 #Include %A_ScriptDir%\Lib\string.ahk
 #include %A_ScriptDir%\lib\AHKhttp.ahk
 #include %A_ScriptDir%\Lib\GetBrowserURL.ahk
 #include %A_ScriptDir%\Script\TrayIcon_FuncsIcon.ahk
 #include <AHKsock>
-#include <TTLib>
 #include *i %A_ScriptDir%\Script\AutoInclude.ahk

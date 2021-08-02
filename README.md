@@ -1,11 +1,11 @@
-# MyScript
+ï»¿# MyScript
 
-Ö÷Òª¼¯ºÏÒÔÏÂµÄ½Å±¾£¬²Î¿¼µÄ½Å±¾Ì«¶à£¬ÓĞĞí¶à½Å±¾Ã»ÓĞÁĞ³ö¡£ÒòÎª¸÷ÖÖÔ­Òò£¬Á´½Ó²»Ò»¶¨ÓĞĞ§¡£  
+ä¸»è¦é›†åˆä»¥ä¸‹çš„è„šæœ¬ï¼Œå‚è€ƒçš„è„šæœ¬å¤ªå¤šï¼Œæœ‰è®¸å¤šè„šæœ¬æ²¡æœ‰åˆ—å‡ºã€‚å› ä¸ºå„ç§åŸå› ï¼Œé“¾æ¥ä¸ä¸€å®šæœ‰æ•ˆã€‚  
 
 1.Drag and Drop Auto-Renamer -------by DTY  
 http://www.autohotkey.com/forum/topic30647.html  
 
-2.×¢²á±í¶¨Î» -------by yonken  
+2.æ³¨å†Œè¡¨å®šä½ -------by yonken  
 
 3.launcher -------alongside  
 ~~http://hi.baidu.com/alongside/blog/item/1a25ed00b4156f10738b65cb.html~~  
@@ -54,16 +54,16 @@ http://www.autohotkey.com/forum/topic35580.html
 17.Screen Capture with Transparent Windows and Mouse Cursor  
 http://www.autohotkey.com/forum/topic18146.html  
 
-18.Ahk½Å±¾¹ÜÀíÆ÷-------À¶À¶Ğ¡Ñ©  
+18.Ahkè„šæœ¬ç®¡ç†å™¨-------è“è“å°é›ª  
 ~~http://wwww.snow518.cn~~  
 
 19.Hi, Eddy--------------Eddy  
 ~~http://www.hieddy.com/~~  
 
-20.ÖÇÄÜÖØÃüÃû----------------JSLover  
+20.æ™ºèƒ½é‡å‘½å----------------JSLover  
 http://jslover.secsrv.net/AutoHotkey/Scripts/Rename-Manager.ahk  
 
-21.F1¼üĞŞ¸ÄÎÄ¼şÊôĞÔÀ©Õ¹ÃûºÍÎÄ¼şÊ±¼ä----------dule2859  
+21.F1é”®ä¿®æ”¹æ–‡ä»¶å±æ€§æ‰©å±•åå’Œæ–‡ä»¶æ—¶é—´----------dule2859  
 ~~http://ahkcn.net/thread-881.html~~  
 
 22.WinExplorer auto-search---------------Buddy  
@@ -75,24 +75,24 @@ http://svn.motlin.com/dev/ahk/NiftyWindows.ahk
 24.Run AHK scripts with less (half or even less) memory usage---------------heresy  
 http://www.autohotkey.com/forum/topic32876.html  
 
-25.°ÑÄãµÄ³ÌĞò¶¤ÔÚ×ÀÃæÉÏ - Pin2Desk-------------------------------BLooM2  
+25.æŠŠä½ çš„ç¨‹åºé’‰åœ¨æ¡Œé¢ä¸Š - Pin2Desk-------------------------------BLooM2  
 ~~http://ahkcn.net/thread-1456.html~~
 
-26.Ò»¼ü´ò¿ªµ±Ç°¼¤»î´°¿ÚµÄËùÔÚÄ¿Â¼-------------------ĞÇÓê³¯Ï¼  
+26.ä¸€é”®æ‰“å¼€å½“å‰æ¿€æ´»çª—å£çš„æ‰€åœ¨ç›®å½•-------------------æ˜Ÿé›¨æœéœ  
 ~~http://ahkcn.net/thread-1709.html~~  
 
 27.GetModuleFileNameEx--------shimanov  
 http://www.autohotkey.com/forum/topic4182-15.html  
 http://www.autohotkey.com/forum/topic9000.html  
 
-28.½ØÍ¼½Å±¾-------------  
+28.æˆªå›¾è„šæœ¬-------------  
 http://www.autohotkey.com/forum/topic18146.html  
 ~~http://ahk.5d6d.com/thread-2220-1-2.html~~  
 
 29.Auto-raise and Other Stuff on Mouse Hover -----------------Lexikos  
 http://www.autohotkey.com/forum/topic22763.html  
 
-30.Ä£·Â QT TabBar µÄÖØÃüÃûÑ­»·±ä»»Ñ¡Ôñ¹¦ÄÜ-------------------Jameson  
+30.æ¨¡ä»¿ QT TabBar çš„é‡å‘½åå¾ªç¯å˜æ¢é€‰æ‹©åŠŸèƒ½-------------------Jameson  
 ~~http://ahkcn.net/thread-623.html~~  
 
 31.7plus--------------------fragman  
@@ -108,7 +108,7 @@ http://www.autohotkey.com/forum/topic25867.html
 34.Candy--------------aamii  
 https://github.com/aamii/Candy  
 
-35.#include ÅúÁ¿²Ù×÷--------------feiyue  
+35.#include æ‰¹é‡æ“ä½œ--------------feiyue  
 ~~http://ahkcn.net/thread-6003.html~~  
 
 36.LV_ColorInitiate  
@@ -124,14 +124,14 @@ https://autohotkey.com/boards/viewtopic.php?t=4425
 39.JEE_NotepadGetPath--------------jeeswg  
 https://autohotkey.com/boards/viewtopic.php?f=6&t=30050  
 
-40.VDLink | Win7 Ä¿Â¼Áª½Ó¹¤¾ß  
+40.VDLink | Win7 ç›®å½•è”æ¥å·¥å…·  
 http://www.cnblogs.com/easysky/p/4931042.html  
 
-41.RunZ | ×¨ÒµµÄ¿ìËÙÆô¶¯¹¤¾ß  
+41.RunZ | ä¸“ä¸šçš„å¿«é€Ÿå¯åŠ¨å·¥å…·  
 https://github.com/goreliu/runz  
 
-42.¿âÎÄ¼ş  
-VA.ahk, Gdip.ahk, tf.ahk, Class_SQLiteDB.ahk, Class_RichEdit.ahk µÈµÈ  
+42.åº“æ–‡ä»¶  
+VA.ahk, Gdip.ahk, tf.ahk, Class_SQLiteDB.ahk, Class_RichEdit.ahk ç­‰ç­‰  
 
 43.AHKhttp  
 https://github.com/zhamlin/AHKhttp  
@@ -143,7 +143,7 @@ https://github.com/jleb/AHKsock
 https://github.com/sunwind/Media-Remote-Control  
 https://autohotkey.com/boards/viewtopic.php?f=6&t=32336  
 
-46.ahk-remote-control(Tasker ÏîÄ¿µÄµ¼³öÎÄ¼şÀ´Ô´)  
+46.ahk-remote-control(Tasker é¡¹ç›®çš„å¯¼å‡ºæ–‡ä»¶æ¥æº)  
 https://github.com/bjc5233/ahk-remote-control  
 
 47.Vis2  

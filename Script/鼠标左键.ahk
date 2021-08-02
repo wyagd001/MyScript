@@ -7,7 +7,7 @@ return
 WinGetClass, Class, ahk_id %id%
 isF:=IsFullscreen("A",false,false)
 ; 屏幕左上角点击按下快捷键
-If(x=0 && y=0 && !WinActive("ahk_class Flip3D") && !isF)   
+If(lastx=0 && lasty=0 && !WinActive("ahk_class Flip3D") && !isF)   
 {
 	if (A_OSVersion="WIN_7")
 		Send ^#{Tab}   ;rundll32.exe DwmApi #105

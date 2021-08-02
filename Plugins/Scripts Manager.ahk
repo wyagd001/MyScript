@@ -33,7 +33,7 @@ Global AppName := "AutoHotkey Scripts Manager"
      , hMainWnd
      , hToolbar
      , hLV
-     , h_List
+     , h_List := "RunningList"
      , hSB
      , ImageList
      , AlwaysOnTop
@@ -51,7 +51,12 @@ Global AppName := "AutoHotkey Scripts Manager"
      . (A_IsUnicode ? "Unicode " : "ANSI ")
      . (A_PtrSize == 4 ? "32-bit" : "64-bit")
      , IniFile := A_ScriptDir . "\Scripts Manager.ini"
+     , AhkScriptLibFile := A_ScriptDir . "\AhkList.txt"
+     , AhkScriptLib := "D:\资料\脚本收集"
+     , ahkhelpfile := "D:\Program Files\AutoHotkey\AutoHotkeyLCN_New.chm"
+     , ahkeditor := "D:\Program Files\Editor\Notepad2\Notepad2.exe"
      , LoadLV_dis_Label
+     , find
 
 Menu Tray, Icon, %IconLib%
 
@@ -60,7 +65,6 @@ Gui 1: New, +hWndhMainWnd +Resize, %AppName%
 AddMenu("ScriptMenu", "&Reload Script`tCtrl+R",, IconLib, 2)
 Menu ScriptMenu, Add
 AddMenu("ScriptMenu", "&Edit Script`tCtrl+E",, IconLib, 3)
-AddMenu("ScriptMenu", "Set &Default Editor...", "SetDefaultEditor", IconLib, 17)
 Menu ScriptMenu, Add
 AddMenu("ScriptMenu", "&Suspend Hotkeys`tCtrl+S",, IconLib, 4)
 AddMenu("ScriptMenu", "&Pause Script`tPause",, IconLib, 5)
@@ -71,7 +75,7 @@ AddMenu("ScriptMenu", "&Open Folder`tCtrl+O", "OpenFolder", IconLib, 11)
 AddMenu("ScriptMenu", "&Copy Path`tCtrl+P", "CopyPath", IconLib, 12)
 Menu ScriptMenu, Add
 AddMenu("ScriptMenu", "Command Prompt", "CommandPromptHere", IconLib, 14)
-AddMenu("ScriptMenu", "Run...", "CopyPath", IconLib, 15)
+AddMenu("ScriptMenu", "Run...", "runPath", IconLib, 15)
 Menu ScriptMenu, Add
 AddMenu("ScriptMenu", "Exit Scripts Manager`tEsc", "GuiClose", IconLib, 13)
 AddMenu("InspectMenu", "Recent &Lines`tCtrl+L",, IconLib, 7)
@@ -83,8 +87,11 @@ Menu EditMenu, Add, Select &All`tCtrl+A, SelectAll
 Menu EditMenu, Add, Del Fav Item, DelFavItem
 Menu EditMenu, Add
 Menu EditMenu, Add, &Find in Files...`tCtrl+F, FindInFiles
+AddMenu("EditMenu", "&UpdateScriptLib`tCtrl+U","UpdateScriptLib", IconLib, 18)
+AddMenu("EditMenu", "F&ind in Lib`tCtrl+I","showfind", IconLib, 19)
 
 Menu ViewMenu, Add, &Refresh Now`tF5, ReloadList
+Menu ViewMenu, Add, Show FindEditBox, showFindEditBox
 
 Menu OptionsMenu, Add, Always on Top, SetAlwaysOnTop
 Menu OptionsMenu, Add, Hide When Minimized, SetHideWhenMinimized
@@ -113,6 +120,7 @@ IniRead Y, %IniFile%, Position, Y
 IniRead W, %IniFile%, Position, Width, 734
 IniRead H, %IniFile%, Position, Height, 441
 IniRead State, %IniFile%, Position, State, 1
+IniRead showfindbox, %IniFile%, Options, showfindbox, 0
 
 If (FileExist(IniFile)) {
     SetWindowPlacement(hMainWnd, X, Y, W, H, 0)
@@ -126,8 +134,16 @@ Gui Add, StatusBar, hWndhSB
 GuiControlGet SBPos, Pos, %hSB%
 
 GetClientSize(hMainWnd, WindowW, WindowH)
-LVH := WindowH - 28 - SBPosH
-Gui Add, ListView, hWndhLV vMyList gLVHandler x0 y30 h%LVH% w%WindowW% +LV0x14000 AltSubmit, Filename|Path|PID|State
+
+if showfindbox
+{
+Gui, Add,Edit, x0 y30  w450 vfind2
+Gui, Add,Button, x+5 y30 h25 gfind2 Default,查找
+}
+
+LVH := WindowH - 28 - SBPosH - (showfindbox ? 30 : 0)
+Lvy := showfindbox ? 60 : 30
+Gui Add, ListView, hWndhLV vMyList gLVHandler x0 y%Lvy% h%LVH% w%WindowW% +LV0x14000 AltSubmit, Filename|Path|PID|State
 
 IniRead Columns, %IniFile%, Position, Columns, 177|424|49|79
 aCols := StrSplit(Columns, "|")
@@ -191,13 +207,14 @@ Menu Tray, Tip, %AppName%
 
 OnMessage(0x16, "SaveSettings") ; WM_ENDSESSION
 
+Gui,findwin: Add,Edit, x2 y2 h25 w300 vfind
+Gui,findwin: Add,Button, x+5 y2 h25 gfind Default,查找
 Return ; End of the auto-execute section
 
 ReloadList() {
   if (h_List = "") || (h_List = "RunningList")
   {
     Row := LV_GetNext()
-
     LV_Delete()
     IL_Destroy(ImageList)
     ImageList := IL_Create(10)
@@ -220,6 +237,8 @@ ReloadList() {
       AddToList(Process)
     }
   }
+  LV_ModifyCol(1)
+  LV_ModifyCol(2)
 }
 
 LoadList(ListName:="") {
@@ -263,6 +282,10 @@ LoadList(ListName:="") {
     ReloadList()
     LoadLV_dis_Label := 0
   }
+   Menu ScriptsListMenu, uncheck, RunningList
+   Menu ScriptsListMenu, uncheck, MangerList
+   Menu ScriptsListMenu, uncheck, FavList
+   Menu ScriptsListMenu, check, %h_list%
 }
 
 GuiSize:
@@ -421,6 +444,26 @@ CopyPath() {
         Filenames .= Item.Path . "`r`n"
     }
     Clipboard := RTrim(Filenames, "`r`n")
+}
+
+EditPath() {
+    Filenames := ""
+    Items := GetSelectedItems()
+    For Each, Item in Items {
+      Splitpath, % Item.Path,,,Extension
+      if Extension not in ahk,ahkl,ahk2,txt,htm,html
+        Continue
+      if FileExist(ahkeditor)
+      {
+        run % ahkeditor " " Item.Path 
+        break
+      }
+      else
+      {
+        run % notepad " " Item.Path 
+        break
+      }
+    }
 }
 
 GetWindowIconByPID(PID) {
@@ -690,6 +733,9 @@ ExecCommand(Command) {
 }
 
 OpenHelpFile() {
+    if FileExist(ahkhelpfile)
+      run % ahkhelpfile
+    else
     Run %A_ScriptDir%\..\Help\AutoHotkey.chm
 }
 
@@ -717,6 +763,8 @@ SetToolbar:
     IL_Add(TBIL, IconLib, 14)
     IL_Add(TBIL, IconLib, 15)
 
+    IL_Add(TBIL, IconLib, 18)
+    IL_Add(TBIL, IconLib, 19)
     Buttons =
     (LTrim
         -
@@ -740,6 +788,9 @@ SetToolbar:
         -
         Command Prompt
         Run...
+        -
+        UpdateScriptLib
+        Find in Lib
     )
     Buttons := StrSplit(Buttons, "`n")
 
@@ -792,6 +843,9 @@ ToolbarHandler:
         } Else If (Text == "Copy Path") {
             CopyPath()
 
+        } Else If (Text == "Edit Script") {
+            EditPath()
+
         } Else If (Text == "Command Prompt") {
             CommandPromptHere()
 
@@ -800,6 +854,12 @@ ToolbarHandler:
 
         } Else If (Text == "Find in Files") {
             FindInFiles()
+
+        } Else If (Text == "UpdateScriptLib") {
+            UpdateScriptLib()
+
+        } Else If (Text == "Find in Lib") {
+            showfind()
 
         } Else {
             ExecCommand(Text)
@@ -878,20 +938,17 @@ AddToList(Process) {
             LV_Add("Icon" . IconIndex, m2, m1, PID, State)
         else
         {
-Loop % LV_GetCount()
-{
-LV_GetText(RetrievedText, A_Index, 2)
-if (RetrievedText=m1)
-{
-  LV_Modify(A_Index, "Icon" . IconIndex, m2, m1, PID, State)
-  break
-}
-
-        } 
+            Loop % LV_GetCount()
+            {
+              LV_GetText(RetrievedText, A_Index, 2)
+              if (RetrievedText=m1)
+              {
+                LV_Modify(A_Index, "Icon" . IconIndex, m2, m1, PID, State)
+                break
+              }
+            } 
+        }
     }
-
-
-}
 }
 
 RemoveFromList(Process) {
@@ -900,15 +957,15 @@ RemoveFromList(Process) {
         LV_GetText(RowPID, A_Index, 3)
         If (RowPID == PID) {
             if (h_list = "RunningList")
-{
-               LV_Delete(A_Index)
-            Break
-}
-else
-{
-LV_Modify(A_Index, , , , "", "")
-Break
-}
+            {
+              LV_Delete(A_Index)
+              Break
+            }
+            else
+            {
+              LV_Modify(A_Index, , , , "", "")
+              Break
+            }
 
         }
     }
@@ -994,13 +1051,16 @@ SaveSettings() {
     }
     IniWrite %State%, %IniFile%, Position, State
 
-    Columns := ""
-    Loop % LV_GetCount("Col") {
-        SendMessage 0x101D, A_Index - 1, 0,, ahk_id %hLV% ; LVM_GETCOLUMNWIDTH
-        Columns .= ErrorLevel . "|"
+    if (h_List = "RunningList")
+    {
+      Columns := ""
+      Loop % LV_GetCount("Col") {
+          SendMessage 0x101D, A_Index - 1, 0,, ahk_id %hLV% ; LVM_GETCOLUMNWIDTH
+          Columns .= ErrorLevel . "|"
+      }
+      Columns := SubStr(Columns, 1, -1)
+      IniWrite %Columns%, %IniFile%, Position, Columns
     }
-    Columns := SubStr(Columns, 1, -1)
-    IniWrite %Columns%, %IniFile%, Position, Columns
 }
 
 SetAlwaysOnTop:
@@ -1053,8 +1113,10 @@ FindInFiles() {
     }
 }
 
-SetDefaultEditor:
-    Run %A_ScriptDir%\Default Editor.ahk
+runPath:
+LV_GetText(FullPath, LV_GetNext(), 2)
+if FullPath
+Run % FullPath
 Return
 
 LoadOptions() {
@@ -1062,6 +1124,7 @@ LoadOptions() {
     IniRead HideWhenMinimized, %IniFile%, Options, HideWhenMinimized, 0
     IniRead Confirm, %IniFile%, Options, Confirm, 1
     IniRead Notifications, %IniFile%, Options, Notifications, 0
+    IniRead showfindbox, %IniFile%, Options, showfindbox, 0
 
     If (AlwaysOnTop) {
         WinSet AlwaysOnTop, On, ahk_id %hMainWnd%
@@ -1078,6 +1141,10 @@ LoadOptions() {
 
     If (Notifications) {
         Menu OptionsMenu, Check, TrayTip Notifications
+    }
+
+    If (showfindbox) {
+        Menu ViewMenu, Check, Show FindEditBox
     }
 }
 
@@ -1101,5 +1168,101 @@ FixRootDir(ByRef Dir) {
     Return Dir
 }
 
+UpdateScriptLib()
+{
+	Tmp_Val := ""
+	FileDelete, %AhkScriptLibFile%
+	Loop, %AhkScriptLib%\*.*, 0,1
+	{
+		ahk_loop := A_loopfilename
+
+		Splitpath, ahk_loop,,,Extension
+		if Extension not in ahk,ahkl,ahk2,txt,dll,exe,zip,rar,7z,htm,html
+			Continue
+		else
+		{
+			Tmp_Val .= a_loopfilefullpath "`n"
+		}
+	}
+	FileAppend, % Tmp_Val, %AhkScriptLibFile%
+	Tmp_Val := ""
+	CF_ToolTip("更新脚本库完毕!		",2500)
+Return
+}
+
+showfind()
+{
+gui,findwin: show
+return
+}
+
+find()
+{
+Gui,findwin: Submit
+if !find
+return
+Gui, 1:Default 
+LV_Delete()
+
+Loop, read, %AhkScriptLibFile%
+		{
+			ahk_loop = %A_LoopReadline%
+			Found = Yes
+			Loop, Parse, find, %a_Space%
+			IfNotInString, ahk_loop, %A_LoopField%, SetEnv, Found, No
+
+			IfEqual, Found, Yes
+				{
+			    SplitPath, ahk_loop,name
+				LV_Add("Focus", name, ahk_loop)
+				}
+}
+LV_ModifyCol(1)
+LV_ModifyCol(2)
+if (h_list<>"findlist")
+{
+Menu ScriptsListMenu, uncheck, %h_list%
+h_list:="findlist"
+}
+Return
+}
+
+showFindEditBox:
+    showfindbox := !showfindbox
+    Menu ViewMenu, ToggleCheck, Show FindEditBox
+    IniWrite %showfindbox%, %IniFile%, Options, showfindbox
+return
+
+find2:
+Gui, Submit, NoHide
+if !find2
+return
+Gui, 1:Default 
+LV_Delete()
+
+Loop, read, %AhkScriptLibFile%
+		{
+			ahk_loop = %A_LoopReadline%
+			Found = Yes
+			Loop, Parse, find2, %a_Space%
+			IfNotInString, ahk_loop, %A_LoopField%, SetEnv, Found, No
+
+			IfEqual, Found, Yes
+				{
+			    SplitPath, ahk_loop,name
+          LV_Add("Focus", name, ahk_loop)
+				}
+}
+LV_ModifyCol(1)
+LV_ModifyCol(2)
+if (h_list<>"findlist")
+{
+Menu ScriptsListMenu, uncheck, %h_list%
+h_list:="findlist"
+}
+Return
+
+
 #Include %A_ScriptDir%\..\Lib\AutoXYWH.ahk
 #Include %A_ScriptDir%\..\Lib\ShellMenu.ahk
+#Include %A_ScriptDir%\..\Lib\CF.ahk

@@ -10,8 +10,9 @@ ShellWM(wp, lp)
 		if ProcessName = explorer.exe
 		{
 			folder_Arr.InsertAt(lp, {cmd: ShellFolder(lp, 1)})
+			lastexplorerhwnd := lp
 		}
-		else if ProcessName in notepad.exe,notepad2.exe,notepad3.exe  ; 程序列表中不能有空格
+		else if ProcessName in notepad.exe,Notepad2.exe,Notepad3.exe  ; 程序列表中不能有空格
 		{
 			textfile_Arr.InsertAt(lp, {cmd: GetTextFilePath(ProcessName,lp)})
 		}
@@ -31,6 +32,7 @@ ShellWM(wp, lp)
 				Array_WriteMenuToINI(CloseWindowList_Arr, "menu", A_ScriptDir "\Settings\Windy\主窗体\CloseWindowList.ini")
 			}
 			folder_Arr.Remove(lp)
+			lastexplorerhwnd := ""
 		}
 		else if textfile_Arr.HasKey(lp)
 		{

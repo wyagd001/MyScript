@@ -4,7 +4,7 @@
 ; 返回值		转换后得到的unicode字串,wString的地址
 ; 该函数映射一个字符串 (MultiByteStr) 到一个宽字符 (unicode UTF-16) 的字符串 (WideCharStr)。
 ; 由该函数映射的字符串不一定是多字节字符组。
-; &mString 传入的是地址，所以 sString 变量不能直接传入地址
+; &mString 传入的是地址，所以 mString 变量不能直接传入地址
 /* 
 ; A版运行例子
 pp=中文
