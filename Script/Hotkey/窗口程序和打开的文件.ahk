@@ -68,7 +68,7 @@ run % "explorer.exe /select,"  FullName
 
 	RegExMatch(CMDLine, "i).*exe.*?\s+(.*)", ff_)   ; 正则匹配命令行参数
 ; 带参数的命令行不能得到路径  例如 a.exe /resart "D:\123.txt"
-; 命令行参数中打开的文件有些程序带  “"”，（"打开文件路径"） 有些程序不带 “"”（打开文件路径）
+; 命令行参数中打开的文件有些程序带  “"”（"打开文件路径"）， 有些程序不带 “"”（打开文件路径）
 	StringReplace,FileFullPath,ff_1,`",,All
 	startzimu:=RegExMatch(FileFullPath, "i)^[a-z]")
 
@@ -103,7 +103,7 @@ run % "explorer.exe /select,"  FullName
 	Return
 	}
 
-; Word、WPS、Excel、et程序
+; Word、Excel、WPS、et、Scite程序
 	FileFullPath:=getDocumentPath(ProcessPath)  
 	if FileFullPath
 		goto OpenFileFullPath
@@ -187,6 +187,10 @@ getDocumentPath(_ProcessPath)
 		if !Application
 			Application := ComObjActive("WPS.Application")
 		ActiveDocument := Application.ActiveDocument
+		if !ActiveDocument   ; WPS 启动然后打开表格文件的情况
+		{
+			Goto Case_ET
+		}
 	Return  % ActiveDocument.FullName
 	Case_ET:
 		Application := ComObjActive("ket.Application")
@@ -200,4 +204,7 @@ getDocumentPath(_ProcessPath)
 			Application := ComObjActive("wpp.Application")
 		ActivePresentation := Application.ActivePresentation ; ActivePresentation
 	Return % ActivePresentation.FullName
+	Case_SciTE:
+		Application := ComObjActive("SciTE4AHK.Application")
+	Return Application.CurrentFile
 }

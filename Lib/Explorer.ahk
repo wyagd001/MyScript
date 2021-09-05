@@ -46,11 +46,11 @@ ShellNavigate(sPath, bExplore=False, hWnd=0)
 {
 	If (window := Explorer_GetWindow(hwnd))
 	{
-		window.Navigate2[sPath]
+		window.Navigate2[sPath] ; 当前资源管理器窗口切换到指定目录
 	}
 	Else If bExplore
-		ComObjCreate("Shell.Application").Explore[sPath]
-	Else ComObjCreate("Shell.Application").Open[sPath]
+		ComObjCreate("Shell.Application").Explore[sPath]  ; 新窗口打开目录(带左侧导航SysTreeView321控件)
+	Else ComObjCreate("Shell.Application").Open[sPath]  ; 新窗口打开目录
 }
 
 /*

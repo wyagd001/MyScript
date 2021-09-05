@@ -58,7 +58,13 @@ Tmp_Val := instr(Clipboard, ".exe") ? Clipboard : Clipboard ".exe"
 Run, %ComSpec% /k taskkill /im %Tmp_Val% /F,,hide
 }
 else if Splitted_Windy_Cmd3
+{
+;tooltip % Splitted_Windy_Cmd3
 Run, %ComSpec% /c taskkill /im %Splitted_Windy_Cmd3% /F,,hide
+}
 else
-Run, %ComSpec% /c taskkill /im %Windy_CurWin_ProcName% /F,,hide
+{
+;tooltip % Windy_CurWin_ProcName
+Run, %ComSpec% /c taskkill /im %Windy_CurWin_ProcName%.exe /F,,hide
+}
 return

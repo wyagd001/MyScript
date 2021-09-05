@@ -52,6 +52,7 @@ migrateHistory()
 
 hidelrc=0
 PlaylistIndex=1
+ErrCounter:=0
 LrcPath:=(SubStr(A_OSVersion, 1, 2)=10)?LrcPath_Win10:LrcPath
 LrcPath:=FileExist(LrcPath)?LrcPath:(FileExist(LrcPath_2)?LrcPath_2:"")
 AhkMediaLibFile = %A_ScriptDir%\settings\AhkPlayer\mp3s.txt
@@ -313,6 +314,17 @@ file.close()
 Tmp_Val := ""
 }
 	hSound := MCI_Open(Mp3, "myfile")
+	if !hSound
+	{
+		ErrCounter+=1
+		if (ErrCounter>10)
+		{
+			Gosub, MyPause
+			return
+		}
+	}
+	else
+		ErrCounter:=0
 	SetTimer UpdateSlider,off
 	GUIControl,,Slider,0
 	GUIControl,Disable,Slider
@@ -357,6 +369,11 @@ Tmp_Val := ""
 	MCI_ToHHMMSS2(len, hh, lm, ls)
 	SetTimer UpdateSlider,100
 	SetTimer,CheckStatus,250
+	if (ErrCounter=11)
+	{
+		ErrCounter:=0
+		Gosub, StarPlay
+	}
 Return
 
 CreatContext:

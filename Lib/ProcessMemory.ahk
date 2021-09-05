@@ -43,7 +43,7 @@ WMI_Query(pid)
     if queryEnum[process]
         sResult.=process.CommandLine
     else
-        MsgBox 指定进程没有找到!  
+        sResult := 0 
    Return   sResult
 }
 

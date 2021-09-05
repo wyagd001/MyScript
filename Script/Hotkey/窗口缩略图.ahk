@@ -1,6 +1,10 @@
 ﻿#include %A_ScriptDir%\Lib\SaveScreen.ahk
 ;#IfWinNotActive  ahk_group DesktopTaskbarGroup
 窗口缩略图:
+WinGet,ProcessPath,ProcessPath,A
+if instr(ProcessPath, "autohotkey")
+return
+
 if(MiniMizeNum>=fi+50)
 {
 return
@@ -15,13 +19,11 @@ MiniMizeNum++
 if (MiniMizeNum>fi+50)
 Return
 }
-WinGet,ProcessPath,ProcessPath,A
-Winicon:= ProcessPath,1
 
+Winicon:= ProcessPath,1
 picname:=MiniMizeNum . ".bmp"
 WinGet, active_id, ID, A
 WinGetTitle, this_title, ahk_id %active_id%
-
 MT_%MiniMizeNum% := MiniTitle := active_id . "*" . MiniMizeNum
 
 if shuiping

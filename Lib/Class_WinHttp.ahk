@@ -105,7 +105,7 @@ class WinHttp
 	例如“MsgBox, % WinHttp.Status”，就得到了状态码。
 
 	;~ 所以整体来说就是
-	WinHttp.UrlDownloadToVar("http://www.baidu.com")
+	WinHttp.UrlGet("http://www.baidu.com")
 	obj:=WinHttp.ResponseHeaders
 	MsgBox, % obj["Set-Cookie"]
 	MsgBox, 上面那个就是cookie

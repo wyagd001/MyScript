@@ -325,8 +325,8 @@ return
 /*
 https://docs.microsoft.com/en-us/windows/win32/api/shellapi/ns-shellapi-notifyicondataa
 typedef struct _NOTIFYICONDATAA {
-  DWORD cbSize;             #4  A_PtrSize
-  HWND  hWnd;               #A_PtrSize
+  DWORD cbSize;             #4  A_PtrSize  结构大小
+  HWND  hWnd;               #A_PtrSize     窗口句柄
   UINT  uID;                #4
   UINT  uFlags;             #4
   UINT  uCallbackMessage;   #4  A_PtrSize
@@ -336,7 +336,7 @@ typedef struct _NOTIFYICONDATAA {
 #else
   CHAR  szTip[128];         
 #endif
-  DWORD dwState;            #4
+  DWORD dwState;            #4  图标的状态
   DWORD dwStateMask;        #4
   CHAR  szInfo[256];        #256*2
   union {                   #4
@@ -395,16 +395,24 @@ NIIF_NOSOUND (0x00000010)
 NIIF_LARGE_ICON (0x00000020)
 NIIF_RESPECT_QUIET_TIME (0x00000080)
 NIIF_ICON_MASK (0x0000000F)
+
+　　dwState 图标的状态：NIS_HIDDEN－隐藏(0x1)，或NIS_SHAREDICON－可视。
+　　dwStateMask 图标状态掩码(0x1)，用以设置dwState
+
 */
 
 /*
 https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shell_notifyicona
 Shell_NotifyIcon
+  Shell_NotifyIcon(dwMessage: DWORD; lpData: PNotifyIconData)
+dwMessage:
 NIM_ADD (0x00000000)
 NIM_MODIFY (0x00000001)
 NIM_DELETE (0x00000002)
 NIM_SETFOCUS (0x00000003)
 NIM_SETVERSION (0x00000004)
+lpdata:
+NOTIFYICONDATA结构的指针
 */
 
 ; ----------------------------------------------------------------------------------------------------------------------

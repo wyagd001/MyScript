@@ -1,5 +1,4 @@
-﻿; 使用 ansi 版编译
-#NoTrayIcon
+﻿#NoTrayIcon
 IniRead, DefaultBrowser, %A_ScriptDir%\smartchooserbrowser.ini, DefaultBrowser, DefaultBrowser
 IfNotExist, %DefaultBrowser%
 	DefaultBrowser := "iexplore.exe"
@@ -86,7 +85,7 @@ GetCommandLine(PID) { ;  by Sean          www.autohotkey.com/forum/viewtopic.php
         Return
  If pFunc=
     pFunc := DllCall("GetProcAddress", UInt
-           , DllCall("GetModuleHandle", Str,"kernel32.dll"), Str, "GetCommandLineA")
+           , DllCall("GetModuleHandle", Str,"kernel32.dll"), A_IsUnicode ? "Astr":"str", A_IsUnicode ? "GetCommandLineW" : "GetCommandLineA")
  hThrd := DllCall("CreateRemoteThread", UInt, hProcess, UInt, 0, UInt, 0, UInt, pFunc, UInt, 0
         , UInt, 0, UInt, 0), DllCall("WaitForSingleObject", UInt, hThrd, UInt, 0xFFFFFFFF)
  DllCall("GetExitCodeThread", UInt, hThrd, UIntP, pcl), VarSetCapacity(sCmdLine, 512)

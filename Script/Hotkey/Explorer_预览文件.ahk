@@ -17,7 +17,7 @@ SplitPath, Tmp_V, , , , Tmp_V
 if !Tmp_V
 return
 SplitPath, Prew_File,, Prew_File_ParentPath, Prew_File_Ext
-FileMove, % Prew_File, % Prew_File_ParentPath "\" Tmp_V "." Prew_File_Ext
+FileMove, % Prew_File, % Prew_File_ParentPath "\" Tmp_V "." Prew_File_Ext  ; 存在同名文件不覆盖
 return
 
 del::
@@ -252,6 +252,12 @@ Cando_rar_prew:
 	return
 	}
 	Tmp_Str := cmdSilenceReturn("for /f ""skip=12 tokens=6,* eol=-"" `%a in ('^;""" 7z """ ""l"" " """" Prew_File """') do @echo `%a `%b")
+	if FileExist(winrar)
+	{
+		包_注释文件 :=  A_Temp "\123_" A_Now ".txt"
+		RunWait, %comspec% /c ""%winrar%" cw "%Prew_File%" "%包_注释文件%"",,hide
+		FileRead,包_注释,%包_注释文件%
+	}
 	;msgbox % Tmp_Str
 	StringReplace, Tmp_Str, Tmp_Str, `n, `n, UseErrorLevel
 	Tmp_Lines :=  ErrorLevel
@@ -271,12 +277,14 @@ ImageListID := IL_Create(5)  ; 创建初始容量为 5 个图标的图像列表.
 Loop 5  ; 加载一些标准系统图标到图像列表中.
     IL_Add(ImageListID, "shell32.dll", A_Index)
 Gui, Add, TreeView,r30 w800 h580 ImageList%ImageListID%
-Gui, Add, button,gtree2text,显示文本
+if 包_注释
+	Gui, Add, Edit, r3 w800 readonly, %包_注释%
+Gui, Add, button, gtree2text, 显示文本
 Gui, Add, StatusBar,, 快捷键: 1. 选中项目后按 F2 以选中项目重命名文件. 2. Del 删除文件. 3. F5 运行. 4. F6 编辑.
 AddBranchesToTree(Tmp_Val)
 Gui,PreWWin: Show, AutoSize Center, % Prew_File " - 文件预览"
 ;GuiControl,, displayArea, %Tmp_Val%
-Tmp_Str := Tmp_FileName := Tmp_Lines := ""
+Tmp_Str := Tmp_FileName := Tmp_Lines := 包_注释 := ""
 return
 
 tree2text:

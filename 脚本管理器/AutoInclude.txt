@@ -1,0 +1,10 @@
+﻿#Include *i %A_ScriptDir%\鼠标手势动作\窗口最大化.ahk
+#Include *i %A_ScriptDir%\鼠标手势动作\窗口最小化.ahk
+#Include *i %A_ScriptDir%\鼠标手势动作\窗口移到左半屏幕.ahk
+#Include *i %A_ScriptDir%\鼠标手势动作\窗口移到右半屏幕.ahk
+#Include *i %A_ScriptDir%\鼠标手势动作\窗口置顶.ahk
+#Include *i %A_ScriptDir%\鼠标手势动作\关闭窗口.ahk
+#Include *i %A_ScriptDir%\鼠标手势动作\发送按键.ahk
+#Include *i %A_ScriptDir%\鼠标手势动作\退出鼠标手势.ahk
+#Include *i %A_ScriptDir%\鼠标手势动作\重启鼠标手势.ahk
+#Include *i %A_ScriptDir%\鼠标手势动作\关闭桌面.ahk

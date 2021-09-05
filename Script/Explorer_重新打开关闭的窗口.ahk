@@ -98,25 +98,17 @@ return
 ; 命令行提取记事本路径
 commandline_notepad(hpid)
 {
-	wmi := ComObjGet("winmgmts:")
-	queryEnum := wmi.ExecQuery(""
-		. "Select * from Win32_Process where ProcessId=" . hpid)
-		._NewEnum()
-	if queryEnum[process]
+	file_path := WMI_Query(hpid)
+	if file_path
 	{
-		file_path := process.CommandLine
-		StringReplace, file_path, file_path, "%A_Space%,,
+		StringReplace, file_path, file_path, "%A_Space%
 		StringReplace, file_path, file_path, ",, All
-		StringReplace, file_path, file_path, %A_WinDir%\system32\notepad.exe,,
-		StringReplace, file_path, file_path, %A_WinDir%\notepad.exe,,
-		wmi := queryEnum := process := ""
-	return file_path
+		StringReplace, file_path, file_path, %A_WinDir%\system32\notepad.exe
+		StringReplace, file_path, file_path, %A_WinDir%\notepad.exe
+		StringReplace, file_path, file_path, notepad.exe
+		StringReplace, file_path, file_path, notepad
 	}
-	else
-	{
-		wmi := queryEnum := process := ""
-	return ""
-	}
+	return Trim(file_path)
 }
 
 CloseWindowListMenuShow:

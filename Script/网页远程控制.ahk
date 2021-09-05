@@ -697,10 +697,11 @@ res.SetBodyText(Serve)
 }
 }
 
+; 下载PC上设置的文件(Cando)
 Func_downFile(ByRef req, ByRef res) {
     if (!HttpServer_File) {
+        server.AddHeader(res, "Content-type", "text/html; charset=utf-8")
         res.SetBodyText("请先在PC上选择文件")
-        server.AddHeader(res, "Content-type", "text/plain; charset=utf-8")
         res.status := 404
         return
     }
