@@ -6,11 +6,11 @@
 #NoEnv
 #NoTrayIcon
 #SingleInstance, force
-;  输入级别设置为 2，不响应下面的自身发送的右键(SendLevel 1)。能影响其他脚本中 SendLevel 为 0 的右键热键。
+;  输入级别设置为 2，不响应下面的自身发送的右键(SendLevel 1)。能影响其他脚本中 SendLevel 为 0 的热键(右键)。
 #InputLevel 2
+MG_settingFile := A_ScriptDir  "\鼠标手势.ini"
 
-FileRead, i,  % A_ScriptDir  "\鼠标手势.ini"
-鼠标手势设置对象 := Ini2Obj(i)
+鼠标手势设置对象 := Ini2Obj(MG_settingFile)
 
 File_AutoInclude :=  A_ScriptDir  . "\AutoInclude.txt"
 FileRead, FileR_TFC, % file_AutoInclude
@@ -21,9 +21,30 @@ Tmp_Str .= "#Include *i %A_ScriptDir%\鼠标手势动作\" A_LoopFileName "`n"
 	{
 		for k in 鼠标手势设置对象
 		{
-			if !FileExist(A_ScriptDir "\鼠标手势动作\" k ".ahk")
-				IniDelete, % A_ScriptDir  "\鼠标手势.ini", % k
+				if (鼠标手势设置对象[k].动作_模式 = "标签")
+{
+				if IsLabel(鼠标手势设置对象[k].动作_命令)
+					Continue
+else
+ IniDelete, % MG_settingFile, % k
+}
+ if (鼠标手势设置对象[k].动作_模式 = "函数")
+{
+MG_AC:=StrSplit(鼠标手势设置对象[k].动作_命令,"|")
+if IsFunc(MG_AC[1])
+ Continue
+else
+ IniDelete, % MG_settingFile, % k
+}
 		}
+Loop, %A_ScriptDir%\鼠标手势动作\*.ahk
+{
+if Instr(FileR_TFC, A_LoopFileName)
+Continue
+else
+run %A_AhkPath% "%A_LoopFileFullPath%"
+}
+
 		FileDelete, %File_AutoInclude%
 		FileAppend, %Tmp_Str%, %File_AutoInclude%, UTF-8
 		msgbox,,脚本重启,自动 Include 的文件发生了变化，点击"确定"后重启脚本，应用更新。
@@ -53,9 +74,7 @@ SetBatchLines, -1
 CoordMode, Mouse
 CoordMode, ToolTip
 生成画板()
-
 return
-
 
 #If !WinActive("ahk_group MyBrowser")
 RButton::
@@ -394,10 +413,91 @@ class GDI ; thanks dwitter, RUNIE, FeiYue
   }
 }
 
+; https://www.autoahk.com/archives/24332
+ini2obj(file){
+iniobj := {}
+FileRead, filecontent, %file% ;加载文件到变量
+StringReplace, filecontent, filecontent, `r, , All
+StringSplit, line, filecontent, `n, , ;用函数分割变量为伪数组
+Loop ;循环
+{
+if A_Index > %line0%
+	Break
+content = % line%A_Index% ;赋值当前行
+FSection := RegExMatch(content, "\[.*\]") ;正则表达式匹配section
+if FSection = 1 ;如果找到
+	{
+	TSection := RegExReplace(content, "\[(.*)\]", "$1") ;正则替换并赋值临时section $为向后引用
+	iniobj[TSection] := {}
+	}
+Else
+	{
+	FKey := RegExMatch(content, "^.*=.*") ;正则表达式匹配key
+	if FKey = 1
+		{
+		TKey := RegExReplace(content, "^(.*)=.*", "$1") ;正则替换并赋值临时key
+		StringReplace, TKey, TKey, ., _, All
+		TValue := RegExReplace(content, "^.*=(.*)", "$1") ;正则替换并赋值临时value
+		iniobj[TSection][TKey] := TValue
+		}
+	}
+}
+Return iniobj
+}
+
+obj2ini(obj,file,sec:=""){
+if (!isobject(obj) or !file)
+	Return 0
+for k,v in obj
+{
+	if !sec or (k=sec)
+{
+	for key,value in v
+	{
+		IniWrite, %value%, %file%, %k%, %key%
+	}
+}
+
+}
+Return 1
+}
+ 
+show_obj(obj,menu_name:=""){
+if menu_name =
+    {
+    main = 1
+    Random, rand, 100000000, 999999999
+    menu_name = %A_Now%%rand%
+    }
+Menu, % menu_name, add,
+Menu, % menu_name, DeleteAll
+for k,v in obj
+{
+if (IsObject(v))
+	{
+    Random, rand, 100000000, 999999999
+	submenu_name = %A_Now%%rand%
+    Menu, % submenu_name, add,
+    Menu, % submenu_name, DeleteAll
+	Menu, % menu_name, add, % k ? "【" k "】[obj]" : "", :%submenu_name%
+    show_obj(v,submenu_name)
+	}
+Else
+	{
+	Menu, % menu_name, add, % k ? "【" k "】" v: "", MenuHandler
+	}
+}
+if main = 1
+    menu,% menu_name, show
+}
+
+/*
 ;Ini2Obj V1.4
 ;http://ahk8.com/thread-5422-post-32235.html
+; https://www.autohotkey.com/boards/viewtopic.php?style=19&f=28&t=4416
 ;RobertL @AHK8
 ;V1.1.16.04/V2 a0.55
+; 已知缺陷 等号(" = ")左右不能有空格, 值中也不能有空格(a=1 23)
 Ini2Obj(i,m:=""){
 ;参数
 ;    i:ini的值; m:存储ini的对象，默认新建空对象。
@@ -405,6 +505,7 @@ Ini2Obj(i,m:=""){
     return m!=0?(o:=m?m:{},RegExReplace(i,"mO`a)^(?:\[([^]\s]+)\]\s+|([^=\s]+)=(\S*))(?C" A_ThisFunc ")")):0,i.1?o[i.1]:=s:={}:s[i.2]:=i.3    ;V1
     ;~ return m!=0?(o:=m?m:{},RegExReplace(i,"m)^(?:\[([^]\s]+)\]\s+|([^=\s]+)=(\S*))(?C" A_ThisFunc ")"),o):(i.1?o[i.1]:=s:={}:s[i.2]:=i.3,0)    ;V2
 }
+*/
 
 #include %A_ScriptDir%\鼠标手势动作\Lib\MG_WriteIni.ahk
 #include *i %A_ScriptDir%\AutoInclude.txt
