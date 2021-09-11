@@ -1,4 +1,4 @@
-;来源网址: https://www.autohotkey.com/boards/viewtopic.php?f=28&t=82466
+; 来源网址: https://www.autohotkey.com/boards/viewtopic.php?f=28&t=82466
 ;------------------------------------
 ;  简单可视化鼠标手势 v1.5  By FeiYue
 ;------------------------------------
@@ -6,52 +6,52 @@
 #NoEnv
 #NoTrayIcon
 #SingleInstance, force
-;  输入级别设置为 2，不响应下面的自身发送的右键(SendLevel 1)。能影响其他脚本中 SendLevel 为 0 的热键(右键)。
+; 输入级别设置为 2，不响应下面的自身发送的右键(SendLevel 1)。能影响其他脚本中 SendLevel 为 0 的热键(右键)。
 #InputLevel 2
 MG_settingFile := A_ScriptDir  "\鼠标手势.ini"
-
+global h_id
 鼠标手势设置对象 := Ini2Obj(MG_settingFile)
 
 File_AutoInclude :=  A_ScriptDir  . "\AutoInclude.txt"
 FileRead, FileR_TFC, % file_AutoInclude
 Tmp_Str := ""
 Loop, %A_ScriptDir%\鼠标手势动作\*.ahk
-Tmp_Str .= "#Include *i %A_ScriptDir%\鼠标手势动作\" A_LoopFileName "`n"
-	if RegExReplace(FileR_TFC, "\s+") != RegExReplace(Tmp_Str, "\s+")
+	Tmp_Str .= "#Include *i %A_ScriptDir%\鼠标手势动作\" A_LoopFileName "`n"
+if RegExReplace(FileR_TFC, "\s+") != RegExReplace(Tmp_Str, "\s+")
+{
+	for k in 鼠标手势设置对象
 	{
-		for k in 鼠标手势设置对象
+		if (鼠标手势设置对象[k].动作_模式 = "标签")
 		{
-				if (鼠标手势设置对象[k].动作_模式 = "标签")
-{
-				if IsLabel(鼠标手势设置对象[k].动作_命令)
-					Continue
-else
- IniDelete, % MG_settingFile, % k
-}
- if (鼠标手势设置对象[k].动作_模式 = "函数")
-{
-MG_AC:=StrSplit(鼠标手势设置对象[k].动作_命令,"|")
-if IsFunc(MG_AC[1])
- Continue
-else
- IniDelete, % MG_settingFile, % k
-}
+			if IsLabel(鼠标手势设置对象[k].动作_命令)
+				Continue
+			else
+				IniDelete, % MG_settingFile, % k
 		}
-Loop, %A_ScriptDir%\鼠标手势动作\*.ahk
-{
-if Instr(FileR_TFC, A_LoopFileName)
-Continue
-else
-run %A_AhkPath% "%A_LoopFileFullPath%"
-}
-
-		FileDelete, %File_AutoInclude%
-		FileAppend, %Tmp_Str%, %File_AutoInclude%, UTF-8
-		msgbox,,脚本重启,自动 Include 的文件发生了变化，点击"确定"后重启脚本，应用更新。
-		IfMsgBox OK
-			Reload
+		if (鼠标手势设置对象[k].动作_模式 = "函数")
+		{
+			MG_AC:=StrSplit(鼠标手势设置对象[k].动作_命令,"|")
+			if IsFunc(MG_AC[1])
+				Continue
+			else
+				IniDelete, % MG_settingFile, % k
+		}
 	}
-	FileR_TFC := Tmp_Str := File_AutoInclude := ""
+	Loop, %A_ScriptDir%\鼠标手势动作\*.ahk
+	{
+		if Instr(FileR_TFC, A_LoopFileName)
+			Continue
+		else
+			run %A_AhkPath% "%A_LoopFileFullPath%"
+	}
+
+	FileDelete, %File_AutoInclude%
+	FileAppend, %Tmp_Str%, %File_AutoInclude%, UTF-8
+	msgbox,,脚本重启,自动 Include 的文件发生了变化，点击"确定"后重启脚本，应用更新。
+	IfMsgBox OK
+		Reload
+}
+FileR_TFC := Tmp_Str := File_AutoInclude := ""
 
 Menu, Tray, Icon, shell32.dll, 15
 SysGet, MWA, MonitorWorkArea
@@ -63,7 +63,7 @@ start_01() {
   GroupAdd, MyBrowser, ahk_class IEFrame
   GroupAdd, MyBrowser, ahk_class 360se5_Frame
   GroupAdd, MyBrowser, ahk_class 360se6_Frame
-  GroupAdd, MyBrowser, ahk_class Chrome_WidgetWin_1
+  ;GroupAdd, MyBrowser, ahk_class Chrome_WidgetWin_1
   GroupAdd, MyBrowser, ahk_class ShockwaveFlashFullScreen
   GroupAdd, MyBrowser, ahk_class QQBrowser_WidgetWin_1
   GroupAdd, MyBrowser, ahk_class MozillaWindowClass
@@ -83,118 +83,124 @@ MouseGetPos, x1, y1, h_id
 WinGetClass, h_class, ahk_id %h_id%
 While GetKeyState("RButton", "P")
 {
-  Sleep, 10
-  MouseGetPos, x2, y2
-  Loop, % (i:=arr.MaxIndex())>10 ? 10 : i
-    if ((dx:=x2-arr[i].3)*0+(dy:=y2-arr[i--].4)*0+Abs(dx)>5 or Abs(dy)>5)
-    {
-      r:=(dx=0) ? 90 : Round(ATan(Abs(dy/dx))/(ATan(1)/45), 1)
-      r:=(dx>=0) ? (dy<=0 ? r:360-r) : (dy<=0 ? 180-r:180+r)
-      方向:=(r>=360-30 || r<=30) ? "右"
-        : (r>=90-30 && r<=90+30) ? "上"
-        : (r>=180-30 && r<=180+30) ? "左"
-        : (r>=270-30 && r<=270+30) ? "下" : 方向
-      Break
-    }
-  if (方向!=上次方向)
-    轨迹.=方向, 上次方向:=方向
-  if (x1!=x2 or y1!=y2)
-  {
-    arr.Push([x1,y1,x2,y2]), x1:=x2, y1:=y2
-  if 轨迹
-{
-		if (轨迹!=上次轨迹)
-{
-LastAction:=SecondAction:=FirstAction:=tipC:="", MGG:=EWC:=[]
-    for k in 鼠标手势设置对象
-{
-	;msgbox % 鼠标手势设置对象[k].动作_轨迹
-	MGG:=StrSplit(鼠标手势设置对象[k].动作_轨迹,";")
-	if (MGG[1]=轨迹) or  (MGG[2]=轨迹) or  (MGG[3]=轨迹)
+	Sleep, 10
+	MouseGetPos, x2, y2
+	Loop, % (i:=arr.MaxIndex())>10 ? 10 : i
+	if ((dx:=x2-arr[i].3)*0+(dy:=y2-arr[i--].4)*0+Abs(dx)>5 or Abs(dy)>5)
 	{
-		上次轨迹:=轨迹
-		;fileappend, % "1. |" 轨迹 "| - MCG1: " MGG[1] " -  MCG2: " MGG[2] " -  MCG3: " MGG[3] "`r`n" , %A_Desktop%\log.txt
-		if (鼠标手势设置对象[k].动作_条件模式="通用")
+		r:=(dx=0) ? 90 : Round(ATan(Abs(dy/dx))/(ATan(1)/45), 1)
+		r:=(dx>=0) ? (dy<=0 ? r:360-r) : (dy<=0 ? 180-r:180+r)
+		方向:=(r>=360-30 || r<=30) ? "右"
+			: (r>=90-30 && r<=90+30) ? "上"
+			: (r>=180-30 && r<=180+30) ? "左"
+			: (r>=270-30 && r<=270+30) ? "下" : 方向
+		Break
+	}
+	if (方向!=上次方向)
+		轨迹.=方向, 上次方向:=方向
+	if (x1!=x2 or y1!=y2)
+	{
+		arr.Push([x1,y1,x2,y2]), x1:=x2, y1:=y2
+		if 轨迹
 		{
-			LastAction := k
-			if !SecondAction
-				tipC := 鼠标手势设置对象[k].动作_提示 "[通用]"
-			Continue
-		}
-		EWC:=StrSplit(鼠标手势设置对象[k].动作_生效条件,";")
-		if (鼠标手势设置对象[k].动作_条件模式="非特定窗口")
-		{
-			if (h_class!=EWC[1]) And  (h_class!=EWC[2]) And (h_class!=EWC[3]) And  (h_class!=EWC[4]) and  (h_class!=EWC[5])
+			if (轨迹!=上次轨迹)
 			{
-				SecondAction := k
-				tipC := 鼠标手势设置对象[k].动作_提示 "[非特定]"
-				Continue
+				LastAction:=SecondAction:=FirstAction:=tipC:="", MGG:=EWC:=[]
+				for k in 鼠标手势设置对象
+				{
+					;msgbox % 鼠标手势设置对象[k].动作_轨迹
+					MGG:=StrSplit(鼠标手势设置对象[k].动作_轨迹,";")
+					if (MGG[1]=轨迹) or  (MGG[2]=轨迹) or  (MGG[3]=轨迹)
+					{
+						上次轨迹:=轨迹
+						;fileappend, % "1. |" 轨迹 "| - MCG1: " MGG[1] " -  MCG2: " MGG[2] " -  MCG3: " MGG[3] "`r`n" , %A_Desktop%\log.txt
+						if (鼠标手势设置对象[k].动作_条件模式="通用")
+						{
+							LastAction := k
+							if !SecondAction
+								tipC := 鼠标手势设置对象[k].动作_提示 "[通用]"
+							Continue
+						}
+						EWC:=StrSplit(鼠标手势设置对象[k].动作_生效条件,";")
+						if (鼠标手势设置对象[k].动作_条件模式="非特定窗口")
+						{
+							if (h_class!=EWC[1]) And  (h_class!=EWC[2]) And (h_class!=EWC[3]) And  (h_class!=EWC[4]) and  (h_class!=EWC[5])
+							{
+								SecondAction := k
+								tipC := 鼠标手势设置对象[k].动作_提示 "[非特定]"
+								Continue
+							}
+						}
+						else ;If (鼠标手势设置对象[k].动作_条件模式="特定窗口")
+						{
+							if (h_class=EWC[1]) or  (h_class=EWC[2]) or  (h_class=EWC[3]) or  (h_class=EWC[4]) or  (h_class=EWC[5])
+							{
+								FirstAction := k
+								tipC := 鼠标手势设置对象[k].动作_提示 "[特定]"
+								break
+							}
+						}
+					}
+					;fileappend, % "2. " 轨迹 " - k: " k " - " LastAction " - " SecondAction " - " FirstAction "`r`n" , %A_Desktop%\log.txt
+				}
 			}
-		}
-		If (鼠标手势设置对象[k].动作_条件模式="特定窗口")
-		{
-			if (h_class=EWC[1]) or  (h_class=EWC[2]) or  (h_class=EWC[3]) or  (h_class=EWC[4]) or  (h_class=EWC[5])
-			{
-				FirstAction := k
-				tipC := 鼠标手势设置对象[k].动作_提示 "[特定]"
-				break
-			}
+			ToolTip, % 轨迹 " > " (tipC ? tipC : "没有设置动作")
 		}
 	}
-;fileappend, % "2. " 轨迹 " - k: " k " - " LastAction " - " SecondAction " - " FirstAction "`r`n" , %A_Desktop%\log.txt
-}
-}
-ToolTip, % 轨迹 " > " (tipC ? tipC : "没有设置动作")
-}
-
-  }
-  color:=A_MSec<500 ? 0xFF9050 : 0x5090FF
-  For k,v in arr
-    划线(v.1, v.2, v.3, v.4, color)
-  更新()
+	color:=A_MSec<500 ? 0xFF9050 : 0x5090FF
+	For k,v in arr
+		划线(v.1, v.2, v.3, v.4, color)
+	更新()
 }
 ToolTip
 清空(), 更新(), 隐藏画板()
 if (轨迹="")
 {
-  SendLevel 1
-  Click, R
-  return
+	SendLevel 1
+	Click, R
+	return
+}
+
+if StartMGHZ
+{
+	Gui,2: Default
+	GuiControl, , MGA_GJ, % 轨迹
+	StartMGHZ:=0
+	GuiControl,, StartMGHZ, 开始绘制
+	return
 }
 
 A_Action := FirstAction ? FirstAction : (SecondAction ? SecondAction : (LastAction ? LastAction : ""))
 if A_Action
 {
-if (鼠标手势设置对象[A_Action].动作_模式 = "标签")
-{
-if IsLabel(鼠标手势设置对象[A_Action].动作_命令)
-{
-;ToolTip, % 轨迹 " > " (鼠标手势设置对象[A_Action].动作_提示) " - "  h_class " - " 鼠标手势设置对象[A_Action].动作_条件模式 " - 1"
-EWC_counter += 1
-gosub % 鼠标手势设置对象[A_Action].动作_命令
-;msgbox % 鼠标手势设置对象[A_Action].动作_命令
+	if (鼠标手势设置对象[A_Action].动作_模式 = "标签")
+	{
+		if IsLabel(鼠标手势设置对象[A_Action].动作_命令)
+		{
+			;ToolTip, % 轨迹 " > " (鼠标手势设置对象[A_Action].动作_提示) " - "  h_class " - " 鼠标手势设置对象[A_Action].动作_条件模式 " - 1"
+			gosub % 鼠标手势设置对象[A_Action].动作_命令
+			;msgbox % 鼠标手势设置对象[A_Action].动作_命令
+		}
+	}
+	if (鼠标手势设置对象[A_Action].动作_模式 = "函数")
+	{
+		MG_AC:=StrSplit(鼠标手势设置对象[A_Action].动作_命令,"|")
+		;msgbox % MG_AC[1] " - " MG_AC[2]
+		if IsFunc(MG_AC[1])
+		{
+			;ToolTip, % 轨迹 " > " (鼠标手势设置对象[A_Action].动作_提示) " - "  h_class " - " 鼠标手势设置对象[A_Action].动作_条件模式 " - 1"
+			if (MG_AC.MaxIndex() >= 4)
+				msgbox 传入参数过多
+			else if (MG_AC.MaxIndex() =3)
+				MG_AC[1](MG_AC[2], MG_AC[3])
+			else if (MG_AC.MaxIndex() = 2)
+				MG_AC[1](MG_AC[2])
+			else   ;if MG_AC.MaxIndex=1
+				MG_AC[1]()
+			;msgbox % 鼠标手势设置对象[k].动作_命令
+		}
+	}
 }
-}
-if (鼠标手势设置对象[A_Action].动作_模式 = "函数")
-{
-MG_AC:=StrSplit(鼠标手势设置对象[A_Action].动作_命令,"|")
-;msgbox % MG_AC[1] " - " MG_AC[2]
-if IsFunc(MG_AC[1])
-{
-;ToolTip, % 轨迹 " > " (鼠标手势设置对象[A_Action].动作_提示) " - "  h_class " - " 鼠标手势设置对象[A_Action].动作_条件模式 " - 1"
-if (MG_AC.MaxIndex() >= 4)
-msgbox 传入参数过多
-else if (MG_AC.MaxIndex() =3)
-MG_AC[1](MG_AC[2], MG_AC[3])
-else if (MG_AC.MaxIndex() = 2)
-MG_AC[1](MG_AC[2])
-else   ; if MG_AC.MaxIndex=1
-MG_AC[1]()
-;msgbox % 鼠标手势设置对象[k].动作_命令
-}
-}
-}
-
 
 ;if IsLabel(轨迹)
 ;  Goto, %轨迹%
@@ -490,22 +496,6 @@ Else
 if main = 1
     menu,% menu_name, show
 }
-
-/*
-;Ini2Obj V1.4
-;http://ahk8.com/thread-5422-post-32235.html
-; https://www.autohotkey.com/boards/viewtopic.php?style=19&f=28&t=4416
-;RobertL @AHK8
-;V1.1.16.04/V2 a0.55
-; 已知缺陷 等号(" = ")左右不能有空格, 值中也不能有空格(a=1 23)
-Ini2Obj(i,m:=""){
-;参数
-;    i:ini的值; m:存储ini的对象，默认新建空对象。
-    static
-    return m!=0?(o:=m?m:{},RegExReplace(i,"mO`a)^(?:\[([^]\s]+)\]\s+|([^=\s]+)=(\S*))(?C" A_ThisFunc ")")):0,i.1?o[i.1]:=s:={}:s[i.2]:=i.3    ;V1
-    ;~ return m!=0?(o:=m?m:{},RegExReplace(i,"m)^(?:\[([^]\s]+)\]\s+|([^=\s]+)=(\S*))(?C" A_ThisFunc ")"),o):(i.1?o[i.1]:=s:={}:s[i.2]:=i.3,0)    ;V2
-}
-*/
 
 #include %A_ScriptDir%\鼠标手势动作\Lib\MG_WriteIni.ahk
 #include *i %A_ScriptDir%\AutoInclude.txt

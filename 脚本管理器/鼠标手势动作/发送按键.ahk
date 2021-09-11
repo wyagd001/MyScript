@@ -15,6 +15,8 @@ return
 
 MGA_SendKey(Key)
 {
+if !WinActive("ahk_id" h_id)
+	WinActivate ahk_id %h_id%
 send %Key%
 return
 }
