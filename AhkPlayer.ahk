@@ -109,12 +109,12 @@ Menu, PlayBack, Add, 下一首跟随鼠标(&F), PTLF
 Menu, PlayBack, Add, 播放列表(&L), PTList
 Menu, PlayBack, Add, 播放媒体库(&M), PTLib
 
+Menu, Lib, Add, 编辑歌词(&E), EditLrc
+Menu, Lib, Add, 编辑配置文件(&O), EditOption
+Menu, Lib, Add
 Menu, Lib, Add, 打开歌词库(&L), OpenLrc
 Menu, Lib, Add, 打开媒体库(&M), OpenLib
 Menu, Lib, Add, 打开配置文件夹(&F), OpenOptionFolder
-Menu, Lib, Add
-Menu, Lib, Add, 编辑歌词(&E), EditLrc
-Menu, Lib, Add, 编辑配置文件(&O), EditOption
 Menu, Lib, Add
 Menu, Lib, Add, 启动恢复上次播放(&H),HuiFuShangCiPlay
 Menu, Lib, Add, 更新媒体库(&U),UpdateMediaLib

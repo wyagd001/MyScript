@@ -1,4 +1,4 @@
-; Script Information ===========================================================
+ï»¿; Script Information ===========================================================
 ; Name:         File String Search
 ; Description:  Search files for a specific string (Inspired by TLM)
 ;               https://autohotkey.com/boards/viewtopic.php?f=6&t=27299 
@@ -34,7 +34,7 @@ return ; End automatic execution
 ControlHandler:
     VarCount := ""
     If (A_GuiControl = "ButtonDir") {
-        FileSelectFolder, DirSel,,, Ñ¡ÔñÄ¿Â¼...
+        FileSelectFolder, DirSel,,, é€‰æ‹©ç›®å½•...
         IfEqual, ErrorLevel, 1, return
         GuiControl,, EditDir, % DirSel
         GuiControl, choose, EditDir, % DirSel
@@ -42,7 +42,7 @@ ControlHandler:
         Gui, Submit, NoHide
         GuiControl, Choose, Tab, 2
         LV_Delete()
-        SB_SetText("ËÑË÷ÖĞ...", 1)
+        SB_SetText("æœç´¢ä¸­...", 1)
         SB_SetText("", 2)
         
         GuiControl, Disable, ButtonSearch
@@ -65,7 +65,7 @@ ControlHandler:
             LV_Add("", (VarCount != "") ? VarCount : ErrorLevel, A_LoopFileFullPath)
             LV_ModifyCol(1, "AutoHdr")
             LV_ModifyCol(2, "AutoHdr")
-            SB_SetText("`t`tËÑË÷ " A_Index . " ¸öÎÄ¼ş, (" LV_GetCount() "¸öÆ¥Åä)", 2)
+            SB_SetText("`t`tæœç´¢ " A_Index . " ä¸ªæ–‡ä»¶, (" LV_GetCount() "ä¸ªåŒ¹é…)", 2)
         }
         
         SearchStop := 0
@@ -75,7 +75,7 @@ ControlHandler:
         GuiControl, Enable, OpenFileFullPath
         GuiControl, Enable, OpenFile
         
-        SB_SetText("É¨ÃèÍê±Ï", 1)
+        SB_SetText("æ‰«æå®Œæ¯•", 1)
     } Else If (A_GuiControl = "ButtonStop") {
         SearchStop := 1
     }
@@ -86,15 +86,15 @@ LV_GetText(FileFullPath, LV_GetNext("F"), 2)
 If Fileexist(FileFullPath)
 Run,% "explorer.exe /select," FileFullPath
 else
-msgbox,Î´Ñ¡ÖĞ»òÎÄ¼ş²»´æÔÚ¡£
+msgbox,æœªé€‰ä¸­æˆ–æ–‡ä»¶ä¸å­˜åœ¨ã€‚
 Return
 
 OpenFile:
 LV_GetText(FileFullPath, LV_GetNext("F"), 2)
 If Fileexist(FileFullPath)
-Run,"D:\Program Files\Editor\Notepad2\Notepad2.exe"  "%FileFullPath%"
+Run,"%notepad2%"  "%FileFullPath%"
 else
-msgbox,Î´Ñ¡ÖĞ»òÎÄ¼ş²»´æÔÚ¡£
+msgbox,æœªé€‰ä¸­æˆ–æ–‡ä»¶ä¸å­˜åœ¨ã€‚
 Return
 
 LV1x:
@@ -116,7 +116,7 @@ if A_GuiEvent = DoubleClick
     {
     try
     ;run, notepad "%c2%"
-		run, "D:\Program Files\Editor\Notepad3\Notepad3.exe" "%c2%"
+		run, "%notepad2%" "%c2%"
        ;- open with notepad or other editors
     }
   }
@@ -135,10 +135,11 @@ OnLoad() {
     run_iniFile = %A_ScriptDir%\..\settings\setting.ini
     Static Init := OnLoad() ; Call function
    
-    IniRead, EditDir, %run_iniFile%, ÎÄ¼şÖĞ²éÕÒ×Ö·û, Â·¾¶, %A_Space%
-    IniRead, SEditDir, %run_iniFile%, ÎÄ¼şÖĞ²éÕÒ×Ö·û, ¹Ì¶¨²éÕÒÄ¿Â¼, %A_Space%
-    IniRead, EditType, %run_iniFile%, ÎÄ¼şÖĞ²éÕÒ×Ö·û, ÀàĞÍ, %A_Space%
-    IniRead, EditString, %run_iniFile%, ÎÄ¼şÖĞ²éÕÒ×Ö·û, ×Ö·û, %A_Space%
+    IniRead, EditDir, %run_iniFile%, æ–‡ä»¶ä¸­æŸ¥æ‰¾å­—ç¬¦, è·¯å¾„, %A_Space%
+    IniRead, SEditDir, %run_iniFile%, æ–‡ä»¶ä¸­æŸ¥æ‰¾å­—ç¬¦, å›ºå®šæŸ¥æ‰¾ç›®å½•, %A_Space%
+    IniRead, EditType, %run_iniFile%, æ–‡ä»¶ä¸­æŸ¥æ‰¾å­—ç¬¦, ç±»å‹, %A_Space%
+    IniRead, EditString, %run_iniFile%, æ–‡ä»¶ä¸­æŸ¥æ‰¾å­—ç¬¦, å­—ç¬¦, %A_Space%
+    IniRead, notepad2, %run_iniFile%, otherProgram, notepad2, F:\Program Files\Editor\Notepad2\Notepad2.exe
 
     SearchStop := 0
 }
@@ -148,9 +149,9 @@ OnUnload(ExitReason, ExitCode) {
     
     Gui, Submit, NoHide
     if EditDir <>
-    IniWrite, % EditDir, %run_iniFile%, ÎÄ¼şÖĞ²éÕÒ×Ö·û, Â·¾¶
-    IniWrite, % EditType, %run_iniFile%, ÎÄ¼şÖĞ²éÕÒ×Ö·û, ÀàĞÍ
-    IniWrite, % EditString, %run_iniFile%, ÎÄ¼şÖĞ²éÕÒ×Ö·û, ×Ö·û
+    IniWrite, % EditDir, %run_iniFile%, æ–‡ä»¶ä¸­æŸ¥æ‰¾å­—ç¬¦, è·¯å¾„
+    IniWrite, % EditType, %run_iniFile%, æ–‡ä»¶ä¸­æŸ¥æ‰¾å­—ç¬¦, ç±»å‹
+    IniWrite, % EditString, %run_iniFile%, æ–‡ä»¶ä¸­æŸ¥æ‰¾å­—ç¬¦, å­—ç¬¦
 }
 
 GuiCreate() {
@@ -162,31 +163,31 @@ GuiCreate() {
     EditDirList:=SEditDir
     Gui, +LastFound -Resize +HWNDhGui1
     Gui, Margin, 8, 8
-    Gui, Add, Tab3, vTab, ²éÕÒ|ËÑË÷½á¹û
+    Gui, Add, Tab3, vTab, æŸ¥æ‰¾|æœç´¢ç»“æœ
 
     Gui, Tab, 1
-    Gui, Add, Text, w460 BackgroundTrans Section, Ä¿Â¼:
+    Gui, Add, Text, w460 BackgroundTrans Section, ç›®å½•:
     Gui, Add, ComBoBox, y+10 w416 vEditDir, % EditDirList
     Gui, Add, Button, x+10 yp w34 hp vButtonDir gControlHandler, ...
-    Gui, Add, Text, xs y+20 w460 BackgroundTrans, ÎÄ¼şÀàĞÍ:
+    Gui, Add, Text, xs y+20 w460 BackgroundTrans, æ–‡ä»¶ç±»å‹:
     Gui, Add, Edit, y+10 w460 vEditType, % EditType
-    Gui, Add, Text, xs y+20 w460 BackgroundTrans, ×Ö·û:
+    Gui, Add, Text, xs y+20 w460 BackgroundTrans, å­—ç¬¦:
     Gui, Add, Edit, y+10 w460 vEditString, % EditString
     GuiControl,choose,EditDir,% EditDir
-    Gui, Add, CheckBox, xs y+10 h20 vfullword,È«×Ö·ûÆ¥Åä(µ¥´Ê±ß½ç)
+    Gui, Add, CheckBox, xs y+10 h20 vfullword,å…¨å­—ç¬¦åŒ¹é…(å•è¯è¾¹ç•Œ)
 
     Gui, Tab, 2
-    Gui, Add, ListView, w460 r10 vListView Grid +altsubmit vLV1 gLV1x, ÕÒµ½´ÎÊı|ÎÄ¼şÂ·¾¶
+    Gui, Add, ListView, w460 r10 vListView Grid +altsubmit vLV1 gLV1x, æ‰¾åˆ°æ¬¡æ•°|æ–‡ä»¶è·¯å¾„
 
     Gui, Tab
-    Gui, Add, Button, w80 h24 default vButtonSearch gControlHandler, ËÑË÷   
-    Gui, Add, Button, x+10 w80 h24 vButtonStop gControlHandler Disabled, Í£Ö¹
-    Gui, Add, Button, x+10 w100 h24 vOpenFileFullPath gOpenFileFullPath Disabled, ´ò¿ªÎÄ¼şÎ»ÖÃ
-    Gui, Add, Button, x+10 w100 h24 vOpenFile gOpenFile Disabled, ´ò¿ªÎÄ¼ş  
+    Gui, Add, Button, w80 h24 default vButtonSearch gControlHandler, æœç´¢   
+    Gui, Add, Button, x+10 w80 h24 vButtonStop gControlHandler Disabled, åœæ­¢
+    Gui, Add, Button, x+10 w100 h24 vOpenFileFullPath gOpenFileFullPath Disabled, æ‰“å¼€æ–‡ä»¶ä½ç½®
+    Gui, Add, Button, x+10 w100 h24 vOpenFile gOpenFile Disabled, æ‰“å¼€æ–‡ä»¶  
     
     Gui, Add, StatusBar,,
     SB_SetParts(120)
     
-    Gui, Show, AutoSize, ÎÄ¼ş×Ö·ûËÑË÷
+    Gui, Show, AutoSize, æ–‡ä»¶å­—ç¬¦æœç´¢
 }
 ; ==============================================================================

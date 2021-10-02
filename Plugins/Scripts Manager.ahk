@@ -52,9 +52,9 @@ Global AppName := "AutoHotkey Scripts Manager"
      . (A_PtrSize == 4 ? "32-bit" : "64-bit")
      , IniFile := A_ScriptDir . "\Scripts Manager.ini"
      , AhkScriptLibFile := A_ScriptDir . "\AhkList.txt"
-     , AhkScriptLib := "D:\资料\脚本收集"
-     , ahkhelpfile := "D:\Program Files\AutoHotkey\AutoHotkeyLCN_New.chm"
-     , ahkeditor := "D:\Program Files\Editor\Notepad2\Notepad2.exe"
+     , AhkScriptLib := CF_IniRead(IniFile, "Options", "AhkScriptLib")
+     , ahkhelpfile := CF_IniRead( A_ScriptDir "\..\settings\setting.ini", "otherProgram", "ahk新版中文帮助")
+     , ahkeditor := CF_IniRead( A_ScriptDir "\..\settings\setting.ini", "常规", "TextEditor")
      , LoadLV_dis_Label
      , find
 
@@ -84,6 +84,7 @@ AddMenu("InspectMenu", "&Hotkeys`tCtrl+H",, IconLib, 9)
 AddMenu("InspectMenu", "&Key history`tCtrl+K",, IconLib, 10)
 
 Menu EditMenu, Add, Select &All`tCtrl+A, SelectAll
+Menu EditMenu, Add, Add To Fav, AddFavItem
 Menu EditMenu, Add, Del Fav Item, DelFavItem
 Menu EditMenu, Add
 Menu EditMenu, Add, &Find in Files...`tCtrl+F, FindInFiles
@@ -111,7 +112,7 @@ Menu MenuBar, Add, &Inspect, :InspectMenu
 Menu MenuBar, Add, &Edit,    :EditMenu
 Menu MenuBar, Add, &View,    :ViewMenu
 Menu MenuBar, Add, &Options, :OptionsMenu
-Menu MenuBar, Add, &ScriptsList,    :ScriptsListMenu
+Menu MenuBar, Add, Scripts&List,    :ScriptsListMenu
 Menu MenuBar, Add, &Help,    :HelpMenu
 Gui Menu, MenuBar
 
@@ -246,6 +247,7 @@ LoadList(ListName:="") {
   {
     h_list := "RunningList"
     Menu, EditMenu, Disable, Del Fav Item
+    Menu, EditMenu, Enable, Add To Fav
     GuiControl, -Checked, MyList
     ReloadList()
   }
@@ -253,6 +255,7 @@ LoadList(ListName:="") {
   {
     h_list := "FavList"
     Menu, EditMenu, Enable, Del Fav Item
+    Menu, EditMenu, Disable, Add To Fav
     GuiControl, -Checked, MyList
     LV_Delete()
     IniRead Tmp_Str, %IniFile%, Fav
@@ -270,6 +273,7 @@ LoadList(ListName:="") {
     LoadLV_dis_Label:=1
     h_list := "MangerList"
     Menu, EditMenu, Disable, Del Fav Item
+    Menu, EditMenu, Enable, Add To Fav
     LV_Delete()
     Loop, %A_ScriptDir%\..\脚本管理器\*.ahk
     {
@@ -413,9 +417,14 @@ SelectAll:
     LV_Modify(0, "Select")
 Return
 
+AddFavItem:
+LV_GetText(FullPath, LV_GetNext(), 2)
+IniWrite, 1, %IniFile%, Fav, %FullPath%
+return
+
 DelFavItem:
 LV_GetText(FullPath, LV_GetNext(), 2)
-if InStr(FullPath, ".ahk")
+if FullPath
 {
 IniDelete, %IniFile%, Fav, %FullPath%
 LoadList("Favlist")
@@ -1222,6 +1231,7 @@ LV_ModifyCol(2)
 if (h_list<>"findlist")
 {
 Menu ScriptsListMenu, uncheck, %h_list%
+Menu, EditMenu, Enable, Add To Fav
 h_list:="findlist"
 }
 Return
@@ -1258,6 +1268,7 @@ LV_ModifyCol(2)
 if (h_list<>"findlist")
 {
 Menu ScriptsListMenu, uncheck, %h_list%
+Menu, EditMenu, Enable, Add To Fav
 h_list:="findlist"
 }
 Return

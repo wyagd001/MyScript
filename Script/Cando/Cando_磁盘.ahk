@@ -4,6 +4,11 @@ if FileExist(Candy_Cmd_Str3)
 	msgbox 错误，磁盘 %Candy_Cmd_Str3% 已经存在！
 return
 }
+if fileexist(CandySel "Windows\System32\winload.exe")
+{
+	msgbox 选中盘符[%CandySel%]为系统盘, 暂不支持更改!
+return
+}
 VolumeName := GetVolumeNameForVolumeMountPoint(CandySel)
 If VolumeName
 {

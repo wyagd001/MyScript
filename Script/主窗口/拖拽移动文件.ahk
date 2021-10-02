@@ -56,15 +56,17 @@ movedropfile:
 	;分割文件路径
 	SplitPath, FileFullPath, FileName, , FileExtension, FileNameNoExt
 	; 特定文件名 含有 foo_ 的文件
-	IfInString, FileNameNoExt, foo_
+	If instr(FileNameNoExt, "foo_") && FileExist(foo_components_path)
 	{
 		;文件名类似 foo_lick_1.0.3.zip  的移动到 H:\foobar2000 v1.1.x\foo_lick
-		StringGetPos, Tmp_Pos, FileNameNoExt, _, 1
+		StringGetPos, Tmp_Pos, FileNameNoExt, -, 1
+		if (Tmp_Pos<0)
+			StringGetPos, Tmp_Pos, FileNameNoExt, _, 1
 		StringLeft, FileNameNoExt, FileNameNoExt, %Tmp_Pos%
 
-		TargetFile = H:\foobar2000 v1.1.x\%FileNameNoExt%\%FileName%
-		IfNotExist, H:\foobar2000 v1.1.x\%FileNameNoExt%
-			FileCreateDir, H:\foobar2000 v1.1.x\%FileNameNoExt%
+		TargetFile = %foo_components_path%\%FileNameNoExt%\%FileName%
+		IfNotExist, %foo_components_path%\%FileNameNoExt%
+			FileCreateDir, %foo_components_path%\%FileNameNoExt%
 		ifExist, %TargetFile%
 		{
 			MsgBox, 指定文件夹中已存在同名文件!
@@ -72,7 +74,7 @@ movedropfile:
 		}
 		Else
 		{
-			FileMove, %FileFullPath%, H:\foobar2000 v1.1.x\%FileNameNoExt%
+			FileMove, %FileFullPath%, %foo_components_path%\%FileNameNoExt%
 		Return
 		}
 	}

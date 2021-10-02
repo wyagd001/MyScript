@@ -1,5 +1,10 @@
 ﻿Windo_其他编辑器打开:
 sTextDocumentPath := GetTextDocumentPath(Windy_CurWin_Pid,Windy_CurWin_id,Windy_CurWin_Title)
+if Instr(Splitted_Windy_Cmd3, "smartchooserbrowser")
+{
+run,%Splitted_Windy_Cmd3% "%sTextDocumentPath%" 
+}
+else
 run,%Splitted_Windy_Cmd3% "%sTextDocumentPath%" 
 return
 

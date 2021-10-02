@@ -1,7 +1,9 @@
 ﻿#NoTrayIcon
 IniRead, DefaultBrowser, %A_ScriptDir%\smartchooserbrowser.ini, DefaultBrowser, DefaultBrowser
 IfNotExist, %DefaultBrowser%
+{
 	DefaultBrowser := "iexplore.exe"
+}
 
 IniRead, url, %A_ScriptDir%\smartchooserbrowser.ini, DefaultUrl, url
 IniRead, BrowserAppList, %A_ScriptDir%\smartchooserbrowser.ini, BrowserApp, BrowserAppList
@@ -13,7 +15,7 @@ if 0 != 1 ;Check %0% to see how many parameters were passed in
 }
 
 urladd = %1%  ;Fetch the contents of the command line argument
-IfNotInString, urladd, http
+If !Instr(urladd, "http") && !InStr(urladd, ":")
 	urladd := "http://" . urladd
 Loop, parse, url, |
 {
@@ -40,6 +42,7 @@ Loop, %BApp0%
 		{
 			pid := GetCommandLine(NewPID)
 			;FileAppend , %pid%`n, %A_desktop%\123.txt
+			;msgbox 1 - %pid% "%urladd%"
 			run, %pid% "%urladd%"
 			br := 1
 			return
@@ -48,6 +51,7 @@ Loop, %BApp0%
 		{
 			pid := GetModuleFileNameEx(NewPID)
 			;FileAppend , %pid%`n, %A_desktop%\123.txt
+;msgbox 2 - %pid% "%urladd%"
 			run, %pid% "%urladd%"
 			br := 1
 			return

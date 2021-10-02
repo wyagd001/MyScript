@@ -53,7 +53,7 @@ Run ::{450d8fba-ad25-11d0-98a8-0800361b1103}
 Return
 
 程序文件夹:
-Run C:\Program Files
+Run %A_ProgramFiles%
 Return
 
 注销:

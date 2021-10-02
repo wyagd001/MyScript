@@ -14,9 +14,10 @@ SetTitleMatchMode 2
 ; 设置鼠标的坐标模式为相对于整个屏幕的坐标模式
 CoordMode, Mouse, Screen
 
-; 开机时脚本启动后等待至70s
-if (A_TickCount < 70000)
-	sleep, % (70000 - A_TickCount)
+; 开机时脚本启动后等待至15s
+While (15000 - A_TickCount) > 0
+		sleep,100
+
 ; 管理员权限
 If(!A_IsAdmin)
 {
@@ -148,6 +149,9 @@ IniRead, 询问, %run_iniFile%, 截图, 询问
 IniRead, filetp, %run_iniFile%, 截图, filetp
 IniRead, screenshot_path, %run_iniFile%, 截图, 截图保存目录
 IniRead, TargetFolder, %run_iniFile%, 路径设置, TargetFolder
+IniRead, foo_components_path, %run_iniFile%, 路径设置, foo_components_path
+if ClipPlugin_git
+  IniRead, Ahk_Help_Html_Path, %run_iniFile%, 路径设置, Ahk_Help_Html_Path
 if !FileExist(screenshot_path)
   FileCreateDir % screenshot_path
 
@@ -220,7 +224,8 @@ loop, parse, IniR_Tmp_Str, `n
 	Tmp_Key := RegExReplace(A_LoopField, "=.*?$")
 	Tmp_Val := RegExReplace(A_LoopField, "^.*?=")
 	%Tmp_key% = %Tmp_Val%
-	menu, audioplayer, add, %Tmp_key%, DPlayer
+	if FileExist(%Tmp_key%)
+		menu, audioplayer, add, %Tmp_key%, DPlayer
 }
 Tmp_Key := Tmp_Val := IniR_Tmp_Str := ""
 ;=========读取配置文件结束=========
@@ -471,11 +476,8 @@ GuiDropFiles.config(HGUI, "GuiDropFiles_Begin", "GuiDropFiles_End")
 ;=========图形界面的"绘制"2=========
 
 ;----------不显示托盘图标则重启脚本----------
-; 等待至开机后100s，可根据需要设置，使托盘图标可以显示出来
 if Auto_Trayicon && WinExist("ahk_class Shell_TrayWnd")
 {
-	While (100000 - A_TickCount) > 0
-		sleep,100
 	Menu, Tray, Icon
 	Script_pid:=DllCall("GetCurrentProcessId")
 	Tray_Icons := {}
@@ -1399,7 +1401,7 @@ if Auto_7plusMenu
 if hidewin_hwnd
 	WinShow, ahk_id %hidewin_hwnd%
 
-if Auto_FuncsIcon
+if Auto_FuncsIcon && WinExist("ahk_class Shell_TrayWnd")
 {
 	TrayIcon_Remove(hGui, 101)
 	TrayIcon_Remove(hGui, 102)
@@ -1700,6 +1702,7 @@ Return
 #include %A_ScriptDir%\Lib\Clip.ahk
 #include %A_ScriptDir%\Lib\DropFiles.ahk
 #include %A_ScriptDir%\Lib\File_CpTransform.ahk
+#include %A_ScriptDir%\Lib\LnkChangePath.ahk
 #include %A_ScriptDir%\Lib\Variables.ahk
 #include %A_ScriptDir%\Lib\Functions.ahk
 #include %A_ScriptDir%\Lib\Explorer.ahk

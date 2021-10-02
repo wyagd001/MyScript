@@ -15,6 +15,7 @@
   SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
   SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
   SetBatchLines, -1   ; Never sleep
+  IniRead, notepad2, %A_ScriptDir%\..\settings\setting.ini, otherProgram, notepad2, F:\Program Files\Editor\Notepad2\Notepad2.exe
 
   WM_NOTIFY               := 0x004E
   LVN_FIRST               := -100
@@ -489,7 +490,7 @@ gosub,slectrowfolder
 varvalue:=varvalue . "\" . varvalue1
 run,edit %varvalue%,,UseErrorLevel
 if ErrorLevel
-Run, "D:\Program Files\Editor\Notepad2\Notepad2.exe" %varvalue% ;,,UseErrorLevel
+Run, "%notepad2%" %varvalue% ;,,UseErrorLevel
 Return
 
 porse:

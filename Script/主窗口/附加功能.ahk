@@ -105,22 +105,10 @@ Return
 */
 
 writeahkurl(){
-/*
-appurl= "%A_AhkPath%" "%A_ScriptDir%\smartchooserbrowser.ahk" "`%1"
-
-RegRead AhkURL, HKCR, Ahk.URL\shell\open\command
-IfNotInString,AhkURL,smartchooserbrowser.ahk
-{
-	RegWrite, REG_SZ, HKCR, Ahk.URL
-	RegWrite, REG_SZ, HKCR, Ahk.URL\shell,,open
-	RegWrite, REG_SZ, HKCR, Ahk.URL\shell\open\command, ,%appurl%
-}
-*/
-
-  appurl= "%A_ScriptDir%\Bin\smartchooserbrowser.exe" "`%1"
+  appurl = "%A_ScriptDir%\Bin\smartchooserbrowser.exe" "`%1"
 
   RegRead AhkURL, HKCR, Ahk.URL\shell\open\command
-  IfNotInString,AhkURL,smartchooserbrowser.exe
+  If(AhkURL != appurl)
   {
 	  RegWrite, REG_SZ, HKCR, Ahk.URL
 	  RegWrite, REG_SZ, HKCR, Ahk.URL\shell,,open
