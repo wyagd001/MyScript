@@ -6,8 +6,11 @@ notepadopen:
 sleep, 50
 Critical,On
 Files := GetSelectedFiles()
+;msgbox % Files
 if !Files and lastexplorerhwnd
 Files := GetSelectedFiles(,lastexplorerhwnd)
+if !Files
+FileReadLine, Files, %A_Temp%\7plus\files.txt, 1
 If !Files
 {
 	CF_ToolTip("获取文件路径失败。", 3000)

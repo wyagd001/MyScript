@@ -1,6 +1,7 @@
 ﻿Cando_A-B交换:  ;   AA - BB.xxx  改名为  BB - AA.xxx
-Tmp_Arr := StrSplit(CandySel_FileNameNoExt, " - ")
-	FileMove, %CandySel%, % CandySel_ParentPath "\" Tmp_Arr[2] " - " Tmp_Arr[1] "." CandySel_Ext
+Tmp_Arr := StrSplit(CandySel_FileNameNoExt, "-")
+if Tmp_Arr[2]
+	FileMove, %CandySel%, % CandySel_ParentPath "\" Trim(Tmp_Arr[2]) " - " Trim(Tmp_Arr[1]) "." CandySel_Ext
 Tmp_Arr := ""
 return
 
@@ -11,10 +12,11 @@ return
 
 File_SwapAB(filename)
 {
-SplitPath, filename, , CandySel_ParentPath, CandySel_Ext, CandySel_FileNameNoExt
-Tmp_Arr := StrSplit(CandySel_FileNameNoExt, " - ")
-	FileMove, %filename%, % CandySel_ParentPath "\" Tmp_Arr[2] " - " Tmp_Arr[1] "." CandySel_Ext
-Tmp_Arr := ""
+	SplitPath, filename, , CandySel_ParentPath, CandySel_Ext, CandySel_FileNameNoExt
+	Tmp_Arr := StrSplit(CandySel_FileNameNoExt, "-")
+	if Tmp_Arr[2]
+	FileMove, %filename%, % CandySel_ParentPath "\" Trim(Tmp_Arr[2]) " - " Trim(Tmp_Arr[1]) "." CandySel_Ext
+	Tmp_Arr := ""
 }
 
 Cando_小说改名:

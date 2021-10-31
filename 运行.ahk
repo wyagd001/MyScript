@@ -565,19 +565,32 @@ GroupAdd, ccc, ahk_class Progman
 GroupAdd, ccc, ahk_class WorkerW
 GroupAdd, ccc, ahk_class #32770
 
+; 空格预览, Md5, 记事本打开(F6), 复制路径
+GroupAdd, Prew_Group, ahk_class CabinetWClass
+GroupAdd, Prew_Group, ahk_class Progman
+GroupAdd, Prew_Group, ahk_class WorkerW
+GroupAdd, Prew_Group, ahk_class EVERYTHING
+GroupAdd, Prew_Group, ahk_class TTOTAL_CMD
+
 ; 主界面网址补齐、runhistory  #ifwinactive  后不能接变量
 GroupAdd, AppMainWindow,%AppTitle%
 
+; 中键新窗口打开文件夹, SetFocusToFileView(), IsRenaming()
 GroupAdd, ExplorerGroup, ahk_class CabinetWClass
 GroupAdd, ExplorerGroup, ahk_class ExploreWClass
+
+; InFileList(), IsRenaming()
 GroupAdd, DesktopGroup, ahk_class Progman
 GroupAdd, DesktopGroup, ahk_class WorkerW
+
+; 窗口缩略图
 GroupAdd, DesktopTaskbarGroup,ahk_class Progman
 GroupAdd, DesktopTaskbarGroup,ahk_class WorkerW
 GroupAdd, DesktopTaskbarGroup,ahk_class Shell_TrayWnd
 GroupAdd, DesktopTaskbarGroup,ahk_class BaseBar
 GroupAdd, DesktopTaskbarGroup,ahk_class DV2ControlHost
 
+; Alt+鼠标移动窗口
 GroupAdd, GameWindows,ahk_class Warcraft III
 GroupAdd, GameWindows,ahk_class Valve001
 ;=========窗口分组=========
@@ -612,6 +625,8 @@ if Auto_7plusMenu
 	FileAppend, %hGui%, %A_Temp%\7plus\hwnd.txt
 }
 ;----------7plus右键菜单----------
+	FileDelete, %A_Temp%\7plus\hwnd2.txt
+	FileAppend, %A_ScriptHwnd%, %A_Temp%\7plus\hwnd2.txt
 
 ;----------监视窗口创建关闭消息：7plus右键菜单之重新打开关闭的窗口 Windo菜单----------
 if Auto_LogClosewindows
@@ -1660,6 +1675,7 @@ _AutoInclude:
 ;---------------------------------
 Return
 
+#include %A_ScriptDir%\Script\热字串.ahk
 #include %A_ScriptDir%\Script\脚本管理器.ahk
 #include %A_ScriptDir%\Script\配置.ahk
 #include %A_ScriptDir%\Script\FolderMenu.ahk

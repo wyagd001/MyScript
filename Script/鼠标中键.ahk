@@ -48,7 +48,8 @@ $MButton::
 		if(undermouse!=selected)
 			SelectFiles(selected)
 		if(Isdir)
-			run explorer.exe  %undermouse%
+			;run explorer.exe  %undermouse%  ; 安装使用 qttabbar 后为打开新窗口
+			run %undermouse% ; 安装使用 qttabbar 后为打开新标签
 	return
 	}
 
@@ -139,13 +140,13 @@ $MButton::
 		if !(vCtlStyle & 0x10000000) ; WS_VISIBLE := 0x10000000
 			PostMessage, 0x111, 29698, , SHELLDLL_DefView1, ahk_class Progman ; show desktop icons (toggle)
 */
-
-		ControlGet, HWND, Hwnd,, SysListView321, ahk_class Progman
+		DetectHiddenWindows Off
+		ControlGet, HWND, Hwnd,, SysListView321, ahk_class WorkerW
 		If HWND =
 		{
-			DetectHiddenWindows Off
-			ControlGet, HWND, Hwnd,, SysListView321, ahk_class WorkerW
 			DetectHiddenWindows On
+			ControlGet, HWND, Hwnd,, SysListView321, ahk_class Progman
+			DetectHiddenWindows Off
 		}
 		If DllCall("IsWindowVisible", UInt, HWND)
 		{

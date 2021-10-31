@@ -8,6 +8,8 @@ EditSelectedFiles()
 	ImageExtensions = jpg,png,bmp,gif,tga,tif,ico,jpeg
 	audioExtensions = wma,mp3,wav,mdi
 	files:=GetSelectedFiles()
+	if !files
+		files:= GetSelText()
 	SplitByExtension(files, Imagesplitfiles, ImageExtensions)
 	SplitByExtension(files, audiosplitfiles, audioExtensions)
 	files:=RemoveLineFeedsAndSurroundWithDoubleQuotes(files)

@@ -34,7 +34,7 @@ F6::
 run, % notepad2 " " Prew_File
 return
 
-#ifWinActive ahk_Group ccc
+#ifWinActive ahk_Group Prew_Group
 $Space::
 ;tooltip % A_Cursor " - " IsRenaming()
 ;重命名时，直接发送空格
@@ -44,7 +44,10 @@ if(A_Cursor="IBeam") or IsRenaming()
  return
 }
 Prew_File := ""
-Prew_File := ShellFolder(0,2)
+if WinActive("ahk_class EVERYTHING") or  WinActive("ahk_class TTOTAL_CMD")
+	Prew_File :=GetSelText()
+else
+	Prew_File := ShellFolder(0,2)
 if !Prew_File or f_IsFolder(Prew_File)
 {
  send {space}

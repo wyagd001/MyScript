@@ -11,6 +11,8 @@ Return
 sleep, 50
 Critical,On
 Files := GetSelectedFiles()
+if !Files
+FileRead, Files, %A_Temp%\7plus\files.txt
 If !Files
 {
 	CF_ToolTip("获取文件路径失败。", 3000)

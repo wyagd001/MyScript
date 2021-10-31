@@ -5,12 +5,14 @@ Return
 CopyPathToClip:
 Critical, On
 Files := GetSelectedFiles()
+if !Files
+FileRead, Files, %A_Temp%\7plus\files.txt
 If !Files
 {
 	CF_ToolTip("获取文件路径失败。", 3000)
 return
 }
-Clipboard := Files
+Clipboard := Trim(Files)
 if !Auto_Clip
 	CF_ToolTip("已复制文件路径到截剪贴板。", 3000)
 Return

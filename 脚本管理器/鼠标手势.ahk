@@ -136,7 +136,7 @@ While GetKeyState("RButton", "P")
 							if (h_class=EWC[1]) or  (h_class=EWC[2]) or  (h_class=EWC[3]) or  (h_class=EWC[4]) or  (h_class=EWC[5])
 							{
 								FirstAction := k
-								tipC := 鼠标手势设置对象[k].动作_提示 "[特定]"
+								tipC := 鼠标手势设置对象[k].动作_提示 "[" h_class "]"
 								break
 							}
 						}
@@ -427,24 +427,24 @@ StringReplace, filecontent, filecontent, `r, , All
 StringSplit, line, filecontent, `n, , ;用函数分割变量为伪数组
 Loop ;循环
 {
-if A_Index > %line0%
-	Break
-content = % line%A_Index% ;赋值当前行
-FSection := RegExMatch(content, "\[.*\]") ;正则表达式匹配section
-if FSection = 1 ;如果找到
+	if A_Index > %line0%
+		Break
+	content = % line%A_Index% ;赋值当前行
+	FSection := RegExMatch(content, "\[.*\]") ;正则表达式匹配section
+	if FSection = 1 ;如果找到
 	{
-	TSection := RegExReplace(content, "\[(.*)\]", "$1") ;正则替换并赋值临时section $为向后引用
-	iniobj[TSection] := {}
+		TSection := RegExReplace(content, "\[(.*)\]", "$1") ;正则替换并赋值临时section $为向后引用
+		iniobj[TSection] := {}
 	}
-Else
+	Else
 	{
-	FKey := RegExMatch(content, "^.*=.*") ;正则表达式匹配key
-	if FKey = 1
+		FKey := RegExMatch(content, "^.*=.*") ;正则表达式匹配key
+		if FKey = 1
 		{
-		TKey := RegExReplace(content, "^(.*)=.*", "$1") ;正则替换并赋值临时key
-		StringReplace, TKey, TKey, ., _, All
-		TValue := RegExReplace(content, "^.*=(.*)", "$1") ;正则替换并赋值临时value
-		iniobj[TSection][TKey] := TValue
+			TKey := RegExReplace(content, "^(.*)=.*", "$1") ;正则替换并赋值临时key
+			StringReplace, TKey, TKey, ., _, All
+			TValue := RegExReplace(content, "^.*=(.*)", "$1") ;正则替换并赋值临时value
+			iniobj[TSection][TKey] := TValue
 		}
 	}
 }
@@ -457,44 +457,43 @@ if (!isobject(obj) or !file)
 for k,v in obj
 {
 	if !sec or (k=sec)
-{
-	for key,value in v
 	{
-		IniWrite, %value%, %file%, %k%, %key%
+		for key,value in v
+		{
+			IniWrite, %value%, %file%, %k%, %key%
+		}
 	}
-}
-
 }
 Return 1
 }
  
 show_obj(obj,menu_name:=""){
 if menu_name =
-    {
-    main = 1
-    Random, rand, 100000000, 999999999
-    menu_name = %A_Now%%rand%
-    }
+{
+	main = 1
+	Random, rand, 100000000, 999999999
+	menu_name = %A_Now%%rand%
+}
 Menu, % menu_name, add,
 Menu, % menu_name, DeleteAll
 for k,v in obj
 {
-if (IsObject(v))
+	if (IsObject(v))
 	{
-    Random, rand, 100000000, 999999999
-	submenu_name = %A_Now%%rand%
-    Menu, % submenu_name, add,
-    Menu, % submenu_name, DeleteAll
-	Menu, % menu_name, add, % k ? "【" k "】[obj]" : "", :%submenu_name%
-    show_obj(v,submenu_name)
+		Random, rand, 100000000, 999999999
+		submenu_name = %A_Now%%rand%
+		Menu, % submenu_name, add,
+		Menu, % submenu_name, DeleteAll
+		Menu, % menu_name, add, % k ? "【" k "】[obj]" : "", :%submenu_name%
+		show_obj(v,submenu_name)
 	}
-Else
+	Else
 	{
-	Menu, % menu_name, add, % k ? "【" k "】" v: "", MenuHandler
+		Menu, % menu_name, add, % k ? "【" k "】" v: "", MenuHandler
 	}
 }
 if main = 1
-    menu,% menu_name, show
+	menu,% menu_name, show
 }
 
 #include %A_ScriptDir%\鼠标手势动作\Lib\MG_WriteIni.ahk

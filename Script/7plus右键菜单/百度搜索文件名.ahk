@@ -9,6 +9,8 @@ searchthefile:
 sleep, 50
 Critical, On
 Files := GetSelectedFiles(0)
+if !Files
+FileReadLine, Files, %A_Temp%\7plus\files.txt, 1
 If !Files
 {
 	CF_ToolTip("获取文件路径失败。", 3000)

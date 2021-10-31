@@ -68,3 +68,9 @@ else
 Run, %ComSpec% /c taskkill /im %Windy_CurWin_ProcName%.exe /F,,hide
 }
 return
+
+重启桌面:
+Run, %ComSpec% /k taskkill /im  explorer.exe /F,,hide
+sleep, 1000
+run explorer.exe
+return

@@ -6,6 +6,8 @@
 	return
 	}
 	WinGet, h_ClipToWin_id, ID, A
+	ControlGetFocus, h_ClipToCtr_ClassNN, A
+	ControlGet, h_ClipToCtr_id, Hwnd, , %h_ClipToCtr_ClassNN%, A
 	IniRead, CHPIF, %run_iniFile%, 常规, CHPIF   ; 剪贴板预览项目收藏夹(最多5个)
 	CHPIFArray := StrSplit(CHPIF, ",")
 	CliphistoryPIF := []
@@ -129,7 +131,7 @@ return
 
 CHPI2Screen(Num:=0)
 {
-	global clipmonitor, CHPIPage, CHPIFNo, h_ClipToWin_id, CliphistoryPIF, cliphistoryPI, cliphistoryPI_ID, CHPIFArray
+	global clipmonitor, CHPIPage, CHPIFNo, h_ClipToWin_id, h_ClipToCtr_id, CliphistoryPIF, cliphistoryPI, cliphistoryPI_ID, CHPIFArray
 	BackUp_ClipBoard := ClipboardAll    ; 备份剪贴板
 	clipmonitor := 0
 	sleep 10
@@ -145,6 +147,8 @@ CHPI2Screen(Num:=0)
 		Clipboard := cliphistoryPI[(KeyNum - CHPIFNo + (CHPIPage - 1) * 9)]
 
 	WinActivate ahk_id %h_ClipToWin_id%
+	ControlFocus,, ahk_id %h_ClipToCtr_id%
+	
 	WinGetClass, h_class, ahk_id %h_ClipToWin_id%
 	if(h_class="ConsoleWindowClass")
 		send, % Clipboard
@@ -164,7 +168,7 @@ DCHPITooltip()
 	ToolTip
 	settimer DCHPITooltip, Off
 	CoordMode, Mouse, Screen
-	CHPITooltip := 0, cliphistoryPIList := CHPIFNo := h_ClipToWin_id := CliphistoryPIF := cliphistoryPI := cliphistoryPI_ID := CHPIFArray := ""
+	CHPITooltip := 0, cliphistoryPIList := CHPIFNo := h_ClipToWin_id := h_ClipToCtr_id := CliphistoryPIF := cliphistoryPI := cliphistoryPI_ID := CHPIFArray := ""
 return
 }
 

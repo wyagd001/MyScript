@@ -1,12 +1,15 @@
 ﻿;LAlt & MButton::  ; 一键打开当前激活窗口的所在目录
 窗口程序所在目录:
 	Sleep,100
-	WinGet,ProcessPath,ProcessPath,A
-	Run,% "explorer.exe /select," ProcessPath 
-	sleep,500
+	WinGet, hProcessPath, ProcessPath, A
+	;SplitPath, hProcessPath, hProcessName, hProcessDir
+	File_OpenAndSelect(hProcessPath)
+	;Run,% "explorer.exe /select," ProcessPath
+	sleep,200
 	Send,{Alt Down}
-	sleep,500
+	sleep,200
 	Send,{Alt Up}
+	Tooltip OK
 Return
 
 ;RAlt & MButton::
@@ -138,7 +141,8 @@ OpenFileFullPath:
 	FileFullPath:=Trim(FileFullPath,"`*")
 	If Fileexist(FileFullPath)
 	{
-		Run,% "explorer.exe /select," FileFullPath
+		File_OpenAndSelect(FileFullPath)
+		;Run,% "explorer.exe /select," FileFullPath
 		FileFullPath:=_Title:=pid:=ProcessPath:=""
 		Return
 	}

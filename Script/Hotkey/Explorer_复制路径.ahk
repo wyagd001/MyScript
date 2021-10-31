@@ -1,6 +1,6 @@
 ﻿;~ 在 Explorer 中模仿 TC 获取文件和文件夹路径的功能。
 复制路径:
-IfWinActive,ahk_Group ccc
+IfWinActive,ahk_Group Prew_Group
 {
 	Gui,3:Destroy
 	;Hotkey, IfWinActive,ahk_Group ccc
@@ -21,7 +21,7 @@ IfWinActive,ahk_Group ccc
 	Gui,3:Add, Button, gCopyPath x0 y84 w490 h34 +Left,完整路径: %FileFullPath%
 
 	Gui,3:Show, w485 h92
-	Gui,3:+AlwaysOnTop -Caption -Border +AlwaysOnTop
+	Gui,3:+AlwaysOnTop -Caption -Border
 	Gui,3:Show
 	Gui,3:Flash
 }

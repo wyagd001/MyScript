@@ -74,3 +74,11 @@ Loop, Files, %sfolder%\*.*, FD
 	return 0
 return 1
 }
+
+CF_Isinteger(ByRef hNumber){
+if hNumber is integer
+{
+hNumber := Round(hNumber)
+return true
+}
+}

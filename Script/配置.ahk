@@ -983,11 +983,11 @@ Loop, %A_ScriptDir%\Script\7plus右键菜单\*.ahk
 		if IsFunc("7PlusMenu_" FileName)
 		{
 			7PlusMenu_%FileName%()
+			IniRead,7Plus_id,%7PlusMenu_ProFile_Ini%,%FileName%,id
+			if 7Plus_id = ERROR
+				continue
 		}
 		else
-			continue
-		IniRead,7Plus_id,%7PlusMenu_ProFile_Ini%,%FileName%,id
-		if 7Plus_id = ERROR
 			continue
 	}
 

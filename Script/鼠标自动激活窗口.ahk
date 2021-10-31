@@ -133,6 +133,12 @@ if (hover_start_button && !WinActive("ahk_class DV2ControlHost")) ; Start Menu
 	}
 }
 
+if Instr(outCtl, "WindowsForms10.Window.8.app")
+{
+	Click
+return
+}
+
 ; SciTe标签自动点击
 if (outCtl = "SysTabControl321")
 {
@@ -199,12 +205,10 @@ if (hover_any_window)
 	}
 }
 
-; Chrome浏览器标签页自动点击激活
+; 根据浏览器标题, 实现标签页自动点击激活
 WinGetTitle,browsertitle,ahk_id %win%
-chrometitle = Chromium
-operatitle = Opera
-wpsettitle = WPS 表格
-IfInString,browsertitle,%chrometitle%
+
+If InStr(browsertitle, "Chromium") or InStr(browsertitle, "360极速浏览器") or InStr(browsertitle, "Opera")
 {
 	WinGetPos , k_WindowX,k_WindowY,k_WindowWidth, k_WindowHeight, ahk_id %win%
 	k_WindowY += 40
@@ -213,16 +217,7 @@ IfInString,browsertitle,%chrometitle%
 		Click
 	return
 }
-IfInString,browsertitle,%operatitle%
-{
-	WinGetPos , k_WindowX,k_WindowY,k_WindowWidth, k_WindowHeight, ahk_id %win%
-	k_WindowY += 49
-	k_WindowWidth1 :=k_WindowX+k_WindowWidth-55
-	if (y<=k_WindowY and x<k_WindowWidth1)
-		Click
-	return
-}
-IfInString,browsertitle,%wpsettitle%
+If InStr(browsertitle, "WPS 表格")
 {
 	; WPS 2013  表格工作表底部标签自动点击
 	if (outCtl = "QWidget2")

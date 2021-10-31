@@ -13,6 +13,44 @@
 	Tmp_Str := FileR_TFC := ""
 Return
 
+Cando_CutTo:
+Menu, %Candy_Cmd_Str3%, add, 移动到 %Candy_Cmd_Str3%, CutToFolder
+Loop, %Candy_Cmd_Str3%\*.*, 2, 1 ; Folders only
+{
+	if A_LoopFileAttrib contains H,R,S  ; Skip any file that is either H (Hidden), R (Read-only), or S (System). Note: No spaces in "H,R,S".
+	continue  ; Skip this file and move on to the next one.
+	StringGetPos, pos, A_LoopFileLongPath, \, R
+	StringLeft, ParentFolderDirectory, A_LoopFileLongPath, %pos%
+	filecount := 0
+	Loop, %A_LoopFileLongPath%\*.*, 2, 1
+	{
+		filecount++
+	}
+	if filecount
+	{
+		Menu, %A_LoopFileLongPath%, add, 移动到 %A_LoopFileName%, CutToFolder
+		Menu, %ParentFolderDirectory%, add, %A_LoopFileName%, :%A_LoopFileLongPath%
+	}
+	else
+	{
+		Menu, %ParentFolderDirectory%, add, %A_LoopFileName%, CutToFolder2
+	}
+}
+Menu, %Candy_Cmd_Str3%, Show
+return
+
+CutToFolder:
+Loop Parse, CandySel, `n, `r
+ShellFileOperation(0x1, A_LoopField, A_ThisMenu,0,WinExist("A"))
+CandySel:=Candy_Cmd_Str3:=""
+return
+
+CutToFolder2:
+Loop Parse, CandySel, `n, `r
+ShellFileOperation(0x1, A_LoopField, A_ThisMenu "\" A_ThisMenuItem,0,WinExist("A"))
+CandySel:=Candy_Cmd_Str3:=""
+return
+
 Cando_复制内容:
 FileEncoding, % File_GetEncoding(CandySel)
 fileread, FileR_TFC, %CandySel%
