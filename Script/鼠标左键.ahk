@@ -1,7 +1,8 @@
 ﻿~LButton::
 CoordMode, Mouse, Screen
 MouseGetPos, lastx, lasty, id
-stophovering(2)
+If(Auto_Raise=1)
+	stophovering(2)
 if !Auto_mouseclick
 return
 WinGetClass, Class, ahk_id %id%
@@ -44,5 +45,18 @@ if WinActive("ahk_class Chrome_WidgetWin_1")
 			}
 		}
 	}
+}
+if WinActive("ahk_class WinRarWindow")
+{
+CoordMode, Mouse, Window
+MouseGetPos, OutputVarX, OutputVarY
+PixelGetColor, OutputVarColor, %OutputVarX%, %OutputVarY%, RGB
+;tooltip % A_PriorHotKey "-" A_TimeSincePriorHotkey "-" OutputVarColor "-" OutputVarControl "-" OutputVarX
+if (A_PriorHotKey = "~LButton" and A_TimeSincePriorHotkey < 400) and (OutputVarColor = "0xFFFFFF")
+;判定是否点击的点是白色
+send {backspace}
+;如果是则发送backspace键
+;tooltip % OutputVarColor " - " A_TimeSincePriorHotkey " - " A_PriorHotKey
+return
 }
 Return

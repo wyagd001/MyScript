@@ -1,18 +1,18 @@
-defaultSet =
+ï»¿defaultSet =
 	( LTrim
-		¶¯×÷_Ãû³Æ=ËùÓÐ´°¿Ú×îÐ¡»¯
-		¶¯×÷_¹ì¼£=ÏÂ
-		¶¯×÷_ÌáÊ¾=ËùÓÐ´°¿Ú×îÐ¡»¯
-		¶¯×÷_Ìõ¼þÄ£Ê½=ÌØ¶¨´°¿Ú
-		¶¯×÷_ÉúÐ§Ìõ¼þ=Progman;Shell_TrayWnd
-		¶¯×÷_Ä£Ê½=±êÇ©
-		¶¯×÷_ÃüÁî=ËùÓÐ´°¿Ú×îÐ¡»¯
-		¶¯×÷_ÆôÓÃ=1
+		åŠ¨ä½œ_åç§°=æ‰€æœ‰çª—å£æœ€å°åŒ–
+		åŠ¨ä½œ_è½¨è¿¹=ä¸‹
+		åŠ¨ä½œ_æç¤º=æ‰€æœ‰çª—å£æœ€å°åŒ–
+		åŠ¨ä½œ_æ¡ä»¶æ¨¡å¼=ç‰¹å®šçª—å£
+		åŠ¨ä½œ_ç”Ÿæ•ˆæ¡ä»¶=Progman;Shell_TrayWnd
+		åŠ¨ä½œ_æ¨¡å¼=æ ‡ç­¾
+		åŠ¨ä½œ_å‘½ä»¤=æ‰€æœ‰çª—å£æœ€å°åŒ–
+		åŠ¨ä½œ_å¯ç”¨=1
 	)
 SplitPath, A_ScriptFullPath,,,,SecName
 MG_WriteIni(SecName, defaultSet)
 return
 
-ËùÓÐ´°¿Ú×îÐ¡»¯:
+æ‰€æœ‰çª—å£æœ€å°åŒ–:
   WinMinimizeAll
 return

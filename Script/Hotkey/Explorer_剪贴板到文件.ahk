@@ -15,7 +15,7 @@ return
 
 PasteToPath(path)
 {
-    if !InStr(FileExist(path), "D")
+    if !CF_IsFolder(path)
         return
     path := RegExReplace(path, "([^\\])$", "$1\")
     if DllCall("IsClipboardFormatAvailable", "Uint",1) or DllCall("IsClipboardFormatAvailable", "Uint",13) {
@@ -43,7 +43,7 @@ PasteToPath(path)
             filename := filename . (paste_type == _("type.text") ? ".txt" : ".png")
         fullname := path . filename
         default_name := filename
-        if FileExist(fullname) and !(InStr(FileExist(fullname), "R") or InStr(FileExist(fullname), "D")) {
+        if FileExist(fullname) and !(InStr(FileExist(fullname), "R") or CF_IsFolder(fullname)) {
             MsgBox, 0x134, % _("file.exists"), % _("file.exists.msg1", filename)
             IfMsgBox, No
                 continue

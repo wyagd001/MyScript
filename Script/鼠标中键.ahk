@@ -1,10 +1,12 @@
 ﻿;鼠标中键增强
 $MButton::
+	;s := A_TickCount
 	MouseGetPos, lastx, lasty
 	MouseGetPos,,,UID,ClassNN ; 获取指针下窗口的 UID 和 ClassNN
 	WinGetClass,窗口Class,ahk_id %UID% ; 根据 UID 获得窗口类名
 	CoordMode, Mouse, Relative
-	stophovering(2)
+	If(Auto_Raise=1)
+		stophovering(2)
   settimer, jkMbutton, -3000
 	; 魔兽争霸自动加血
 	IfWinActive,Warcraft III
@@ -38,19 +40,36 @@ $MButton::
 	}
 
 ; 资源管理器新窗口打开文件夹
+; 使用 QtTabBar时, 会造成 QtTabBar 打开新窗口时会有些许卡顿, 移动鼠标还可能导致打开当前鼠标下面指向的文件夹,而不是中键点击的文件夹
+; 可能原因为Autohotkey 拦截了中键,导致 QtTabBar 缓存了中键, 暂无很好的解决办法
 	if(WinActive("ahk_group ExplorerGroup") && IsMouseOverFileList())
 	{
-		selected:=GetSelectedFiles(0)
+		;if QtTabBar   ; 尝试解决卡顿问题无效, QtTabBar 和 Autohotkey 中键新窗口打开文件夹只能二选一
+		;{
+			;Sleep 20
+			;new_s:=A_TickCount
+			;tooltip % new_s - s
+			;return
+		;}
+		selected := GetSelectedFiles(0)
+		;tooltip % selected "111"
 		SendEvent {LButton}
-		Sleep 200
-		if(InStr(FileExist(undermouse:=GetSelectedFiles()), "D"))
-			Isdir:=true
-		if(undermouse!=selected)
-			SelectFiles(selected)
-		if(Isdir)
-			;run explorer.exe  %undermouse%  ; 安装使用 qttabbar 后为打开新窗口
-			run %undermouse% ; 安装使用 qttabbar 后为打开新标签
-	return
+		Sleep 500
+		undermouse := GetSelectedFiles()
+		if undermouse
+		{
+			if CF_IsFolder(undermouse)
+				Isdir :=true
+			else
+				Isdir :=false
+			if(undermouse!=selected)
+				SelectFiles(selected)
+			;tooltip % selected " - " undermouse
+			if(Isdir)
+				run explorer.exe  %undermouse%  ; 安装使用 qttabbar 后为打开新窗口
+			;run %undermouse% ; 安装使用 qttabbar 后为打开新标签
+			return
+		}
 	}
 
 	; 任务栏自动关闭窗口
@@ -91,6 +110,7 @@ $MButton::
         }
 				if (h_id := TTLib.GetTrackedButtonWindow())
         {
+					;tooltip TTLib 成功, 500,500
           PostMessage, 0x112, 0xF060,,, ahk_id %h_id%
           CoordMode, Mouse, Screen
           mousegetpos, Tmp_X, Tmp_Y
@@ -102,6 +122,7 @@ $MButton::
         }
 				else
 				{
+					;tooltip TTLib 失败,500,500
 					Send {Shift down}
 					click right
 					If(!IsContextMenuActive())
@@ -219,7 +240,10 @@ $MButton::
 	return
 	}
 	else
+	{
 		Send, {MButton}
+		;tooltip 中键点击最后一步
+	}
 	CoordMode, Mouse, Screen
 return
 

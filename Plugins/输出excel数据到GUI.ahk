@@ -1,4 +1,4 @@
-;À´Ô´ÍøÖ·: https://www.autoahk.com/archives/18627
+ï»¿;æ¥æºç½‘å€: https://www.autoahk.com/archives/18627
 SplitPath A_AhkPath,, AhkDir
 If (A_PtrSize = 8 || !A_IsUnicode) {
     U32 := AhkDir . "AutoHotkeyU32.exe"
@@ -15,44 +15,44 @@ file := A_Args[1]
 
 ;Thinkai@2015-11-05
 Gui, Add, Tab, x0 y0 w800 h500 vtab
-Gui, Show, , % File " - ÎÄ¼şÔ¤ÀÀ"
-;FileSelectFile, file, , , Ñ¡ÔñÒ»¸ö±í¸ñ, ExcelÎÄ¼ş(*.xls;*.xlsx)
+Gui, Show, , % File " - æ–‡ä»¶é¢„è§ˆ"
+;FileSelectFile, file, , , é€‰æ‹©ä¸€ä¸ªè¡¨æ ¼, Excelæ–‡ä»¶(*.xls;*.xlsx)
 IfNotExist % file
     ExitApp
-conn := ComObjCreate("ADODB.connection") ;³õÊ¼»¯COM
-;²»Çø·Öºó×ºÃû³¢ÊÔÓÃ03¡¢07¸ñÊ½
+conn := ComObjCreate("ADODB.connection") ;åˆå§‹åŒ–COM
+;ä¸åŒºåˆ†åç¼€åå°è¯•ç”¨03ã€07æ ¼å¼
 /*
 try
-	conn.Open("Provider=Microsoft.Jet.OLEDB.4.0;Extended Properties='Excel 8.0;HDR=Yes';Data Source=" file) ;´ò¿ªÁ¬½Ó 2003·½Ê½
+	conn.Open("Provider=Microsoft.Jet.OLEDB.4.0;Extended Properties='Excel 8.0;HDR=Yes';Data Source=" file) ;æ‰“å¼€è¿æ¥ 2003æ–¹å¼
 catch e03
 {
 	try
-		conn.Open("Provider=Microsoft.Ace.OLEDB.12.0;Extended Properties=Excel 12.0;Data Source=" file) ;´ò¿ªÁ¬½Ó
+		conn.Open("Provider=Microsoft.Ace.OLEDB.12.0;Extended Properties=Excel 12.0;Data Source=" file) ;æ‰“å¼€è¿æ¥
 	catch e07
-		MsgBox, 4112, ³ö´í, % "³¢ÊÔÓÃoffice 2003·½Ê½´ò¿ª³ö´í£º`n" e03.Message "`n³¢ÊÔÓÃoffice 2007·½Ê½´ò¿ª³ö´í£º`n" e07.Message "`nÇë¼ì²é£¡"
+		MsgBox, 4112, å‡ºé”™, % "å°è¯•ç”¨office 2003æ–¹å¼æ‰“å¼€å‡ºé”™ï¼š`n" e03.Message "`nå°è¯•ç”¨office 2007æ–¹å¼æ‰“å¼€å‡ºé”™ï¼š`n" e07.Message "`nè¯·æ£€æŸ¥ï¼"
 }
 */
 if RegExMatch(file,".xlsx$")
 {
 	try
-		conn.Open("Provider=Microsoft.Ace.OLEDB.12.0;Extended Properties=Excel 12.0;Data Source=" file) ;´ò¿ªÁ¬½Ó
+		conn.Open("Provider=Microsoft.Ace.OLEDB.12.0;Extended Properties=Excel 12.0;Data Source=" file) ;æ‰“å¼€è¿æ¥
 	catch e07
-		MsgBox, 4112, ³ö´í, % "³¢ÊÔÓÃoffice 2007·½Ê½´ò¿ª³ö´í£º`n" e07.Message "`nÇë¼ì²é£¡"
+		MsgBox, 4112, å‡ºé”™, % "å°è¯•ç”¨office 2007æ–¹å¼æ‰“å¼€å‡ºé”™ï¼š`n" e07.Message "`nè¯·æ£€æŸ¥ï¼"
 }
 else
 {
 	try
-		conn.Open("Provider=Microsoft.Jet.OLEDB.4.0;Extended Properties='Excel 8.0;HDR=Yes';Data Source=" file) ;´ò¿ªÁ¬½Ó 2003·½Ê½
+		conn.Open("Provider=Microsoft.Jet.OLEDB.4.0;Extended Properties='Excel 8.0;HDR=Yes';Data Source=" file) ;æ‰“å¼€è¿æ¥ 2003æ–¹å¼
 	catch e03
-		MsgBox, 4112, ³ö´í, % "³¢ÊÔÓÃoffice 2003·½Ê½´ò¿ª³ö´í£º`n" e03.Message "`nÇë¼ì²é£¡"
+		MsgBox, 4112, å‡ºé”™, % "å°è¯•ç”¨office 2003æ–¹å¼æ‰“å¼€å‡ºé”™ï¼š`n" e03.Message "`nè¯·æ£€æŸ¥ï¼"
 }
  
-;Í¨¹ıOpenSchema·½·¨»ñÈ¡±íĞÅÏ¢
-rs := conn.OpenSchema(20) ;SchemaEnum ²Î¿¼ http://www.w3school.com.cn/ado/app_schemaenum.asp
+;é€šè¿‡OpenSchemaæ–¹æ³•è·å–è¡¨ä¿¡æ¯
+rs := conn.OpenSchema(20) ;SchemaEnum å‚è€ƒ http://www.w3school.com.cn/ado/app_schemaenum.asp
 table_info := []
 table_name := []
 rs.MoveFirst()
-while !rs.EOF ;ÓĞĞ§Sheet
+while !rs.EOF ;æœ‰æ•ˆSheet
 {
 ;fileappend, % rs.("TABLE_NAME").value "`n",%A_desktop%\123.txt
 	t_name := RegExReplace(rs.("TABLE_NAME").value,"^'*(.*)\$'*$","$1")
@@ -60,7 +60,7 @@ while !rs.EOF ;ÓĞĞ§Sheet
 	t_name := Trim(t_name, "$")
 ;fileappend, % t_name "`n`n",%A_desktop%\123.txt
 
-	if InStr(t_name, "_")   ; ±íÃûÖĞ´øÓĞ"_"×Ö·û£¬ÔòÌø¹ı
+	if InStr(t_name, "_")   ; è¡¨åä¸­å¸¦æœ‰"_"å­—ç¬¦ï¼Œåˆ™è·³è¿‡
 {
 	rs.MoveNext()
 		continue
@@ -68,7 +68,7 @@ while !rs.EOF ;ÓĞĞ§Sheet
 	table_name[t_name] := rs.("TABLE_NAME").value
 	q := conn.Execute("select top 1 * from [" t_name "$]")
  
-	if (q.Fields(0).Name="F1" && q.Fields.Count=1) ;ÅÅ³ı¿Õ±í¸ñ!!!!!!!!!
+	if (q.Fields(0).Name="F1" && q.Fields.Count=1) ;æ’é™¤ç©ºè¡¨æ ¼!!!!!!!!!
 	{
 		rs.MoveNext()
 		continue
@@ -76,15 +76,15 @@ while !rs.EOF ;ÓĞĞ§Sheet
 	
  
 	table_info[t_name] := []
-	for field in q.Fields  ;»ñÈ¡°´Ë³ĞòÅÅÁĞµÄ×Ö¶Î
+	for field in q.Fields  ;è·å–æŒ‰é¡ºåºæ’åˆ—çš„å­—æ®µ
 		table_info[t_name].insert(field.Name)
 	q.close()
 	rs.MoveNext()
 }
-;Éú³ÉListview
+;ç”ŸæˆListview
 for t,c in table_info
 {
-	;´´½¨tab¼°listview
+	;åˆ›å»ºtabåŠlistview
 	GuiControl, , tab, % t
 	Gui, Tab, % A_index
 	cols =
@@ -93,12 +93,12 @@ for t,c in table_info
 	Gui, Add, ListView, % "x10 y50 w780 h460 vlv" A_Index, % cols
 	Gui, ListView, % "lv" A_Index
  
-	;»ñÈ¡±í¸ñÊı¾İ
+	;è·å–è¡¨æ ¼æ•°æ®
 	data := GetTable("select * from [" table_name[t] "]")
 	for k,v in data
 		LV_Add("",v*)
  
-	LV_ModifyCol() ;×Ô¶¯µ÷ÕûÁĞ¿í
+	LV_ModifyCol() ;è‡ªåŠ¨è°ƒæ•´åˆ—å®½
 }
 rs.close()
 conn.close()
@@ -108,21 +108,21 @@ $Space::
 GuiClose:
 ExitApp
  
-GetTable(sql){ ;AdodbÍ¨ÓÃµÄ»ñÈ¡Êı¾İÊı×éµÄº¯Êı
+GetTable(sql){ ;Adodbé€šç”¨çš„è·å–æ•°æ®æ•°ç»„çš„å‡½æ•°
     global conn
     t := []
 	try
 	{
 		query := conn.Execute(sql)
-		fetchedArray := query.GetRows() ;È¡³öÊı¾İ£¨¶şÎ¬Êı×é£©
+		fetchedArray := query.GetRows() ;å–å‡ºæ•°æ®ï¼ˆäºŒç»´æ•°ç»„ï¼‰
 	}
 	catch e
 	{
-		MsgBox, 4112, ³ö´í, % e03.Message "`nÇë¼ì²é£¡"
+		MsgBox, 4112, å‡ºé”™, % e03.Message "`nè¯·æ£€æŸ¥ï¼"
 		return []
 	}
-    colSize := fetchedArray.MaxIndex(1) + 1 ;ÁĞ×î´óÖµ tips£º´Ó0¿ªÊ¼ ËùÒÔÒª+1
-    rowSize := fetchedArray.MaxIndex(2) + 1 ;ĞĞ×î´óÖµ tips£º´Ó0¿ªÊ¼ ËùÒÔÒª+1
+    colSize := fetchedArray.MaxIndex(1) + 1 ;åˆ—æœ€å¤§å€¼ tipsï¼šä»0å¼€å§‹ æ‰€ä»¥è¦+1
+    rowSize := fetchedArray.MaxIndex(2) + 1 ;è¡Œæœ€å¤§å€¼ tipsï¼šä»0å¼€å§‹ æ‰€ä»¥è¦+1
     loop, % rowSize
     {
         i := (y := A_index) - 1
@@ -130,7 +130,7 @@ GetTable(sql){ ;AdodbÍ¨ÓÃµÄ»ñÈ¡Êı¾İÊı×éµÄº¯Êı
         loop, % colSize
         {
             j := (x := A_index) - 1
-            t[y][x] := fetchedArray[j,i] ;È¡³ö¶şÎ¬Êı×éÄÚÖµ
+            t[y][x] := fetchedArray[j,i] ;å–å‡ºäºŒç»´æ•°ç»„å†…å€¼
         }
     }
 	query.close()

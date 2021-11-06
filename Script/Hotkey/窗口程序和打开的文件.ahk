@@ -9,7 +9,7 @@
 	Send,{Alt Down}
 	sleep,200
 	Send,{Alt Up}
-	Tooltip OK
+	;Tooltip OK
 Return
 
 ;RAlt & MButton::

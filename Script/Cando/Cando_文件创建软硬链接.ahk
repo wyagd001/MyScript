@@ -43,7 +43,7 @@ SHHL_OK2:
 		errFlag:=3, Tmp_Str:="链接名称不得包含以下任意字符：\ / : * \ ? "" < > |"
 	If (errFlag=0) And (FileExist(SHHL_Path)="")
 		errFlag:=4, Tmp_Str:= "链接目录不存在。"
-	If (errFlag=0) And (FileExist(SHHL_TGPath)="") and  !InStr(FileExist(SHHL_TGPath), "D")
+	If (errFlag=0) And (FileExist(SHHL_TGPath)="") and  !CF_IsFolder(SHHL_TGPath)
 		errFlag:=5, Tmp_Str:= "目标文件不存在。"
 	If ((errFlag=0) And (sPara="/S")) 
 	{

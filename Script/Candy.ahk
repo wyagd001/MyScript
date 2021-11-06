@@ -30,7 +30,7 @@ Candy:
 		Candy_isFile:=1     ; 如果是“文字型”的有效路径，强制认定为文件
 		SplitPath, CandySel, CandySel_FileNameWithExt, CandySel_ParentPath, CandySel_Ext, CandySel_FileNameNoExt, CandySel_Drive
 		SplitPath, CandySel_ParentPath, CandySel_ParentName,,,, ; 用这个提取“所在文件夹名”
-		If InStr(FileExist(CandySel), "D")  ; 区分是否文件夹,Attrib= D ,则是文件夹
+		If CF_IsFolder(CandySel)  ; 区分是否文件夹,Attrib= D ,则是文件夹
 		{
 			CandySel_FileNameNoExt := CandySel_FileNameWithExt
 			CandySel_Ext := RegExMatch(CandySel, "^.:\\$") ? "Driver" : "Folder"            ; 细分：盘符或者文件夹

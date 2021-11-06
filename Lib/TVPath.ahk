@@ -59,6 +59,7 @@ TVPath_Get(hTreeView, ByRef outPath, Delimiter="\")
 
 	MEM_COMMIT=0x1000
 	MEM_RESERVE=0x2000
+	MEM_RELEASE := 0x8000
 	MEM_FREE=0x10000
 	PAGE_READWRITE=0x4
 	;常量声明结束
@@ -74,23 +75,11 @@ TVPath_Get(hTreeView, ByRef outPath, Delimiter="\")
 	if (!pid)
 		return "pid"
 
-	hProcess:=DllCall("OpenProcess"
-		, "Int", PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ
-		, "Int", 0, "Int", pid, "Ptr")
+	hProcess := OpenProcess(PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, 0, pid)
 	if (hProcess)
 	{
-		pTVItemRemote:=DllCall("VirtualAllocEx"
-			, "Ptr", hProcess
-			, "Ptr", 0
-			, "UInt", sizeof_TVITEMEX
-			, "UInt", MEM_COMMIT | MEM_RESERVE
-			, "UInt", PAGE_READWRITE, "Ptr")
-		pszTextRemote:=DllCall("VirtualAllocEx"
-			, "Ptr", hProcess
-			, "Ptr", 0
-			, "UInt", cchTextMax * BytePerChar
-			, "UInt", MEM_COMMIT | MEM_RESERVE
-			, "UInt", PAGE_READWRITE, "Ptr")
+		pTVItemRemote := VirtualAllocEx(hProcess, 0, sizeof_TVITEMEX, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE)
+		pszTextRemote := VirtualAllocEx(hProcess, 0, cchTextMax * BytePerChar, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE)
 		if (pszTextRemote && pTVItemRemote)
 		{
 			while hSelItem != 0 ;到根节点结束
@@ -112,12 +101,7 @@ TVPath_Get(hTreeView, ByRef outPath, Delimiter="\")
 					NumPut(cchTextMax, tvitem, 32) ;cchTextMax
 				}
 
-				ret := DllCall("WriteProcessMemory"
-					, "Ptr", hProcess
-					, "Ptr", pTVItemRemote
-					, "Ptr", &tvitem
-					, "Uint", sizeof_TVITEMEX
-					, "UInt*", 0, "Int")
+				ret := WriteProcessMemory(hProcess, pTVItemRemote, &tvitem, sizeof_TVITEMEX, 0)
 				if (ret)
 				{
 					;获取文字
@@ -125,12 +109,7 @@ TVPath_Get(hTreeView, ByRef outPath, Delimiter="\")
 
 					if(errorlevel!="FAIL" && errorlevel!=0) ;获取文字成功
 					{
-						ret := DllCall("ReadProcessMemory"
-							, "Ptr", hProcess
-							, "Ptr", pszTextRemote
-							, "Ptr",  &szTextByte
-							, "UInt", cchTextMax * BytePerChar
-							, "UInt*", 0, "Int")
+						ret := ReadProcessMemory(hProcess, pszTextRemote, szTextByte, cchTextMax * BytePerChar)
 						if (ret)
 						{
 							szText := StrGet(&szTextByte, cchTextMax, DllTextEncode)
@@ -168,19 +147,11 @@ TVPath_Get(hTreeView, ByRef outPath, Delimiter="\")
 
 	;释放内存
 	if(pszTextRemote)
-		DllCall("VirtualFreeEx"
-			, "Ptr", hProcess
-			, "Ptr", pszTextRemote
-			, "UINT", cchTextMax * BytePerChar
-			, "UINT", MEM_FREE, "Int")
+		VirtualFreeEx(hProcess, pszTextRemote, cchTextMax * BytePerChar, MEM_RELEASE)
 	if(pTVItemRemote)
-		DllCall("VirtualFreeEx"
-			, "Ptr", hProcess
-			, "Ptr", pTVItemRemote
-			, "UINT", sizeof_TVITEMEX
-			, "UINT", MEM_FREE, "Int")
+		VirtualFreeEx(hProcess, pTVItemRemote, sizeof_TVITEMEX, MEM_RELEASE)
 	if(hProcess)
-		DllCall("CloseHandle", uint, hProcess)
+		CloseHandle(hProcess)
 
 	return HasError
 }
@@ -205,8 +176,7 @@ TVPath_Get(hTreeView, ByRef outPath, Delimiter="\")
 ;		NoSelection - 默认为False，如果只想获取 outMatchPath 而不想实际选中任何节点（但是展开是不可避免的），可以将此参数设为True。
 ; 返回值:
 ;		字符串，指示错误出现的位置。无错误返回空串。
-; 注意:
-; 在64位的win7系统上，该函数无法对64位程序窗口上的控件进行操作，但可以操作32位程序。
+; 
 ;		关于转义符的说明：
 ;		利用转义符可以更方便地匹配各层节点。详细说明如下（为了方便，以下用 @# 表示转义符）：
 ;			如果 @# 后面是数字（可以是十六进制），比如 @#2，那么会将此项解析为序号。
@@ -247,7 +217,8 @@ TVPath_Set(hTreeView, inPath, ByRef outMatchPath,  EscapeChar="", Delimiter="\",
 {
 	if Delimiter=
 		return "Delimiter"
-		
+	outMatchPath =
+
 	;判断窗口是否是Unicode
 	isUnicode:=DllCall("IsWindowUnicode", "uint", hTreeView)
 	BytePerChar:= isUnicode = 1 ? 2 : 1
@@ -255,7 +226,6 @@ TVPath_Set(hTreeView, inPath, ByRef outMatchPath,  EscapeChar="", Delimiter="\",
 	;消息和消息参数常量
 	TVM_GETNEXTITEM = 0x110A
 	TVGN_ROOT = 0
-
 	NULL = 0
 	;变量
 	cchTextMax=128
@@ -270,6 +240,18 @@ TVPath_Set(hTreeView, inPath, ByRef outMatchPath,  EscapeChar="", Delimiter="\",
 	Else
 		hSelItem:=errorlevel
 
+		htext:=TVPath_GetText(hTreeView, hSelItem)
+		if (htext="收藏夹")  ; 资源管理器 首个节点为收藏夹
+		{
+			Loop 20
+			{
+				hSelItem:=TVPath_GetNext(hTreeView, hSelItem,"full")
+				htext:=TVPath_GetText(hTreeView, hSelItem)
+				if (htext="计算机")   ; 找到 计算机 节点为止
+					break
+			}
+		}
+
 	;以下Process系函数用
 	;常量声明
 	PROCESS_VM_OPERATION=0x8
@@ -279,6 +261,7 @@ TVPath_Set(hTreeView, inPath, ByRef outMatchPath,  EscapeChar="", Delimiter="\",
 	MEM_COMMIT=0x1000
 	MEM_RESERVE=0x2000
 	MEM_FREE=0x10000
+	MEM_RELEASE := 0x8000
 	PAGE_READWRITE=0x4
 	;常量声明结束
 
@@ -293,24 +276,12 @@ TVPath_Set(hTreeView, inPath, ByRef outMatchPath,  EscapeChar="", Delimiter="\",
 	if (!pid)
 		return "pid"
 
-	hProcess:=DllCall("OpenProcess"
-		, "Int", PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ
-		, "Int", 0, "Int", pid, "Ptr")
+	hProcess := OpenProcess(PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, 0, pid)
 	if (hProcess)
 	{
-		pTVItemRemote:=DllCall("VirtualAllocEx"
-			, "Ptr", hProcess
-			, "Ptr", 0
-			, "UInt", sizeof_TVITEMEX
-			, "UInt", MEM_COMMIT | MEM_RESERVE
-			, "UInt", PAGE_READWRITE, "Ptr")
+		pTVItemRemote := VirtualAllocEx(hProcess, 0, sizeof_TVITEMEX, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE)
 
-		pszTextRemote:=DllCall("VirtualAllocEx"
-			, "Ptr", hProcess
-			, "Ptr", 0
-			, "UInt", cchTextMax * BytePerChar
-			, "UInt", MEM_COMMIT | MEM_RESERVE
-			, "UInt", PAGE_READWRITE, "Ptr")
+		pszTextRemote := VirtualAllocEx(hProcess, 0, cchTextMax * BytePerChar, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE)
 			;
 		if (pszTextRemote && pTVItemRemote)
 __dummySetPathToTreeView(hProcess, hTreeView, hSelItem, inPath, tvitem, szTextByte, pszTextRemote, pTVItemRemote, inPath, outMatchPath, HasError, EscapeChar, NoSelection, 0, Delimiter, RetryTimesForGetChild)
@@ -322,19 +293,11 @@ __dummySetPathToTreeView(hProcess, hTreeView, hSelItem, inPath, tvitem, szTextBy
 
 	;释放内存
 	if(pszTextRemote)
-		DllCall("VirtualFreeEx"
-			, "Ptr", hProcess
-			, "Ptr", pszTextRemote
-			, "UInt", cchTextMax * BytePerChar
-			, "UInt", MEM_FREE, "Int")
+		VirtualFreeEx(hProcess, pszTextRemote, cchTextMax * BytePerChar, MEM_RELEASE)
 	if(pTVItemRemote)
-		DllCall("VirtualFreeEx"
-			, "Ptr", hProcess
-			, "Ptr", pTVItemRemote
-			, "UInt", sizeof_TVITEMEX
-			, "UInt", MEM_FREE, "Int")
+		VirtualFreeEx(hProcess, pTVItemRemote, sizeof_TVITEMEX, MEM_RELEASE)
 	if(hProcess)
-		DllCall("CloseHandle", uint, hProcess)
+		CloseHandle(hProcess)
 
 	return HasError
 }
@@ -419,12 +382,7 @@ __dummySetPathToTreeView(hProcess, hTreeView, hItem, RestPath, ByRef tvitem, ByR
 				}
 
 		;准备获取文字
-		ret := DllCall("WriteProcessMemory"
-			, "Ptr", hProcess
-			, "Ptr", pTVItemRemote
-			, "Ptr", &tvitem
-			, "Uint", sizeof_TVITEMEX
-			, "UInt*", 0, "Int")
+		ret := WriteProcessMemory(hProcess, pTVItemRemote, &tvitem, sizeof_TVITEMEX, 0)
 		if (ret)
 		{
 			;获取文字
@@ -432,12 +390,7 @@ __dummySetPathToTreeView(hProcess, hTreeView, hItem, RestPath, ByRef tvitem, ByR
 
 			if(errorlevel!="FAIL" && errorlevel!=0) ;获取文字成功
 			{
-				ret := DllCall("ReadProcessMemory"
-					, "Ptr", hProcess
-					, "Ptr", pszTextRemote
-					, "Ptr",  &szTextByte
-					, "UInt", cchTextMax * BytePerChar
-					, "UInt*", 0, "Int")
+				ret := ReadProcessMemory(hProcess, pszTextRemote, szTextByte, cchTextMax * BytePerChar)
 				if (ret)
 				{
 					szText := StrGet(&szTextByte, cchTextMax, DllTextEncode)
@@ -516,4 +469,120 @@ __dummySetPathToTreeView(hProcess, hTreeView, hItem, RestPath, ByRef tvitem, ByR
 		SendMessage, TVM_GETNEXTITEM, TVGN_NEXT, hItem, , ahk_id %hTreeView%
 		hItem:=errorlevel
 	}
+}
+
+TVPath_GetText(hTreeView, pItem)
+{
+	TVM_GETITEMW := 0x113E
+	TVM_GETITEMA := 0x110C
+	PROCESS_VM_OPERATION=0x8
+	PROCESS_VM_WRITE=0x20
+	PROCESS_VM_READ=0x10
+	PROCESS_QUERY_INFORMATION := (0x1000)
+
+	MEM_COMMIT=0x1000
+	MEM_RESERVE=0x2000
+	MEM_FREE=0x10000
+	PAGE_READWRITE=0x4
+
+	TVIF_TEXT  := 0x0001
+	TVIF_HANDLE             := 0x0010
+	MEM_RELEASE := 0x8000
+
+	TVM_GETITEM := A_IsUnicode ? TVM_GETITEMW : TVM_GETITEMA
+	WinGet ProcessId, pid, % "ahk_id " hTreeView
+	hProcess := OpenProcess(PROCESS_VM_OPERATION|PROCESS_VM_READ
+                               |PROCESS_VM_WRITE|PROCESS_QUERY_INFORMATION
+                               , false, ProcessId)
+	if (!hProcess)
+	return "No Open"
+	; Try to determine the bitness of the remote tree-view's process
+	ProcessIs32Bit := A_PtrSize = 8 ? False : True
+	;msgbox % ProcessIs32Bit
+	If (A_Is64bitOS) && DllCall("Kernel32.dll\IsWow64Process", "Ptr", hProcess, "UIntP", WOW64)
+		ProcessIs32Bit := WOW64
+
+	Size := ProcessIs32Bit ?  60 : 80 ; Size of a TVITEMEX structure
+
+	_tvi := VirtualAllocEx(hProcess, 0, Size, MEM_COMMIT, PAGE_READWRITE)
+	_txt := VirtualAllocEx(hProcess, 0, 256,  MEM_COMMIT, PAGE_READWRITE)
+	if (!_tvi)
+	return "No _tvi"
+	if (!_txt)
+	return "No _txt"
+	; TVITEMEX Structure
+	VarSetCapacity(tvi, Size, 0)
+	NumPut(TVIF_TEXT|TVIF_HANDLE, tvi, 0, "UInt")
+	If (ProcessIs32Bit)
+	{
+		NumPut(pItem, tvi,  4, "UInt")
+		NumPut(_txt , tvi, 16, "UInt")
+		NumPut(127  , tvi, 20, "UInt")
+	}
+	Else
+	{
+		NumPut(pItem, tvi,  8, "UInt64")
+		NumPut(_txt , tvi, 24, "UInt64")
+		NumPut(127  , tvi, 32, "UInt")
+	}
+
+	VarSetCapacity(txt, 256, 0)
+	WriteProcessMemory(hProcess, _tvi, &tvi, Size)
+
+	SendMessage TVM_GETITEM, 0, _tvi, ,  % "ahk_id " hTreeView
+	if(errorlevel!="FAIL" && errorlevel!=0)
+		ReadProcessMemory(hProcess, _txt, txt, 256)
+
+	VirtualFreeEx(hProcess, _txt, 0, MEM_RELEASE)
+	VirtualFreeEx(hProcess, _tvi, 0, MEM_RELEASE)
+	CloseHandle(hProcess)
+	szText := StrGet(&txt, 127, "UTF-16")
+	;msgbox % szText
+	return szText
+}
+
+TVPath_GetNext(hTreeView, pItem = 0, flag = "")
+{
+	TVM_EXPAND = 0x1102
+	TVM_GETNEXTITEM = 0x110A
+	TVM_SELECTITEM = 0x110B
+
+	TVGN_CARET = 0x09
+	TVGN_CHILD = 0x04
+	TVGN_NEXT = 0x01
+	TVGN_PARENT             := 0x0003
+
+	TVE_EXPAND = 0x02
+	TVIF_TEXT = 0x01
+
+		static Root := -1
+		
+		if (RegExMatch(flag, "i)^\s*(F|Full)\s*$")) {
+			if (Root = -1) {
+				Root := pItem
+			}
+			SendMessage TVM_GETNEXTITEM, TVGN_CHILD, pItem, , % "ahk_id " hTreeView
+			if (ErrorLevel = 0) {
+				SendMessage TVM_GETNEXTITEM, TVGN_NEXT, pItem, , % "ahk_id " hTreeView
+				if (ErrorLevel = 0) {
+					Loop {
+						SendMessage TVM_GETNEXTITEM, TVGN_PARENT, pItem, , % "ahk_id " hTreeView
+						if (ErrorLevel = Root) {
+							Root := -1
+							return 0
+						}
+						pItem := ErrorLevel
+						SendMessage TVM_GETNEXTITEM, TVGN_NEXT, pItem, , % "ahk_id " hTreeView
+					} until ErrorLevel
+				}
+			}
+			return ErrorLevel
+		}
+		
+		Root := -1
+		if (!pItem)
+			SendMessage TVM_GETNEXTITEM, TVGN_ROOT, 0, , % "ahk_id " hTreeView
+		else
+			SendMessage TVM_GETNEXTITEM, TVGN_NEXT, pItem, , % "ahk_id " hTreeView
+		return ErrorLevel
 }

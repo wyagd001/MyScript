@@ -41,7 +41,6 @@
 #Include *i %A_ScriptDir%\Script\Windo\Windo_其他编辑器打开.ahk
 #Include *i %A_ScriptDir%\Script\Windo\Windo_窗口任务栏按钮移到分组最右边.ahk
 #Include *i %A_ScriptDir%\Script\Windo\Windo_记事本打开浏览器打开的文件.ahk
-#Include *i %A_ScriptDir%\Script\Hotkey\Eval.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_AppendFiles.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_FastFolder.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_MD5.ahk
@@ -70,6 +69,7 @@
 #Include *i %A_ScriptDir%\Script\Hotkey\窗口程序和打开的文件.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\窗口缩略图.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\隐藏窗口.ahk
+#Include *i %A_ScriptDir%\Script\7plus右键菜单\Md5.ahk
 #Include *i %A_ScriptDir%\Script\7plus右键菜单\Open_Cmd_Here.ahk
 #Include *i %A_ScriptDir%\Script\7plus右键菜单\Windy资源管理器菜单.ahk
 #Include *i %A_ScriptDir%\Script\7plus右键菜单\使用当前的窗口打开文件夹.ahk

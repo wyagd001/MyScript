@@ -2,7 +2,7 @@
 Splitpath,CandySel,Filename
 
 if Fileexist(CandySel "\" Filename ".exe")
-ChangeFolderIcon(CandySel,CandySel "\" Filename ".exe")
+	ChangeFolderIcon(CandySel,CandySel "\" Filename ".exe")
 Return
 
 Cando_exeicon2folder:
@@ -11,15 +11,15 @@ ChangeFolderIcon(FilePath,CandySel)
 Return
 
 Cando_文件夹图标还原:
-If InStr(FileExist(CandySel), "D")  
+If CF_IsFolder(CandySel)
 {
-if Fileexist(CandySel "\desktop.ini" ) 
-FileRecycle, % CandySel "\desktop.ini"
+	if Fileexist(CandySel "\desktop.ini" ) 
+		FileRecycle, % CandySel "\desktop.ini"
 }
 else{
-Splitpath,CandySel,,FilePath
-If Fileexist(FilePath "\desktop.ini" ) 
-FileRecycle, % FilePath "\desktop.ini"
+	Splitpath,CandySel,,FilePath
+	If Fileexist(FilePath "\desktop.ini" ) 
+		FileRecycle, % FilePath "\desktop.ini"
 }
 Return
 
@@ -44,15 +44,15 @@ FileSetAttrib +S, %TargetFolder%, 2	;msdn: PathMakeSystemFolder to make the fold
 if !IconFile
 	IniWrite %A_AHKPath%, %ini%, .ShellClassInfo, IconFile	;set the AHK exe icon as folder icon.
 else
-	{
+{
 	IfExist, %IconFile%		;incase the specified icon file doesn't exist
 		IniWrite %IconFile%, %ini%, .ShellClassInfo, IconFile	
 	else
-		{
+	{
 		MsgBox, 0xC0010, %A_ScriptName%, Specified Icon File Doesn't Exist!
 		Return 0
-		}
 	}
+}
 	
 if !IconIndex
 	IniWrite 0, %ini%, .ShellClassInfo, IconIndex

@@ -146,3 +146,227 @@ JEE_NotepadGetPath(hWnd)
 			return vfilepath
 	}
 }
+
+;----------------------------------------------------------------------------------------------
+; Function: OpenProcess
+;         Opens an existing local process object.
+;
+; Parameters:
+;         DesiredAccess - The desired access to the process object. 
+;
+;         InheritHandle - If this value is TRUE, processes created by this process will inherit
+;                         the handle. Otherwise, the processes do not inherit this handle.
+;
+;         ProcessId     - The Process ID of the local process to be opened. 
+;
+; Returns:
+;         If the function succeeds, the return value is an open handle to the specified process.
+;         If the function fails, the return value is NULL.
+;
+OpenProcess(DesiredAccess, InheritHandle, ProcessId)
+{
+	return DllCall("OpenProcess"
+	             , "Int", DesiredAccess
+				 , "Int", InheritHandle
+				 , "Int", ProcessId
+				 , "Ptr")
+}
+
+;----------------------------------------------------------------------------------------------
+; Function: CloseHandle
+;         Closes an open object handle.
+;
+; Parameters:
+;         hObject       - A valid handle to an open object
+;
+; Returns:
+;         If the function succeeds, the return value is nonzero.
+;         If the function fails, the return value is zero.
+;
+CloseHandle(hObject)
+{
+	return DllCall("CloseHandle"
+	             , "Ptr", hObject
+				 , "Int")
+}
+
+;----------------------------------------------------------------------------------------------
+; Function: VirtualAllocEx
+;         Reserves or commits a region of memory within the virtual address space of the 
+;         specified process, and specifies the NUMA node for the physical memory.
+;
+; Parameters:
+;         hProcess      - A valid handle to an open object. The handle must have the 
+;                         PROCESS_VM_OPERATION access right.
+;
+;         Address       - The pointer that specifies a desired starting address for the region 
+;                         of pages that you want to allocate. 
+;
+;                         If you are reserving memory, the function rounds this address down to 
+;                         the nearest multiple of the allocation granularity.
+;
+;                         If you are committing memory that is already reserved, the function rounds 
+;                         this address down to the nearest page boundary. To determine the size of a 
+;                         page and the allocation granularity on the host computer, use the GetSystemInfo 
+;                         function.
+;
+;                         If Address is NULL, the function determines where to allocate the region.
+;
+;         Size          - The size of the region of memory to be allocated, in bytes. 
+;
+;         AllocationType - The type of memory allocation. This parameter must contain ONE of the 
+;                          following values:
+;								MEM_COMMIT
+;								MEM_RESERVE
+;								MEM_RESET
+;
+;         ProtectType   - The memory protection for the region of pages to be allocated. If the 
+;                         pages are being committed, you can specify any one of the memory protection 
+;                         constants:
+;								 PAGE_NOACCESS
+;								 PAGE_READONLY
+;								 PAGE_READWRITE
+;								 PAGE_WRITECOPY
+;								 PAGE_EXECUTE
+;								 PAGE_EXECUTE_READ
+;								 PAGE_EXECUTE_READWRITE
+;								 PAGE_EXECUTE_WRITECOPY
+;
+; Returns:
+;         If the function succeeds, the return value is the base address of the allocated region of pages.
+;         If the function fails, the return value is NULL.
+;
+VirtualAllocEx(hProcess, Address, Size, AllocationType, ProtectType)
+{
+	return DllCall("VirtualAllocEx"
+				 , "Ptr", hProcess
+				 , "Ptr", Address
+				 , "UInt", Size
+				 , "UInt", AllocationType
+				 , "UInt", ProtectType
+				 , "Ptr")
+}
+
+;----------------------------------------------------------------------------------------------
+; Function: VirtualFreeEx
+;         Releases, decommits, or releases and decommits a region of memory within the 
+;         virtual address space of a specified process
+;
+; Parameters:
+;         hProcess      - A valid handle to an open object. The handle must have the 
+;                         PROCESS_VM_OPERATION access right.
+;
+;         Address       - The pointer that specifies a desired starting address for the region 
+;                         to be freed. If the dwFreeType parameter is MEM_RELEASE, lpAddress 
+;                         must be the base address returned by the VirtualAllocEx function when 
+;                         the region is reserved.
+;
+;         Size          - The size of the region of memory to be allocated, in bytes. 
+;
+;                         If the FreeType parameter is MEM_RELEASE, dwSize must be 0 (zero). The function 
+;                         frees the entire region that is reserved in the initial allocation call to 
+;                         VirtualAllocEx.
+;
+;                         If FreeType is MEM_DECOMMIT, the function decommits all memory pages that 
+;                         contain one or more bytes in the range from the Address parameter to 
+;                         (lpAddress+dwSize). This means, for example, that a 2-byte region of memory
+;                         that straddles a page boundary causes both pages to be decommitted. If Address 
+;                         is the base address returned by VirtualAllocEx and dwSize is 0 (zero), the
+;                         function decommits the entire region that is allocated by VirtualAllocEx. After 
+;                         that, the entire region is in the reserved state.
+;
+;         FreeType      - The type of free operation. This parameter can be one of the following values:
+;								MEM_DECOMMIT
+;								MEM_RELEASE
+;
+; Returns:
+;         If the function succeeds, the return value is a nonzero value.
+;         If the function fails, the return value is 0 (zero). 
+;
+VirtualFreeEx(hProcess, Address, Size, FType)
+{
+	return DllCall("VirtualFreeEx"
+				 , "Ptr", hProcess
+				 , "Ptr", Address
+				 , "UINT", Size
+				 , "UInt", FType
+				 , "Int")
+}
+
+;----------------------------------------------------------------------------------------------
+; Function: WriteProcessMemory
+;         Writes data to an area of memory in a specified process. The entire area to be written 
+;         to must be accessible or the operation fails
+;
+; Parameters:
+;         hProcess      - A valid handle to an open object. The handle must have the 
+;                         PROCESS_VM_WRITE and PROCESS_VM_OPERATION access right.
+;
+;         BaseAddress   - A pointer to the base address in the specified process to which data 
+;                         is written. Before data transfer occurs, the system verifies that all 
+;                         data in the base address and memory of the specified size is accessible 
+;                         for write access, and if it is not accessible, the function fails.
+;
+;         Buffer        - A pointer to the buffer that contains data to be written in the address 
+;                         space of the specified process.
+;
+;         Size          - The number of bytes to be written to the specified process.
+;
+;         NumberOfBytesWritten   
+;                       - A pointer to a variable that receives the number of bytes transferred 
+;                         into the specified process. This parameter is optional. If NumberOfBytesWritten 
+;                         is NULL, the parameter is ignored.
+;
+; Returns:
+;         If the function succeeds, the return value is a nonzero value.
+;         If the function fails, the return value is 0 (zero). 
+;
+WriteProcessMemory(hProcess, BaseAddress, Buffer, Size, ByRef NumberOfBytesWritten = 0)
+{
+	return DllCall("WriteProcessMemory"
+				 , "Ptr", hProcess
+				 , "Ptr", BaseAddress
+				 , "Ptr", Buffer
+				 , "Uint", Size
+				 , "UInt*", NumberOfBytesWritten
+				 , "Int")
+}
+
+;----------------------------------------------------------------------------------------------
+; Function: ReadProcessMemory
+;         Reads data from an area of memory in a specified process. The entire area to be read 
+;         must be accessible or the operation fails
+;
+; Parameters:
+;         hProcess      - A valid handle to an open object. The handle must have the 
+;                         PROCESS_VM_READ access right.
+;
+;         BaseAddress   - A pointer to the base address in the specified process from which to 
+;                         read. Before any data transfer occurs, the system verifies that all data 
+;                         in the base address and memory of the specified size is accessible for read 
+;                         access, and if it is not accessible the function fails.
+;
+;         Buffer        - A pointer to a buffer that receives the contents from the address space 
+;                         of the specified process.
+;
+;         Size          - The number of bytes to be read from the specified process.
+;
+;         NumberOfBytesWritten   
+;                       - A pointer to a variable that receives the number of bytes transferred 
+;                         into the specified buffer. If lpNumberOfBytesRead is NULL, the parameter 
+;                         is ignored.
+;
+; Returns:
+;         If the function succeeds, the return value is a nonzero value.
+;         If the function fails, the return value is 0 (zero). 
+;
+ReadProcessMemory(hProcess, BaseAddress, ByRef Buffer, Size, ByRef NumberOfBytesRead = 0)
+{
+	return DllCall("ReadProcessMemory"
+	             , "Ptr", hProcess
+				 , "Ptr", BaseAddress
+				 , "Ptr", &Buffer
+				 , "UInt", Size
+				 , "UInt*", NumberOfBytesRead
+				 , "Int")
+}

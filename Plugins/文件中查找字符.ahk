@@ -84,9 +84,9 @@ return
 OpenFileFullPath:
 LV_GetText(FileFullPath, LV_GetNext("F"), 2)
 If Fileexist(FileFullPath)
-Run,% "explorer.exe /select," FileFullPath
+	CF_OpenFolder(FileFullPath)
 else
-msgbox,未选中或文件不存在。
+	msgbox,未选中或文件不存在。
 Return
 
 OpenFile:
@@ -191,3 +191,4 @@ GuiCreate() {
     Gui, Show, AutoSize, 文件字符搜索
 }
 ; ==============================================================================
+#Include %A_ScriptDir%\..\Lib\CF.ahk

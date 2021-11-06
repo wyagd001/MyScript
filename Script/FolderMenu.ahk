@@ -612,7 +612,7 @@ if (!s_BrowseMode && GetKeyState("CapsLock", "T")) || (s_BrowseMode && !GetKeySt
 		f_OpenPath(f_OpenFavPath)
 		return
 	}
-	if InStr(FileExist(f_OpenFavPath), "D") or f_OpenFavPath = """::{20D04FE0-3AEA-1069-A2D8-08002B30309D}"""
+	if CF_IsFolder(f_OpenFavPath) or f_OpenFavPath = """::{20D04FE0-3AEA-1069-A2D8-08002B30309D}"""
 	{
 		if GetKeyState("Shift")
 		{
@@ -634,14 +634,14 @@ if (!s_BrowseMode && GetKeyState("CapsLock", "T")) || (s_BrowseMode && !GetKeySt
 ; Holding both ctrl and shift for files and folders
 if (GetKeyState("Shift") && GetKeyState("Ctrl"))
 {
-	if f_IsFolder(f_OpenFavPath)
+	if CF_IsFolder(f_OpenFavPath)
 		f_OpenTempMenu(f_OpenFavPath, 1)
 	else
 		ShellContextMenu(f_OpenFavPath)
 }
 else if (GetKeyState("Shift") || GetKeyState("Ctrl") || GetKeyState("RButton"))
 {
-	if f_IsFolder(f_OpenFavPath)
+	if CF_IsFolder(f_OpenFavPath)
 		f_OpenTempMenu(f_OpenFavPath, s_TempShowAll)
 	else
 		ShellContextMenu(f_OpenFavPath)
@@ -653,7 +653,7 @@ return
 f_OpenPath(ThisPath)
 {
 	Global
-	if !f_IsFolder(ThisPath) && !FileExist(ThisPath) ; not a folder, file not exist, run it
+	if !Cf_IsFolder(ThisPath) && !FileExist(ThisPath) ; not a folder, file not exist, run it
 	{
 		if !f_RunPath(ThisPath) ; if no error
 			if f_RecentEnabled = 1
@@ -715,7 +715,7 @@ f_OpenPath(ThisPath)
 		; FileZilla 3
 		else if w_Class = wxWindowClassNR
 		{
-			if InStr(FileExist(ThisPath), "D")
+			if CF_IsFolder(ThisPath)
 			{
 			ControlGetPos, w_Edit1Pos,,,, Edit5, ahk_id %w_WinID%
 			if w_Edit1Pos != ; it has quick connect bar, addressbar is edit5
@@ -748,7 +748,7 @@ f_OpenPath(ThisPath)
 		else if w_Class = TTOTAL_CMD
 		{
 			;Total Commander has Edit1 control but you need to cd to location
-            if InStr(FileExist(ThisPath), "D")
+            if CF_IsFolder(ThisPath)
 			{
 				ControlSetText, Edit1, cd %ThisPath%, ahk_id %w_WinID%
 				ControlSend, Edit1, {Enter}, ahk_id %w_WinID%
@@ -767,7 +767,7 @@ f_OpenPath(ThisPath)
 		; Command Prompt
 		else if w_Class = ConsoleWindowClass
     {
-		if InStr(FileExist(ThisPath), "D")
+		if CF_IsFolder(ThisPath)
 		{
 			WinActivate, ahk_id %w_WinID%	; Because sometimes the mclick deactivates it.
 			SetKeyDelay, 0	; This will be in effect only for the duration of this thread.
@@ -788,7 +788,7 @@ f_OpenPath(ThisPath)
 		; Rxvt command prompt (thanks to catweazle (John))
 		else if w_Class contains rxvt
 		{
-			if InStr(FileExist(ThisPath), "D")
+			if CF_IsFolder(ThisPath)
 			{
 				WinActivate, ahk_id %w_WinID%
 				SetKeyDelay, 0
@@ -801,7 +801,7 @@ f_OpenPath(ThisPath)
 	    ; Others
 		else if w_Class in %s_Apps_OthersList%
 		{
-			if InStr(FileExist(ThisPath), "D")
+			if CF_IsFolder(ThisPath)
 			{
 				ControlSetText, Edit1, %ThisPath%, ahk_id %w_WinID%
 				ControlSend, Edit1, {Right}{Enter}, ahk_id %w_WinID%
@@ -813,7 +813,7 @@ f_OpenPath(ThisPath)
 
 	if f_RecentEnabled = 1
 	{
-		if f_IsFolder(ThisPath) ; it's a folder
+		if CF_IsFolder(ThisPath) ; it's a folder
 			f_AddRecent(ThisPath)
 		else ; it's file
 			if !s_RecentOnlyFolder ; if recent not only record folders
@@ -1038,7 +1038,7 @@ f_OpenSelected(SelectedPath)
 				CF_Traytip("错误", "不能打开`n" """" SelectedPath """。", 5000, 3)
 				return ; don't keep error item
 			}
-		if f_IsFolder(SelectedPath) ; it's a folder
+		if CF_IsFolder(SelectedPath) ; it's a folder
 			f_AddRecent(SelectedPath)
 		else
 			if !s_RecentOnlyFolder ; if recent not only record folders
@@ -1165,7 +1165,7 @@ f_GetIcon(ThisPath)
 		}
 		return f_Icons_Drive
 	}
-	else if InStr(FileExist(ThisPath), "D") ; Folder
+	else if CF_IsFolder(ThisPath) ; Folder
 	{
 		; read from desktop.ini first
 		Local IconPath, IconFile, IconIndex
@@ -1837,7 +1837,7 @@ f_CreateSystemRecentMenu()
 		}
 		else ; add only folders
 		{
-			if InStr(FileExist(ThisFolderPath), "D")
+			if CF_IsFolder(ThisFolderPath)
 				RecentFolderList = %RecentFolderList%`n%ItemTime% %ThisFolderPath%`=%ThisFolderPath%
 		}
 	}

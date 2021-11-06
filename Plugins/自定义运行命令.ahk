@@ -1,28 +1,28 @@
-#NoEnv
+ï»¿#NoEnv
 SetBatchLines -1
 ListLines Off
 Sys=HKLM
 sys1=HKEY_LOCAL_MACHINE
 
-Menu, Context, Add, ä¯ÀÀÎÄ¼şÎ»ÖÃ, PlayLV
+Menu, Context, Add, æµè§ˆæ–‡ä»¶ä½ç½®, PlayLV
 
-Gui, Add, Button,gLoadw,Ë¢ĞÂÁĞ±í(&R)
-Gui, Add, Button, x+15 gEditVar, ±à¼­/´´½¨ÏîÄ¿(&C)
-Gui, Add, Button, x+15 gDelVar, É¾³ı¸ÃÏîÄ¿(&D)
-Gui, Add, Button, x+15 gUser, ÇĞ»»µ½ÓÃ»§/ÏµÍ³(&U)
-Gui, Add, Button, x+15 gRegedit, Ìø×ªµ½×¢²á±í(&O)
-Gui, Add, Button, x+20 gAbout, ¹ØÓÚ(&A)
-Gui, Add, ListView, xm Grid w600 h400 gListView vEV Altsubmit,×Ô¶¨ÒåÃüÁî|Â·¾¶|ä¯ÀÀ
+Gui, Add, Button,gLoadw,åˆ·æ–°åˆ—è¡¨(&R)
+Gui, Add, Button, x+15 gEditVar, ç¼–è¾‘/åˆ›å»ºé¡¹ç›®(&C)
+Gui, Add, Button, x+15 gDelVar, åˆ é™¤è¯¥é¡¹ç›®(&D)
+Gui, Add, Button, x+15 gUser, åˆ‡æ¢åˆ°ç”¨æˆ·/ç³»ç»Ÿ(&U)
+Gui, Add, Button, x+15 gRegedit, è·³è½¬åˆ°æ³¨å†Œè¡¨(&O)
+Gui, Add, Button, x+20 gAbout, å…³äº(&A)
+Gui, Add, ListView, xm Grid w600 h400 gListView vEV Altsubmit,è‡ªå®šä¹‰å‘½ä»¤|è·¯å¾„|æµè§ˆ
 Gui, +AlwaysOnTop
-Gui,Show,,×Ô¶¨ÒåÔËĞĞÃüÁî
+Gui,Show,,è‡ªå®šä¹‰è¿è¡Œå‘½ä»¤
 Gui +resize
 
-Gui 2:Add, Text,,ÏîÄ¿Ãû³Æ
+Gui 2:Add, Text,,é¡¹ç›®åç§°
 Gui 2:Add, Edit,vVarname w250
-Gui 2:Add, Text,, ³ÌĞòÂ·¾¶
+Gui 2:Add, Text,, ç¨‹åºè·¯å¾„
 Gui 2:Add, Edit,vVarvalue w250
 Gui 2:Add, Button,x+5  gselectfile,&.
-Gui 2:Add, Button,x10 gVarsave w280,Ğ´Èë×¢²á±í(&S)
+Gui 2:Add, Button,x10 gVarsave w280,å†™å…¥æ³¨å†Œè¡¨(&S)
 
 Gui,2:+Owner1 +ToolWindow +AlwaysOnTop
 
@@ -31,10 +31,10 @@ WinW = 500
 XPos1 := WinW  - 100
 XPos2 := XPos1 + 40
 Gui 3:Font,s14,Arial
-text=°æ±¾£º1.0¡£ ¸ÃAutohotkey½Å±¾ĞŞ¸ÄÓÚenv.ahk¡£ÓÃÍ¾£ºÍ¨¹ıĞŞ¸Ä×¢²á±í£¬×Ô¶¨Òå¡°ÔËĞĞ¡±ÃüÁî£¬"ÔËĞĞ"ÖĞÊäÈë×Ô¶¨ÒåÃüÁî£¬¿ìËÙ´ò¿ª³ÌĞò¡£
+text=ç‰ˆæœ¬ï¼š1.0ã€‚ è¯¥Autohotkeyè„šæœ¬ä¿®æ”¹äºenv.ahkã€‚ç”¨é€”ï¼šé€šè¿‡ä¿®æ”¹æ³¨å†Œè¡¨ï¼Œè‡ªå®šä¹‰â€œè¿è¡Œâ€å‘½ä»¤ï¼Œ"è¿è¡Œ"ä¸­è¾“å…¥è‡ªå®šä¹‰å‘½ä»¤ï¼Œå¿«é€Ÿæ‰“å¼€ç¨‹åºã€‚
 Gui 3:+ToolWindow +AlwaysOnTop
 Gui 3:Add, Text,vtext4 x%XPos2% y35 BackgroundTrans , %text%
-Gui 3:Add, Text,x0 y5 w%winw% center, ×Ô¶¨ÒåÔËĞĞÃüÁî
+Gui 3:Add, Text,x0 y5 w%winw% center, è‡ªå®šä¹‰è¿è¡Œå‘½ä»¤
 GuiControlGet,Text4,3:Pos
 Text4H+=10
 Gui 3:Add, Text, vText1 w4024 h%Text4H% x-1524 y30
@@ -44,7 +44,7 @@ Gosub,Loadw
 Return
 
 selectfile:
-FileSelectFile,tt,,,Ñ¡ÔñÎÄ¼ş
+FileSelectFile,tt,,,é€‰æ‹©æ–‡ä»¶
 GuiControl,, Varvalue, %tt%
 GuiControl,choose,dir,%tt%
 Return
@@ -72,7 +72,7 @@ Loop,%Sys%,SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths,0,1
     StringGetPos,num,A_LoopRegSubKey,\,R
     num++
     StringTrimLeft,syskey,A_LoopRegSubKey,%num%
-    LV_Add("",syskey,value,"ä¯ÀÀ")
+    LV_Add("",syskey,value,"æµè§ˆ")
     LV_ModifyCol()
 }
 return
@@ -88,14 +88,14 @@ EditVar:
 FocusedRowNumber := LV_GetNext(0, "F")
 if not FocusedRowNumber
 {
-gui 2:show,,´´½¨ĞÂµÄÏîÄ¿
+gui 2:show,,åˆ›å»ºæ–°çš„é¡¹ç›®
 varname=
 varvalue=
 }
 else{
 LV_GetText(varname, FocusedRowNumber, 1)
 LV_GetText(varvalue, FocusedRowNumber, 2)
-gui 2:show,,±à¼­ÔËĞĞÃüÁî
+gui 2:show,,ç¼–è¾‘è¿è¡Œå‘½ä»¤
 }
 GuiControl,2:,varname,% varname
 GuiControl,2:,varvalue,% varvalue
@@ -105,12 +105,12 @@ DelVar:
 FocusedRowNumber := LV_GetNext(0, "F")
 if not FocusedRowNumber
    {
-    MsgBox,,´íÎó,Î´Ñ¡ÔñÒªÉ¾³ıµÄÏîÄ¿£¡
+    MsgBox,,é”™è¯¯,æœªé€‰æ‹©è¦åˆ é™¤çš„é¡¹ç›®ï¼
     Return
 }
 Else{
 LV_GetText(varname, FocusedRowNumber, 1)
-MsgBox,4129,¾¯¸æ,ÊÇ·ñÈ·ÈÏÉ¾³ı"%varname%"Õâ¸öÏîÄ¿£¿¸Ã²Ù×÷ÎŞ·¨³·Ïú£¬ÇëÉ÷ÖØ¡£
+MsgBox,4129,è­¦å‘Š,æ˜¯å¦ç¡®è®¤åˆ é™¤"%varname%"è¿™ä¸ªé¡¹ç›®ï¼Ÿè¯¥æ“ä½œæ— æ³•æ’¤é”€ï¼Œè¯·æ…é‡ã€‚
 IfMsgBox,Yes
 {
     RegDelete,%Sys%,SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\%varname%
@@ -131,7 +131,7 @@ Return
 Return
 
 About:
-Gui 3:Show, w%WinW% h70, ¹ØÓÚ
+Gui 3:Show, w%WinW% h70, å…³äº
 XPos2 := WinW - 60
     GuiControl 3:Move, Text4, x%XPos2%
     Loop {
@@ -172,7 +172,8 @@ return
 
 PlayLV:
 LV_GetText(Mdir, rrownum, 2)
-abcd=explorer.exe /select, "%Mdir%"
-Transform,abcd,Deref,%abcd%
-Run,%abcd%
+Transform,abcd,Deref,%Mdir%
+CF_OpenFolder(abcd)
 return
+
+#Include %A_ScriptDir%\..\Lib\CF.ahk

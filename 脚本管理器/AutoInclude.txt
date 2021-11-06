@@ -1,4 +1,5 @@
 ﻿#Include *i %A_ScriptDir%\鼠标手势动作\发送按键.ahk
+#Include *i %A_ScriptDir%\鼠标手势动作\所有窗口最小化.ahk
 #Include *i %A_ScriptDir%\鼠标手势动作\桌面关闭.ahk
 #Include *i %A_ScriptDir%\鼠标手势动作\窗口关闭.ahk
 #Include *i %A_ScriptDir%\鼠标手势动作\窗口最大化.ahk

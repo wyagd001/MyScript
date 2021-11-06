@@ -1,33 +1,4 @@
-﻿;#IfWinActive,拖拽移动文件到目标文件夹（自动重命名）
-;* 任意==号时自动触发，不需要终止符触发，B0 触发不删除==
-:?B0*:==::
-If !IME_IsENG()
-; 检测 IME 状态，中文输入时不执行任何命令，
-{
-sleep,400
-Return
-}
-Else
-{
-BackUp_ClipBoard := ClipboardAll
-Clipboard :=
-;复制
-Send, +{Home}^c
-;剪贴
-;Send, +{Home}^x
-ClipWait, 0.5
-StringReplace, Clipboard, Clipboard,==,,all
-Tmp_Val := ZTrim( Eval(Clipboard) )
-;是否保留公式
-;Send, {end}=
-SendInput, %Tmp_Val%
-Clipboard := BackUp_ClipBoard
-Tmp_Val := BackUp_ClipBoard := ""
-}
-Return
-;#IfWinActive
-
-Eval(x)
+﻿Eval(x)
 {
 x := RegExReplace(x,"(.*)=")
 x := RegExReplace(x,"\s*")
@@ -39,6 +10,7 @@ If !RegExMatch(x, "(.*)\(([^\(\)]*)\)(.*)", y)
 x := y1 Eval_(y2) y3
 }
 }
+
 Eval_(x)
 {
 RegExMatch(x, "(.*)(\+|\#)(.*)", y)

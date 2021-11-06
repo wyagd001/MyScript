@@ -185,7 +185,7 @@ OpenAndSelect(sPath, Files*)
 	}
 
 	DllCall("shell32\SHOpenFolderAndSelectItems", "Ptr", FolderPidl, "UInt", Files.MaxIndex(), "Ptr", &PidlArray, "Int", 0)
-	tooltip % ErrorLevel  " - " A_LastError " - " Files[1]
+	;tooltip % ErrorLevel  " - " A_LastError " - " Files[1]
 	; Free all of the pidl memory
 	for i in Files 
 	{
@@ -455,7 +455,7 @@ IsRenaming()
 	{
 		If(focussed="Edit1")
 		{
-			tooltip 123
+			;tooltip 123
 			Return true
 		}
 	}
@@ -1143,7 +1143,7 @@ SetDirectory(sPath)
 		sPath .="\"s
 	If (WinActive("ahk_class CabinetWClass"))
 	{
-		If (InStr(FileExist(sPath), "D") || SubStr(sPath,1,6)="shell:" || SubStr(sPath,1,6)="ftp://" || strEndsWith(sPath,".search-ms")||CF_Isinteger(sPath))
+		If (CF_IsFolder(sPath) || SubStr(sPath,1,6)="shell:" || SubStr(sPath,1,6)="ftp://" || strEndsWith(sPath,".search-ms")||CF_Isinteger(sPath))
 		{
 			hWnd := WinExist("A")
 			ShellNavigate(sPath,0,hwnd)
@@ -1190,16 +1190,6 @@ f_GetExplorerList() ; Thanks to F1reW1re
 		}
 	}
 	return PathList
-}
-
-f_IsFolder(ThisPath)
-{
-	if InStr(FileExist(ThisPath), "D")
-	|| (ThisPath = """::{20D04FE0-3AEA-1069-A2D8-08002B30309D}""")
-	|| SubStr(ThisPath, 1, 2) = "\\"
-		return 1
-	else
-		return 0
 }
 
 f_GetPathEdit(ThisID) ; get the classnn of the addressbar, thanks to F1reW1re

@@ -6,7 +6,7 @@ EditSelectedFiles()
 {
 	global TextEditor,ImageEditor,DefaultPlayer
 	ImageExtensions = jpg,png,bmp,gif,tga,tif,ico,jpeg
-	audioExtensions = wma,mp3,wav,mdi
+	audioExtensions = wma,mp3,wav
 	files:=GetSelectedFiles()
 	if !files
 		files:= GetSelText()
@@ -66,7 +66,7 @@ SplitByExtension(ByRef files, ByRef SplitFiles,extensions)
 	Loop, Parse, files, `n,`r  ; Rows are delimited by linefeeds ('r`n).
 	{
 		SplitPath, A_LoopField , , , OutExtension
-	  if (InStr(extensions, OutExtension) && OutExtension!="")
+	  if (InStr(extensions, OutExtension) && OutExtension != "")
 	  {
 	  	Splitfiles .= A_LoopField "`n"
 	  }
@@ -85,7 +85,7 @@ RemoveLineFeedsAndSurroundWithDoubleQuotes(files)
 	result:=""
 	Loop, Parse, files, `n,`r  ; Rows are delimited by linefeeds ('r`n).
    {
-      if !InStr(FileExist(A_LoopField), "D")
+      if !CF_IsFolder(A_LoopField)
    			result=%result% "%A_LoopField%"
    }
    return result

@@ -19,7 +19,7 @@ Return
 ; 搜索文件夹中的某种类型的文件内容是否包含字符
 文件中查找字符:
 Tmp_Val := GetCurrentFolder()
-If InStr(FileExist(Tmp_Val), "D")
+If CF_IsFolder(Tmp_Val)
 {
 	IniWrite, % Tmp_Val, %run_iniFile%, 文件中查找字符, 路径
 	Run "%A_AhkPath%" "%A_ScriptDir%\Plugins\文件中查找字符.ahk"

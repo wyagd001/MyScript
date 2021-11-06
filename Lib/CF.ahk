@@ -64,9 +64,9 @@ return
 }
 
 CF_GetDriveFS(sfile){
-SplitPath, sfile, , , , , sDrive
-DriveGet, DFS, FS, %sDrive%
-return DFS
+	SplitPath, sfile, , , , , sDrive
+	DriveGet, DFS, FS, %sDrive%
+	return DFS
 }
 
 CF_FolderIsEmpty(sfolder){
@@ -76,9 +76,27 @@ return 1
 }
 
 CF_Isinteger(ByRef hNumber){
-if hNumber is integer
-{
-hNumber := Round(hNumber)
-return true
+	if hNumber is integer
+	{
+		hNumber := Round(hNumber)
+		return true
+	}
 }
+
+CF_IsFolder(sfile){
+	if InStr(FileExist(sfile), "D")
+	|| (sfile = """::{20D04FE0-3AEA-1069-A2D8-08002B30309D}""")
+	|| SubStr(sfile, 1, 2) = "\\"
+		return 1
+	else
+		return 0
+}
+
+CF_OpenFolder(sfile, OnlyFolder := 1){
+	if !CF_IsFolder(sfile)
+		SplitPath, sfile, , oPath
+	if OnlyFolder
+		Run %oPath%
+	else
+		Run, % "explorer.exe /select," sfile
 }

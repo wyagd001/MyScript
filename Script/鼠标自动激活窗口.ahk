@@ -2,6 +2,7 @@
 ; Don't consider it hovering if the mouse was clicked.
 ; However, clicking and then moving a small amount will still trigger hover.
 ~RButton::
+If(Auto_Raise=1)
 stophovering(5)
 CoordMode, Mouse, Screen
 MouseGetPos, lastx, lasty
@@ -10,15 +11,15 @@ return
 
 stophovering(sectime:=1)
 {
-SetTimer, hovering, off
-SetTimer, hovercheck, off
-hovering_off:=1
-SetTimer, starthovering, % -(sectime * 1000)
+	SetTimer, hovering, off
+	SetTimer, hovercheck, off
+	hovering_off:=1
+	SetTimer, starthovering, % -(sectime * 1000)
 return
 
 starthovering:
-hovering_off:=0
-SetTimer, hovercheck, on
+	hovering_off:=0
+	SetTimer, hovercheck, on
 return
 }
 

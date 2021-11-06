@@ -28,7 +28,7 @@ Gui, Add, Text, x12 y20 w80 h25 , 下载链接：
 Gui, Add, Edit, x80 y20 w310 h25 vsUrl gsUrl2sFile,%sUrl%
 Gui, Add, Button, x390 y20 w60 h25 gxunlei,迅雷下载
 Gui, Add, Text, x12 y50 w80 h25 , 保存路径：
-Gui, Add, Edit, x80 y50 w310 h25 vsFolder, N:\
+Gui, Add, Edit, x80 y50 w310 h25 vsFolder, J:\
 Gui, Add, Button, x390 y50 w60 h25 gSelectFolder, 浏览
 Gui, Add, Text, x12 y80 w80 h25 , 文件名称：
 Gui, Add, Edit, x80 y80 w310 h25 vsFile,%sFile%
@@ -344,7 +344,7 @@ view:
 	IfInString, oFilefullpath, \\
 		StringReplace, oFilefullpath, oFilefullpath,\\,\,All
 	If Fileexist(oFileFullPath)
-		run % "explorer.exe /select," oFileFullPath
+		CF_OpenFolder(oFileFullPath)
 	Else
 		msgbox % oFileFullPath
 Return
@@ -439,3 +439,5 @@ Base64Decode(code) {
 	IfEqual m,2, Return out Chr(buffer>>16)
 Return out Chr(buffer>>16) Chr(255 & buffer>>8)
 }
+
+#Include %A_ScriptDir%\..\Lib\CF.ahk

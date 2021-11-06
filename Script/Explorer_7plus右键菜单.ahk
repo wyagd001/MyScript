@@ -1,7 +1,43 @@
 ﻿TriggerFromContextMenu(wParam, lParam){
 	Gosub % wparam
+	Return 1
 	}
-Return
+
+; 接收直接发送过来的文件路径, 暂时不用
+ExecReceive_WM_COPYDATA(wParam, lParam)
+{
+	StringAddress := NumGet(lParam + 2*A_PtrSize)
+	CopyOfData := StrGet(StringAddress)
+	arrCandy_Cmd_Str :=StrSplit(CopyOfData, "|", " `t")
+	Candy_Cmd_Str1 := arrCandy_Cmd_Str[1]
+	Candy_Cmd_Str2 := arrCandy_Cmd_Str[2]
+	;tooltip % CopyOfData " - " Candy_Cmd_Str2 " - " Candy_Cmd_Str1
+if !Candy_Cmd_Str2
+{
+run notepad "%Candy_Cmd_Str1%"
+		return true
+}
+	if IsLabel(Candy_Cmd_Str2)
+	{
+		CandySel := Candy_Cmd_Str1
+		Gosub % Candy_Cmd_Str2
+		return true
+	}
+	else
+	{
+		Transform, Candy_Cmd_Str3, Deref, %Candy_Cmd_Str2%
+		if Candy_Cmd_Str3
+{
+		run %Candy_Cmd_Str3% "%Candy_Cmd_Str1%"
+		return true
+}
+		else
+		{
+					run %Candy_Cmd_Str2% "%Candy_Cmd_Str1%"
+		return true
+		}
+	}
+}
 
 regsvr32dll:
 	RegisterShellExtension(0)
@@ -52,9 +88,12 @@ Return
 
 RegisterShellExtension(Silent=1)
 {
+	7plus_shelldll := A_ScriptDir "\Dll\" (A_PtrSize=8 ? "ShellExtension_x64.dll" : "ShellExtension_x32.dll")
+	if fileexist(7plus_shelldll)
+	{
 	If(Vista7)
 	{
-		uacrep := DllCall("shell32\ShellExecute", uint, 0, str, "RunAs", str, "regsvr32", str, "/s """ A_ScriptDir "\Dll\" (A_PtrSize=8 ? "ShellExtension_x64.dll" : "ShellExtension_x32.dll") """", str, A_ScriptDir, int, 1)
+		uacrep := DllCall("shell32\ShellExecute", uint, 0, str, "RunAs", str, "regsvr32", str, "/s """ 7plus_shelldll """", str, A_ScriptDir, int, 1)
 		If(uacrep = 42) ; UAC Prompt confirmed, application may run as admin
 		{
 			If(!Silent)
@@ -65,6 +104,9 @@ RegisterShellExtension(Silent=1)
 	}
 	Else ; XP
 		run regsvr32 "%A_ScriptDir%\Dll\ShellExtension_x32.dll"
+	}
+	Else
+			MsgBox, % "dll文件不存在!请检查路径`n" 7plus_shelldll
 }
 
 UnregisterShellExtension(Silent=1)

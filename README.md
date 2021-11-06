@@ -1,6 +1,7 @@
 ﻿# MyScript
 
 主要集合以下的脚本，参考的脚本太多，有许多脚本没有列出。因为各种原因，链接不一定有效。  
+脚本说明: https://wyagd001.github.io/Run-Ahk/  
 
 1.Drag and Drop Auto-Renamer -------by DTY  
 http://www.autohotkey.com/forum/topic30647.html  

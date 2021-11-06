@@ -1,59 +1,69 @@
-defaultSet =
+ï»¿defaultSet =
 	( LTrim
-		¶¯×÷_Ãû³Æ=¶¯×÷¹ÜÀí
-		¶¯×÷_¹ì¼£=ÏÂ×ó
-		¶¯×÷_ÌáÊ¾=¶¯×÷¹ÜÀí
-		¶¯×÷_Ìõ¼şÄ£Ê½=Í¨ÓÃ
-		¶¯×÷_ÉúĞ§Ìõ¼ş=
-		¶¯×÷_Ä£Ê½=±êÇ©
-		¶¯×÷_ÃüÁî=Êó±êÊÖÊÆ¶¯×÷¹ÜÀí
-		¶¯×÷_ÆôÓÃ=1
+		åŠ¨ä½œ_åç§°=åŠ¨ä½œç®¡ç†
+		åŠ¨ä½œ_è½¨è¿¹=ä¸‹å·¦
+		åŠ¨ä½œ_æç¤º=åŠ¨ä½œç®¡ç†
+		åŠ¨ä½œ_æ¡ä»¶æ¨¡å¼=é€šç”¨
+		åŠ¨ä½œ_ç”Ÿæ•ˆæ¡ä»¶=
+		åŠ¨ä½œ_æ¨¡å¼=æ ‡ç­¾
+		åŠ¨ä½œ_å‘½ä»¤=é¼ æ ‡æ‰‹åŠ¿åŠ¨ä½œç®¡ç†
+		åŠ¨ä½œ_å¯ç”¨=1
 	)
 SplitPath, A_ScriptFullPath,,,,SecName
 MG_WriteIni(SecName, defaultSet)
 ExitApp
 return
 
-Êó±êÊÖÊÆ¶¯×÷¹ÜÀí:
+é¼ æ ‡æ‰‹åŠ¿åŠ¨ä½œç®¡ç†:
 Gui,2: Destroy
 MGA_CNameList:=""
 Gui,2: Default
-Gui,2: Add, ListView, x8 y24 w160 h426 vpluginsList gloadset, ¶¯×÷ÁĞ±í
-Gui,2: Add, Text, x180 y20 w65 h30 +0x200, ¶¯×÷Ãû³Æ:
-Gui,2: Add, Button, x590 y20 w60 h32 gDelMGA, É¾³ı¶¯×÷
+Gui,2: Add, ListView, x8 y24 w160 h426 vpluginsList gloadset, åŠ¨ä½œåˆ—è¡¨
+Gui,2: Add, Text, x180 y20 w65 h30 +0x200, åŠ¨ä½œåç§°:
+Gui,2: Add, Button, x590 y20 w60 h32 gDelMGA, åˆ é™¤åŠ¨ä½œ
 Gui,2: Add, Edit, x280 y20 w300 h27 vMGA_Name, 
-Gui,2: Add, Text, x180 y60 w65 h30 +0x200, ¶¯×÷¹ì¼£:
+Gui,2: Add, Text, x180 y60 w65 h30 +0x200, åŠ¨ä½œè½¨è¿¹:
 Gui,2: Add, Edit, x280 y60 w300 h27 vMGA_GJ,
-Gui,2: Add, Button, x590 y60 w60 h32 vStartMGHZ gStartMGHZ, ¿ªÊ¼»æÖÆ
-Gui,2: Add, Text, x180 y100 w87 h30 +0x200, ¶¯×÷ÌáÊ¾ÎÄ±¾:
+Gui,2: Add, Button, x590 y60 w60 h32 vStartMGHZ gStartMGHZ, å¼€å§‹ç»˜åˆ¶
+Gui,2: Add, Text, x180 y100 w87 h30 +0x200, åŠ¨ä½œæç¤ºæ–‡æœ¬:
 Gui,2: Add, Edit, x280 y100 w300 h27 vMGA_Tip, 
-Gui,2: Add, Text, x180 y140 w85 h30 +0x200, ¶¯×÷ÉúĞ§Ä£Ê½:
-Gui,2: Add, DropDownList, x280 y140 w163 vMGA_Mode, ÌØ¶¨´°¿Ú|·ÇÌØ¶¨´°¿Ú|Í¨ÓÃ
-Gui,2: Add, Text, x180 y180 w85 h30 +0x200, ¶¯×÷ÉúĞ§Ìõ¼ş:
+Gui,2: Add, Text, x180 y140 w85 h30 +0x200, åŠ¨ä½œç”Ÿæ•ˆæ¨¡å¼:
+Gui,2: Add, DropDownList, x280 y140 w163 vMGA_Mode, ç‰¹å®šçª—å£|éç‰¹å®šçª—å£|é€šç”¨
+Gui,2: Add, Text, x180 y180 w85 h30 +0x200, åŠ¨ä½œç”Ÿæ•ˆæ¡ä»¶:
 Gui,2: Add, Edit, x280 y180 w300 h27 vMGA_TJ, 
-Gui,2: Add, Picture, x590 y180 w32 h32 gGetWClass vPic, % A_ScriptDir "\Êó±êÊÖÊÆ¶¯×÷\Full.ico"
-Gui,2: Add, Text, x180 y220 w85 h30 +0x200, ¶¯×÷µ÷ÓÃÄ£Ê½:
-Gui,2: Add, DropDownList, x280 y220 w163 vMGA_CType, ±êÇ©|º¯Êı
-Gui,2: Add, Text, x180 y260 w85 h30 +0x200, ¶¯×÷µ÷ÓÃÃüÁî:
+Gui,2: Add, Picture, x590 y180 w32 h32 gGetWClass vPic, % A_ScriptDir "\é¼ æ ‡æ‰‹åŠ¿åŠ¨ä½œ\Full.ico"
+Gui,2: Add, Text, x180 y220 w85 h30 +0x200, åŠ¨ä½œè°ƒç”¨æ¨¡å¼:
+Gui,2: Add, DropDownList, x280 y220 w163 vMGA_CType, æ ‡ç­¾|å‡½æ•°
+Gui,2: Add, Text, x180 y260 w85 h30 +0x200, åŠ¨ä½œè°ƒç”¨å‘½ä»¤:
 Gui,2: Add, ComboBox, x280 y260 w300 h140 vMGA_CName,
-Gui,2: Add, Button, x544 y416 w77 h36 gsaveaction, ±£´æ
-Gui,2: Add, Button, x440 y416 w77 h36 g2GuiClose, È¡Ïû
+Gui,2: Add, Button, x544 y416 w77 h36 gsaveaction, ä¿å­˜
+Gui,2: Add, Button, x440 y416 w77 h36 g2GuiClose, å–æ¶ˆ
 
- for k in Êó±êÊÖÊÆÉèÖÃ¶ÔÏó
+ for k in é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡
 {
 	if k
 	{
-		LV_Add("", k)
-		if !(ipos := instr(Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[k].¶¯×÷_ÃüÁî, "|"))
-			MGA_CNameList .= Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[k].¶¯×÷_ÃüÁî "|"
+		åŠ¨ä½œé¡¹ç›®:= k MGA_Name2ç®­å¤´(é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[k].åŠ¨ä½œ_è½¨è¿¹)
+		LV_Add("", åŠ¨ä½œé¡¹ç›®)
+		if !(ipos := instr(é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[k].åŠ¨ä½œ_å‘½ä»¤, "|"))
+			MGA_CNameList .= é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[k].åŠ¨ä½œ_å‘½ä»¤ "|"
 		else
-			MGA_CNameList .= SubStr(Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[k].¶¯×÷_ÃüÁî, 1, iPos-1) "|"
+			MGA_CNameList .= SubStr(é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[k].åŠ¨ä½œ_å‘½ä»¤, 1, iPos-1) "|"
 	}
 }
 Sort, MGA_CNameList, U D|
-Gui,2: Show, w654 h470, ¶¯×÷¹ÜÀí
+Gui,2: Show, w654 h470, åŠ¨ä½œç®¡ç†
 GuiControl, , MGA_CName, |%MGA_CNameList%
 Return
+
+MGA_Name2ç®­å¤´(Str)
+{
+	Str := StrReplace(Str, "ä¸Š", "â†‘")
+	Str := StrReplace(Str, "ä¸‹", "â†“")
+	Str := StrReplace(Str, "å·¦", "â†")
+	Str := StrReplace(Str, "å³", "â†’")
+	Return "ã€" Str "ã€‘"
+}
 
 loadset:
 Gui,2: submit, nohide
@@ -64,13 +74,15 @@ if A_GuiEvent = DoubleClick
 	if RF
 	{
 		LV_GetText(C1,RF,1)
-		GuiControl, , MGA_Name, % Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[C1].¶¯×÷_Ãû³Æ
-		GuiControl, , MGA_GJ, % Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[C1].¶¯×÷_¹ì¼£
-		GuiControl, , MGA_Tip, % Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[C1].¶¯×÷_ÌáÊ¾
-		GuiControl, , MGA_TJ, % Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[C1].¶¯×÷_ÉúĞ§Ìõ¼ş
-		GuiControl, Text, MGA_CName, % Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[C1].¶¯×÷_ÃüÁî
-		GuiControl, ChooseString, MGA_Mode, % Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[C1].¶¯×÷_Ìõ¼şÄ£Ê½
-		GuiControl, ChooseString, MGA_CType, % Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[C1].¶¯×÷_Ä£Ê½
+		ipos := instr(C1, "ã€")
+		C1 := SubStr(C1, 1, iPos-1)
+		GuiControl, , MGA_Name, % é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[C1].åŠ¨ä½œ_åç§°
+		GuiControl, , MGA_GJ, % é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[C1].åŠ¨ä½œ_è½¨è¿¹
+		GuiControl, , MGA_Tip, % é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[C1].åŠ¨ä½œ_æç¤º
+		GuiControl, , MGA_TJ, % é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[C1].åŠ¨ä½œ_ç”Ÿæ•ˆæ¡ä»¶
+		GuiControl, Text, MGA_CName, % é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[C1].åŠ¨ä½œ_å‘½ä»¤
+		GuiControl, ChooseString, MGA_Mode, % é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[C1].åŠ¨ä½œ_æ¡ä»¶æ¨¡å¼
+		GuiControl, ChooseString, MGA_CType, % é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[C1].åŠ¨ä½œ_æ¨¡å¼
 	}
 }
 return
@@ -83,16 +95,18 @@ Gui,2: Destroy
 return
 
 GetWClass:
-GuiControl,,Pic, % A_ScriptDir "\Êó±êÊÖÊÆ¶¯×÷\Null.ico"
-CursorHandle := DllCall( "LoadCursorFromFile", Str,A_ScriptDir "\Êó±êÊÖÊÆ¶¯×÷\Cross.CUR" )
+GuiControl,,Pic, % A_ScriptDir "\é¼ æ ‡æ‰‹åŠ¿åŠ¨ä½œ\Null.ico"
+CursorHandle := DllCall( "LoadCursorFromFile", Str,A_ScriptDir "\é¼ æ ‡æ‰‹åŠ¿åŠ¨ä½œ\Cross.CUR" )
 DllCall( "SetSystemCursor", Uint,CursorHandle, Int,32512 )
 SetTimer,GetPos,300
 KeyWait,LButton
 DllCall( "SystemParametersInfo", UInt,0x57, UInt,0, UInt,0, UInt,0 )
 SetTimer,GetPos,Off
 Gui,2:Default
-GuiControl, , MGA_TJ, % OutWin2
-GuiControl,,Pic, % A_ScriptDir "\Êó±êÊÖÊÆ¶¯×÷\Full.ico"
+GuiControlGet, OutputVar,, MGA_TJ
+OutputVar := trim(OutputVar,";")
+GuiControl, , MGA_TJ, % OutputVar ";" OutWin2
+GuiControl,,Pic, % A_ScriptDir "\é¼ æ ‡æ‰‹åŠ¿åŠ¨ä½œ\Full.ico"
 return
 
 GetPos:
@@ -107,11 +121,13 @@ IniDelete, % MG_settingFile, % MGA_Name
 RowNumber := 0
 loop
 {
-	LV_GetText(OutputVar, RowNumber)
-	if (OutputVar = MGA_Name)
+	LV_GetText(C1, RowNumber)
+	ipos := instr(C1, "ã€")
+	C1 := SubStr(C1, 1, iPos-1)
+	if (C1 = MGA_Name)
 	{
 		LV_Delete(RowNumber)
-		Êó±êÊÖÊÆÉèÖÃ¶ÔÏó.Delete(MGA_Name)
+		é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡.Delete(MGA_Name)
 		break
 	}
 	RowNumber+=1
@@ -120,7 +136,7 @@ return
 
 StartMGHZ:
 StartMGHZ:=1
-GuiControl,, StartMGHZ, »æÖÆÖĞ
+GuiControl,, StartMGHZ, ç»˜åˆ¶ä¸­
 return
 
 saveaction:
@@ -128,26 +144,26 @@ Gui,2: submit, nohide
 if MGA_Name and (MGA_Name != " ")
 {
 /*
-	IniWrite, % MGA_Name, % MG_settingFile, % MGA_Name, ¶¯×÷_Ãû³Æ
-	IniWrite, % MGA_GJ, % MG_settingFile, % MGA_Name, ¶¯×÷_¹ì¼£
-	IniWrite, % MGA_Tip, % MG_settingFile, % MGA_Name, ¶¯×÷_ÌáÊ¾
-	IniWrite, % MGA_Mode, % MG_settingFile, % MGA_Name, ¶¯×÷_Ìõ¼şÄ£Ê½
-	IniWrite, % MGA_TJ, % MG_settingFile, % MGA_Name, ¶¯×÷_ÉúĞ§Ìõ¼ş
-	IniWrite, % MGA_CType, % MG_settingFile, % MGA_Name, ¶¯×÷_Ä£Ê½
-	IniWrite, % MGA_CName, % MG_settingFile, % MGA_Name, ¶¯×÷_ÃüÁî
+	IniWrite, % MGA_Name, % MG_settingFile, % MGA_Name, åŠ¨ä½œ_åç§°
+	IniWrite, % MGA_GJ, % MG_settingFile, % MGA_Name, åŠ¨ä½œ_è½¨è¿¹
+	IniWrite, % MGA_Tip, % MG_settingFile, % MGA_Name, åŠ¨ä½œ_æç¤º
+	IniWrite, % MGA_Mode, % MG_settingFile, % MGA_Name, åŠ¨ä½œ_æ¡ä»¶æ¨¡å¼
+	IniWrite, % MGA_TJ, % MG_settingFile, % MGA_Name, åŠ¨ä½œ_ç”Ÿæ•ˆæ¡ä»¶
+	IniWrite, % MGA_CType, % MG_settingFile, % MGA_Name, åŠ¨ä½œ_æ¨¡å¼
+	IniWrite, % MGA_CName, % MG_settingFile, % MGA_Name, åŠ¨ä½œ_å‘½ä»¤
 */
-	if !isobject(Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[MGA_Name])
+	if !isobject(é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[MGA_Name])
 	{
-		LV_Add("", MGA_Name)
-		Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[MGA_Name]:={}
+		LV_Add("", MGA_Name MGA_Name2ç®­å¤´(MGA_GJ))
+		é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[MGA_Name]:={}
 	}
-	Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[MGA_Name].¶¯×÷_Ãû³Æ:=MGA_Name
-	Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[MGA_Name].¶¯×÷_¹ì¼£:=MGA_GJ
-	Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[MGA_Name].¶¯×÷_ÌáÊ¾:=MGA_Tip
-	Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[MGA_Name].¶¯×÷_Ìõ¼şÄ£Ê½:=MGA_Mode
-	Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[MGA_Name].¶¯×÷_ÉúĞ§Ìõ¼ş:=MGA_TJ
-	Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[MGA_Name].¶¯×÷_Ä£Ê½:=MGA_CType
-	Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[MGA_Name].¶¯×÷_ÃüÁî:=MGA_CName
-	obj2ini(Êó±êÊÖÊÆÉèÖÃ¶ÔÏó, MG_settingFile, MGA_Name)
+	é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[MGA_Name].åŠ¨ä½œ_åç§°:=MGA_Name
+	é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[MGA_Name].åŠ¨ä½œ_è½¨è¿¹:=MGA_GJ
+	é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[MGA_Name].åŠ¨ä½œ_æç¤º:=MGA_Tip
+	é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[MGA_Name].åŠ¨ä½œ_æ¡ä»¶æ¨¡å¼:=MGA_Mode
+	é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[MGA_Name].åŠ¨ä½œ_ç”Ÿæ•ˆæ¡ä»¶:=MGA_TJ
+	é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[MGA_Name].åŠ¨ä½œ_æ¨¡å¼:=MGA_CType
+	é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[MGA_Name].åŠ¨ä½œ_å‘½ä»¤:=MGA_CName
+	obj2ini(é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡, MG_settingFile, MGA_Name)
 }
 return

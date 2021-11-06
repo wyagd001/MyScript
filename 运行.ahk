@@ -464,6 +464,8 @@ if Auto_7plusMenu
 	DllCall("ChangeWindowMessageFilter", "UInt", 55555, "UInt", 1)
 }
 
+OnMessage(0x4a, "ExecReceive_WM_COPYDATA")
+
 if Auto_tsk_UpdateMenu
   OnMessage(0x404, "AHK_NOTIFYICON")
 
@@ -558,41 +560,25 @@ if Auto_FuncsIcon
 ;----------不显示托盘图标则重启脚本----------
 
 ;=========窗口分组=========
-;依次将桌面，显示桌面，我的电脑，资源管理器,另存为窗口加入"组" "ccc"中,应用于定位文件,复制路径,智能重命名等
-GroupAdd, ccc, ahk_class CabinetWClass
-GroupAdd, ccc, ahk_class ExploreWClass
-GroupAdd, ccc, ahk_class Progman
-GroupAdd, ccc, ahk_class WorkerW
-GroupAdd, ccc, ahk_class #32770
+; 分组 ccc: 应用于定位文件,复制路径,智能重命名等
+; 分组 Prew_Group: 空格预览, Md5, 记事本打开(F6), 复制路径
+; 分组 ExplorerGroup: 中键新窗口打开文件夹, SetFocusToFileView(), IsRenaming()
+; 分组 DesktopGroup: InFileList(), IsRenaming()
+; 分组 DesktopTaskbarGroup: 窗口缩略图
+; 分组 GameWindows: Alt+鼠标移动窗口
+IniRead IniR_Tmp_Str, %run_iniFile%, 分组
+loop, parse, IniR_Tmp_Str, `n
+{
+	Tmp_Key := RegExReplace(A_LoopField, "=.*?$")
+	Tmp_Val := RegExReplace(A_LoopField, "^.*?=")
+	Tmp_Array := StrSplit(Tmp_Val, ";")
+	for k, v in Tmp_Array
+		GroupAdd, %Tmp_Key%, ahk_class %v%
+}
+IniR_Tmp_Str := Tmp_Array := Tmp_Key := Tmp_Val := ""
 
-; 空格预览, Md5, 记事本打开(F6), 复制路径
-GroupAdd, Prew_Group, ahk_class CabinetWClass
-GroupAdd, Prew_Group, ahk_class Progman
-GroupAdd, Prew_Group, ahk_class WorkerW
-GroupAdd, Prew_Group, ahk_class EVERYTHING
-GroupAdd, Prew_Group, ahk_class TTOTAL_CMD
-
-; 主界面网址补齐、runhistory  #ifwinactive  后不能接变量
+; 分组 AppMainWindow: 主界面网址补齐、runhistory 因为 #ifwinactive 后不能接变量
 GroupAdd, AppMainWindow,%AppTitle%
-
-; 中键新窗口打开文件夹, SetFocusToFileView(), IsRenaming()
-GroupAdd, ExplorerGroup, ahk_class CabinetWClass
-GroupAdd, ExplorerGroup, ahk_class ExploreWClass
-
-; InFileList(), IsRenaming()
-GroupAdd, DesktopGroup, ahk_class Progman
-GroupAdd, DesktopGroup, ahk_class WorkerW
-
-; 窗口缩略图
-GroupAdd, DesktopTaskbarGroup,ahk_class Progman
-GroupAdd, DesktopTaskbarGroup,ahk_class WorkerW
-GroupAdd, DesktopTaskbarGroup,ahk_class Shell_TrayWnd
-GroupAdd, DesktopTaskbarGroup,ahk_class BaseBar
-GroupAdd, DesktopTaskbarGroup,ahk_class DV2ControlHost
-
-; Alt+鼠标移动窗口
-GroupAdd, GameWindows,ahk_class Warcraft III
-GroupAdd, GameWindows,ahk_class Valve001
 ;=========窗口分组=========
 
 ;=========功能加载开始=========
@@ -914,7 +900,7 @@ Loop, 4
 ;----------虚拟桌面----------
 ;=========热键设置=========
 
-;---------鼠标增强空格预览的热键-----------
+;---------鼠标增强和空格预览的热键的开启-----------
 if !Auto_mouseclick && !Auto_Raise
 	hotkey,~LButton,off
 if !Auto_midmouse
@@ -925,7 +911,7 @@ if !Auto_Spacepreview
 	hotkey, $Space, off
 	Hotkey, ifWinActive
 }
-;---------鼠标增强空格预览的热键-----------
+;---------鼠标增强和空格预览的热键的开启-----------
 
 ;----------网页控制电脑----------
 ; 电脑访问地址       127.0.0.1:8000  http://localhost:2525/
@@ -1014,8 +1000,18 @@ if Auto_Capslock
 
 	;StimeDiff := A_TickCount - Stime
 	;msgbox % "加载完毕耗时" StimeDiff/1000  "秒"
+	hotkey ~Capslock, WinMouseOn
+}
 
-	Loop {
+;----------WinMouse----------
+;----------脚本启动自动加载结束----------
+Return
+
+WinMouseOn:
+Caps_index := 1
+KeyWait, Capslock, T0.3
+if (ErrorLevel = 1) {
+Loop {
 	;Check state
 		If GetKeyState("Capslock", "P") {
 			If Not bTimerOn {
@@ -1057,11 +1053,12 @@ if Auto_Capslock
 		;bQuit := False
 		}
 		Sleep 50
+		Caps_index ++
+		if (Caps_index > 100)
+			break
 	}
 }
-;----------WinMouse----------
-;----------脚本启动自动加载结束----------
-Return
+return
 
 aaa:
 	Gosub, GetUnderMouseInfo
@@ -1409,7 +1406,7 @@ Loop, %scriptCount%
 		WinClose %thisScript% - AutoHotkey
 	}
 }
-
+	tooltip 1
 if Auto_7plusMenu
 	FileDelete, %A_Temp%\7plus\hwnd.txt
 
@@ -1433,6 +1430,7 @@ if Auto_LogClosewindows
 {
 	DllCall("DeregisterShellHookWindow","uint",hGui)
 }
+tooltip 2
 
 If !Auto_smartchooserbrowser
 {
@@ -1469,6 +1467,7 @@ If ToggleList
 		ToggleList:=StrAr_DeletElement(ToggleList,A_LoopField,1)
 	}
 }
+tooltip 3
 
 ; 还原虚拟桌面隐藏的窗口
 Loop, %numDesktops%
@@ -1498,6 +1497,7 @@ If Auto_PasteAndOpen
 	WinActivate,ahk_class Shell_TrayWnd
 	UnhookWinEvent(hWinEventHook, HookProcAdr)
 }
+tooltip 4
 
 if prewpToken
 {
@@ -1515,9 +1515,11 @@ if Auto_Cliphistory
 
 if TTLib.get_Init()
 	TTLib.UnloadFromExplorer(), TTLib.Uninit()
+tooltip 5
 
 if xd2txlib.get_Init()
   xd2txlib.Uninit()
+tooltip 6
 
 SoundPlay ,%A_ScriptDir%\Sound\Windows Error.wav
 sleep,300
@@ -1729,12 +1731,14 @@ Return
 #include %A_ScriptDir%\Lib\ProcessMemory.ahk
 #include %A_ScriptDir%\Lib\WinEventHook.ahk
 #include %A_ScriptDir%\Lib\ActiveScript.ahk
+#include %A_ScriptDir%\Lib\Eval2.ahk
 #include %A_ScriptDir%\Lib\Class_GuiDropFiles.ahk
 #include %A_ScriptDir%\Lib\Class_SQLiteDB.ahk
 #include %A_ScriptDir%\Lib\Class_JSON.ahk
 #include %A_ScriptDir%\Lib\Class_WinHttp.ahk
 #include %A_ScriptDir%\Lib\Class_Interception.ahk
 #include %A_ScriptDir%\Lib\Class_TTLib.ahk
+#include %A_ScriptDir%\Lib\Class_LV_Rows.ahk
 #include %A_ScriptDir%\Lib\Class_xd2txlib.ahk
 #Include %A_ScriptDir%\Lib\进制转换.ahk
 #Include %A_ScriptDir%\Lib\string.ahk

@@ -56,6 +56,7 @@ Else Run,% %DefaultPlayer%  ;,,UseErrorLevel
 Return
 
 MG_foo_httpcontrol_click:
+foo_httpcontrol_click:
 Run %A_ScriptDir%\Plugins\foo_httpcontrol.ahk
 Return
 

@@ -10,10 +10,10 @@ Gui, Margin, 12,12
 gui_W := 306 + gui_ww
 gui_H := 336 + gui_hh
 gui_hh+= (gui_hh = 0) ? 0 : 18
-Gui, Add, Tab, +Theme vgui_Tab w%gui_W% h%gui_H% w306, Favorites|应用程序|快捷键|图标|菜单|其它|关于
+Gui, Add, Tab, +Theme vgui_Tab w%gui_W% h%gui_H% w306, 收藏夹|应用程序|快捷键|图标|菜单|其它|关于
 
 ;--------- Favorites ---------
-Gui, Tab, Favorites
+Gui, Tab, 收藏夹
 
 gui_FavImageList := IL_Create()
 gui_W := 276 + gui_ww
@@ -284,8 +284,8 @@ Gui, Add, Text, ys+4 Section BackgroundTrans, Folder Menu
 Gui, Font
 Gui, Add, Text, ys+11 BackgroundTrans, v1.34 修改版
 Gui, Add, Text, xs BackgroundTrans, Copyright (c) 2006-2009 rexx
-Gui, Add, Text, xs-45 BackgroundTrans, 最新版本已改用AU3编写，Ahk的最新版为v2.08。
-Gui, Add, Button, xs+85 y+32 Section gf_GoWebsite, 访问软件主页
+Gui, Add, Text, xs-45 BackgroundTrans, 原脚本作者发布的最新版本已改用AU3编写，`nAhk版的最新版为v2.08。
+Gui, Add, Button, xs+75 y+32 Section gf_GoWebsite, 软件主页(Folder Menu)
 
 Gui, Tab
 gui_X := 30 + gui_ww

@@ -42,7 +42,7 @@ ShowFileFullPath:
 	; 可将用户选择的选项储存为该项目的位置而不是该选项的名称。如果没有选择项目，对于 ComboBox 将储存编辑框中的文字
 	GuiControl, , Dir, %GuiDropFiles_FileFullPath%
 	GuiControl, Choose, Dir, %GuiDropFiles_FileFullPath%
-	If InStr(FileExist(GuiDropFiles_FileFullPath), "D")
+	If CF_IsFolder(GuiDropFiles_FileFullPath)
 	{
 		TargetFolder := GuiDropFiles_FileFullPath
 		IniWrite, %TargetFolder%, %run_iniFile%, 路径设置, TargetFolder
@@ -78,10 +78,10 @@ movedropfile:
 		Return
 		}
 	}
-	If InStr(FileExist(TargetFolder), "D")
+	If CF_IsFolder(TargetFolder)
 	{
 		; 有同名文件时，自动重命名文件
-		If InStr(FileExist(FileFullPath), "D")
+		If CF_IsFolder(FileFullPath)
 		{
 			FileMoveDir, % FileFullPath, %TargetFolder%\%FileNameNoExt%, 1
 		return

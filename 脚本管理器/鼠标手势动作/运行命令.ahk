@@ -1,13 +1,13 @@
-defaultSet =
+ï»¿defaultSet =
 	( LTrim
-		¶¯×÷_Ãû³Æ=¼ÇÊÂ±¾
-		¶¯×÷_¹ì¼£=ÉÏÏÂ
-		¶¯×÷_ÌáÊ¾=´ò¿ª¼ÇÊÂ±¾
-		¶¯×÷_Ìõ¼þÄ£Ê½=Í¨ÓÃ
-		¶¯×÷_ÉúÐ§Ìõ¼þ=
-		¶¯×÷_Ä£Ê½=º¯Êý
-		¶¯×÷_ÃüÁî=MGA_Run|notepad
-		¶¯×÷_ÆôÓÃ=1
+		åŠ¨ä½œ_åç§°=è®°äº‹æœ¬
+		åŠ¨ä½œ_è½¨è¿¹=ä¸Šä¸‹
+		åŠ¨ä½œ_æç¤º=æ‰“å¼€è®°äº‹æœ¬
+		åŠ¨ä½œ_æ¡ä»¶æ¨¡å¼=é€šç”¨
+		åŠ¨ä½œ_ç”Ÿæ•ˆæ¡ä»¶=
+		åŠ¨ä½œ_æ¨¡å¼=å‡½æ•°
+		åŠ¨ä½œ_å‘½ä»¤=MGA_Run|notepad
+		åŠ¨ä½œ_å¯ç”¨=1
 	)
 SplitPath, A_ScriptFullPath,,,,SecName
 MG_WriteIni(SecName, defaultSet)

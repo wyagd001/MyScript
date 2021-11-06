@@ -10,13 +10,16 @@
 ;#NoTrayIcon
 ;!Space::
 定位文件:
-IfWinActive,ahk_Group ccc
-searchInExplorer()
+定位文件二:
+If WinActive("ahk_class CabinetWClass")
+	searchInExplorer()
+else If WinActive("ahk_class #32770") or WinActive("ahk_class RegEdit_RegEdit")
+	gosub dialogpath
 Else
 {
-Sleep,100
-Send !{Space}
-    }
+	Sleep,100
+	Send !{Space}
+}
 Return
 
 ;---------------------------------------------------------------------------
@@ -165,3 +168,88 @@ ListEvent:
         LV_GetText(SelectedFile, LV_GetNext(0))
     Return
 }
+
+; 对话框跳转使用 Folder Menu 就足够了,这里只是展示 TV 定位的函数
+dialogpath:
+hdialogwin := WinExist("A")
+hdialogedit := ""
+If WinActive("ahk_class #32770")
+{
+	WinGetPos, hX, hY, , , ahk_class #32770
+	ControlGet, hTreeView, Hwnd,, SysTreeView321, ahk_class #32770
+	ControlGet, hdialogedit, Hwnd,, DirectUIHWND3, ahk_class #32770
+}
+else If WinActive("ahk_class RegEdit_RegEdit")
+{
+	WinGetPos, hX, hY, , , ahk_class RegEdit_RegEdit
+	ControlGet, hTreeView, Hwnd,, SysTreeView321, ahk_class RegEdit_RegEdit
+	hdialogedit := 1
+}
+if !hTreeView
+return
+Gui,DialogTv:Destroy
+Gui, DialogTv:New
+Gui DialogTv:Default 
+Gui, Add, Picture, x0 y0 vhpic gDialogFav, %A_ScriptDir%\pic\Candy\Command\windo.ico
+Gui, Add, Edit, x+0 yp+0 w300 h25 vdpath
+Gui, Add, button,  x+0 yp+0 w30 gsetpath, Go!
+Gui, Add, button,  x+0 yp+0 w30 gDialogTvGuiEscape, X
+gui, show, % "x" . hX . " y" . ((hY>30)?(hy-30):(hy+30)) . " w390 h1"
+
+gui, -Caption -Border +AlwaysOnTop +Owner 
+return
+
+setpath:
+Gui DialogTv:Default 
+Gui, Submit , NoHide
+hdrive := SubStr(dpath, 1, 2)
+If WinExist("ahk_class #32770")
+{
+	DriveGet, OutputVar, Label, %hdrive%
+	dpath := StrReplace(dpath, hdrive, OutputVar " (" hdrive ")" )
+	dpath := StrReplace(dpath, "\users\", "\用户\")
+	dpath := StrReplace(dpath, "\desktop\", "\桌面\")
+}
+;tooltip % dpath
+TVPath_Set(hTreeView, (hdialogedit?"计算机\":"桌面\计算机\") dpath, outMatchPath,,,10)
+ControlFocus, , ahk_id %hTreeView%
+ControlSend, , {Enter}, ahk_id %hTreeView%
+;msgbox % (hdialogedit?"计算机\":"桌面\计算机\") dpath
+return
+
+DialogTvGuiEscape:
+Gui,DialogTv:Destroy
+return
+
+DialogFav:
+candysel:="对话框收藏夹"
+Candy_Cmd := "Menu|Dialog"
+Gosub Label_Candy_DrawMenu
+return
+
+Cando_Dialogsetpath:
+ControlGet, CTreeView, Hwnd,, SysTreeView321, ahk_id %hdialogwin%
+if (CTreeView != hTreeView)
+{
+	Gui,DialogTv:Destroy
+	return
+}
+dpath := Candy_Cmd_Str3
+If WinExist("ahk_class #32770")
+{
+hdrive := SubStr(dpath, 1, 2)
+DriveGet, OutputVar, Label, %hdrive%
+dpath := StrReplace(dpath, hdrive, OutputVar " (" hdrive ")" )
+dpath := StrReplace(dpath, "\users\", "\用户\")
+dpath := StrReplace(dpath, "\desktop\", "\桌面\")
+;tooltip % dpath " - " hTreeView
+TVPath_Set(hTreeView, (hdialogedit?"计算机\":"桌面\计算机\") dpath, outMatchPath,,,10)
+ControlFocus, , ahk_id %hTreeView%
+ControlSend, , {Enter}, ahk_id %hTreeView%
+;msgbox % (hdialogedit?"计算机\":"桌面\计算机\") dpath "`n" hTreeView
+}
+If WinExist("ahk_class RegEdit_RegEdit")
+{
+TVPath_Set(hTreeView, "计算机\" dpath, outMatchPath)
+}
+return

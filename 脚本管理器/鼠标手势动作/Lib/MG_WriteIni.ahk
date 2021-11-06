@@ -1,5 +1,5 @@
-MG_WriteIni(section := "", defaultSet := "")
+ï»¿MG_WriteIni(section := "", defaultSet := "")
 {
-	IniWrite, % defaultSet, % A_ScriptDir "\..\Êó±êÊÖÊÆ.ini", % section
+	IniWrite, % defaultSet, % A_ScriptDir "\..\é¼ æ ‡æ‰‹åŠ¿.ini", % section
 return
 }

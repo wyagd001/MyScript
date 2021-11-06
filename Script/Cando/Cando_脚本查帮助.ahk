@@ -28,6 +28,7 @@ Cando_查新版帮助:
 				Ahk跳转的地址=/docs/commands/%直接打开%.htm
 				myURL =mk:@MSITStore:%ahk新版中文帮助%::%Ahk跳转的地址%
 				wb.Navigate(myURL)
+				wb := ""
 			}
 		Return
 		}
@@ -69,6 +70,7 @@ wb.document.getElementsByTagName("input")[0].focus()
 sleep,100
 ControlSend,Internet Explorer_Server1,{enter},%Ahk帮助标题%
 ControlSend,Internet Explorer_Server1,{enter},%Ahk帮助标题%
+wb := ""
 return
 
 monishuru2:
@@ -88,6 +90,7 @@ wb.document.getElementsByTagName("input")[1].focus()
 sleep 200
 ControlSend,Internet Explorer_Server1,{enter},%Ahk帮助标题%
 ControlSend,Internet Explorer_Server1,{enter},%Ahk帮助标题%
+wb := ""
 return
 
 Cando_脚本文字_查帮助:

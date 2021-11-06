@@ -1,6 +1,6 @@
 ﻿LV_Color_Initiate(Gui_Number=1, Control="")  ; initiate listview color change procedure 
 { 
-	global hw_LV_ColorChange,Line_Text_Color,Line_Back_Color,hw_LV_ColorChange_Header
+	global hw_LV_ColorChange, Line_Text_Color, Line_Back_Color, hw_LV_ColorChange_Header
 	Line_Text_Color := [], Line_Back_Color := []
 	If Control =
 	{
@@ -24,23 +24,17 @@ LV_Color_unload()
 
 LV_Color_Change(Index="", TextColor="", BackColor="") ; change specific line's color or reset all lines
 { 
-	global hw_LV_ColorChange,Line_Text_Color,Line_Back_Color
-	If Index && (TextColor || BackColor)
+	global hw_LV_ColorChange, Line_Text_Color, Line_Back_Color
+	If !Index
+	{
+		Loop,% LV_GetCount() 
+			LV_Color_Change(A_Index) 
+	}
+	else
 	{
 		Line_Text_Color[Index] := TextColor
 		Line_Back_Color[Index] := BackColor
 		;tooltip % Index " _ " TextColor " _ " Line_Text_Color[Index]
-		WinSet,Redraw,,ahk_id %hw_LV_ColorChange%
-	}
-	If Index && (TextColor = "") && (BackColor = "")
-	{
-		Line_Text_Color[Index] := ""
-		Line_Back_Color[Index] := ""
-		WinSet,Redraw,,ahk_id %hw_LV_ColorChange% 
-	}
-	If !Index
-	{
-		Line_Text_Color := Line_Back_Color := ""
 		WinSet,Redraw,,ahk_id %hw_LV_ColorChange%
 	}
 }

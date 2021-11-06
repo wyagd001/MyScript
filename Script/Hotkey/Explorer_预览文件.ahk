@@ -48,7 +48,7 @@ if WinActive("ahk_class EVERYTHING") or  WinActive("ahk_class TTOTAL_CMD")
 	Prew_File :=GetSelText()
 else
 	Prew_File := ShellFolder(0,2)
-if !Prew_File or f_IsFolder(Prew_File)
+if !Prew_File or CF_IsFolder(Prew_File)
 {
  send {space}
  return
@@ -144,6 +144,7 @@ return
 */
 
 Cando_xls_prew:
+输出excel数据到GUI:
 run, "%A_AhkPath%" "%A_ScriptDir%\Plugins\输出excel数据到GUI.ahk" "%Prew_File%"
 return
 
@@ -283,6 +284,7 @@ Gui, Add, TreeView,r30 w800 h580 ImageList%ImageListID%
 if 包_注释
 	Gui, Add, Edit, r3 w800 readonly, %包_注释%
 Gui, Add, button, gtree2text, 显示文本
+Gui, Add, button, xp+70 yp+0 gPf2Unarchiver, 智能解压
 Gui, Add, StatusBar,, 快捷键: 1. 选中项目后按 F2 以选中项目重命名文件. 2. Del 删除文件. 3. F5 运行. 4. F6 编辑.
 AddBranchesToTree(Tmp_Val)
 Gui,PreWWin: Show, AutoSize Center, % Prew_File " - 文件预览"
@@ -295,6 +297,10 @@ GUI,66:Destroy
 Gui,66:Default 
 Gui, Add, Edit, w600 h300 ReadOnly,%Prew_File%`n%Tmp_Val%
 Gui show, AutoSize Center, % Prew_File " - 文件预览"
+return
+
+Pf2Unarchiver:
+7z_smart_Unarchiver(Prew_File)
 return
 
 cmdSilenceReturn(command){

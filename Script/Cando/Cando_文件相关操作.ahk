@@ -88,7 +88,7 @@ SHL_OK:
 		errFlag:=1, Tmp_Str :="未设置快捷方式名称。"
 	If (errFlag=0) And (RegexMatch(SHL_Name, "[\\/:\*\?""<>\|]")>0)
 		errFlag:=2, Tmp_Str :="快捷方式名称不得包含以下任意字符：\ / : * \ ? "" < > |"
-	If (errFlag=0) And (SHL_Path !="") And !InStr(FileExist(SHL_Path), "D")
+	If (errFlag=0) And (SHL_Path !="") And !CF_IsFolder(SHL_Path)
 		errFlag:=3, Tmp_Str := "快捷方式目录不存在。"
 	If (errFlag=0) And (FileExist(SHL_TGPath)="")
 		errFlag:=4, Tmp_Str := "目标文件不存在。"
