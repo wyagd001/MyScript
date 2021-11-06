@@ -28,7 +28,7 @@ GetSelText(returntype := 1, ByRef _isFile := "", ByRef _ClipAll := "", waittime 
 	BackUp_ClipBoard := ClipboardAll    ; 备份剪贴板
 	Clipboard =    ; 清空剪贴板
 	Send, ^c
-	sleep 200
+	sleep 100
 	ClipWait, % waittime
 	If(ErrorLevel) ; 如果粘贴板里面没有内容，则还原剪贴板
 	{

@@ -464,8 +464,6 @@ if Auto_7plusMenu
 	DllCall("ChangeWindowMessageFilter", "UInt", 55555, "UInt", 1)
 }
 
-OnMessage(0x4a, "ExecReceive_WM_COPYDATA")
-
 if Auto_tsk_UpdateMenu
   OnMessage(0x404, "AHK_NOTIFYICON")
 
@@ -611,8 +609,6 @@ if Auto_7plusMenu
 	FileAppend, %hGui%, %A_Temp%\7plus\hwnd.txt
 }
 ;----------7plus右键菜单----------
-	FileDelete, %A_Temp%\7plus\hwnd2.txt
-	FileAppend, %A_ScriptHwnd%, %A_Temp%\7plus\hwnd2.txt
 
 ;----------监视窗口创建关闭消息：7plus右键菜单之重新打开关闭的窗口 Windo菜单----------
 if Auto_LogClosewindows

@@ -10,7 +10,7 @@ cando_MD5:
 			Md5FilePath2 := GetSelText()
 		else
 			Md5FilePath2:=GetSelectedFiles()
-		if !Files
+		if !Md5FilePath2
 			FileReadLine, Md5FilePath2, %A_Temp%\7plus\files.txt, 1
 		if (Md5FilePath2 = Md5FilePath)
 		Return
@@ -45,7 +45,7 @@ cando_MD5:
 			Md5FilePath := GetSelText()
 		else
 			Md5FilePath := GetSelectedFiles()
-		if !Files
+		if !Md5FilePath
 			FileReadLine, Md5FilePath, %A_Temp%\7plus\files.txt, 1
     if (Md5FilePath = "")
       Return

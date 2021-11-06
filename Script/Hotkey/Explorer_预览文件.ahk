@@ -7,12 +7,12 @@ F2::
 ControlGet, Tmp_V, Selected,, Edit1
 if !Tmp_V
 {
-try {
-GUI, PreWWin:Default
-Tmp_id := TV_GetSelection()
-TV_GetText(Tmp_V, Tmp_id)
-SplitPath, Tmp_V, , , , Tmp_V
-}
+	try {
+		GUI, PreWWin:Default
+		Tmp_id := TV_GetSelection()
+		TV_GetText(Tmp_V, Tmp_id)
+		SplitPath, Tmp_V, , , , Tmp_V
+	}
 }
 if !Tmp_V
 return
@@ -23,7 +23,7 @@ return
 del::
 MsgBox,4,删除提示,确定要把文件放入回收站吗？`n`n%Prew_File%
 IfMsgBox Yes
-FileRecycle,%Prew_File%
+	FileRecycle,%Prew_File%
 return
 
 F5::
@@ -40,8 +40,8 @@ $Space::
 ;重命名时，直接发送空格
 if(A_Cursor="IBeam") or IsRenaming()
 {
- send {space}
- return
+	send {space}
+	return
 }
 Prew_File := ""
 if WinActive("ahk_class EVERYTHING") or  WinActive("ahk_class TTOTAL_CMD")
@@ -50,14 +50,14 @@ else
 	Prew_File := ShellFolder(0,2)
 if !Prew_File or CF_IsFolder(Prew_File)
 {
- send {space}
- return
+	send {space}
+	return
 }
 SplitPath,Prew_File,,,Prew_File_Ext
 if(Prew_File_Ext="")
 {
- send {space}
- return
+	send {space}
+	return
 }
 Candy_Cmd:=SkSub_Regex_IniRead(Candy_ProFile_Ini, "FilePrew", "i)(^|\|)" Prew_File_Ext "($|\|)")
 if Candy_Cmd
@@ -84,7 +84,7 @@ return
 }
 if Tmp_Val
 	Tmp_Val := ""
-Gui,PreWWin:Destroy
+Gui, PreWWin:Destroy
 ;if prewpToken
 ;{
 ;Gdip_ShutDown(prewpToken)
@@ -99,7 +99,7 @@ return
 
 ; 详情  https://github.com/mozilla/pdf.js
 Cando_pdf_prew:
-	gosub,IE_Open
+	gosub, IE_Open
 	WB.Navigate("https://wyagd001.github.io/pdfjs/es5/web/viewer.html?file=blank.pdf")  ; IE浏览器
 	WBStartTime := A_TickCount
 	loop 
@@ -113,7 +113,7 @@ Cando_pdf_prew:
 return
 
 Cando_html_prew:
-gosub,IE_Open
+gosub, IE_Open
 WB.Navigate(Prew_File)
 return
 
@@ -255,12 +255,13 @@ Cando_rar_prew:
 		msgbox 7z 变量未设置，请在选项→运行→自定义短语中添加。`n例如: 7z=G:\Program Files\7z\7z.exe
 	return
 	}
-	Tmp_Str := cmdSilenceReturn("for /f ""skip=12 tokens=6,* eol=-"" `%a in ('^;""" 7z """ ""l"" " """" Prew_File """') do @echo `%a `%b")
+	; 提取整行
+	Tmp_Str := cmdSilenceReturn("for /f ""skip=12 tokens=* delims=-"" `%a in ('^;""" 7z """ ""l"" " """" Prew_File """') do @echo `%a")
 	if FileExist(winrar)
 	{
-		包_注释文件 :=  A_Temp "\123_" A_Now ".txt"
+		包_注释文件 := A_Temp "\123_" A_Now ".txt"
 		RunWait, %comspec% /c ""%winrar%" cw "%Prew_File%" "%包_注释文件%"",,hide
-		FileRead,包_注释,%包_注释文件%
+		FileRead, 包_注释, %包_注释文件%
 	}
 	;msgbox % Tmp_Str
 	StringReplace, Tmp_Str, Tmp_Str, `n, `n, UseErrorLevel
@@ -268,10 +269,15 @@ Cando_rar_prew:
 	Tmp_Val := ""
 	Loop, parse, Tmp_Str, `n, `r
 	{
+		NewStr := SubStr(A_LoopField, 54)
+		if instr(NewStr, "----")
+			continue
 		if (A_Index = 1) or (A_Index >= Tmp_Lines)
 			continue
-		Tmp_FileName:=trim(A_LoopField)
-		if (Tmp_FileName="")
+		Tmp_FileName := trim(NewStr)
+		if (Tmp_FileName = "")
+			continue
+		if (Tmp_FileName = "Name")
 			continue
 		Tmp_Val .= Tmp_FileName "`n"
 	}
@@ -307,7 +313,7 @@ cmdSilenceReturn(command){
 	FileR_CMDReturn := ""
 	cmdFN := "RunAnyCtrlCMD.log"
 	try{
-    fullCommand = %ComSpec% /c "%command% >> %cmdFN%"
+		fullCommand = %ComSpec% /c "%command% >> %cmdFN%"
 		RunWait, %fullCommand%, %A_Temp%, Hide
 
 		FileRead, FileR_CMDReturn, %A_Temp%\%cmdFN%
@@ -369,7 +375,6 @@ AddBranchesToTree(filelist)
 build_tree:
 	loop, % parts0 - level
 	{
-        
 		prev_parent = parent%level%
 		level++
 ;msgbox % parts0 "-" level "-" A_LoopField
@@ -441,7 +446,7 @@ return
 
 Cando_md_html_prew:
 FileCopy, % Prew_File, % A_ScriptDir "\html\html-markdown-preview\apidoc.md", true
-gosub,IE_Open
+gosub, IE_Open
 WB.Navigate(A_ScriptDir "\html\html-markdown-preview\index.html")
 return
 

@@ -3,42 +3,6 @@
 	Return 1
 	}
 
-; 接收直接发送过来的文件路径, 暂时不用
-ExecReceive_WM_COPYDATA(wParam, lParam)
-{
-	StringAddress := NumGet(lParam + 2*A_PtrSize)
-	CopyOfData := StrGet(StringAddress)
-	arrCandy_Cmd_Str :=StrSplit(CopyOfData, "|", " `t")
-	Candy_Cmd_Str1 := arrCandy_Cmd_Str[1]
-	Candy_Cmd_Str2 := arrCandy_Cmd_Str[2]
-	;tooltip % CopyOfData " - " Candy_Cmd_Str2 " - " Candy_Cmd_Str1
-if !Candy_Cmd_Str2
-{
-run notepad "%Candy_Cmd_Str1%"
-		return true
-}
-	if IsLabel(Candy_Cmd_Str2)
-	{
-		CandySel := Candy_Cmd_Str1
-		Gosub % Candy_Cmd_Str2
-		return true
-	}
-	else
-	{
-		Transform, Candy_Cmd_Str3, Deref, %Candy_Cmd_Str2%
-		if Candy_Cmd_Str3
-{
-		run %Candy_Cmd_Str3% "%Candy_Cmd_Str1%"
-		return true
-}
-		else
-		{
-					run %Candy_Cmd_Str2% "%Candy_Cmd_Str1%"
-		return true
-		}
-	}
-}
-
 regsvr32dll:
 	RegisterShellExtension(0)
 	gosub savetoreg

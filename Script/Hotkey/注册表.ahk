@@ -1,12 +1,16 @@
 ﻿;#IfWinActive,ahk_class RegEdit_RegEdit
 ;!x::
 注册表复制路径:
+ControlGet, hTreeView, hwnd, , SysTreeView321, ahk_class RegEdit_RegEdit
 CopyTvPath:
-ControlGet, CTreeView, hwnd, , SysTreeView321, ahk_id %hdialogwin%
-if (CTreeView != hTreeView)
+if hdialogwin
 {
-	Gui,DialogTv:Destroy
-	return
+	ControlGet, CTreeView, hwnd, , SysTreeView321, ahk_id %hdialogwin%
+	if (CTreeView != hTreeView)
+	{
+		Gui,DialogTv:Destroy
+		return
+	}
 }
 ret:=TVPath_Get(hTreeView, outPath)
 if( ret = "")

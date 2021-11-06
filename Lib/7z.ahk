@@ -27,8 +27,8 @@
 	RunWait, %comspec% /c ""%7Z%" l "%S_File%"`>"%包_列表%"",,hide
 	loop, read, %包_列表%
 	{
-		; 合计项老版7z 不显示日期,新版添加额外的条件
-		If(RegExMatch(A_LoopReadLine, "^(\d\d\d\d-\d\d-\d\d)")) && InStr(A_loopreadline, "...")
+		; 合计项老版7z 不显示日期, 新版添加额外的条件
+		If(RegExMatch(A_LoopReadLine, "^(\d\d\d\d-\d\d-\d\d)")) || InStr(A_loopreadline, "...")
 		{
 			SmartUnZip_是否存在文件 := 1
 			If( InStr(A_loopreadline, "D") = 21 Or InStr(A_loopreadline, "\"))  ;本行如果包含\或者有D标志，则判定为文件夹
