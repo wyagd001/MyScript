@@ -6,7 +6,7 @@ IniRead, LoginPass, %run_iniFile%, serverConfig, LoginPass
 
 IniRead, IniR_Tmp_Str, %run_iniFile%, 常规
 Gosub, _GetAllKeys
-IniRead, IniR_Tmp_Str, %run_iniFile%, 功能开关in
+IniRead, IniR_Tmp_Str, %run_iniFile%, 功能开关
 Gosub, _GetAllKeys
 IniRead, IniR_Tmp_Str, %run_iniFile%, 自动激活
 Gosub, _GetAllKeys
@@ -633,6 +633,7 @@ if LoadLV_dis_Label   ; 载入列表时禁用列表的标签，直接返回
 return
 If(A_GuiControl = "hotkeysListview")
 {
+	LvHandle.SetHwnd(h_SG_hotkeyLv)
 	Tmp_ListV = hotkeys
 	Gui, 99:ListView, hotkeysListview
 }
@@ -665,7 +666,9 @@ If(A_GuiEvent = "I")
 If A_GuiEvent = DoubleClick     ;Double-clicking a row opens the Edit Row dialogue window.
 	gosub, Edithotkey
 If A_GuiEvent  = D
+{
 	LvHandle.Drag()
+}
 Return
 
 Edithotkey:
