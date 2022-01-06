@@ -48,7 +48,7 @@ Array_ToString(array, depth=5, indentLevel="")
    return rtrim(list)
 }
 
-Array_writeToINI(InputArray,sectionINI, fileName, removeDupes:=false)
+Array_writeToINI(InputArray, sectionINI, fileName, removeDupes:=false, isExist:=false)
 {
 	if removeDupes = 1
 	{
@@ -59,6 +59,11 @@ Array_writeToINI(InputArray,sectionINI, fileName, removeDupes:=false)
 	Loop % InputArray.MaxIndex()
 	{
 		k := InputArray[A_Index]
+		if isExist
+		{
+			if fileExist(k) or instr(k,"::{")
+				IniWrite, %k%, %fileName%, %sectionINI%
+		}
 		IniWrite, %k%, %fileName%, %sectionINI%
 	}
 }

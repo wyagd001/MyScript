@@ -1,177 +1,161 @@
 ﻿;!M::
 文件MD5:
 cando_MD5:
-	Gui,2:Default
-	Nomd5func := 0
-	;IfWinActive,ahk_Group ccc
-	IfWinExist,MD5验证
-	{
-		if WinActive("ahk_class EVERYTHING") or  WinActive("ahk_class TTOTAL_CMD")
-			Md5FilePath2 := GetSelText()
-		else
-			Md5FilePath2:=GetSelectedFiles()
-		if !Md5FilePath2
+7plusMD5:
+Gui,2:Default
+Nomd5func := 0
+;IfWinActive,ahk_Group ccc
+IfWinExist, MD5验证
+{
+	if WinActive("ahk_class EVERYTHING") or WinActive("ahk_class TTOTAL_CMD")
+		Md5FilePath2 := GetSelText()
+	else
+		Md5FilePath2 := GetSelectedFiles()
+	if !Md5FilePath2 && (A_ThisLabel="7plusMD5")
 			FileReadLine, Md5FilePath2, %A_Temp%\7plus\files.txt, 1
-		if (Md5FilePath2 = Md5FilePath)
+	if (Md5FilePath2 = Md5FilePath)
 		Return
-		GuiControl,enable,CRC32_2
-		GuiControl,enable,del2
-		GuiControl,, Md5FilePath2,%Md5FilePath2%
-		if md5type=1
-		{
-			If A_IsUnicode
-			{
-				StrPutVar(Md5FilePath2,Md5FilePath2_2,"cp0")
-				VarSetCapacity(md5sum2, 32)
-				DllCall(A_ScriptDir "\MD5Lib.dll\hexMD5", "str", md5sum2, "str", Md5FilePath2_2)
-				Ansi2Unicode(md5sum2_2,md5sum2,936)
-				VarSetCapacity(md5sum2_2, -1)
-				GuiControl,, hash2, % md5sum2_2
-			}
-			Else
-      {
-        VarSetCapacity(md5sum, 32)
-        DllCall(A_ScriptDir "\MD5Lib.dll\hexMD5", "str", md5sum, "str", Md5FilePath2)
-        GuiControl,, hash2, % md5sum
-      }
-    }
-    Else
-      GuiControl,, hash2, % MD5_File(Md5FilePath2)
-		WinActivate,MD5验证
-  }
-  Else
-  {
-		if WinActive("ahk_class EVERYTHING") or  WinActive("ahk_class TTOTAL_CMD")
-			Md5FilePath := GetSelText()
-		else
-			Md5FilePath := GetSelectedFiles()
-		if !Md5FilePath
+	GuiControl, enable, CRC32_2
+	GuiControl, enable, del2
+	GuiControl,, Md5FilePath2, %Md5FilePath2%
+	if md5type=1
+	{
+		md5type1(Md5FilePath2, "hash2")
+	}
+	Else
+		GuiControl,, hash2, % MD5_File(Md5FilePath2)
+	WinActivate, MD5验证
+}
+Else
+{
+	if WinActive("ahk_class EVERYTHING") or WinActive("ahk_class TTOTAL_CMD")
+		Md5FilePath := GetSelText()
+	else
+		Md5FilePath := GetSelectedFiles()
+	if !Md5FilePath && (A_ThisLabel="7plusMD5")
 			FileReadLine, Md5FilePath, %A_Temp%\7plus\files.txt, 1
-    if (Md5FilePath = "")
-      Return
-    Gui, add, text,x5 ,文件1
-    Gui, Add, edit, x+10 VMd5FilePath readonly w350,%Md5FilePath%
-    Gui, add, edit,  y+7  h20 w350 Vhash readonly cblue,
-    Gui, Add, Button,x+5 w65 h20 gdelfile,删除文件1
-		Gui, add, text,  yp-25 w60 cgreen vCRC32 gCRC32,CRC32
-
-
-		Gui, add, text,x5 ,文件2
-		Gui, Add, edit, x+10 VMd5FilePath2 w350 readonly,
-		Gui, add, edit, y+7  h20 w350 Vhash2 readonly gTrueorFalse cblue,
-		Gui, Add, Button,x+5 w65 h20 vdel2 gdelfile,删除文件2
-		Gui, add, text, yp-25 w60 cgreen vCRC32_2 gCRC32,CRC32
-
-		Gui, add, text,x5 ,两文件是否相同：
-		Gui, add, text,x+1 vtof w30,
-
-   GuiControl,disable,CRC32_2
-   GuiControl,disable,del2
-   Gui, Show, ,MD5验证
-
-		if md5type=1
+	if (Md5FilePath = "")
+		Return
+	SplitPath, Md5FilePath, OutFileName,, OutExtension, OutNameNoExt
+	Md5FilePath2 := ""
+	AllOpenFolder := GetAllWindowOpenFolder()
+	for k,v in AllOpenFolder
+	{
+		Tmp_Fp := v "\" OutNameNoExt
+		Tmp_Fp := StrReplace(Tmp_Fp, "\\", "\")
+		if FileExist(Tmp_Fp "*.*")
 		{
-			If A_IsUnicode
+			if FileExist(Tmp_Fp "." OutExtension) && (Tmp_Fp (OutExtension?".":"") OutExtension != Md5FilePath)
 			{
-				StrPutVar(Md5FilePath,Md5FilePath_1,"cp0")
-				VarSetCapacity(md5sum, 32)
-				DllCall(A_ScriptDir "\MD5Lib.dll\hexMD5", "str", md5sum, "str", Md5FilePath_1)
-				Ansi2Unicode(md5sum_1,md5sum,936)
-VarSetCapacity(md5sum_1, -1)
-				GuiControl,, hash, % md5sum_1
+				Md5FilePath2 := Tmp_Fp (OutExtension?".":"") OutExtension
+				break
 			}
-			Else
+			Loop, Files, % Tmp_Fp "*.*", F
 			{
-				VarSetCapacity(md5sum, 32)
-				DllCall(A_ScriptDir "\MD5Lib.dll\hexMD5", "str", md5sum, "str", Md5FilePath)
-				GuiControl,, hash, % md5sum
+				if InStr(A_LoopFileName, OutNameNoExt) && (A_LoopFileName != OutFileName)
+				{
+					Md5FilePath2 := v "\" A_LoopFileName
+					Md5FilePath2 := StrReplace(Md5FilePath2, "\\", "\")
+					break 2
+				}
 			}
 		}
-		Else
-			GuiControl,, hash, % MD5_File(Md5FilePath)
 	}
+	AllOpenFolder := ""
 
-	Gosub TrueorFalse
+	Gui, add, text, x5, 文件1
+	Gui, Add, edit, x+10 VMd5FilePath readonly w350, %Md5FilePath%
+	Gui, add, edit, y+7 h20 w350 Vhash readonly cblue,
+	Gui, Add, Button, x+5 w65 h20 gdelfile, 删除文件1
+	Gui, add, text, yp-25 w60 cgreen vCRC32 gCRC32, CRC32
+
+	Gui, add, text, x5, 文件2
+	Gui, Add, edit, x+10 VMd5FilePath2 w350 readonly,
+	Gui, add, edit, y+7 h20 w350 Vhash2 readonly gTrueorFalse cblue,
+	Gui, Add, Button, x+5 w65 h20 vdel2 gdelfile, 删除文件2
+	Gui, add, text, yp-25 w60 cgreen vCRC32_2 gCRC32, CRC32
+
+	Gui, add, text,x5, 两文件是否相同：
+	Gui, add, text,x+1 vtof w30,
+
+	GuiControl, disable, CRC32_2
+	GuiControl, disable, del2
+	Gui, Show,, MD5验证
+
+	if md5type=1
+	{
+		md5type1(Md5FilePath, "hash")
+	}
+	Else
+	{
+		GuiControl,, hash, % MD5_File(Md5FilePath)
+	}
+	if Md5FilePath2
+	{
+		GuiControl, enable, CRC32_2
+		GuiControl, enable, del2
+		GuiControl,, Md5FilePath2, %Md5FilePath2%
+		if md5type=1
+		{
+			md5type1(Md5FilePath2, "hash2")
+		}
+		else
+			GuiControl,, hash2, % MD5_File(Md5FilePath2)
+	}
+}
+
+Gosub TrueorFalse
 Return
 
 2GuiClose:
 2GuiEscape:
 Gui,Destroy
-	Nomd5func := 1
+Nomd5func := 1
 Return
 
 TrueorFalse:
-GuiControlGet,hash,,hash
-GuiControlGet,hash2,,hash2
+GuiControlGet, hash,, hash
+GuiControlGet, hash2,, hash2
 if(hash=hash2)
 {
-Gui, Font,  cgreen bold
-GuiControl,Font, tof
-GuiControl, , tof,是
+	Gui, Font, cgreen bold
+	GuiControl, Font, tof
+	GuiControl,, tof, 是
 }
 Else
 {
-Gui, Font,  cred bold
-GuiControl,Font, tof
-GuiControl, , tof,否
+	Gui, Font, cred bold
+	GuiControl, Font, tof
+	GuiControl,, tof, 否
 }
 Return
-
 
 2GuiDropFiles:
 	Loop, parse, A_GuiEvent, `n
 	{
-		FileGetAttrib, Attributes,%A_LoopField%
-		IfEqual A_guicontrol ,Md5FilePath
+		FileGetAttrib, Attributes, %A_LoopField%
+		IfEqual A_guicontrol, Md5FilePath
 		{
 			IfInString, Attributes, D
 			return  ; exit if it is folder
 			GuiControl,, %A_guicontrol%, %A_LoopField%  ; to asign filename to a control
 			if md5type=1
 			{
-				If A_IsUnicode
-				{
-					StrPutVar(Md5FilePath,Md5FilePath_1,"cp0")
-					VarSetCapacity(md5sum, 32)
-					DllCall(A_ScriptDir "\MD5Lib.dll\hexMD5", "str", md5sum, "str", Md5FilePath_1)
-					Ansi2Unicode(md5sum_1,md5sum,936)
-					VarSetCapacity(md5sum_1, -1)
-					GuiControl,, hash, % md5sum_1
-				}
-				Else
-				{
-					VarSetCapacity(md5sum, 32)
-					DllCall(A_ScriptDir "\MD5Lib.dll\hexMD5", "str", md5sum, "str", Md5FilePath)
-					GuiControl,, hash, % md5sum
-				}
+				md5type1(A_LoopField, "hash")
 			}
 			Else
 				GuiControl,, hash, % MD5_File(A_LoopField)
 		}
-		IfEqual A_guicontrol ,Md5FilePath2
+		IfEqual A_guicontrol, Md5FilePath2
 		{
 			IfInString, Attributes, D
 			return  ; exit if it is folder
 			GuiControl,, %A_guicontrol%, %A_LoopField%  ; to asign filename to a control
-			GuiControl,enable,CRC32_2
-			GuiControl,enable,del2
+			GuiControl, enable, CRC32_2
+			GuiControl, enable, del2
 			if md5type=1
 			{
-				If A_IsUnicode
-				{
-					StrPutVar(Md5FilePath2,Md5FilePath2_2,"cp0")
-					VarSetCapacity(md5sum2, 32)
-					DllCall(A_ScriptDir "\MD5Lib.dll\hexMD5", "str", md5sum2, "str", Md5FilePath2_2)
-					Ansi2Unicode(md5sum2_2,md5sum2,936)
-					VarSetCapacity(md5sum2_2, -1)
-					GuiControl,, hash2, % md5sum2_2
-				}
-				Else
-				{
-					VarSetCapacity(md5sum, 32)
-					DllCall(A_ScriptDir "\MD5Lib.dll\hexMD5", "str", md5sum, "str", Md5FilePath2)
-					GuiControl,, hash2, % md5sum
-				}
+				md5type1(A_LoopField, "hash2")
 			}
 			Else
 				GuiControl,, hash2, % MD5_File(A_LoopField)
@@ -182,35 +166,56 @@ Return
 return
 
 delfile:
-GuiControlGet,whichbutton, Focus
-if whichbutton=Button1
-  delfile=Md5FilePath
+GuiControlGet, whichbutton, Focus
+if whichbutton = Button1
+	delfile = Md5FilePath
 else 
-  delfile=Md5FilePath2
-GuiControlGet,Md5FilePath,,%delfile%
-MsgBox,4,删除提示,确定要把下面的文件放入回收站吗？`n`n%Md5FilePath%
+	delfile = Md5FilePath2
+GuiControlGet, Md5FilePath,, %delfile%
+MsgBox, 4, 删除提示, 确定要把下面的文件放入回收站吗？`n`n%Md5FilePath%
 IfMsgBox Yes
-FileRecycle,%Md5FilePath%
+	FileRecycle, %Md5FilePath%
 return
 
 CRC32:
 if A_GuiControl =CRC32
- {
-  CRCfile=Md5FilePath
-  whichstatic=static2 
+{
+	CRCfile = Md5FilePath
+	whichstatic = static2 
 }
 else 
 {
-  CRCfile=Md5FilePath2
-  whichstatic=static4
+	CRCfile = Md5FilePath2
+	whichstatic = static4
 }
-Gui, Font,  cblue bold
+Gui, Font, cblue bold
 GuiControl,Font, %A_GuiControl%
-GuiControlGet,Md5FilePath,,%CRCfile%
-GuiControl,, %A_GuiControl% , % FileCRC32(Md5FilePath)
-ControlGetText,CRC32,%whichstatic% 
-Clipboard:=CRC32
+GuiControlGet, Md5FilePath,, %CRCfile%
+GuiControl,, %A_GuiControl%, % FileCRC32(Md5FilePath)
+ControlGetText, CRC32, %whichstatic% 
+Clipboard := CRC32
 Return
+
+md5type1(sFile, scontrol)  ; MD5Lib.dll 文件只适用于 32位 程序
+{
+	Gui,2:Default
+	If A_IsUnicode
+	{
+		StrPutVar(sFile, Md5FilePath_1, "cp936")
+		VarSetCapacity(md5sum, 32)
+		DllCall(A_ScriptDir "\Dll\MD5Lib.dll\hexMD5", "str", md5sum, "str", Md5FilePath_1)
+		Ansi2Unicode(md5sum_1, md5sum, 936)
+		VarSetCapacity(md5sum_1, -1)
+		GuiControl,, % scontrol, % md5sum_1
+	}
+	Else
+	{
+		VarSetCapacity(md5sum, 32)
+		DllCall(A_ScriptDir "\Dll\MD5Lib.dll\hexMD5", "str", md5sum, "str", sFile)
+		GuiControl,, % scontrol, % md5sum
+	}
+	return
+}
 
 ; ************  MD5 hashing functions by Laszlo  *******************
 

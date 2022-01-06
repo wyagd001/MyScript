@@ -1,76 +1,115 @@
 ﻿Cando_文本比较:
-	IfWinExist, ahk_id %GuiID%
+IfWinExist, ahk_id %GuiID%
+{
+	Gui,66:Default 
+	if Candy_isFile
 	{
-		Gui,66:Default 
-		if Candy_isFile
-		{
-			FileEncoding, % File_GetEncoding(CandySel)
-			fileread, FileR_TFC2, %CandySel%
-			FileEncoding
-			GuiControl,, textfile2, %CandySel%
-			t2.SetText(FileR_TFC2)
-		}
-		else
-		{
-			t2.SetText(CandySel)
-		}
-		WinActivate, ahk_id %GuiID%
-		GuiControl, Focus, % t2.HWND
-		gosub UpdateSBText
-		SetTimer, WatchScrollBar, 100
+		FileEncoding, % File_GetEncoding(CandySel)
+		fileread, FileR_TFC2, %CandySel%
+		FileEncoding
+		GuiControl,, textfile2, %CandySel%
+		t2.SetText(FileR_TFC2)
 	}
 	else
 	{
-		Gui,66:Destroy
-		Gui,66:Default 
-		gui +ReSize +hwndGuiID
-		if Candy_isFile
+		t2.SetText(CandySel)
+	}
+	WinActivate, ahk_id %GuiID%
+	GuiControl, Focus, % t2.HWND
+	gosub UpdateSBText
+	SetTimer, WatchScrollBar, 100
+}
+else
+{
+	Gui,66:Destroy
+	Gui,66:Default 
+	gui +ReSize +hwndGuiID
+	if Candy_isFile
+	{
+		FileEncoding, % File_GetEncoding(CandySel)
+		fileread, FileR_TFC1, %CandySel%
+		FileEncoding
+		textfile1 := CandySel
+
+		SplitPath, textfile1, OutFileName,, OutExtension, OutNameNoExt
+		AllOpenFolder := GetAllWindowOpenFolder()
+		for k,v in AllOpenFolder
 		{
-			FileEncoding, % File_GetEncoding(CandySel)
-			fileread, FileR_TFC1, %CandySel%
-			FileEncoding
-			textfile1 := CandySel
-		}
-		else
-			textfile1 := ""
-		Menu, ContextMenu, deleteall
-		Menu, ContextMenu, Add, 撤消, RichEdit_Undo
-		Menu, ContextMenu, Add, 重做, RichEdit_Redo
-		Menu, ContextMenu, Add
-		Menu, ContextMenu, Add, 剪切, RichEdit_Cut
-		Menu, ContextMenu, Add, 复制, RichEdit_Copy
-		Menu, ContextMenu, Add, 粘贴, RichEdit_Paste
-		Menu, ContextMenu, Add
-		Menu, ContextMenu, Add, 全选, RichEdit_SelAll
-		twidth := 600, bwidth := 150, opts := "x5 y30 r40 0x100000 gMessageHandler"
-		Gui, Add,text ,,%textfile1%
-		Gui, Add,text, x610 yp w600 vtextfile2, 
-		t1 := new RichEdit(66, opts " w" twidth)
-		t2 := new RichEdit(66, opts " w" twidth " xp" twidth)
-		t1.SetEventMask(["SELCHANGE"])   ; 监控控件消息
-		t2.SetEventMask(["SELCHANGE"])
-		Gui, Add, Button, Default w%bwidth% x520 gcompare, 比较/更新
-		Gui, Add,text, x700 yp+10 h25,模式：
-		Gui, Add, Radio, x740 yp-8 h25 gsub_compmode Group vcompmode,字
-		Gui, Add, Radio, x790 yp h25 gsub_compmode, 连字
-		Gui, Add, Radio, x860 yp h25 gsub_compmode Checked,行
-		Gui, Add, Statusbar
-		SB_SetParts(610)
-		gui show,, 文字比较
-		gosub UpdateSBText
-		if Candy_isFile
-		{
-			if (strlen(FileR_TFC1) > 10000)
-				GuiControl, Disable, compmode
-			t1.SetText(FileR_TFC1)
-		}
-		else
-		{
-			if (strlen(CandySel) > 10000)
-				GuiControl, Disable, compmode
-			t1.SetText(CandySel)
+			Tmp_Fp := v "\" OutNameNoExt
+			Tmp_Fp := StrReplace(Tmp_Fp, "\\", "\")
+			if FileExist(Tmp_Fp "*.*")
+			{
+				if FileExist(Tmp_Fp "." OutExtension) && (Tmp_Fp "." OutExtension != textfile1)
+				{
+					textfile2 := Tmp_Fp "." OutExtension
+					break
+				}
+				Loop, Files, % Tmp_Fp "*.*", F
+				{
+					if InStr(A_LoopFileName, OutNameNoExt) && (A_LoopFileName != OutFileName)
+					{
+						textfile2 := v "\" A_LoopFileName
+						textfile2 := StrReplace(textfile2, "\\", "\")
+						break 2
+					}
+				}
+			}
 		}
 	}
+	else
+		textfile1 := ""
+	Menu, ContextMenu, deleteall
+	Menu, ContextMenu, Add, 撤消, RichEdit_Undo
+	Menu, ContextMenu, Add, 重做, RichEdit_Redo
+	Menu, ContextMenu, Add
+	Menu, ContextMenu, Add, 剪切, RichEdit_Cut
+	Menu, ContextMenu, Add, 复制, RichEdit_Copy
+	Menu, ContextMenu, Add, 粘贴, RichEdit_Paste
+	Menu, ContextMenu, Add
+	Menu, ContextMenu, Add, 全选, RichEdit_SelAll
+	twidth := 600, bwidth := 150, opts := "x5 y30 r40 0x100000 gMessageHandler"
+	Gui, Add,text ,,%textfile1%
+	Gui, Add,text, x610 yp w600 vtextfile2, 
+	t1 := new RichEdit(66, opts " w" twidth)
+	t2 := new RichEdit(66, opts " w" twidth " xp" twidth)
+	t1.SetEventMask(["SELCHANGE"])   ; 监控控件消息
+	t2.SetEventMask(["SELCHANGE"])
+	Gui, Add, Button, Default w%bwidth% x520 gcompare, 比较/更新
+	Gui, Add,text, x700 yp+10 h25,模式：
+	Gui, Add, Radio, x740 yp-8 h25 gsub_compmode Group vcompmode,字
+	Gui, Add, Radio, x790 yp h25 gsub_compmode, 连字
+	Gui, Add, Radio, x860 yp h25 gsub_compmode Checked,行
+	Gui, Add, Statusbar
+	SB_SetParts(610)
+	gui show,, 文字比较
+	
+	if Candy_isFile
+	{
+		if (strlen(FileR_TFC1) > 10000)
+			GuiControl, Disable, compmode
+		t1.SetText(FileR_TFC1)
+		gosub UpdateSBText
+		if textfile2
+		{
+			FileEncoding, % File_GetEncoding(textfile2)
+			fileread, FileR_TFC2, %textfile2%
+			FileEncoding
+			GuiControl,, textfile2, %textfile2%
+			t2.SetText(FileR_TFC2)
+			GuiControl, Focus, % t2.HWND
+			gosub UpdateSBText
+			SetTimer, WatchScrollBar, 100
+		}
+	}
+	else
+	{
+		if (strlen(CandySel) > 10000)
+			GuiControl, Disable, compmode
+		t1.SetText(CandySel)
+	}
+	
+	
+}
 return
 
 sub_compmode:
@@ -271,124 +310,123 @@ return
 Return
 
 RichEdit_Undo:
-	ControlGetFocus, FocusedControl, ahk_id %GuiID%
-	if (FocusedControl = "RICHEDIT50W1")
-	{
-		t1.Undo()
-		GuiControl, Focus, % t1.HWND
-	Return
-	}
-	if (FocusedControl = "RICHEDIT50W2")
-	{
-		t2.Undo()
-		GuiControl, Focus, % t2.HWND
-	}
+ControlGetFocus, FocusedControl, ahk_id %GuiID%
+if (FocusedControl = "RICHEDIT50W1")
+{
+	t1.Undo()
+	GuiControl, Focus, % t1.HWND
+Return
+}
+if (FocusedControl = "RICHEDIT50W2")
+{
+	t2.Undo()
+	GuiControl, Focus, % t2.HWND
+}
 Return
 
 RichEdit_Redo:
-	ControlGetFocus, FocusedControl, ahk_id %GuiID%
-	if (FocusedControl = "RICHEDIT50W1")
-	{
-		t1.Redo()
-		GuiControl, Focus, % t1.HWND
-	Return
-	}
-	if (FocusedControl = "RICHEDIT50W2")
-	{
-		t2.Redo()
-		GuiControl, Focus, % t2.HWND
-	}
+ControlGetFocus, FocusedControl, ahk_id %GuiID%
+if (FocusedControl = "RICHEDIT50W1")
+{
+	t1.Redo()
+	GuiControl, Focus, % t1.HWND
+Return
+}
+if (FocusedControl = "RICHEDIT50W2")
+{
+	t2.Redo()
+	GuiControl, Focus, % t2.HWND
+}
 Return
 
 RichEdit_Cut:
-	ControlGetFocus, FocusedControl, ahk_id %GuiID%
-	if (FocusedControl = "RICHEDIT50W1")
-	{
-		t1.Cut()
-		GuiControl, Focus, % t1.HWND
-	Return
-	}
-	if (FocusedControl = "RICHEDIT50W2")
-	{
-		t2.Cut()
-		GuiControl, Focus, % t2.HWND
-	}
+ControlGetFocus, FocusedControl, ahk_id %GuiID%
+if (FocusedControl = "RICHEDIT50W1")
+{
+	t1.Cut()
+	GuiControl, Focus, % t1.HWND
+Return
+}
+if (FocusedControl = "RICHEDIT50W2")
+{
+	t2.Cut()
+	GuiControl, Focus, % t2.HWND
+}
 Return
 
 RichEdit_Copy:
-	ControlGetFocus, FocusedControl, ahk_id %GuiID%
-	if (FocusedControl = "RICHEDIT50W1")
-	{
-		t1.Copy()
-		GuiControl, Focus, % t1.HWND
-	Return
-	}
-	if (FocusedControl = "RICHEDIT50W2")
-	{
-		t2.Copy()
-		GuiControl, Focus, % t2.HWND
-	}
+ControlGetFocus, FocusedControl, ahk_id %GuiID%
+if (FocusedControl = "RICHEDIT50W1")
+{
+	t1.Copy()
+	GuiControl, Focus, % t1.HWND
+Return
+}
+if (FocusedControl = "RICHEDIT50W2")
+{
+	t2.Copy()
+	GuiControl, Focus, % t2.HWND
+}
 Return
 
 RichEdit_Paste:
-	ControlGetFocus, FocusedControl, ahk_id %GuiID%
-	if (FocusedControl = "RICHEDIT50W1")
-	{
-		t1.Paste()
-		GuiControl, Focus, % t1.HWND
-	Return
-	}
-	if (FocusedControl = "RICHEDIT50W2")
-	{
-		t2.Paste()
-		GuiControl, Focus, % t2.HWND
-	}
+ControlGetFocus, FocusedControl, ahk_id %GuiID%
+if (FocusedControl = "RICHEDIT50W1")
+{
+	t1.Paste()
+	GuiControl, Focus, % t1.HWND
+Return
+}
+if (FocusedControl = "RICHEDIT50W2")
+{
+	t2.Paste()
+	GuiControl, Focus, % t2.HWND
+}
 Return
 
 RichEdit_SelALL:
-	ControlGetFocus, FocusedControl, ahk_id %GuiID%
-	if (FocusedControl = "RICHEDIT50W1")
-	{
-		t1.SelALL()
-		GuiControl, Focus, % t1.HWND
-	Return
-	}
-	if (FocusedControl = "RICHEDIT50W2")
-	{
-		t2.SelALL()
-		GuiControl, Focus, % t2.HWND
-	}
+ControlGetFocus, FocusedControl, ahk_id %GuiID%
+if (FocusedControl = "RICHEDIT50W1")
+{
+	t1.SelALL()
+	GuiControl, Focus, % t1.HWND
+Return
+}
+if (FocusedControl = "RICHEDIT50W2")
+{
+	t2.SelALL()
+	GuiControl, Focus, % t2.HWND
+}
 Return
 
 UpdateSBText:
-	Gui, 66:Default
-	ControlGetFocus, FocusedControl, ahk_id %GuiID%
-	if (FocusedControl = "RICHEDIT50W1")
-	{
-		Stats := t1.GetStatistics()
-		SB_SetText("左: " Stats.Line . " : " . Stats.LinePos, 1)
-	return
-	}
-	if (FocusedControl = "RICHEDIT50W2")
-	{
-		Stats := t2.GetStatistics()
-		SB_SetText("右: " Stats.Line . " : " . Stats.LinePos, 2)
-	}
+Gui, 66:Default
+ControlGetFocus, FocusedControl, ahk_id %GuiID%
+if (FocusedControl = "RICHEDIT50W1")
+{
+	Stats := t1.GetStatistics()
+	SB_SetText("左: " Stats.Line . " : " . Stats.LinePos, 1)
+return
+}
+if (FocusedControl = "RICHEDIT50W2")
+{
+	Stats := t2.GetStatistics()
+	SB_SetText("右: " Stats.Line . " : " . Stats.LinePos, 2)
+}
 Return
 
 WatchScrollBar:
-	IfWinActive,ahk_id %GuiID%
-	{
-		ControlGetFocus, FocusedControl, ahk_id %GuiID%
-		t1ScrollPos := t1.GetScrollPos()
-		t2ScrollPos := t2.GetScrollPos()
-		if (FocusedControl = "RICHEDIT50W2")
-		t1.SetScrollPos(0, t2ScrollPos.Y)
-	return
-	}
-	IfWinNotExist,ahk_id %GuiID%
-	{
-		t1 := t2 := FileR_TFC1 := FileR_TFC2 := ""
-		SetTimer, WatchScrollBar, off
-	}
+IfWinActive, ahk_id %GuiID%
+{
+	ControlGetFocus, FocusedControl, ahk_id %GuiID%
+	t1ScrollPos := t1.GetScrollPos()
+	t2ScrollPos := t2.GetScrollPos()
+	if (FocusedControl = "RICHEDIT50W2")
+	t1.SetScrollPos(0, t2ScrollPos.Y)
+}
+IfWinNotExist, ahk_id %GuiID%
+{
+	t1 := t2 := FileR_TFC1 := FileR_TFC2 := textfile2 := ""
+	SetTimer, WatchScrollBar, off
+}
 return

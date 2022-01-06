@@ -46,6 +46,7 @@ ShowFileFullPath:
 	{
 		TargetFolder := GuiDropFiles_FileFullPath
 		IniWrite, %TargetFolder%, %run_iniFile%, 路径设置, TargetFolder
+		WinSetTitle, %AppTitle%, , %AppTitle% - %TargetFolder%
 		MsgBox, , , 目标文件夹已设置为 %TargetFolder% 。, 3
 	Return
 	}

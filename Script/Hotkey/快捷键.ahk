@@ -91,11 +91,19 @@ winshow, ahk_class Shell_TrayWnd
 Return
 
 ExploreDrive:
-   StringRight Drv,A_THISHOTKEY,1
-   ifExist %Drv%:\
-      Run %Drv%:\
-   else
-      TrayTip,错误,%Drv%盘不存在!,10,3
+	StringRight Drv, A_THISHOTKEY, 1
+	ifExist %Drv%:\
+	{
+		if WinActive("ahk_class TTOTAL_CMD")
+		{
+			msgnum := 2000 + Asc(Drv) - 4
+			TC_SendMsg(msgnum)
+		}
+		else
+			Run %Drv%:\
+	}
+	else
+		TrayTip,错误,%Drv%盘不存在!,10,3
 Return
 
 缩为标题栏:
@@ -285,9 +293,3 @@ CandyLast:
 Run_Candylast := 1
 gosub Candy
 return
-
-/*
-q::
- Interception.send("a", 1)
-return
-*/

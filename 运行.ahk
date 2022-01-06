@@ -16,7 +16,7 @@ CoordMode, Mouse, Screen
 
 ; 开机时脚本启动后等待至15s
 While (15000 - A_TickCount) > 0
-		sleep,100
+	sleep,100
 
 ; 管理员权限
 If(!A_IsAdmin)
@@ -42,6 +42,8 @@ global run_iniFile := A_ScriptDir "\settings\setting.ini"
 IfNotExist, %run_iniFile%
 	FileCopy, %A_ScriptDir%\Backups\setting.ini, %run_iniFile%
 global visable
+if QtTabBar()
+	qt := 1
 
 IniRead, IniR_Tmp_Str, %run_iniFile%, 功能开关
 Gosub, _GetAllKeys
@@ -129,7 +131,8 @@ global ClosetextfileList_Arr := []
 global folder_Arr := []
 global textfile_Arr := []
 IniRead, IniR_Tmp_Str, %run_iniFile%, CloseWindowList
-CloseWindowList_Arr := StrSplit(IniR_Tmp_Str, "`n")
+CloseWindowList_Arr := StrSplit(IniR_Tmp_Str, "`n",, 16)
+ClosetextfileList_Arr.RemoveAt(16)
 Array_Sort(CloseWindowList_Arr)
 
 IniRead, IniR_Tmp_Str, %run_iniFile%, ClosetextfileList
@@ -402,13 +405,13 @@ Menu,  addf, Add, 恢复桌面图标, RestoreDesktopIconsPositions
 
 if Auto_DisplayMainWindow
 {
-	Gui, Show, x%x_x% y%y_y% w624 h78, %AppTitle%
+	Gui, Show, x%x_x% y%y_y% w624 h78, %AppTitle% - %TargetFolder%
 	visable = 1
 }
 else
 {
 	是否检测:=0
-	Gui, Show, hide x%x_x% y%y_y% w624 h78, %AppTitle%
+	Gui, Show, hide x%x_x% y%y_y% w624 h78, %AppTitle% - %TargetFolder%
 	visable= 0
 }
 ;=========图形界面的"绘制"=========
@@ -576,7 +579,7 @@ loop, parse, IniR_Tmp_Str, `n
 IniR_Tmp_Str := Tmp_Array := Tmp_Key := Tmp_Val := ""
 
 ; 分组 AppMainWindow: 主界面网址补齐、runhistory 因为 #ifwinactive 后不能接变量
-GroupAdd, AppMainWindow,%AppTitle%
+GroupAdd, AppMainWindow, %AppTitle%
 ;=========窗口分组=========
 
 ;=========功能加载开始=========
@@ -805,10 +808,11 @@ else
 	hotkey,$^V,off
 ;;;;;;;;;; 剪贴板  ;;;;;;;;;;;;
 
-;快捷键打开C,D,E,F盘...设置其快捷键，loop 15循环15次，到达字母Q
+; 快捷键打开C,D,E,F盘(循环次数为系统盘符数)...
 if islabel("ExploreDrive") && !InStr(myhotkey.前缀_快速打开磁盘,"@")
 {
-	Loop 15
+	DriveGet, Tmp_Str, List
+	Loop % Strlen(Tmp_Str)
 		HotKey % myhotkey.前缀_快速打开磁盘 Chr(A_Index+66), ExploreDrive
 }
 
@@ -1213,7 +1217,8 @@ If tmpDir
 {
 	TargetFolder := tmpDir
 	IniWrite,%TargetFolder%, %run_iniFile%,路径设置, TargetFolder
-	TrayTip,移动文件,目标文件夹设置为 %TargetFolder% 。
+	WinSetTitle, %AppTitle%, , %AppTitle% - %TargetFolder%
+	TrayTip,移动文件,目标文件夹已设置为 %TargetFolder% 。
 }
 GuiControl, -default,选择(&S)
 GuiControl, +default,打开(&O)

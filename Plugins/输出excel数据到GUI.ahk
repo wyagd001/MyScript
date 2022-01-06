@@ -1,12 +1,12 @@
 ﻿;来源网址: https://www.autoahk.com/archives/18627
 SplitPath A_AhkPath,, AhkDir
 If (A_PtrSize = 8 || !A_IsUnicode) {
-    U32 := AhkDir . "AutoHotkeyU32.exe"
+    U32 := AhkDir . "\AutoHotkeyU32.exe"
     If (FileExist(U32)) {
-        Run % U32 . " """ . A_LineFile . ""
+        Run % U32 . " """ . A_LineFile . """" . " """ . A_Args[1] . """"
         ExitApp
     } Else {
-        MsgBox 0x40010, AutoGUI, AutoHotkey 32-bit Unicode not found.
+        MsgBox 0x40010, 错误, 没有找到 AutoHotkey 32-bit Unicode(AutoHotkeyU32.exe) 程序.
         ExitApp
     }
 }

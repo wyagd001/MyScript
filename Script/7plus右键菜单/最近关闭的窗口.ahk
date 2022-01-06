@@ -1,5 +1,6 @@
 ﻿1007:
-Sleep,100
+Sleep, 100
+
 If CloseWindowList_Arr.Length()
 {
 	if(GetKeyState("Shift"))
@@ -8,15 +9,25 @@ If CloseWindowList_Arr.Length()
 	return
 	}
 	If (Tmp_CW := CloseWindowList_Arr.Pop())
-	{ 
-		if FileExist(Tmp_CW) or  InStr(Tmp_CW, "::{")
-			run, % "explorer.exe " Tmp_CW
+	{
+		if FileExist(Tmp_CW) or InStr(Tmp_CW, "::{")
+		{
+			;run, % "explorer.exe " Tmp_CW
+			run, % Tmp_CW
+		}
+		else
+		{
+			Tmp_CW := CloseWindowList_Arr.Pop()
+			if FileExist(Tmp_CW) or InStr(Tmp_CW, "::{")
+				run, % Tmp_CW
+		}
 	}
 }
 Else
 {
 	If FileExist(LastClosewindow) or InStr(LastClosewindow, "::{")
-		Run, % "explorer.exe " LastClosewindow
+		;Run, % "explorer.exe " LastClosewindow
+		Run, % LastClosewindow
 }
 Return
 

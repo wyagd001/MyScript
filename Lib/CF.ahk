@@ -100,3 +100,37 @@ CF_OpenFolder(sfile, OnlyFolder := 1){
 	else
 		Run, % "explorer.exe /select," sfile
 }
+
+CF_GetParentPath(sfile){
+	return SubStr(sfile, 1, InStr(SubStr(sfile, 1, -1), "\", 0, 0)-1)
+}
+
+CF_GetParentFolderName(sfile){
+	RegExMatch(sfile, "(.+\\\K|^)[^\\]+(?=\\)", m)
+	return m
+}
+
+CF_FileIsReadOnly(sfile){
+	FileGetAttrib, Attributes, %sfile%
+	if InStr(Attributes, "R")
+	return 1
+	else
+	return 0
+}
+
+CF_SendMessage(Msg, wParam := 0, lParam := 0, Control := "", WinTitle := "A"){
+	SendMessage, % Msg, % wParam, % lParam, %control%, %WinTitle%
+	return ErrorLevel
+}
+
+CF_PostMessage(Msg, wParam := 0, lParam := 0, Control := "", WinTitle := "A"){
+	PostMessage, % Msg, % wParam, % lParam, %control%, %WinTitle%
+}
+
+CF_ControlGetText(Control, WinTitle := ""){
+	if WinTitle
+		ControlGetText, OutputVar, %Control%, %WinTitle%
+	else
+		ControlGetText, OutputVar, , ahk_id %Control%
+return OutputVar
+}

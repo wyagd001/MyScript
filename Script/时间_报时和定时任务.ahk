@@ -5,36 +5,51 @@ http://ahk.5d6d.com/thread-898-1-1.html
 http://www.ahkcn.net/thread-629.html
 */
 实时报时:
-  SoundPlay, %A_ScriptDir%\Sound\domisodo.wav, Wait
-  JA_VoiceAlert()
+	SoundPlay, %A_ScriptDir%\Sound\domisodo.wav, Wait
+	JA_VoiceAlert()
  return
 
 renwu:
 If  (A_Hour = rh && A_Min= rm)
 {
-SetTimer, renwu, Off
-IniWrite,0,%run_iniFile%,时间,renwu
-run %renwucx%,,UseErrorLevel
-if ErrorLevel
-  MsgBox,,定时任务,定时任务运行失败，请检查设置。
+	SetTimer, renwu, Off
+	IniWrite, 0, %run_iniFile%, 时间, renwu
+	run %renwucx%,,UseErrorLevel
+	if ErrorLevel
+		MsgBox,,定时任务,定时任务运行失败，请检查设置。
 }
 Return
 
 renwu2:
 loop 5
 {
-If (A_Hour A_Min = rh%A_index%) or (A_Hour ":" A_Min = rh%A_index%)
-{
-	xqArray := {"星期一": 1, "星期二": 2,  "星期三": 3,  "星期四": 4,  "星期五": 5,  "星期六": 6,  "星期日": 7}
-xqdsArray := StrSplit(xq%A_index%)
-msgtptemp:=msgtp%A_index%
-for v in xqdsArray
-{
-if(v = xqArray[A_DDDD])
-  MsgBox,,提示,% msgtptemp
-}
-xqdsArray:=""
-}
+	If (A_Hour A_Min = rh%A_index%) or (A_Hour ":" A_Min = rh%A_index%) ; A: 判断时间
+	{
+		xqArray := {"星期一": 1, "星期二": 2,  "星期三": 3,  "星期四": 4,  "星期五": 5,  "星期六": 6,  "星期日": 7}
+		xqdsArray := StrSplit(xq%A_index%)
+		msgtptemp := msgtp%A_index%
+		for v in xqdsArray
+		{
+			if(v = xqArray[A_DDDD])   ; B: 判断星期几
+			{
+				Tmp_Pos := InStr(renwu2_todaynonotify, "@@@")
+				NoNotifyDay := SubStr(renwu2_todaynonotify, Tmp_Pos+3)
+				if !InStr(renwu2_todaynonotify, msgtptemp)
+					MsgBox, 1, 提示, % msgtptemp "`n`n`n相同提醒今天不再提示， 点“取消”！"
+				else
+				{
+					if (A_YYYY A_MM A_DD != NoNotifyDay)
+						MsgBox, 1, 提示, % msgtptemp "`n`n`n相同提醒今天不再提示， 点“取消”！"
+				}
+				IfMsgBox, cancel
+				{
+					IniWrite, %msgtptemp%@@@%A_YYYY%%A_MM%%A_DD%, %run_iniFile%, 时间, renwu2_todaynonotify
+					IniRead, renwu2_todaynonotify, %run_iniFile%, 时间, renwu2_todaynonotify
+				}
+			}
+		}
+		xqdsArray:=""
+	}
 }
 Return
 

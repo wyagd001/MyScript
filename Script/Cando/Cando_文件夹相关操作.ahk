@@ -17,6 +17,13 @@ Files:= CandySel . "\"
 CopyDirStructure(Files, CandySel_ParentPath "\" CandySel_FileNameWithExt "_①", 0)
 Return
 
+Cando_删除空白文件夹:
+Loop, Files, %CandySel%\*.*, DR  ; 一层循环
+{
+	FileRemoveDir, %A_LoopFilePath%, 0
+}
+Return
+
 Cando_解开文件夹:
 ErrorCount := MoveFilesAndFolders(CandySel "\*.*", CandySel_ParentPath)
 if (ErrorCount != 0)

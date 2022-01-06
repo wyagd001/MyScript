@@ -121,11 +121,11 @@ UrlDecode(Url, Enc = "UTF-8")
 Return, Url
 }
 
-StrPutVar(Str, ByRef Var, Enc = "")
+StrPutVar(Str, ByRef Var, Enc = "", ExLen = 0)
 {
-	Len := StrPut(Str, Enc) * (Enc = "UTF-16" || Enc = "CP1200" ? 2 : 1)
+	Len := StrPut(Str, Enc) * (Enc = "UTF-16" || Enc = "CP1200" ? 2 : 1) + ExLen
 	VarSetCapacity(Var, Len, 0)
-Return, StrPut(Str, &Var, Enc),VarSetCapacity(var,-1)
+Return StrPut(Str, &Var, Enc)
 }
 
 ; http://ahkcn.net/thread-1927.html

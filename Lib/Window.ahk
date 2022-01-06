@@ -92,7 +92,6 @@ IsFullscreen(sWinTitle = "A", UseExcludeList = true, UseIncludeList=true) {     
 
 MouseIsOverTitlebar(HeightOfTitlebar = 30)
 {
-
 	CoordMode,Mouse,Screen
 	SysGet, HeightOfTitlebar, 4
 
@@ -102,4 +101,30 @@ MouseIsOverTitlebar(HeightOfTitlebar = 30)
 		return, true
 	Else
 		return, false
+}
+
+QueryActiveWinID( byRef aWin, winText="", excludeTitle="", excludeText="" )
+{
+	if( (aWin || aWin:="A") && (aWin <> "A") && (subStr(aWin,1,4) <> "ahk_") ) 
+		aWin:=(( RegExMatch(subStr(aWin,1,1), "\d") && !InStr(aWin, " ")) ? "ahk_class " aWin : "ahk_id " aWin )
+;MsgBox, QAWID: %aWin%
+return  aWin:=WinActive( aWin, winText, excludeTitle, excludeText )
+}
+
+QueryFocusedCtrlID( byRef aControl, byRef aWin="", winText="", excludeTitle="", excludeText="" )
+{
+	if( !aWin )
+		QueryActiveWinID( aWin, winText, excludeTitle, excludeText )
+	if( !aControl )
+		ControlGetFocus, aControl, ahk_id %aWin%, %winText%, %excludeTitle%, %excludeText%
+;MsgBox, QFC: %aControl%`naWin:%aWin%
+	ControlGet, aControl, HWND,, %aControl%, ahk_id %aWin%
+return aControl
+}
+
+QueryMouseGetPosID( byRef aControl, byRef aCName="", byRef aWin="", byRef x="", byRef y="" )
+{
+	MouseGetPos, x, y, aWin, aControl, 3
+	MouseGetPos,,,, aCName, 1
+return aControl
 }

@@ -107,10 +107,10 @@ If(x_x = 0 && y_y = y_y2){
 If(x_x = x_x2 && y_y = y_y2){
 	GuiControl,, def4, 1
 }
-Gui, Add, text, x285 y124 w15 h20, X = 
-Gui, Add, Edit, x300 y121 w50 h20 vx1, %x_x%
-Gui, Add, text, x285 y144 w15 h20, Y = 
-Gui, Add, Edit, x300 y141 w50 h20 vy1, %y_y%
+Gui, Add, text, x285 y124 w30 h20, X = 
+Gui, Add, Edit, x315 y121 w50 h20 vx1, %x_x%
+Gui, Add, text, x285 y144 w30 h20, Y = 
+Gui, Add, Edit, x315 y141 w50 h20 vy1, %y_y%
 
 Gui, Add, Button, x26 y185 w144 gf_OptionsGUI, Folder Menu 选项
 Gui, Font, Cred
@@ -262,7 +262,7 @@ If(renwu = 0)
 GuiControl,, gbds, 定时任务(已关闭)
 }
 if(renwu2 = 0)
-GuiControl,, gbnz, 闹钟(已关闭)
+	GuiControl,, gbnz, 闹钟(已关闭)
 gosub updaterh
 
 Gui, Tab, 播放器
@@ -892,9 +892,9 @@ return
 
 updategbnz:
 if(renwu2 := !renwu2)
-guicontrol,, gbnz, 闹钟(已开启)
+	guicontrol,, gbnz, 闹钟(已开启)
 else
-guicontrol,, gbnz, 闹钟(已关闭)
+	guicontrol,, gbnz, 闹钟(已关闭)
 return
 
 Load_PluginsList:

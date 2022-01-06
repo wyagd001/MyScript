@@ -36,7 +36,7 @@
 	CoordMode, Caret
 	CHPITT_x := A_CaretX + 10, CHPITT_y := A_CaretY + 20
 	ToolTip, % cliphistoryPIList, % CHPITT_x, % CHPITT_y
-	WinActivate, ahk_class tooltips_class32
+	;WinActivate, ahk_class tooltips_class32   ; 不激活 鼠标点击无效
 	CHPITooltip := 1
 	settimer DCHPITooltip, -10000
 return
@@ -79,7 +79,7 @@ Loop, 9
 }
 CoordMode, ToolTip
 ToolTip, % cliphistoryPIList, % CHPITT_x, % CHPITT_y
-WinActivate, ahk_class tooltips_class32
+;WinActivate, ahk_class tooltips_class32
 settimer DCHPITooltip, -10000
 return
 
@@ -125,7 +125,7 @@ else
 }
 CoordMode, ToolTip
 ToolTip, % cliphistoryPIList, % CHPITT_x, % CHPITT_y
-WinActivate, ahk_class tooltips_class32
+;WinActivate, ahk_class tooltips_class32
 settimer DCHPITooltip, -10000
 return
 
@@ -173,6 +173,7 @@ return
 }
 
 MenuClick:
+	WinActivate, ahk_class tooltips_class32
 	IfWinNotActive, ahk_class tooltips_class32
 	{
 		DCHPITooltip()

@@ -12,8 +12,8 @@ if hdialogwin
 		return
 	}
 }
-ret:=TVPath_Get(hTreeView, outPath)
-if( ret = "")
+ret := TVPath_Get(hTreeView, outPath)
+if(ret = "")
 {
 	If WinActive("ahk_class RegEdit_RegEdit") or WinExist("ahk_class RegEdit_RegEdit")
 	{
@@ -25,5 +25,6 @@ if( ret = "")
 	else
 		msgbox % outPath
 }
+;msgbox % ret " - " outPath
 Return
 ;#IfWinActive

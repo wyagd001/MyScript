@@ -1,43 +1,42 @@
-; À´Ô´ÍøÖ·: https://www.autohotkey.com/boards/viewtopic.php?f=28&t=82466
+ï»¿; æ¥æºç½‘å€: https://www.autohotkey.com/boards/viewtopic.php?f=28&t=82466
 ;------------------------------------
-;  ¼òµ¥¿ÉÊÓ»¯Êó±êÊÖÊÆ v1.5  By FeiYue
+;  ç®€å•å¯è§†åŒ–é¼ æ ‡æ‰‹åŠ¿ v1.5  By FeiYue
 ;------------------------------------
 
 #NoEnv
 #NoTrayIcon
 #SingleInstance, force
-; ÊäÈë¼¶±ğÉèÖÃÎª 2£¬²»ÏìÓ¦ÏÂÃæµÄ×ÔÉí·¢ËÍµÄÓÒ¼ü(SendLevel 1)¡£ÄÜÓ°ÏìÆäËû½Å±¾ÖĞ SendLevel Îª 0 µÄÈÈ¼ü(ÓÒ¼ü)¡£
+; è¾“å…¥çº§åˆ«è®¾ç½®ä¸º 2ï¼Œä¸å“åº”ä¸‹é¢è„šæœ¬è‡ªèº«å‘é€çš„å³é”®(SendLevel 1)ã€‚ä½†èƒ½å½±å“å…¶ä»–è„šæœ¬ä¸­ SendLevel ä¸º 0 çš„çƒ­é”®(å³é”®)ã€‚
 #InputLevel 2
-MG_settingFile := A_ScriptDir  "\Êó±êÊÖÊÆ.ini"
+MG_settingFile := A_ScriptDir  "\é¼ æ ‡æ‰‹åŠ¿.ini"
 global h_id
-Êó±êÊÖÊÆÉèÖÃ¶ÔÏó := Ini2Obj(MG_settingFile)
-
+é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡ := Ini2Obj(MG_settingFile)
 File_AutoInclude :=  A_ScriptDir  . "\AutoInclude.txt"
 FileRead, FileR_TFC, % file_AutoInclude
 Tmp_Str := ""
-Loop, %A_ScriptDir%\Êó±êÊÖÊÆ¶¯×÷\*.ahk
-	Tmp_Str .= "#Include *i %A_ScriptDir%\Êó±êÊÖÊÆ¶¯×÷\" A_LoopFileName "`n"
+Loop, %A_ScriptDir%\é¼ æ ‡æ‰‹åŠ¿åŠ¨ä½œ\*.ahk
+	Tmp_Str .= "#Include *i %A_ScriptDir%\é¼ æ ‡æ‰‹åŠ¿åŠ¨ä½œ\" A_LoopFileName "`n"
 if RegExReplace(FileR_TFC, "\s+") != RegExReplace(Tmp_Str, "\s+")
 {
-	for k in Êó±êÊÖÊÆÉèÖÃ¶ÔÏó
+	for k in é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡
 	{
-		if (Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[k].¶¯×÷_Ä£Ê½ = "±êÇ©")
+		if (é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[k].åŠ¨ä½œ_æ¨¡å¼ = "æ ‡ç­¾")
 		{
-			if IsLabel(Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[k].¶¯×÷_ÃüÁî)
+			if IsLabel(é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[k].åŠ¨ä½œ_å‘½ä»¤)
 				Continue
 			else
 				IniDelete, % MG_settingFile, % k
 		}
-		if (Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[k].¶¯×÷_Ä£Ê½ = "º¯Êı")
+		if (é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[k].åŠ¨ä½œ_æ¨¡å¼ = "å‡½æ•°")
 		{
-			MG_AC:=StrSplit(Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[k].¶¯×÷_ÃüÁî,"|")
+			MG_AC:=StrSplit(é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[k].åŠ¨ä½œ_å‘½ä»¤,"|")
 			if IsFunc(MG_AC[1])
 				Continue
 			else
 				IniDelete, % MG_settingFile, % k
 		}
 	}
-	Loop, %A_ScriptDir%\Êó±êÊÖÊÆ¶¯×÷\*.ahk
+	Loop, %A_ScriptDir%\é¼ æ ‡æ‰‹åŠ¿åŠ¨ä½œ\*.ahk
 	{
 		if Instr(FileR_TFC, A_LoopFileName)
 			Continue
@@ -47,7 +46,7 @@ if RegExReplace(FileR_TFC, "\s+") != RegExReplace(Tmp_Str, "\s+")
 
 	FileDelete, %File_AutoInclude%
 	FileAppend, %Tmp_Str%, %File_AutoInclude%, UTF-8
-	msgbox,,½Å±¾ÖØÆô,×Ô¶¯ Include µÄÎÄ¼ş·¢ÉúÁË±ä»¯£¬µã»÷"È·¶¨"ºóÖØÆô½Å±¾£¬Ó¦ÓÃ¸üĞÂ¡£
+	msgbox,,è„šæœ¬é‡å¯,è‡ªåŠ¨ Include çš„æ–‡ä»¶å‘ç”Ÿäº†å˜åŒ–ï¼Œç‚¹å‡»"ç¡®å®š"åé‡å¯è„šæœ¬ï¼Œåº”ç”¨æ›´æ–°ã€‚
 	IfMsgBox OK
 		Reload
 }
@@ -73,12 +72,12 @@ SetWinDelay -1
 SetBatchLines, -1
 CoordMode, Mouse
 CoordMode, ToolTip
-Éú³É»­°å()
+ç”Ÿæˆç”»æ¿()
 return
 
 #If !WinActive("ahk_group MyBrowser")
 RButton::
-ÏÔÊ¾»­°å(), ¹ì¼£:=·½Ïò:=ÉÏ´Î·½Ïò:=A_Action:=LastAction:=SecondAction:=FirstAction:=tipC:=ÉÏ´Î¹ì¼£:="", arr:=MGG:=EWC:=[]
+æ˜¾ç¤ºç”»æ¿(), è½¨è¿¹:=æ–¹å‘:=ä¸Šæ¬¡æ–¹å‘:=A_Action:=LastAction:=SecondAction:=FirstAction:=tipC:=ä¸Šæ¬¡è½¨è¿¹:="", arr:=MGG:=EWC:=[]
 MouseGetPos, x1, y1, h_id
 WinGetClass, h_class, ahk_id %h_id%
 While GetKeyState("RButton", "P")
@@ -86,75 +85,75 @@ While GetKeyState("RButton", "P")
 	Sleep, 10
 	MouseGetPos, x2, y2
 	Loop, % (i:=arr.MaxIndex())>10 ? 10 : i
-	if ((dx:=x2-arr[i].3)*0+(dy:=y2-arr[i--].4)*0+Abs(dx)>5 or Abs(dy)>5)
+	if ((dx:=x2-arr[i].3)*0+(dy:=y2-arr[i--].4)*0+Abs(dx)>30 or Abs(dy)>30)
 	{
 		r:=(dx=0) ? 90 : Round(ATan(Abs(dy/dx))/(ATan(1)/45), 1)
 		r:=(dx>=0) ? (dy<=0 ? r:360-r) : (dy<=0 ? 180-r:180+r)
-		·½Ïò:=(r>=360-30 || r<=30) ? "ÓÒ"
-			: (r>=90-30 && r<=90+30) ? "ÉÏ"
-			: (r>=180-30 && r<=180+30) ? "×ó"
-			: (r>=270-30 && r<=270+30) ? "ÏÂ" : ·½Ïò
+		æ–¹å‘:=(r>=360-30 || r<=30) ? "å³"
+			: (r>=90-30 && r<=90+30) ? "ä¸Š"
+			: (r>=180-30 && r<=180+30) ? "å·¦"
+			: (r>=270-30 && r<=270+30) ? "ä¸‹" : æ–¹å‘
 		Break
 	}
-	if (·½Ïò!=ÉÏ´Î·½Ïò)
-		¹ì¼£.=·½Ïò, ÉÏ´Î·½Ïò:=·½Ïò
+	if (æ–¹å‘!=ä¸Šæ¬¡æ–¹å‘)
+		è½¨è¿¹.=æ–¹å‘, ä¸Šæ¬¡æ–¹å‘:=æ–¹å‘
 	if (x1!=x2 or y1!=y2)
 	{
 		arr.Push([x1,y1,x2,y2]), x1:=x2, y1:=y2
-		if ¹ì¼£
+		if è½¨è¿¹
 		{
-			if (¹ì¼£!=ÉÏ´Î¹ì¼£)
+			if (è½¨è¿¹!=ä¸Šæ¬¡è½¨è¿¹)
 			{
 				LastAction:=SecondAction:=FirstAction:=tipC:="", MGG:=EWC:=[]
-				for k in Êó±êÊÖÊÆÉèÖÃ¶ÔÏó
+				for k in é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡
 				{
-					;msgbox % Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[k].¶¯×÷_¹ì¼£
-					MGG:=StrSplit(Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[k].¶¯×÷_¹ì¼£,";")
-					if (MGG[1]=¹ì¼£) or  (MGG[2]=¹ì¼£) or  (MGG[3]=¹ì¼£)
+					;msgbox % é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[k].åŠ¨ä½œ_è½¨è¿¹
+					MGG:=StrSplit(é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[k].åŠ¨ä½œ_è½¨è¿¹,";")
+					if (MGG[1]=è½¨è¿¹) or  (MGG[2]=è½¨è¿¹) or  (MGG[3]=è½¨è¿¹)
 					{
-						ÉÏ´Î¹ì¼£:=¹ì¼£
-						;fileappend, % "1. |" ¹ì¼£ "| - MCG1: " MGG[1] " -  MCG2: " MGG[2] " -  MCG3: " MGG[3] "`r`n" , %A_Desktop%\log.txt
-						if (Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[k].¶¯×÷_Ìõ¼şÄ£Ê½="Í¨ÓÃ")
+						ä¸Šæ¬¡è½¨è¿¹:=è½¨è¿¹
+						;fileappend, % "1. |" è½¨è¿¹ "| - MCG1: " MGG[1] " -  MCG2: " MGG[2] " -  MCG3: " MGG[3] "`r`n" , %A_Desktop%\log.txt
+						if (é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[k].åŠ¨ä½œ_æ¡ä»¶æ¨¡å¼="é€šç”¨")
 						{
 							LastAction := k
 							if !SecondAction
-								tipC := Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[k].¶¯×÷_ÌáÊ¾ "[Í¨ÓÃ]"
+								tipC := é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[k].åŠ¨ä½œ_æç¤º "[é€šç”¨]"
 							Continue
 						}
-						EWC:=StrSplit(Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[k].¶¯×÷_ÉúĞ§Ìõ¼ş,";")
-						if (Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[k].¶¯×÷_Ìõ¼şÄ£Ê½="·ÇÌØ¶¨´°¿Ú")
+						EWC:=StrSplit(é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[k].åŠ¨ä½œ_ç”Ÿæ•ˆæ¡ä»¶,";")
+						if (é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[k].åŠ¨ä½œ_æ¡ä»¶æ¨¡å¼="éç‰¹å®šçª—å£")
 						{
 							if (h_class!=EWC[1]) And  (h_class!=EWC[2]) And (h_class!=EWC[3]) And  (h_class!=EWC[4]) and  (h_class!=EWC[5])
 							{
 								SecondAction := k
-								tipC := Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[k].¶¯×÷_ÌáÊ¾ "[·ÇÌØ¶¨]"
+								tipC := é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[k].åŠ¨ä½œ_æç¤º "[éç‰¹å®š]"
 								Continue
 							}
 						}
-						else ;If (Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[k].¶¯×÷_Ìõ¼şÄ£Ê½="ÌØ¶¨´°¿Ú")
+						else ;If (é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[k].åŠ¨ä½œ_æ¡ä»¶æ¨¡å¼="ç‰¹å®šçª—å£")
 						{
 							if (h_class=EWC[1]) or  (h_class=EWC[2]) or  (h_class=EWC[3]) or  (h_class=EWC[4]) or  (h_class=EWC[5])
 							{
 								FirstAction := k
-								tipC := Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[k].¶¯×÷_ÌáÊ¾ "[" h_class "]"
+								tipC := é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[k].åŠ¨ä½œ_æç¤º "[" h_class "]"
 								break
 							}
 						}
 					}
-					;fileappend, % "2. " ¹ì¼£ " - k: " k " - " LastAction " - " SecondAction " - " FirstAction "`r`n" , %A_Desktop%\log.txt
+					;fileappend, % "2. " è½¨è¿¹ " - k: " k " - " LastAction " - " SecondAction " - " FirstAction "`r`n" , %A_Desktop%\log.txt
 				}
 			}
-			ToolTip, % ¹ì¼£ " > " (tipC ? tipC : "Ã»ÓĞÉèÖÃ¶¯×÷")
+			ToolTip, % è½¨è¿¹ " > " (tipC ? tipC : "æ²¡æœ‰è®¾ç½®åŠ¨ä½œ")
 		}
 	}
 	color:=A_MSec<500 ? 0xFF9050 : 0x5090FF
 	For k,v in arr
-		»®Ïß(v.1, v.2, v.3, v.4, color)
-	¸üĞÂ()
+		åˆ’çº¿(v.1, v.2, v.3, v.4, color)
+	æ›´æ–°()
 }
 ToolTip
-Çå¿Õ(), ¸üĞÂ(), Òş²Ø»­°å()
-if (¹ì¼£="")
+æ¸…ç©º(), æ›´æ–°(), éšè—ç”»æ¿()
+if (è½¨è¿¹="")
 {
 	SendLevel 1
 	Click, R
@@ -164,94 +163,94 @@ if (¹ì¼£="")
 if StartMGHZ
 {
 	Gui,2: Default
-	GuiControl, , MGA_GJ, % ¹ì¼£
+	GuiControl, , MGA_GJ, % è½¨è¿¹
 	StartMGHZ:=0
-	GuiControl,, StartMGHZ, ¿ªÊ¼»æÖÆ
+	GuiControl,, StartMGHZ, å¼€å§‹ç»˜åˆ¶
 	return
 }
 
 A_Action := FirstAction ? FirstAction : (SecondAction ? SecondAction : (LastAction ? LastAction : ""))
 if A_Action
 {
-	if (Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[A_Action].¶¯×÷_Ä£Ê½ = "±êÇ©")
+	if (é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[A_Action].åŠ¨ä½œ_æ¨¡å¼ = "æ ‡ç­¾")
 	{
-		if IsLabel(Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[A_Action].¶¯×÷_ÃüÁî)
+		if IsLabel(é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[A_Action].åŠ¨ä½œ_å‘½ä»¤)
 		{
-			;ToolTip, % ¹ì¼£ " > " (Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[A_Action].¶¯×÷_ÌáÊ¾) " - "  h_class " - " Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[A_Action].¶¯×÷_Ìõ¼şÄ£Ê½ " - 1"
-			gosub % Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[A_Action].¶¯×÷_ÃüÁî
-			;msgbox % Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[A_Action].¶¯×÷_ÃüÁî
+			;ToolTip, % è½¨è¿¹ " > " (é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[A_Action].åŠ¨ä½œ_æç¤º) " - "  h_class " - " é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[A_Action].åŠ¨ä½œ_æ¡ä»¶æ¨¡å¼ " - 1"
+			gosub % é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[A_Action].åŠ¨ä½œ_å‘½ä»¤
+			;msgbox % é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[A_Action].åŠ¨ä½œ_å‘½ä»¤
 		}
 	}
-	if (Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[A_Action].¶¯×÷_Ä£Ê½ = "º¯Êı")
+	if (é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[A_Action].åŠ¨ä½œ_æ¨¡å¼ = "å‡½æ•°")
 	{
-		MG_AC:=StrSplit(Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[A_Action].¶¯×÷_ÃüÁî,"|")
+		MG_AC:=StrSplit(é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[A_Action].åŠ¨ä½œ_å‘½ä»¤,"|")
 		;msgbox % MG_AC[1] " - " MG_AC[2]
 		if IsFunc(MG_AC[1])
 		{
-			;ToolTip, % ¹ì¼£ " > " (Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[A_Action].¶¯×÷_ÌáÊ¾) " - "  h_class " - " Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[A_Action].¶¯×÷_Ìõ¼şÄ£Ê½ " - 1"
+			;ToolTip, % è½¨è¿¹ " > " (é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[A_Action].åŠ¨ä½œ_æç¤º) " - "  h_class " - " é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[A_Action].åŠ¨ä½œ_æ¡ä»¶æ¨¡å¼ " - 1"
 			if (MG_AC.MaxIndex() >= 4)
-				msgbox ´«Èë²ÎÊı¹ı¶à
+				msgbox ä¼ å…¥å‚æ•°è¿‡å¤š
 			else if (MG_AC.MaxIndex() =3)
 				MG_AC[1](MG_AC[2], MG_AC[3])
 			else if (MG_AC.MaxIndex() = 2)
 				MG_AC[1](MG_AC[2])
 			else   ;if MG_AC.MaxIndex=1
 				MG_AC[1]()
-			;msgbox % Êó±êÊÖÊÆÉèÖÃ¶ÔÏó[k].¶¯×÷_ÃüÁî
+			;msgbox % é¼ æ ‡æ‰‹åŠ¿è®¾ç½®å¯¹è±¡[k].åŠ¨ä½œ_å‘½ä»¤
 		}
 	}
 }
 
-;if IsLabel(¹ì¼£)
-;  Goto, %¹ì¼£%
+;if IsLabel(è½¨è¿¹)
+;  Goto, %è½¨è¿¹%
 ;else
-;  Tooltip, % ¹ì¼£ " > Ã»ÓĞÉèÖÃ¶¯×÷", 1
+;  Tooltip, % è½¨è¿¹ " > æ²¡æœ‰è®¾ç½®åŠ¨ä½œ", 1
 return
 #If
 
 
-;========== ÏÂÃæÊÇº¯Êı ==========
+;========== ä¸‹é¢æ˜¯å‡½æ•° ==========
 
 
-Éú³É»­°å()
+ç”Ÿæˆç”»æ¿()
 {
   global my_gdi
   Gui, My_DrawingBoard: New
   Gui, +LastFound +AlwaysOnTop -Caption +ToolWindow
     +E0x80000 +OwnDialogs +Hwndmy_id +E0x20
-  ; ÏÂÃæÁ½ĞĞ½áºÏBitblt¸üĞÂÓëUpdateLayeredWindow¸üĞÂ»¥³â
+  ; ä¸‹é¢ä¸¤è¡Œç»“åˆBitbltæ›´æ–°ä¸UpdateLayeredWindowæ›´æ–°äº’æ–¥
   ; Gui, Color, 0x000000
   ; WinSet, TransColor, 0x000000
   w:=A_ScreenWidth, h:=A_ScreenHeight
-  Gui, Show, Hide x0 y0 w%w% h%h%, »­°å
-  my_gdi := new GDI(my_id, w, h), Çå¿Õ()
+  Gui, Show, Hide x0 y0 w%w% h%h%, ç”»æ¿
+  my_gdi := new GDI(my_id, w, h), æ¸…ç©º()
   return
 }
 
-ÏÔÊ¾»­°å()
+æ˜¾ç¤ºç”»æ¿()
 {
   Gui, My_DrawingBoard: Show, NA
 }
 
-Òş²Ø»­°å()
+éšè—ç”»æ¿()
 {
   Gui, My_DrawingBoard: Hide
 }
 
-»®Ïß(x,y,x2,y2,color=0xFF0000)
+åˆ’çº¿(x,y,x2,y2,color=0xFF0000)
 {
   global my_gdi
   my_gdi.DrawLine(x, y, x2, y2, Color, 4)
 }
 
-¸üĞÂ(color=0x000000)
+æ›´æ–°(color=0x000000)
 {
   global my_gdi
   ; my_gdi.Bitblt()
   my_gdi.UpdateLayeredWindow(0, 0, 0, 0, color)
 }
 
-Çå¿Õ(color=0x000000)
+æ¸…ç©º(color=0x000000)
 {
   global my_gdi
   my_gdi.FillRectangle(0, 0, my_gdi.CliWidth, my_gdi.CliHeight, color)
@@ -422,28 +421,28 @@ class GDI ; thanks dwitter, RUNIE, FeiYue
 ; https://www.autoahk.com/archives/24332
 ini2obj(file){
 iniobj := {}
-FileRead, filecontent, %file% ;¼ÓÔØÎÄ¼şµ½±äÁ¿
+FileRead, filecontent, %file% ;åŠ è½½æ–‡ä»¶åˆ°å˜é‡
 StringReplace, filecontent, filecontent, `r, , All
-StringSplit, line, filecontent, `n, , ;ÓÃº¯Êı·Ö¸î±äÁ¿ÎªÎ±Êı×é
-Loop ;Ñ­»·
+StringSplit, line, filecontent, `n, , ;ç”¨å‡½æ•°åˆ†å‰²å˜é‡ä¸ºä¼ªæ•°ç»„
+Loop ;å¾ªç¯
 {
 	if A_Index > %line0%
 		Break
-	content = % line%A_Index% ;¸³Öµµ±Ç°ĞĞ
-	FSection := RegExMatch(content, "\[.*\]") ;ÕıÔò±í´ïÊ½Æ¥Åäsection
-	if FSection = 1 ;Èç¹ûÕÒµ½
+	content = % line%A_Index% ;èµ‹å€¼å½“å‰è¡Œ
+	FSection := RegExMatch(content, "\[.*\]") ;æ­£åˆ™è¡¨è¾¾å¼åŒ¹é…section
+	if FSection = 1 ;å¦‚æœæ‰¾åˆ°
 	{
-		TSection := RegExReplace(content, "\[(.*)\]", "$1") ;ÕıÔòÌæ»»²¢¸³ÖµÁÙÊ±section $ÎªÏòºóÒıÓÃ
+		TSection := RegExReplace(content, "\[(.*)\]", "$1") ;æ­£åˆ™æ›¿æ¢å¹¶èµ‹å€¼ä¸´æ—¶section $ä¸ºå‘åå¼•ç”¨
 		iniobj[TSection] := {}
 	}
 	Else
 	{
-		FKey := RegExMatch(content, "^.*=.*") ;ÕıÔò±í´ïÊ½Æ¥Åäkey
+		FKey := RegExMatch(content, "^.*=.*") ;æ­£åˆ™è¡¨è¾¾å¼åŒ¹é…key
 		if FKey = 1
 		{
-			TKey := RegExReplace(content, "^(.*)=.*", "$1") ;ÕıÔòÌæ»»²¢¸³ÖµÁÙÊ±key
+			TKey := RegExReplace(content, "^(.*)=.*", "$1") ;æ­£åˆ™æ›¿æ¢å¹¶èµ‹å€¼ä¸´æ—¶key
 			StringReplace, TKey, TKey, ., _, All
-			TValue := RegExReplace(content, "^.*=(.*)", "$1") ;ÕıÔòÌæ»»²¢¸³ÖµÁÙÊ±value
+			TValue := RegExReplace(content, "^.*=(.*)", "$1") ;æ­£åˆ™æ›¿æ¢å¹¶èµ‹å€¼ä¸´æ—¶value
 			iniobj[TSection][TKey] := TValue
 		}
 	}
@@ -484,17 +483,17 @@ for k,v in obj
 		submenu_name = %A_Now%%rand%
 		Menu, % submenu_name, add,
 		Menu, % submenu_name, DeleteAll
-		Menu, % menu_name, add, % k ? "¡¾" k "¡¿[obj]" : "", :%submenu_name%
+		Menu, % menu_name, add, % k ? "ã€" k "ã€‘[obj]" : "", :%submenu_name%
 		show_obj(v,submenu_name)
 	}
 	Else
 	{
-		Menu, % menu_name, add, % k ? "¡¾" k "¡¿" v: "", MenuHandler
+		Menu, % menu_name, add, % k ? "ã€" k "ã€‘" v: "", MenuHandler
 	}
 }
 if main = 1
 	menu,% menu_name, show
 }
 
-#include %A_ScriptDir%\Êó±êÊÖÊÆ¶¯×÷\Lib\MG_WriteIni.ahk
+#include %A_ScriptDir%\é¼ æ ‡æ‰‹åŠ¿åŠ¨ä½œ\Lib\MG_WriteIni.ahk
 #include *i %A_ScriptDir%\AutoInclude.txt

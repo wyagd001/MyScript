@@ -1,16 +1,16 @@
 ﻿~LButton::
 CoordMode, Mouse, Screen
 MouseGetPos, lastx, lasty, id
-If(Auto_Raise=1)
+If(Auto_Raise = 1)
 	stophovering(2)
 if !Auto_mouseclick
 return
 WinGetClass, Class, ahk_id %id%
-isF:=IsFullscreen("A",false,false)
+isF:=IsFullscreen("A", false, false)
 ; 屏幕左上角点击按下快捷键
 If(lastx=0 && lasty=0 && !WinActive("ahk_class Flip3D") && !isF)   
 {
-	if (A_OSVersion="WIN_7")
+	if (A_OSVersion = "WIN_7")
 		Send ^#{Tab}   ;rundll32.exe DwmApi #105
 	else
 		Send #{Tab}
@@ -24,9 +24,9 @@ If(lastx>=A_ScreenWidth - 1.5 and lasty>=A_ScreenHeight - 60 and lasty<=A_Screen
 ; chrome 标签页双击关闭
 if WinActive("ahk_class Chrome_WidgetWin_1") 
 {
-	if (lastyA!=lasty)
+	if (lastyA != lasty)
 	{
-		lastyA:=lasty
+		lastyA := lasty
 	return
 	}
 	WinGet, state, MinMax
@@ -48,15 +48,28 @@ if WinActive("ahk_class Chrome_WidgetWin_1")
 }
 if WinActive("ahk_class WinRarWindow")
 {
-CoordMode, Mouse, Window
-MouseGetPos, OutputVarX, OutputVarY
-PixelGetColor, OutputVarColor, %OutputVarX%, %OutputVarY%, RGB
-;tooltip % A_PriorHotKey "-" A_TimeSincePriorHotkey "-" OutputVarColor "-" OutputVarControl "-" OutputVarX
-if (A_PriorHotKey = "~LButton" and A_TimeSincePriorHotkey < 400) and (OutputVarColor = "0xFFFFFF")
-;判定是否点击的点是白色
-send {backspace}
-;如果是则发送backspace键
-;tooltip % OutputVarColor " - " A_TimeSincePriorHotkey " - " A_PriorHotKey
-return
+	CoordMode, Mouse, Window
+	MouseGetPos, OutputVarX, OutputVarY
+	PixelGetColor, OutputVarColor, %OutputVarX%, %OutputVarY%, RGB
+	;tooltip % A_PriorHotKey "-" A_TimeSincePriorHotkey "-" OutputVarColor "-" OutputVarControl "-" OutputVarX
+	if (A_PriorHotKey = "~LButton" and A_TimeSincePriorHotkey < 400) and (OutputVarColor = "0xFFFFFF")
+	; 判定是否点击的点是白色
+		send {backspace}
+	; 如果是则发送backspace键
+	;tooltip % OutputVarColor " - " A_TimeSincePriorHotkey " - " A_PriorHotKey
+	return
+}
+if WinActive("ahk_class CabinetWClass") && !Qt
+{
+	CoordMode, Mouse, Window
+	MouseGetPos, OutputVarX, OutputVarY
+	PixelGetColor, OutputVarColor, %OutputVarX%, %OutputVarY%, RGB
+	;tooltip % A_PriorHotKey "-" A_TimeSincePriorHotkey "-" OutputVarColor "-" OutputVarControl "-" OutputVarX
+	if (A_PriorHotKey = "~LButton" and A_TimeSincePriorHotkey < 400) and (OutputVarColor = "0xFFFFFF")
+	; 判定是否点击的点是白色
+		send !{Up}
+	; 如果是则发送backspace键
+	;tooltip % OutputVarColor " - " A_TimeSincePriorHotkey " - " A_PriorHotKey
+	return
 }
 Return

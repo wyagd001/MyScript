@@ -1,9 +1,11 @@
 ﻿;鼠标中键增强
 $MButton::
 	;s := A_TickCount
-	MouseGetPos, lastx, lasty
-	MouseGetPos,,,UID,ClassNN ; 获取指针下窗口的 UID 和 ClassNN
-	WinGetClass,窗口Class,ahk_id %UID% ; 根据 UID 获得窗口类名
+	;MouseGetPos, lastx, lasty
+	MouseGetPos, lastx, lasty, UID, ClassNN ; 获取指针下窗口的 ID 和控件的 ClassNN
+	WinGetClass, 窗口Class, ahk_id %UID% ; 根据 ID 获得窗口类名
+	WinExist("ahk_id " UID)
+	ControlGetText, OutputText, %ClassNN%
 	CoordMode, Mouse, Relative
 	If(Auto_Raise=1)
 		stophovering(2)
@@ -39,9 +41,10 @@ $MButton::
 	return
 	}
 
-; 资源管理器新窗口打开文件夹
-; 使用 QtTabBar时, 会造成 QtTabBar 打开新窗口时会有些许卡顿, 移动鼠标还可能导致打开当前鼠标下面指向的文件夹,而不是中键点击的文件夹
-; 可能原因为Autohotkey 拦截了中键,导致 QtTabBar 缓存了中键, 暂无很好的解决办法
+; 资源管理器中键新窗口打开文件夹
+; 使用 QtTabBar 时, 会造成 QtTabBar 打开新窗口时会有些许卡顿, 
+; 移动鼠标还可能导致打开当前鼠标下面指向的文件夹,而不是中键点击的文件夹
+; 可能原因为 Autohotkey 拦截了中键,导致 QtTabBar 缓存了中键, 暂无很好的解决办法
 	if(WinActive("ahk_group ExplorerGroup") && IsMouseOverFileList())
 	{
 		;if QtTabBar   ; 尝试解决卡顿问题无效, QtTabBar 和 Autohotkey 中键新窗口打开文件夹只能二选一
@@ -52,7 +55,6 @@ $MButton::
 			;return
 		;}
 		selected := GetSelectedFiles(0)
-		;tooltip % selected "111"
 		SendEvent {LButton}
 		Sleep 500
 		undermouse := GetSelectedFiles()
@@ -66,7 +68,7 @@ $MButton::
 				SelectFiles(selected)
 			;tooltip % selected " - " undermouse
 			if(Isdir)
-				run explorer.exe  %undermouse%  ; 安装使用 qttabbar 后为打开新窗口
+				run explorer.exe %undermouse%  ; 安装使用 qttabbar 后为打开新窗口
 			;run %undermouse% ; 安装使用 qttabbar 后为打开新标签
 			return
 		}
@@ -83,21 +85,26 @@ $MButton::
 		}
 		else
 		{
-			If (ClassNN = "ToolbarWindow321") ; 指针是否在托盘图标上
+			If instr(ClassNN, "ToolbarWindow32") ; 指针是否在托盘图标上
 			{
-				SendEvent,{click,Right}
-				SendEvent,{Up}{enter} ; 如果是在托盘区上，为关闭选择的程序
-			return
+				if instr(OutputText, "通知区域")
+				{
+					SendEvent,{click,Right}
+					SendEvent,{Up}{enter} ; 如果是在托盘区上，为关闭选择的程序
+				return
+				}
 			}
 			Else ; 指针在任务栏窗口按钮上
 			{
 				;SendEvent,{Click,Right}
 				;WinWait,ahk_class DV2ControlHost
 				;Sleep,200 ;中文输入法状态下，有延迟才能成功
+
 				;SendEvent,{Up}{enter};如果是任务栏上，为关闭选择的程序
 
         if !(h_id := TTLib.GetTrackedButtonWindow())
         {
+
           ;SendEvent,{Click}
           CoordMode, Mouse, Screen
           mousegetpos, Tmp_X, Tmp_Y
@@ -132,8 +139,8 @@ $MButton::
 					SendEvent {c}
 					sleep,100
 				}
-			return
 			}
+			return
 		}
 	}
 
@@ -227,6 +234,21 @@ $MButton::
 		else
 			Send, {MButton}  ; 浏览器窗口其他位置发送中键
 	Return
+	}
+
+	If (窗口Class = "TTOTAL_CMD")
+	{
+		if Instr(ClassNN, "TMyPanel") or Instr(ClassNN, "TMyTabControl")
+		{
+			Send, {MButton}
+			Return
+		}
+		if Instr(ClassNN, "TMyListBox")
+		{
+			click
+			TC_SendMsg(3003)
+			Return
+		}
 	}
 
 	; 未激活窗口先点击激活

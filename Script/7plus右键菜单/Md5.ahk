@@ -1,5 +1,5 @@
 ﻿1016:
-SetTimer, 文件MD5, -150
+SetTimer, 7plusMD5, -150
 Return
 
 7PlusMenu_MD5()

@@ -1,5 +1,6 @@
 ﻿; 注册表打开时跳转到相应条目 主窗口\OpenButton.ahk
 ; 复制注册表相应条目路径  注册表.ahk
+; 64 位程序不适用与 32 位程序, 反之亦然
 
 ; https://autohotkey.com/boards/viewtopic.php?t=5999
 ;
@@ -106,7 +107,8 @@ TVPath_Get(hTreeView, ByRef outPath, Delimiter="\")
 				{
 					;获取文字
 					SendMessage, TVM_GETITEM, 0, pTVItemRemote, , ahk_id %hTreeView%
-
+					;if errorlevel = 0
+						;fileappend, % TVM_GETITEM " - " errorlevel " - " hTreeView " - 测试`n",%A_Desktop%\123.txt
 					if(errorlevel!="FAIL" && errorlevel!=0) ;获取文字成功
 					{
 						ret := ReadProcessMemory(hProcess, pszTextRemote, szTextByte, cchTextMax * BytePerChar)
@@ -115,9 +117,10 @@ TVPath_Get(hTreeView, ByRef outPath, Delimiter="\")
 							szText := StrGet(&szTextByte, cchTextMax, DllTextEncode)
 							VarSetCapacity(szText, -1)
 							outPath := (outPath="") ? szText : szText . Delimiter . outPath
+							;fileappend, % outPath "`n",%A_Desktop%\123.txt
 							;获取父节点
 							SendMessage, TVM_GETNEXTITEM, TVGN_PARENT, hSelItem, , ahk_id %hTreeView%
-							hSelItem:=errorlevel ;返回NULL则跳出
+							hSelItem := errorlevel ;返回NULL则跳出
 						}
 						else
 						{
@@ -127,13 +130,13 @@ TVPath_Get(hTreeView, ByRef outPath, Delimiter="\")
 					}
 					else
 					{
-						HasError:="gettext"
+						HasError := "gettext - " errorlevel
 						break
 					}
 				}
 				else
 				{
-					HasError:="write"
+					HasError := "write - " errorlevel
 					break
 				}
 			}
@@ -241,14 +244,18 @@ TVPath_Set(hTreeView, inPath, ByRef outMatchPath,  EscapeChar="", Delimiter="\",
 		hSelItem:=errorlevel
 
 		htext:=TVPath_GetText(hTreeView, hSelItem)
-		if (htext="收藏夹")  ; 资源管理器 首个节点为收藏夹
+		;tooltip % htext
+		if (htext = "收藏夹") || (htext = "快速访问") ; 资源管理器 首个节点为收藏夹
 		{
 			Loop 20
 			{
 				hSelItem:=TVPath_GetNext(hTreeView, hSelItem,"full")
 				htext:=TVPath_GetText(hTreeView, hSelItem)
-				if (htext="计算机")   ; 找到 计算机 节点为止
+				if (htext="计算机") || (htext="此电脑")  ; 找到 计算机 节点为止
+				{
+					;tooltip % hSelItem
 					break
+				}
 			}
 		}
 
@@ -305,6 +312,7 @@ __dummySetPathToTreeView(hProcess, hTreeView, hSelItem, inPath, tvitem, szTextBy
 ;由 TVPath_Set 函数调用，勿直接调用此函数。
 __dummySetPathToTreeView(hProcess, hTreeView, hItem, RestPath, ByRef tvitem, ByRef szTextByte, pszTextRemote, pTVItemRemote, ByRef FullPath, ByRef MatchPath, ByRef HasError, ByRef EscapeChar, ByRef NoSelection, Depth, ByRef Delimiter, ByRef RetryTimesForGetChild)
 {
+
 	if RestPath=
 		return
 	Depth++
@@ -337,7 +345,8 @@ __dummySetPathToTreeView(hProcess, hTreeView, hItem, RestPath, ByRef tvitem, ByR
 			}
 		}
 	}
-	
+	fileappend, % RestPath "`n",%A_Desktop%\345.txt
+	fileappend, % FindText "`n",%A_Desktop%\345.txt
 	;判断窗口是否是Unicode
 	isUnicode:=DllCall("IsWindowUnicode", uint, hTreeView)
 
@@ -387,7 +396,9 @@ __dummySetPathToTreeView(hProcess, hTreeView, hItem, RestPath, ByRef tvitem, ByR
 		{
 			;获取文字
 			SendMessage, TVM_GETITEM, 0, pTVItemRemote, , ahk_id %hTreeView%
-
+			;msgbox % hItem " - " errorlevel
+			if errorlevel = 0
+				fileappend, % TVM_GETITEM " - " errorlevel " - " hTreeView " - 测试`n",%A_Desktop%\345.txt
 			if(errorlevel!="FAIL" && errorlevel!=0) ;获取文字成功
 			{
 				ret := ReadProcessMemory(hProcess, pszTextRemote, szTextByte, cchTextMax * BytePerChar)
@@ -395,7 +406,7 @@ __dummySetPathToTreeView(hProcess, hTreeView, hItem, RestPath, ByRef tvitem, ByR
 				{
 					szText := StrGet(&szTextByte, cchTextMax, DllTextEncode)
 					VarSetCapacity(szText, -1)
-
+					;msgbox % szText
 					if (MatchCount=A_Index)
 						Matches:=True
 					else if FuncName!=

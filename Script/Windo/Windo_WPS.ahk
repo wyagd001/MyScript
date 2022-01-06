@@ -1,4 +1,8 @@
-﻿Windo_WPS_RunVba:
+﻿;q::
+;gosub Windo_ET_PasteAll
+;return
+
+Windo_WPS_RunVba:
 Application := ComObjActive("ket.Application")
 if !Splitted_Windy_Cmd4
 try Application.run("'" Application.ActiveWorkbook.FullName "'!" Splitted_Windy_Cmd3)
@@ -10,6 +14,43 @@ Application:=""
 ;Application.ActiveSheet.run("!模块1.二合一函数")
 ;tooltip % "'" Application.ActiveWorkbook.FullName "'!模块1.二合一函数"
 return
+
+; 不同工作表的相同位置相同的值(公式), 适用于总表加 n 个分表的情况
+; 分表具有相同的结构, 其中一个单元格要更改, 所有分表中的相同位置的单元格也随之更改
+; 1. 最常见的方法是不同工作表一个一个切换一个一个粘贴(分表太多时耗时耗力)
+; 2. 将所有要修改的工作表选中(表多的话可以先全选再剔除), 在其中一个工作表修改好单元格后,所有选中的工作表中的相同位置单元格都会被修改
+
+Windo_ET_PasteAll:
+Application := ComObjActive("ket.Application")
+ActiveCell := Application.ActiveCell.Address
+ActiveCell := StrReplace(ActiveCell, "$")
+HasFormula := Application.ActiveSheet.Range(ActiveCell).HasFormula
+if !HasFormula
+	ActiveCellValue := Application.ActiveSheet.Range(ActiveCell).Value
+else
+	ActiveCellValue := Application.ActiveSheet.Range(ActiveCell).Formula
+
+SheetsCount := Application.ActiveWorkbook.Sheets.Count
+loop % SheetsCount
+{
+	SheetName := Application.ActiveWorkbook.Sheets(A_index).Name
+	if CF_Isinteger(SheetName)
+	{
+		Application.Sheets(A_index).Range(ActiveCell).Value := ActiveCellValue
+	}
+}
+Application:=""
+return
+
+/*
+CF_Isinteger(ByRef hNumber){
+	if hNumber is integer
+	{
+		hNumber := Round(hNumber)
+		return true
+	}
+}
+*/
 
 /*
 wps  VB 宏（Alt+F8）中的选项  指定快捷键

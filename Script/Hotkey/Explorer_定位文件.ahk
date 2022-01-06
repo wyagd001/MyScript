@@ -169,7 +169,7 @@ ListEvent:
     Return
 }
 
-; 对话框跳转使用 Folder Menu 就足够了,这里只是展示 TV 定位的函数
+; 对话框跳转使用 Folder Menu 就足够了, 这里只是展示 TV 定位的函数
 dialogpath:
 hdialogwin := WinExist("A")
 hdialogedit := ""
@@ -187,16 +187,16 @@ else If WinActive("ahk_class RegEdit_RegEdit")
 }
 if !hTreeView
 return
-Gui,DialogTv:Destroy
-Gui, DialogTv:New
+Gui DialogTv:Destroy
+Gui DialogTv:New
 Gui DialogTv:Default 
 Gui, Add, Picture, x0 y0 vhpic gDialogFav, %A_ScriptDir%\pic\Candy\Command\windo.ico
 Gui, Add, Edit, x+0 yp+0 w300 h25 vdpath
 Gui, Add, button,  x+0 yp+0 w30 gsetpath, Go!
 Gui, Add, button,  x+0 yp+0 w30 gDialogTvGuiEscape, X
 gui, show, % "x" . hX . " y" . ((hY>30)?(hy-30):(hy+30)) . " w390 h1"
-
-gui, -Caption -Border +AlwaysOnTop +Owner 
+gui, -Caption -Border +AlwaysOnTop +Owner
+SetTimer, Watchhdialogwin, 100
 return
 
 setpath:
@@ -211,10 +211,13 @@ If WinExist("ahk_class #32770")
 	dpath := StrReplace(dpath, "\desktop\", "\桌面\")
 }
 ;tooltip % dpath
-TVPath_Set(hTreeView, (hdialogedit?"计算机\":"桌面\计算机\") dpath, outMatchPath,,,10)
+if (A_OSVersion = "WIN_7")
+	TVPath_Set(hTreeView, (hdialogedit?"桌面\计算机\":"计算机\") dpath, outMatchPath,,,10)
+else ; 只适配 Win10
+	TVPath_Set(hTreeView, (hdialogedit?"桌面\此电脑\":"计算机\") dpath, outMatchPath,,,10)
 ControlFocus, , ahk_id %hTreeView%
 ControlSend, , {Enter}, ahk_id %hTreeView%
-;msgbox % (hdialogedit?"计算机\":"桌面\计算机\") dpath
+;msgbox % (hdialogedit?"桌面\计算机\":"计算机\") dpath
 return
 
 DialogTvGuiEscape:
@@ -237,19 +240,30 @@ if (CTreeView != hTreeView)
 dpath := Candy_Cmd_Str3
 If WinExist("ahk_class #32770")
 {
-hdrive := SubStr(dpath, 1, 2)
-DriveGet, OutputVar, Label, %hdrive%
-dpath := StrReplace(dpath, hdrive, OutputVar " (" hdrive ")" )
-dpath := StrReplace(dpath, "\users\", "\用户\")
-dpath := StrReplace(dpath, "\desktop\", "\桌面\")
+	hdrive := SubStr(dpath, 1, 2)
+	DriveGet, OutputVar, Label, %hdrive%
+	dpath := StrReplace(dpath, hdrive, OutputVar " (" hdrive ")" )
+	dpath := StrReplace(dpath, "\users\", "\用户\")
+	dpath := StrReplace(dpath, "\desktop\", "\桌面\")
 ;tooltip % dpath " - " hTreeView
-TVPath_Set(hTreeView, (hdialogedit?"计算机\":"桌面\计算机\") dpath, outMatchPath,,,10)
+if (A_OSVersion = "WIN_7")
+	TVPath_Set(hTreeView, (hdialogedit?"计算机\":"桌面\计算机\") dpath, outMatchPath,,,10)
+else ; 只适配 Win10
+	TVPath_Set(hTreeView, (hdialogedit?"此电脑\":"桌面\计算机\") dpath, outMatchPath,,,20)
 ControlFocus, , ahk_id %hTreeView%
 ControlSend, , {Enter}, ahk_id %hTreeView%
-;msgbox % (hdialogedit?"计算机\":"桌面\计算机\") dpath "`n" hTreeView
+;msgbox % (hdialogedit?"桌面\计算机\":"计算机\") dpath "`n" hTreeView
 }
 If WinExist("ahk_class RegEdit_RegEdit")
 {
-TVPath_Set(hTreeView, "计算机\" dpath, outMatchPath)
+	TVPath_Set(hTreeView, "计算机\" dpath, outMatchPath)
+}
+return
+
+Watchhdialogwin:
+if !WinExist("ahk_id " hdialogwin)
+{
+	Gui,DialogTv:Destroy
+	SetTimer, Watchhdialogwin, off
 }
 return

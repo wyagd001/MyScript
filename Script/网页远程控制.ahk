@@ -60,14 +60,13 @@ window.location.href="/";
 <a href="/exitapp"> <button> 退出 </button> </a>
 <a href="/"> <button> 主页 </button> </a>
 </p>
-
 <p>
 <a href="/vp"> <button> 音量+ </button> </a>
 <a href="/vm"> <button> 音量- </button> </a>
 <a href="/u_m"> <button> 静音 </button> </a>
-<a href="/vHigh"> <button> 80`% </button> </a>
-<a href="/vMed"> <button> 50`% </button> </a>
-<a href="/vLow"> <button> 20`% </button> </a>
+<a href="/vhigh"> <button> 80`% </button> </a>
+<a href="/vmed"> <button> 50`% </button> </a>
+<a href="/vlow"> <button> 20`% </button> </a>
 </p>
 
 <p> &nbsp; </p>
@@ -77,8 +76,12 @@ window.location.href="/";
 <p>
 <a href="/standby"> <button> 待机 </button> </a>
 <a href="/hibernate"> <button> 休眠 </button> </a>
+<a href="/reloadpc"> <button> 重启 </button> </a>
+<a href="/shutdownpc"> <button> 关机 </button> </a>
 <a href="/monitoronoff"> <button> 屏幕开关 </button> </a>
-<a href="/logout"> <button> 退出登录 </button> </a>
+</p>
+<p>
+<a href="/logout"> <button>退出网页控制登录</button> </a>
 <a href="/serverreload"> <button> 重启服务 </button> </a>
 </p>
 
@@ -204,6 +207,9 @@ paths["/vlow"] := Func("vLow")
 paths["/standby"] := Func("standby")
 paths["/hibernate"] := Func("hibernate")
 paths["/monitoronoff"] := Func("monitorOnOff")
+paths["/shutdownpc"] := Func("shutdownPC")
+paths["/reloadpc"] := Func("ReloadPC")
+
 paths["/logout"] := Func("logout")
 paths["/serverreload"] := Func("serverReload")
 
@@ -390,6 +396,14 @@ if scheduleDelay
 ; Parameter #3: Pass 1 instead of 0 to disable all wake events.
 DllCall("PowrProf\SetSuspendState", "int", 1, "int", 0, "int", 0)
 }
+}
+
+shutdownPC(ByRef req, ByRef res){
+shutdown 5
+}
+
+ReloadPC(ByRef req, ByRef res){
+shutdown 2
 }
 
 monitorOnOff(ByRef req, ByRef res){

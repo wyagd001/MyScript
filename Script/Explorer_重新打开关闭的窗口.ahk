@@ -17,18 +17,25 @@ ShellWM(wp, lp)
 			textfile_Arr.InsertAt(lp, {cmd: GetTextFilePath(ProcessName,lp)})
 		}
 	}
-	else if (wp = 2)
+	else if (wp = 2)  ; 窗口关闭
 	{
 		if folder_Arr.HasKey(lp)
 		{
 			if folder_Arr[lp].cmd
 			{
-				CloseWindowList_Arr.Push(folder_Arr[lp].cmd)
-				IniWrite, % folder_Arr[lp].cmd, %run_iniFile%,路径设置, LastClosewindow
+				Loop, Parse, % folder_Arr[lp].cmd, `n, `r
+				{
+					if A_LoopField
+					{
+						CloseWindowList_Arr.Push(A_LoopField)
+						if CloseWindowList_Arr.Length() >= 15
+							CloseWindowList_Arr.RemoveAt(1)
+					}
+					if (A_index=1) && A_LoopField
+						IniWrite, % A_LoopField, %run_iniFile%, 路径设置, LastClosewindow
+				}
 				Array_removeDuplicates(CloseWindowList_Arr)
-				if CloseWindowList_Arr.Length() >= 11
-				CloseWindowList_Arr.RemoveAt(1)
-				Array_writeToINI(CloseWindowList_Arr, "CloseWindowList", run_iniFile)
+				Array_writeToINI(CloseWindowList_Arr, "CloseWindowList", run_iniFile,,1)
 				Array_WriteMenuToINI(CloseWindowList_Arr, "menu", A_ScriptDir "\Settings\Windy\主窗体\CloseWindowList.ini")
 			}
 			folder_Arr.Remove(lp)
@@ -40,24 +47,29 @@ ShellWM(wp, lp)
 			{
 				ClosetextfileList_Arr.Push(textfile_Arr[lp].cmd)
 				Array_removeDuplicates(ClosetextfileList_Arr)
-				if ClosetextfileList_Arr.Length() >= 11
-				ClosetextfileList_Arr.RemoveAt(1)
-				Array_writeToINI(ClosetextfileList_Arr, "ClosetextfileList", run_iniFile)
+				if ClosetextfileList_Arr.Length() >= 16
+					ClosetextfileList_Arr.RemoveAt(1)
+				Array_writeToINI(ClosetextfileList_Arr, "ClosetextfileList", run_iniFile,,1)
 				Array_WriteMenuToINI(ClosetextfileList_Arr, "menu", A_ScriptDir "\Settings\Windy\主窗体\closetextfile_Arrlist.ini")
 			}
 			textfile_Arr.Remove(lp)
 		}
 	}
-	else if (wp = 6)
+	else if (wp = 6)   ; 窗口重绘
 	{
-		WinGet,ProcessName,ProcessName,ahk_id %lp%
+		WinGet, ProcessName, ProcessName, ahk_id %lp%
 		if folder_Arr.HasKey(lp)
-			folder_Arr[lp].cmd := ShellFolder(lp, 1)
+		{
+			Tmp_Fp := ShellFolder(lp, 1)
+			if Instr(folder_Arr[lp].cmd, Tmp_Fp "`n")
+				folder_Arr[lp].cmd := StrReplace(folder_Arr[lp].cmd, Tmp_Fp "`n")
+			if !Instr(folder_Arr[lp].cmd, Tmp_Fp)
+				folder_Arr[lp].cmd .= "`n" Tmp_Fp
+		}
     else if textfile_Arr.HasKey(lp)
 		{
      textfile_Arr[lp].cmd := GetTextFilePath(ProcessName,lp)
 		}
-
 	}
 }
 
@@ -135,7 +147,7 @@ ClosetextfileListMenuShow:
 	Menu, ClosetextfileListMenu, DeleteAll
 Return
 
-AddItem(argMenu, argPath,index)
+AddItem(argMenu, argPath, index)
 {
 	MenuArray := {"::{645FF040-5081-101B-9F08-00AA002F954E}":"回收站","::{F02C1A0D-BE21-4350-88B0-7367FC96EF3C}":"网络","::{20D04FE0-3AEA-1069-A2D8-08002B30309D}":"计算机","::{26EE0668-A00A-44D7-9371-BEB064C98683}\0":"控制面板","::{031E4825-7B94-4DC3-B131-E946B44C8DD5}":"库","Documents.library-ms":"文档库","Music.library-ms":"音乐库","Pictures.library-ms":"图片库","Videos.library-ms":"视频库","::{7B81BE6A-CE2B-4676-A29E-EB907A5126C5}":"程序和功能","::{21EC2020-3AEA-1069-A2DD-08002B30309D}\::{7007ACC7-3202-11D1-AAD2-00805FC1270E}":"网络连接","::{8E908FC9-BECC-40F6-915B-F4CA0E70D03D}":"网络和共享中心","::{BB06C0E4-D293-4F75-8A90-CB05B6477EEE}":"系统","::{60632754-C523-4B62-B45C-4172DA012619}":"用户帐户","::{78F3955E-3B90-4184-BD14-5397C15F1EFC}\PerfCenterAdvTools":"高级工具","::{ED834ED6-4B5A-4BFE-8F11-A626DCB6A921}":"个性化","::{05D7B0F4-2121-4EFF-BF6B-ED3F69B894D9}":"通知区域图标","::{78F3955E-3B90-4184-BD14-5397C15F1EFC}":"性能信息和工具","::{C555438B-3C23-4769-A71F-B6D3D9B6053A}":"显示","::{BB64F8A7-BEE7-4E1A-AB8D-7D8273F7FDB6}":"操作中心","::{025A5937-A6BE-4686-A844-36FE4BEC8B6D}":"电源选项","::{2227A280-3AEA-1069-A2DE-08002B30309D}":"打印机和传真","::{208D2C60-3AEA-1069-A2D7-08002B30309D}":"网上邻居","::{A8A91A66-3A7D-4424-8D24-04E180695C7A}":"设备和打印机"}
 	IfInString, argPath, ::
@@ -191,7 +203,10 @@ Array_WriteMenuToINI(InputArray,sectionINI, fileName)
 		}
 		else
 			MenuItemName:=Strlen(k)>20 ? SubStr0(k,1,10) . "..." . SubStr0(k,-10) : k
-    k:="open|" k
-		IniWrite, %k%, %fileName%, %sectionINI%,%MenuItemName%
+		if FileExist(k) or Instr(k, "::{")
+		{
+			k:="run|" k
+			IniWrite, %k%, %fileName%, %sectionINI%,%MenuItemName%
+		}
 	}
 }

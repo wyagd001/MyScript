@@ -69,6 +69,7 @@
 #Include *i %A_ScriptDir%\Script\Hotkey\窗口程序和打开的文件.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\窗口缩略图.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\隐藏窗口.ahk
+#Include *i %A_ScriptDir%\Script\7plus右键菜单\Candy菜单.ahk
 #Include *i %A_ScriptDir%\Script\7plus右键菜单\Md5.ahk
 #Include *i %A_ScriptDir%\Script\7plus右键菜单\Open_Cmd_Here.ahk
 #Include *i %A_ScriptDir%\Script\7plus右键菜单\Windy资源管理器菜单.ahk

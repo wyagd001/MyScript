@@ -73,8 +73,9 @@ Cando_生成快捷方式到指定目录:
 	Gui, Add, CheckBox, x110 y80 w40 h30 vSHL_Desktop, 桌面
 	Gui, Add, CheckBox, x168 y80 w78 h30 vSHL_QL, 快速启动栏
 	Gui, Add, CheckBox, x260 y80 w78 h30 vSHL_Fav, 脚本收藏夹
-	Gui, Add, Text, x10 y110, 快捷方式名称(&N)
-	Gui, Add, Edit, x110 y108 w350 vSHL_Name, %CandySel_FileNameNoExt%
+	Gui, Add, CheckBox, x350 y80 w78 h30 vSHL_SendTo, 发送到
+	Gui, Add, Text, x10 y112, 快捷方式名称(&N)
+	Gui, Add, Edit, x110 y110 w350 vSHL_Name, %CandySel_FileNameNoExt%
 	Gui, Add, Button, x280 y140 w80 h25 Default gSHL_OK, 确定(&S)
 	Gui, Add, Button, x370 y140 w80 h25 g66GuiClose, 取消(&X)
 	Gui,show, , 为文件[%CandySel_FileNameWithExt%]创建快捷方式
@@ -92,7 +93,7 @@ SHL_OK:
 		errFlag:=3, Tmp_Str := "快捷方式目录不存在。"
 	If (errFlag=0) And (FileExist(SHL_TGPath)="")
 		errFlag:=4, Tmp_Str := "目标文件不存在。"
-	If (errFlag=0) And (SHL_Path="") And (SHL_Desktop=0) And (SHL_QL=0) And (SHL_Fav=0)
+	If (errFlag=0) And (SHL_Path="") And (SHL_Desktop=0) And (SHL_QL=0) And (SHL_Fav=0) And (SHL_SendTo=0)
 		errFlag:=5, Tmp_Str := "快捷方式目录为空并且未勾选任一目录。"
 	If (errFlag=0) 
 	{
@@ -105,6 +106,8 @@ SHL_OK:
 			FileCreateShortcut, % SHL_TGPath, %A_AppData%\Microsoft\Internet Explorer\Quick Launch\%SHL_Name%.lnk
 		if SHL_Fav
 			FileCreateShortcut, % SHL_TGPath, %A_ScriptDir%\favorites\%SHL_Name%.lnk
+		if SHL_SendTo
+			FileCreateShortcut, % SHL_TGPath, %A_AppData%\Microsoft\Windows\SendTo\%SHL_Name%.lnk
 	}
 	Else 
 	{

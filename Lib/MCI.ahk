@@ -359,6 +359,7 @@ MCI_Open(p_MediaFile,p_Alias="",p_Flags="")
         . " wait"
 
     l_Return:=MCI_SendString(l_CmdString)
+
     if l_Return
         l_Return:=0
      else

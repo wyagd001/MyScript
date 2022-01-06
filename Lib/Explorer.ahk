@@ -49,9 +49,9 @@ ShellNavigate(sPath, bExplore=False, hWnd=0)
 	{
 		
 		if !InStr(sPath, "#")  ; 排除特殊文件名
-{
+		{
 			window.Navigate2(sPath) ; 当前资源管理器窗口切换到指定目录
-}
+		}
 		else ; https://www.autohotkey.com/boards/viewtopic.php?f=5&t=526&p=153676#p153676
 		{
 			DllCall("shell32\SHParseDisplayName", WStr, sPath, Ptr,0, PtrP, vPIDL, UInt,0, Ptr,0)
@@ -91,25 +91,30 @@ ShellFolder(hWnd=0, returntype=1, onlyname=0)
 		ControlGet, hwWindow, HWND,, SysListView321, ahk_class Progman  ; 桌面文件夹区别对待
 		If !hwWindow ; #D mode
 			ControlGet, hwWindow, HWND,, SysListView321, A
-		ControlGet, files, List, % ( selection ? "Selected":"") "Col1",,ahk_id %hwWindow%
-		base := SubStr(A_Desktop,0,1)=="" ? SubStr(A_Desktop,1,-1) : A_Desktop
+		ControlGet, files, List, % (selection ? "Selected":"") "Col1",, ahk_id %hwWindow%
+		;base := SubStr(A_Desktop, 0, 1)=="\" ? SubStr(A_Desktop, 1, -1) : A_Desktop
 		Loop, Parse, files, `n, `r
 		{
-			hpath := base "\" A_LoopField
+			hpath := A_Desktop "\" A_LoopField
+			hpath2 := A_DesktopCommon "\" A_LoopField
 			IfExist %hpath% ; ignore special icons like Computer (at least for now)
 				ret .= !onlyname?hpath:A_LoopField "`n"
-			else IfExist  %hpath%.lnk
-				ret .= !onlyname?hpath:A_LoopField ".lnk" "`n"
+			else IfExist %hpath%.lnk
+				ret .= !onlyname?hpath:A_LoopField ".lnk`n"
+			else IfExist %hpath2%
+				ret .= !onlyname?hpath2:A_LoopField "`n"
+			else IfExist %hpath2%.lnk
+				ret .= !onlyname?hpath2:A_LoopField ".lnk`n"
 		}
 	Return Trim(ret,"`n")
 	}
 	Else
 	{
 		; Find hwnd window
-		doc:=window.Document
+		doc := window.Document
 		If (returntype=1)
 		{
-			sFolder   := doc.Folder.Self.path
+			sFolder := doc.Folder.Self.path
 			If onlyname
 				sFolder := doc.Folder.Self.name
 		}
@@ -233,7 +238,6 @@ SelectFiles(Select,Clear=1,Deselect=0,MakeVisible=1,focus=1, hWnd=0)
 			}
 			items.Push(item)
 			itemnames.Push(itemname)
-			;FileAppend,%itemname%`n,%A_desktop%\123.txt
 		}
 		ererer:=Select.Length()
 		Loop % Select.Length()
@@ -610,14 +614,13 @@ return
 CreateNewFolder()
 {
 	global newfolder
-global shell32muipath
   ;This is done manually, by creating a text file with the translated name, which is then focussed
 	SetFocusToFileView()
 If(A_OSversion = "WIN_XP")
     TextTranslated:=TranslateMUI("shell32.dll",30320) ;"New Folder"
 Else
    TextTranslated:=TranslateMUI("shell32.dll",16888) ;"New Folder"
-	CurrentFolder:=GetCurrentFolder()
+	CurrentFolder := GetCurrentFolder()
 	If newfolder=types2
 	{
     PostMessage, 0x111, 40962   ; send direct command for new folder
@@ -638,7 +641,7 @@ Else
 	RefreshExplorer()
   sleep,1000
 		SelectFiles(Testpath)
-Sleep 50
+	Sleep 50
 	Send {F2}
 	Return
 }
@@ -763,51 +766,78 @@ ToArray(SourceFiles, ByRef Separator = "`n", ByRef wasQuoted = 0)
 
 Explorer_GetPath(hwnd="")
 {
-   If !(window := Explorer_GetWindow(hwnd))
-      Return, ErrorLevel := "ERROR"
-   If (window="desktop")
-      Return, A_Desktop
-   hpath := window.LocationURL
-    hpath := RegExReplace(hpath, "ftp://.*@","ftp://")
-    StringReplace, hpath, hpath, file:///
-    StringReplace, hpath, hpath, /, \, All
+	If !(window := Explorer_GetWindow(hwnd))
+		Return, ErrorLevel := "ERROR"
+	If (window = "desktop")
+		Return, A_Desktop
+	hpath := window.LocationURL
+	hpath := RegExReplace(hpath, "ftp://.*@","ftp://")
+	StringReplace, hpath, hpath, file:///
+	StringReplace, hpath, hpath, /, \, All
 
-   ; thanks to polyethene
-   Loop
-      If RegExMatch(hpath, "i)(?<=%)[\da-f]{1,2}", hex)
-         StringReplace, hpath, hpath, `%%hex%, % Chr("0x" . hex), All
-      Else Break
-   Return hpath
+	; thanks to polyethene
+	Loop
+		If RegExMatch(hpath, "i)(?<=%)[\da-f]{1,2}", hex)
+			StringReplace, hpath, hpath, `%%hex%, % Chr("0x" . hex), All
+		Else Break
+	Return hpath
+}
+
+GetAllWindowOpenFolder()
+{
+	if WinActive("ahk_class TTOTAL_CMD")
+	return TC_getTwoPath()
+
+	QtTabBarObj := QtTabBar()
+	if QtTabBarObj
+	{
+		OPenedFolder := QtTabBar_GetAllTabs()
+	}
+	else
+	{
+		OPenedFolder := []
+		ShellWindows := ComObjCreate("Shell.Application").Windows
+		for w in ShellWindows
+		{
+			Tmp_Fp := w.Document.Folder.Self.path
+			if (Tmp_Fp)
+				if FileExist(Tmp_Fp)
+				{
+					OPenedFolder.push(Tmp_Fp)
+				}
+		}
+	}
+return OPenedFolder
 }
 
 Explorer_GetWindow(hwnd="")
 {
-    static shell := ComObjCreate("Shell.Application")
-    ; thanks to jethrow for some pointers here
-    WinGet, process, processName, % "ahk_id" hwnd := (hwnd ? hwnd : WinExist("A"))
-    WinGetClass class, ahk_id %hwnd%
+	static shell := ComObjCreate("Shell.Application")
+	; thanks to jethrow for some pointers here
+	WinGet, process, processName, % "ahk_id" hwnd := (hwnd ? hwnd : WinExist("A"))
+	WinGetClass class, ahk_id %hwnd%
     
-    If (process!="explorer.exe")
-        Return
-    If (class ~= "(Cabinet|Explore)WClass")
-    {
-        for window in shell.Windows
-       {
-           ;tooltip % window.hwnd " - " hwnd
-           If (window.hwnd==hwnd)
-               Return window
-       }
-    }
-    Else If (class ~= "Progman|WorkerW")
-        Return "desktop" ; desktop found
-} 
+	If (process!="explorer.exe")
+		Return
+	If (class ~= "(Cabinet|Explore)WClass")
+	{
+		for window in shell.Windows
+		{
+			;tooltip % window.hwnd " - " hwnd
+			If (window.hwnd==hwnd)
+			Return window
+		}
+	}
+	Else If (class ~= "Progman|WorkerW")
+		Return "desktop" ; desktop found
+}
 
 InFileList()
 {
 	If(Vista7)
 		ControlGetFocus focussed, A
 	Else
-	  focussed:=XPGetFocussed()
+		focussed:=XPGetFocussed()
 
 	If(WinActive("ahk_group ExplorerGroup"))
 	{

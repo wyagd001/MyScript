@@ -350,6 +350,8 @@ Label_Candy_RunCommand:
 	Candy_Cmd_Str1 := arrCandy_Cmd_Str[1]
 	Candy_Cmd_Str2 := RegExReplace(arrCandy_Cmd_Str[2], Chr(3), "|")
 	Candy_Cmd_Str3 := RegExReplace(arrCandy_Cmd_Str[3], Chr(3), "|")
+	Candy_Cmd_Str4 := RegExReplace(arrCandy_Cmd_Str[4], Chr(3), "|")
+
 	If (Candy_Cmd_Str1 = "web")
 	{
 		SkSub_WebSearch(Candy_CurWin_Fullpath, RegExReplace(Candy_Cmd, "i)^web\|(\s+|)|\s+"))

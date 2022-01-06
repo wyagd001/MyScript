@@ -44,8 +44,8 @@ if(A_Cursor="IBeam") or IsRenaming()
 	return
 }
 Prew_File := ""
-if WinActive("ahk_class EVERYTHING") or  WinActive("ahk_class TTOTAL_CMD")
-	Prew_File :=GetSelText()
+if WinActive("ahk_class EVERYTHING") or WinActive("ahk_class TTOTAL_CMD") or WinActive("ahk_class #32770")
+	Prew_File := GetSelText()
 else
 	Prew_File := ShellFolder(0,2)
 if !Prew_File or CF_IsFolder(Prew_File)
@@ -53,8 +53,8 @@ if !Prew_File or CF_IsFolder(Prew_File)
 	send {space}
 	return
 }
-SplitPath,Prew_File,,,Prew_File_Ext
-if(Prew_File_Ext="")
+SplitPath, Prew_File,,, Prew_File_Ext
+if(Prew_File_Ext = "")
 {
 	send {space}
 	return

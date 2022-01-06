@@ -28,8 +28,11 @@ return
 
 LnksChangePath(LinkFile, OldPathStr:="", NewPathStr:="")
 {
-	SplitPath, LinkFile, , OutDir
-	Loop, Files, %OutDir%\*.lnk
+	if CF_IsFolder(LinkFile)
+		OutDir := LinkFile
+	else
+		SplitPath, LinkFile, , OutDir
+	Loop, Files, %OutDir%\*.lnk, R
 	{
 		LnkChangePath(A_LoopFileFullPath, OldPathStr, NewPathStr)
 	}

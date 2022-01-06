@@ -1,9 +1,11 @@
 ﻿; CMD中右键复制，右键粘贴
 ;#c::
 命令提示符:
-CurrentFolder:=GetCurrentFolder()
+CurrentFolder := GetCurrentFolder()
 if(CurrentFolder)
-Run "cmd.exe", %CurrentFolder%
+	Run "cmd.exe", %CurrentFolder%
+else if WinActive("ahk_class TTOTAL_CMD")
+	TC_sendMsg(511)
 else
 	Run "cmd.exe", C:\
 return

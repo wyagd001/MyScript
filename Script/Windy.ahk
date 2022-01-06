@@ -409,7 +409,7 @@ Label_Windy_RunCommand:
 		Run, %Splitted_Windy_Cmd2%, %Splitted_Windy_Cmd3%, %Splitted_Windy_Cmd4% UseErrorLevel, Windy_Pid_TempB
 		If (ErrorLevel = "Error")               ; 如果运行出错的话
 			Goto Label_Windy_ErrorHandle
-		WinWait, Ahk_PID %Windy_Pid_TempB%,,3
+		WinWait, Ahk_PID %Windy_Pid_TempB%,, 3
 		WinActivate, Ahk_PID %Windy_Pid_TempB%
 		return
 	}
