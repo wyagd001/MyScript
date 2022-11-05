@@ -1,8 +1,8 @@
 ﻿; ======================================================================================================================
 ; Github            https://github.com/AHK-just-me/Class_SQLiteDB
 ; Function:         Class definitions as wrappers for SQLite3.dll to work with SQLite DBs.
-; AHK version:      1.1.23.01
-; Tested on:        Win 10 Pro (x64), SQLite 3.7.13
+; AHK version:      1.1.33.09
+; Tested on:        Win 10 Pro (x64), SQLite 3.11.1
 ; Version:          0.0.01.00/2011-08-10/just me
 ;                   0.0.02.00/2012-08-10/just me   -  Added basic BLOB support
 ;                   0.0.03.00/2012-08-11/just me   -  Added more advanced BLOB support
@@ -13,11 +13,16 @@
 ;                   0.0.08.00/2019-03-09/just me   -  Added basic support for application-defined functions
 ;                   0.0.09.00/2019-07-09/just me   -  Added basic support for prepared statements, minor bug fixes
 ;                   0.0.10.00/2019-12-12/just me   -  Fixed bug in EscapeStr method
+;                   0.0.10.00/2019-12-12/just me   -  Fixed bug in EscapeStr method
+;                   0.0.11.00/2021-10-10/just me   -  Removed statement checks in GetTable, Prepare, and Query
+;                   0.0.12.00/2022-09-18/just me   -  Fixed bug for Bind - type text
+;                   0.0.13.00/2022-10-03/just me   -  Fixed bug in Prepare
+;                   0.0.14.00/2022-10-04/just me   -  Changed DllCall parameter type PtrP to UPtrP
 ; Remarks:          Names of "private" properties / methods are prefixed with an underscore,
 ;                   they must not be set / called by the script!
 ;                   
-;                   SQLite3.dll 假定在脚本目录中
-;                   文件名 32 位系统中为 SQLite3_x32.dll,64 位系统中为 SQLite3_x64.dll
+;                   SQLite3.dll 假定在脚本目录中, 此脚本修改指定了dll文件的位置和名称
+;                   文件名 32 位系统中为 \Dll\SQLite3_x32.dll, 64 位系统中为 \Dll\SQLite3_x64.dll
 ;
 ;                   Encoding of SQLite DBs is assumed to be UTF-8
 ;                   Minimum supported SQLite3.dll version is 3.6
@@ -399,7 +404,7 @@ Class SQLiteDB {
          }
          Else If (Type = "Text") { ; -----------------------------------------------------------------------------------
             ; Param3 = zero-terminated string
-            This._DB._StrToUTF8(Param3, ByRef UTF8)
+            This._DB._StrToUTF8(Param3, UTF8)
             ; Let SQLite always create a copy of the text
             RC := DllCall(SQLiteDB._SQLiteDLL "\sqlite3_bind_text", "Ptr", This._Handle, "Int", Index, "Ptr", &UTF8
                         , "Int", -1, "Ptr", -1, "Cdecl Int")
@@ -676,7 +681,7 @@ Class SQLiteDB {
       }
       This._Path := DBPath
       This._StrToUTF8(DBPath, UTF8)
-      RC := DllCall(This.base._SQLiteDLL "\sqlite3_open_v2", "Ptr", &UTF8, "PtrP", HDB, "Int", Flags, "Ptr", 0, "Cdecl Int")
+      RC := DllCall(This.base._SQLiteDLL "\sqlite3_open_v2", "Ptr", &UTF8, "UPtrP", HDB, "Int", Flags, "Ptr", 0, "Cdecl Int")
       If (ErrorLevel) {
          This._Path := ""
          This.ErrorMsg := "DllCall sqlite3_open_v2 失败!"
@@ -774,7 +779,7 @@ Class SQLiteDB {
          CBPtr := RegisterCallback(Callback, "F C", 4, &SQL)
       This._StrToUTF8(SQL, UTF8)
       RC := DllCall(This.base._SQLiteDLL "\sqlite3_exec", "Ptr", This._Handle, "Ptr", &UTF8, "Int", CBPtr, "Ptr", Object(This)
-                  , "PtrP", Err, "Cdecl Int")
+                  , "UPtrP", Err, "Cdecl Int")
       CallError := ErrorLevel
       If (CBPtr)
          DllCall("Kernel32.dll\GlobalFree", "Ptr", CBPtr)
@@ -813,10 +818,6 @@ Class SQLiteDB {
          This.ErrorMsg := "无效的 database 句柄!"
          Return False
       }
-      If !RegExMatch(SQL, "i)^\s*(SELECT|PRAGMA)\s") {
-         This.ErrorMsg := A_ThisFunc . " 需要查询语句!"
-         Return False
-      }
       Names := ""
       Err := 0, RC := 0, GetRows := 0
       I := 0, Rows := Cols := 0
@@ -827,7 +828,7 @@ Class SQLiteDB {
          MaxResult := 0
       This._StrToUTF8(SQL, UTF8)
       RC := DllCall(This.base._SQLiteDLL "\sqlite3_get_table", "Ptr", This._Handle, "Ptr", &UTF8, "PtrP", Table
-                  , "IntP", Rows, "IntP", Cols, "PtrP", Err, "Cdecl Int")
+                  , "IntP", Rows, "IntP", Cols, "UPtrP", Err, "Cdecl Int")
       If (ErrorLevel) {
          This.ErrorMsg := "DllCall sqlite3_get_table 失败!"
          This.ErrorCode := ErrorLevel
@@ -908,14 +909,10 @@ Class SQLiteDB {
          This.ErrorMsg := "无效的 database 句柄!"
          Return False
       }
-      If !RegExMatch(SQL, "i)^\s*(INSERT|UPDATE|REPLACE)\s") {
-         This.ErrorMsg := A_ThisFunc . " 需要 INSERT/UPDATE/REPLACE 语句!"
-         Return False
-      }
       Stmt := 0
       This._StrToUTF8(SQL, UTF8)
       RC := DllCall(This.base._SQLiteDLL "\sqlite3_prepare_v2", "Ptr", This._Handle, "Ptr", &UTF8, "Int", -1
-                  , "PtrP", Stmt, "Ptr", 0, "Cdecl Int")
+                  , "UPtrP", Stmt, "Ptr", 0, "Cdecl Int")
       If (ErrorLeveL) {
          This.ErrorMsg := A_ThisFunc . ": DllCall sqlite3_prepare_v2 failed!"
          This.ErrorCode := ErrorLevel
@@ -927,7 +924,7 @@ Class SQLiteDB {
          Return False
       }
 		ST := New This._Statement
-      ST.ParamCount := DllCall(This.base._SQLiteDLL "\sqlite3_bind_parameter_count", "Ptr", This._Handle, "Cdecl Int")
+      ST.ParamCount := DllCall(This.base._SQLiteDLL "\sqlite3_bind_parameter_count", "Ptr", Stmt, "Cdecl Int")
       ST._Handle := Stmt
       ST._DB := This
       This._Stmts[Stmt] := Stmt
@@ -951,14 +948,10 @@ Class SQLiteDB {
          This.ErrorMsg := "无效的 database 句柄!"
          Return False
       }
-      If !RegExMatch(SQL, "i)^\s*(SELECT|PRAGMA)\s|") {
-         This.ErrorMsg := A_ThisFunc . " 需要查询语句!"
-         Return False
-      }
       Query := 0
       This._StrToUTF8(SQL, UTF8)
       RC := DllCall(This.base._SQLiteDLL "\sqlite3_prepare_v2", "Ptr", This._Handle, "Ptr", &UTF8, "Int", -1
-                  , "PtrP", Query, "Ptr", 0, "Cdecl Int")
+                  , "UPtrP", Query, "Ptr", 0, "Cdecl Int")
       If (ErrorLeveL) {
          This.ErrorMsg := "DllCall sqlite3_prepare_v2 失败!"
          This.ErrorCode := ErrorLevel
@@ -1187,7 +1180,7 @@ Class SQLiteDB {
       Query := 0
       This._StrToUTF8(SQL, UTF8)
       RC := DllCall(This.base._SQLiteDLL "\sqlite3_prepare_v2", "Ptr", This._Handle, "Ptr", &UTF8, "Int", -1
-                  , "PtrP", Query, "Ptr", 0, "Cdecl Int")
+                  , "UPtrP", Query, "Ptr", 0, "Cdecl Int")
       If (ErrorLeveL) {
          This.ErrorMsg := A_ThisFunc . ": DllCall sqlite3_prepare_v2 失败!"
          This.ErrorCode := ErrorLevel

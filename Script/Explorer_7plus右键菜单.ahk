@@ -1,7 +1,11 @@
 ﻿TriggerFromContextMenu(wParam, lParam){
-	Gosub % wparam
-	Return 1
+	if Islabel(wParam)
+	{
+		Gosub % wparam
+		Return 1
 	}
+	Return 0
+}
 
 regsvr32dll:
 	RegisterShellExtension(0)

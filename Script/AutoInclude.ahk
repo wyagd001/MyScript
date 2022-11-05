@@ -39,6 +39,7 @@
 #Include *i %A_ScriptDir%\Script\Windo\Windo_WPS.ahk
 #Include *i %A_ScriptDir%\Script\Windo\Windo_其他浏览器打开.ahk
 #Include *i %A_ScriptDir%\Script\Windo\Windo_其他编辑器打开.ahk
+#Include *i %A_ScriptDir%\Script\Windo\Windo_对话框.ahk
 #Include *i %A_ScriptDir%\Script\Windo\Windo_窗口任务栏按钮移到分组最右边.ahk
 #Include *i %A_ScriptDir%\Script\Windo\Windo_记事本打开浏览器打开的文件.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\Explorer_AppendFiles.ahk
@@ -60,11 +61,13 @@
 #Include *i %A_ScriptDir%\Script\Hotkey\一键翻译.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\剪贴板上屏.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\剪贴板最近的项目.ahk
+#Include *i %A_ScriptDir%\Script\Hotkey\发送文件到当前打开文件夹.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\快捷键.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\快捷键_Plugins.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\截取屏幕.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\截取窗口.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\注册表.ahk
+#Include *i %A_ScriptDir%\Script\Hotkey\测试.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\窗口水平垂直最大化.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\窗口程序和打开的文件.ahk
 #Include *i %A_ScriptDir%\Script\Hotkey\窗口缩略图.ahk

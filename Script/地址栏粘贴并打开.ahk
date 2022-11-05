@@ -3,7 +3,7 @@
 #ifwinexist, ahk_class #32768   ;右键菜单
 ~lbutton::
 	sleep,1000
-	SetTimer,Monitormenuclick,off
+	SetTimer, Monitormenuclick, off
 return
 #ifwinexist
 
@@ -73,7 +73,7 @@ addmenuitem:
 	}
 return
 
-HookProcMenu( hWinEventHook, Event, hWnd, idObject, idChild, dwEventThread, dwmsEventTime )
+HookProcMenu(hWinEventHook, Event, hWnd, idObject, idChild, dwEventThread, dwmsEventTime)
 {
 	global namcls, hwndNow
 	wingetclass, namcls, ahk_id %hwnd%

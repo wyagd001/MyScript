@@ -2,13 +2,19 @@
 
 GetActiveBrowserURL(sClass, WithProtocol:=1) {
 	static ModernBrowsers, LegacyBrowsers,OtherBrowsers
-ModernBrowsers := "ApplicationFrameWindow,Chrome_WidgetWin_0,Chrome_WidgetWin_1,Maxthon3Cls_MainFrm,MozillaWindowClass,Slimjet_WidgetWin_1,360se6_Frame,QQBrowser_WidgetWin_1"
+ModernBrowsers := "ApplicationFrameWindow,Chrome_WidgetWin_0,Chrome_WidgetWin_1,Maxthon3Cls_MainFrm,MozillaWindowClass,Slimjet_WidgetWin_1,360se6_Frame,360chrome,QQBrowser_WidgetWin_1"
 LegacyBrowsers := "IEFrame,OperaWindowClass"
 OtherBrowsers := "AuroraMainFrame"
 	if !sclass
 		WinGetClass, sClass, A
 	If sClass In % ModernBrowsers
-		Return GetBrowserURL_ACC(sClass, WithProtocol)
+	{
+		tmp_val := GetBrowserURL_ACC(sClass, WithProtocol)
+		if tmp_val
+		Return tmp_val
+		else
+		Return GetBrowserURL_hK()
+	}
 	Else If sClass In % LegacyBrowsers
 		Return GetBrowserURL_DDE(sClass) ; empty string if DDE not supported (or not a browser)
 	Else If sClass In % OtherBrowsers
@@ -21,7 +27,7 @@ GetBrowserURL_hK()
 {
 	Send, ^l
 	sleep,300
-	sURL:=GetSelText()
+	sURL := GetSelText()
 	if IsURL(sURL)
 	Return sURL
 }
@@ -120,5 +126,6 @@ GetAddressBar(accObj) {
 }
 
 IsURL(sURL) {
-	Return RegExMatch(sURL, "^(?<Protocol>https?|ftp|file):///?(?<Domain>(?:[\w-]+\.)+\w\w+)(?::(?<Port>\d+))?/?(?<Path>(?:[^:/?# ]*/?)+)(?:\?(?<Query>[^#]+)?)?(?:\#(?<Hash>.+)?)?$")
+	Return RegExMatch(sURL, "^(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]+[-A-Za-z0-9+&@#/%=~_|]$")
+	;Return RegExMatch(sURL, "^(?<Protocol>https?|ftp|file):///?(?<Domain>(?:[\w-]+\.)+\w\w+)(?::(?<Port>\d+))?/?(?<Path>(?:[^:/?# ]*/?)+)(?:\?(?<Query>[^#]+)?)?(?:\#(?<Hash>.+)?)?$")
 }

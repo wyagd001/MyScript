@@ -4,17 +4,17 @@ Return
 
 ;复制文件夹结构而不复制文件夹中的文件
 copyfolderStructure:
+FileReadLine, Files, %A_Temp%\7plus\files.txt, 1
 sleep, 50
 Critical,On
-Files := GetSelectedFiles()
 if !Files
-FileReadLine, Files, %A_Temp%\7plus\files.txt, 1
+	Files := GetSelectedFiles()
+Critical,Off
 If !Files
 {
 	CF_ToolTip("获取文件路径失败。", 3000)
 Return
 }
-Critical,Off
 
 Files:=Files . "\"
 CopyDirStructure(Files, A_Desktop, 1)

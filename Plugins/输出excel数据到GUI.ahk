@@ -12,6 +12,7 @@ If (A_PtrSize = 8 || !A_IsUnicode) {
 }
 
 file := A_Args[1]
+;msgbox % file
 
 ;Thinkai@2015-11-05
 Gui, Add, Tab, x0 y0 w800 h500 vtab

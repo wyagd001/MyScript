@@ -1,76 +1,58 @@
 ﻿; 来源 Ahk QQ群
 Windy:
 Label_Windy_Start_Inside:   ;  内部调用入口，让Windy可以在“#if”模式下运行。
-	Sksub_Clear_WindyVar()                ;  每次启动的时候，首先清除本次Windy可能用到的变量
-	MouseGetPos, Windy_X, Windy_Y, Windy_CurWin_id, Windy_CurWin_ClassNN,                 ;  当前鼠标下的窗口
-	WinGet, Windy_CurWin_Pid, PID, Ahk_ID %Windy_CurWin_id%                                ;  当前窗口的Pid
-	WinGet, Windy_CurWin_Fullpath, ProcessPath, Ahk_ID %Windy_CurWin_id%           ;  当前窗口的进程路径
-	SplitPath, Windy_CurWin_Fullpath,, Windy_CurWin_ParentPath,, Windy_CurWin_ProcName            ;  当前窗口的进程名称，不带后缀
-	if (Windy_CurWin_ProcName = "explorer")
-		Windy_CurWin_FolderPath := GetCurrentFolder()
-	WinGetClass, Windy_CurWin_Class, Ahk_ID %Windy_CurWin_id%                                ;  当前窗口的Class
-	WinGetTitle, Windy_CurWin_Title, Ahk_ID %Windy_CurWin_id%                                  ;  当前窗口的title
+Sksub_Clear_WindyVar()                ;  每次启动的时候，首先清除本次Windy可能用到的变量
+MouseGetPos, Windy_X, Windy_Y, Windy_CurWin_id, Windy_CurWin_ClassNN,                 ;  当前鼠标下的窗口
+WinGet, Windy_CurWin_Pid, PID, Ahk_ID %Windy_CurWin_id%                                ;  当前窗口的Pid
+WinGet, Windy_CurWin_Fullpath, ProcessPath, Ahk_ID %Windy_CurWin_id%           ;  当前窗口的进程路径
+SplitPath, Windy_CurWin_Fullpath,, Windy_CurWin_ParentPath,, Windy_CurWin_ProcName            ;  当前窗口的进程名称，不带后缀
+if (Windy_CurWin_ProcName = "explorer")
+	Windy_CurWin_FolderPath := GetCurrentFolder()
+WinGetClass, Windy_CurWin_Class, Ahk_ID %Windy_CurWin_id%                                ;  当前窗口的Class
+WinGetTitle, Windy_CurWin_Title, Ahk_ID %Windy_CurWin_id%                                  ;  当前窗口的title
 
 ;  [···················································]
 ; 
-;  ③位置，判定类型
+;  ③区分对话框，主窗体
 ; 
 ;  [···················································]
 Label_Windy_Set_Pos_or_WinArea:
-	; Gosub Label_Windy_The_Position        ; 划分固定的位置区
+; 用进程名进行划分定义
+Windy_Window_Area := IsDialog( Windy_CurWin_id ) ?  "对话框" : "主窗体"
 
-	If ( Windy_The_Position!="")  ; 如果是固定区域
+IniRead, Windy_Disabled_Win, %Windy_Profile_Ini%, %Windy_Window_Area%, Windy_Disabled
+IfInString, Windy_Disabled_Win, %Windy_CurWin_ProcName%
+{
+	MouseClick, Middle
+	Return
+}
+Else
+{
+	; 首先在Windy.ini中[主窗体]下查找进程名对应的配置
+	Windy_Cmd := SkSub_Regex_IniRead(Windy_Profile_Ini, Windy_Window_Area, "i)(^|\|)\Q" Windy_CurWin_ProcName "\E($|\|)")
+	If(Windy_Cmd = "Error") 
 	{
-		IniRead, Windy_Cmd, %Windy_Profile_Ini%, 位置区, %Windy_The_Position%
-		If(Windy_Cmd = "Error") ;  如果没有定义，则看看AnyWindow的定义
+		; 如果没有定义，则看看Any的定义
+		IniRead, Windy_Cmd, %Windy_Profile_Ini%, %Windy_Window_Area%, Any
+		If(Windy_Cmd = "Error") ; 如果Any没有定义，则查找“主窗体”文件夹下的文件
 		{
-			IfExist, %Windy_Profile_Dir%\位置区\%Windy_The_Position%.ini
+			IfExist, %Windy_Profile_Dir%\%Windy_Window_Area%\%Windy_CurWin_ProcName%.ini
 			{
-				Windy_Cmd := "menu|位置区|" Windy_The_Position
+				Windy_Cmd := "menu|" Windy_CurWin_ProcName "|menu"
+			}
+			Else IfExist, %Windy_Profile_Dir%\%Windy_Window_Area%\Any.ini
+			{
+				Windy_Cmd := "menu|any|menu"
 			}
 			Else
 				Return
 		}
 	}
-	Else    ; 对标题栏，对话框，主窗体 这三大件       ; 用进程名进行划分定义
-	{
-		; Windy_Window_Area:= Is_Title="Caption" ? "标题栏" : ( SkSub_IsDialog( Windy_CurWin_id ) ?  "对话框" : "主窗体")
-		Windy_Window_Area := "主窗体"
-
-		IniRead, Windy_Disabled_Win, %Windy_Profile_Ini%, %Windy_Window_Area%, Windy_Disabled
-		IfInString, Windy_Disabled_Win, %Windy_CurWin_ProcName%
-		{
-			MouseClick, Middle
-			Return
-		}
-		Else
-		{
-			; 首先在Windy.ini中[主窗体]下查找进程名对应的配置
-			Windy_Cmd := SkSub_Regex_IniRead(Windy_Profile_Ini, Windy_Window_Area, "i)(^|\|)\Q" Windy_CurWin_ProcName "\E($|\|)")
-			If(Windy_Cmd = "Error") 
-			{
-				; 如果没有定义，则看看Any的定义
-				IniRead, Windy_Cmd, %Windy_Profile_Ini%, %Windy_Window_Area%, Any
-				If(Windy_Cmd = "Error") ; 如果Any没有定义，则查找“主窗体”文件夹下的文件
-				{
-					IfExist, %Windy_Profile_Dir%\%Windy_Window_Area%\%Windy_CurWin_ProcName%.ini
-					{
-						Windy_Cmd := "menu|" Windy_CurWin_ProcName "|menu"
-					}
-					Else IfExist, %Windy_Profile_Dir%\%Windy_Window_Area%\Any.ini
-					{
-						Windy_Cmd := "menu|any|menu"
-					}
-					Else
-						Return
-				}
-			}
-		}
-	}
-	If !(RegExMatch(Windy_Cmd,"i)^Menu\|"))
-	{
-		Goto Label_Windy_RunCommand            ; 如果不是menu指令，直接运行应用程序
-	}
+}
+If !(RegExMatch(Windy_Cmd,"i)^Menu\|"))
+{
+	Goto Label_Windy_RunCommand            ; 如果不是menu指令，直接运行应用程序
+}
 
 ;  [···················································]
 ; 
@@ -120,7 +102,7 @@ Return
 
 ; ================菜单处理================================
 Label_Windy_HandleMenu:
-	If GetKeyState("Ctrl")			    ; [按住Ctrl则是进入配置]
+	If GetKeyState("Ctrl")       ; [按住Ctrl则是进入配置]
 	{
 		Windy_ctrl_ini_fullpath := Windy_Profile_Dir . "\" . Windy_Window_Area . "\" . szMenuWhichFile[ A_thisMenu "/" A_ThisMenuItem] . ".ini"
 		Windy_Ctrl_Regex := "=\s*\Q" szMenuContent[ A_thisMenu "/" A_ThisMenuItem] "\E\s*$"

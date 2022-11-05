@@ -74,8 +74,8 @@ MouseMove(wParam, lParam, msg, hwnd)
    Global
    if !visable
    {
-    sleep, 50
-   return
+     sleep, 50
+     return 0
    }
 
    local Current_Hover_Image
@@ -108,8 +108,8 @@ MouseLDown(wParam, lParam, msg, hwnd)
    Global
    if !visable
    {
-    sleep, 50
-   return
+     sleep, 50
+     return 0
    }
    Local Current_Down_Image
    Local Current_GUI
@@ -139,9 +139,10 @@ MouseLUp(wParam, lParam, msg, hwnd)
    Global
    if !visable
    {
-    sleep, 50
-   return
+     sleep, 50
+     return 0
    }
+   
    local Current_Main_Image
    Local Current_GUI
    loop, parse, Graphic_Button_List, |

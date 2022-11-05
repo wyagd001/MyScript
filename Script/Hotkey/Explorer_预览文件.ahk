@@ -301,7 +301,7 @@ return
 tree2text:
 GUI,66:Destroy
 Gui,66:Default 
-Gui, Add, Edit, w600 h300 ReadOnly,%Prew_File%`n%Tmp_Val%
+Gui, Add, Edit, w600 h300 ReadOnly, %Prew_File%`n%Tmp_Val%
 Gui show, AutoSize Center, % Prew_File " - 文件预览"
 return
 
@@ -444,10 +444,32 @@ GuiControl,, displayArea, %FileR_TFC%
 FileR_TFC := File_Encode := File_Size := ""
 return
 
+/*
 Cando_md_html_prew:
 FileCopy, % Prew_File, % A_ScriptDir "\html\html-markdown-preview\apidoc.md", true
 gosub, IE_Open
 WB.Navigate(A_ScriptDir "\html\html-markdown-preview\index.html")
+return
+*/
+Cando_md_html_prew:
+Fileread, Tmp_val, % Prew_File
+gosub, IE_Open
+WB.Navigate("http://editor.md.ipandao.com/examples/simple.html")
+WBStartTime := A_TickCount
+	loop 
+	{
+		WBElapsedTime := A_TickCount - WBStartTime
+		Sleep, 500
+	}
+	Until (wb.Document.Readystate = "Complete") or WBElapsedTime>5000
+backclip := clipboard
+clipboard := Tmp_val
+wb.document.querySelector("#test-editormd > div.editormd-toolbar > div > ul > li:nth-child(39) > a").click()
+MouseClick , Right, 300,200
+;sendevent ^v
+;MouseClick , left, 350,320
+clipboard := backclip
+;msgbox % wb.document.querySelector("#test-editormd > textarea").value
 return
 
 ; https://www.autohotkey.com/boards/viewtopic.php?p=112572

@@ -61,11 +61,12 @@ start_01() {
   static init:=start_01()
   GroupAdd, MyBrowser, ahk_class IEFrame
   GroupAdd, MyBrowser, ahk_class 360se5_Frame
-  GroupAdd, MyBrowser, ahk_class 360se6_Frame
+  ;GroupAdd, MyBrowser, ahk_class 360se6_Frame
   ;GroupAdd, MyBrowser, ahk_class Chrome_WidgetWin_1
   GroupAdd, MyBrowser, ahk_class ShockwaveFlashFullScreen
   GroupAdd, MyBrowser, ahk_class QQBrowser_WidgetWin_1
   GroupAdd, MyBrowser, ahk_class MozillaWindowClass
+  GroupAdd, MyBrowser, ahk_class Warcraft III
 }
 
 SetWinDelay -1
@@ -218,12 +219,14 @@ return
   Gui, My_DrawingBoard: New
   Gui, +LastFound +AlwaysOnTop -Caption +ToolWindow
     +E0x80000 +OwnDialogs +Hwndmy_id +E0x20
-  ; 下面两行结合Bitblt更新与UpdateLayeredWindow更新互斥
-  ; Gui, Color, 0x000000
-  ; WinSet, TransColor, 0x000000
+  ; 下面两行结合 Bitblt 更新与 UpdateLayeredWindow 更新互斥
+  ;Gui, Color, 0x000000
+  ;WinSet, TransColor, 0x000000
   w:=A_ScreenWidth, h:=A_ScreenHeight
   Gui, Show, Hide x0 y0 w%w% h%h%, 画板
-  my_gdi := new GDI(my_id, w, h), 清空()
+  my_gdi := new GDI(my_id, w, h-30), 清空()
+  ; +E0x80000  任务栏遮挡的窗口，win10系统会在右键时显示出来， 使任务栏被遮挡住
+  ; win10 任务栏会被窗口遮挡，造成任务栏闪烁， 所以 h-30，窗口不会遮挡底部任务栏， 但是任务栏区域不会显示鼠标轨迹
   return
 }
 

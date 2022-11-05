@@ -1,7 +1,7 @@
 ﻿_TrayEvent:
   XWN_FocusFollowsMouse := !XWN_FocusFollowsMouse
-IniRead,Auto_Raise,%run_iniFile%,功能开关,Auto_Raise
-IniRead,hover_any_window,%run_iniFile%,自动激活,hover_any_window
+IniRead, Auto_Raise, %run_iniFile%, 功能开关,Auto_Raise
+IniRead, hover_any_window, %run_iniFile%, 自动激活, hover_any_window
   If(Auto_Raise=1 && hover_any_window=1)
     Msgbox,,提示,已在“选项→自动激活→窗口自动激活”中自动启用该功能。,5
   Else
@@ -59,7 +59,7 @@ Return
 
 runwithsys:
 Auto_runwithsys := !Auto_runwithsys
-IniWrite,%Auto_runwithsys%,%run_iniFile%,功能开关,Auto_runwithsys
+IniWrite, %Auto_runwithsys%, %run_iniFile%, 功能开关, Auto_runwithsys
 
 	If Auto_runwithsys
 	{
@@ -75,7 +75,7 @@ Return
 
 AutoSaveDeskIcons:
 Auto_SaveDeskIcons := !Auto_SaveDeskIcons
-IniWrite,%Auto_SaveDeskIcons%,%run_iniFile%,功能开关,Auto_SaveDeskIcons
+IniWrite, %Auto_SaveDeskIcons%, %run_iniFile%, 功能开关, Auto_SaveDeskIcons
 If  Auto_SaveDeskIcons=1
 	Menu, addf, Check, 启动时记忆桌面图标
 	Else
@@ -84,7 +84,7 @@ Return
 
 smartchooserbrowser:
   Auto_smartchooserbrowser := !Auto_smartchooserbrowser
-  IniWrite,%Auto_smartchooserbrowser%,%run_iniFile%,功能开关,Auto_smartchooserbrowser
+  IniWrite, %Auto_smartchooserbrowser%, %run_iniFile%, 功能开关, Auto_smartchooserbrowser
   If Auto_smartchooserbrowser
   {
 	  Menu, addf, Check, 智能浏览器
@@ -105,7 +105,10 @@ Return
 */
 
 writeahkurl(){
-  appurl = "%A_ScriptDir%\Bin\smartchooserbrowser.exe" "`%1"
+	if Fileexist(A_ScriptDir "\Bin\AnyToAhk.exe")
+		appurl = "%A_ScriptDir%\Bin\AnyToAhk.exe" "`%1"
+	else if Fileexist(A_ScriptDir "\Bin\smartchooserbrowser.exe")
+		appurl = "%A_ScriptDir%\Bin\smartchooserbrowser.exe" "`%1"
 
   RegRead AhkURL, HKCR, Ahk.URL\shell\open\command
   If(AhkURL != appurl)
@@ -117,15 +120,15 @@ writeahkurl(){
 
   ; 检查是否存在备份，若不存在则读取系统默认（防止意外退出）
   RegRead old_FTP, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp\UserChoice, URL.LastFound
-if ErrorLevel
-	RegRead old_FTP, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp\UserChoice, Progid
+	if ErrorLevel
+		RegRead old_FTP, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\ftp\UserChoice, Progid
 
   RegRead old_HTTP, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice, URL.LastFound
-if ErrorLevel
+		if ErrorLevel
 	RegRead old_HTTP, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice, Progid
 
   RegRead old_HTTPS, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice, URL.LastFound
-if ErrorLevel
+		if ErrorLevel
 	RegRead old_HTTPS, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice, Progid
 
   ; 写入备份设置（防止意外退出）
@@ -138,7 +141,6 @@ if ErrorLevel
   RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice, Progid, Ahk.URL
   RegWrite REG_SZ, HKCU, Software\Microsoft\Windows\Shell\Associations\UrlAssociations\https\UserChoice, Progid, Ahk.URL
 }
-
 
 delahkurl()
 {

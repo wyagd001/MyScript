@@ -10,13 +10,27 @@ http://www.ahkcn.net/thread-629.html
  return
 
 renwu:
-If  (A_Hour = rh && A_Min= rm)
+if dingshichongfu
 {
-	SetTimer, renwu, Off
-	IniWrite, 0, %run_iniFile%, 时间, renwu
-	run %renwucx%,,UseErrorLevel
-	if ErrorLevel
-		MsgBox,,定时任务,定时任务运行失败，请检查设置。
+	if nexttime is not integer
+		nexttime := a_now
+	if (a_now > nexttime)
+	{
+		cf_tooltip("运行了定时任务", 3000)
+		nexttime := nexttime + ((StrLen(rh)=1?0 rh:rh) (StrLen(rm)=1?0 rm:rm) 00)
+		IniWrite, %nexttime%, %run_iniFile%, 时间, nexttime
+	}
+}
+else
+{
+	If  (A_Hour = rh && A_Min= rm)
+	{
+		SetTimer, renwu, Off
+		IniWrite, 0, %run_iniFile%, 时间, renwu
+		run %renwucx%,,UseErrorLevel
+		if ErrorLevel
+			MsgBox,, 定时任务, 定时任务运行失败，请检查设置。
+	}
 }
 Return
 

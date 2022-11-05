@@ -44,18 +44,21 @@ If !IME_IsENG()
 }
 Else
 {
+	SetFormat, FLOAT, 0.6
 	BackUp_ClipBoard := ClipboardAll
 	Clipboard :=
 	; 复制
 	Send, +{Home}^c
  ; 剪贴
 	;Send, +{Home}^x
-	ClipWait, 0.5
+	ClipWait, 1
 	StringReplace, Clipboard, Clipboard, ==,, all
 	Tmp_Val := ZTrim(Eval(Clipboard))
+	;tooltip % Eval(Clipboard) "`n" Tmp_Val
 	; 是否保留公式
 	;Send, {end}=
-	SendInput, %Tmp_Val%
+	;SendInput, %Tmp_Val%
+	Send, %Tmp_Val%
 	Clipboard := BackUp_ClipBoard
 	Tmp_Val := BackUp_ClipBoard := ""
 }

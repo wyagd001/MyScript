@@ -6,17 +6,17 @@ Return
 ; 桌面lnk文件无效  Why
 ; 百度搜索文件名
 searchthefile:
+FileRead, Files, %A_Temp%\7plus\files.txt
 sleep, 50
 Critical, On
-Files := GetSelectedFiles(0)
 if !Files
-FileReadLine, Files, %A_Temp%\7plus\files.txt, 1
+	Files := GetSelectedFiles(0)
+Critical, Off
 If !Files
 {
 	CF_ToolTip("获取文件路径失败。", 3000)
 Return
 }
-Critical, Off
 
 StrReplace(files, "`n", "`n", Tmp_Val)
 if Tmp_Val > 5

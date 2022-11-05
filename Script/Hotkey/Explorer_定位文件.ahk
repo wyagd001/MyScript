@@ -170,6 +170,7 @@ ListEvent:
 }
 
 ; 对话框跳转使用 Folder Menu 就足够了, 这里只是展示 TV 定位的函数
+; 注意64位主程序对64位程序打开的对话框有效， 对32位程序打开的对话框无效
 dialogpath:
 hdialogwin := WinExist("A")
 hdialogedit := ""
@@ -212,12 +213,12 @@ If WinExist("ahk_class #32770")
 }
 ;tooltip % dpath
 if (A_OSVersion = "WIN_7")
-	TVPath_Set(hTreeView, (hdialogedit?"桌面\计算机\":"计算机\") dpath, outMatchPath,,,10)
-else ; 只适配 Win10
-	TVPath_Set(hTreeView, (hdialogedit?"桌面\此电脑\":"计算机\") dpath, outMatchPath,,,10)
+	TVPath_Set(hTreeView, (hdialogedit?"计算机\":instr(dpath, "桌面")?"":"桌面\计算机\") dpath, outMatchPath,,,10)
+else ; 适配 Win10
+	TVPath_Set(hTreeView, (hdialogedit?"此电脑\":"桌面\计算机\") dpath, outMatchPath,,,10)
 ControlFocus, , ahk_id %hTreeView%
 ControlSend, , {Enter}, ahk_id %hTreeView%
-;msgbox % (hdialogedit?"桌面\计算机\":"计算机\") dpath
+;msgbox % (hdialogedit?"此电脑\":"桌面\计算机\") dpath "`n" hdialogedit
 return
 
 DialogTvGuiEscape:
@@ -247,12 +248,12 @@ If WinExist("ahk_class #32770")
 	dpath := StrReplace(dpath, "\desktop\", "\桌面\")
 ;tooltip % dpath " - " hTreeView
 if (A_OSVersion = "WIN_7")
-	TVPath_Set(hTreeView, (hdialogedit?"计算机\":"桌面\计算机\") dpath, outMatchPath,,,10)
-else ; 只适配 Win10
-	TVPath_Set(hTreeView, (hdialogedit?"此电脑\":"桌面\计算机\") dpath, outMatchPath,,,20)
+	TVPath_Set(hTreeView, (hdialogedit?"计算机\":instr(dpath, "桌面")?"":"桌面\计算机\") dpath, outMatchPath,,,10)
+else ; 适配 Win10
+	TVPath_Set(hTreeView, (hdialogedit?"此电脑\":"桌面\计算机\") dpath, outMatchPath,,,10)
 ControlFocus, , ahk_id %hTreeView%
 ControlSend, , {Enter}, ahk_id %hTreeView%
-;msgbox % (hdialogedit?"桌面\计算机\":"计算机\") dpath "`n" hTreeView
+;msgbox % (hdialogedit?"此电脑\":"桌面\计算机\") dpath "`n" hdialogedit
 }
 If WinExist("ahk_class RegEdit_RegEdit")
 {

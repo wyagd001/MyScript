@@ -5,6 +5,7 @@ return
 $^V::
 if clipnotext   ; 图片，文件等非文字剪贴板 直接粘贴
 {
+	CF_ToolTip(GetClipboardFormat(2) "`n图片、文件等(非文字)", 3000)
 	Send, ^{vk56}
 return
 }
@@ -13,8 +14,9 @@ if !ClipSaved1   ; 脚本启动时的剪贴板 直接粘贴
 	Send, ^{vk56}
 return
 }
-if (Clipboard!=ClipSaved%clipid%)   ; 脚本未记录的剪贴板 直接粘贴
+if (Clipboard != ClipSaved%clipid%)   ; 脚本未记录的剪贴板 直接粘贴
 {
+	CF_ToolTip("未记录的剪贴板.", 2000)
 	Send, ^{vk56}
 return
 }
@@ -57,7 +59,7 @@ SetTimer, ctrlCheck, 50
 return
 
 ctrlCheck:
-lt1:=A_TickCount
+lt1 := A_TickCount
 if lt1-st1>300
 	cliptip(clipnum)
 
@@ -97,15 +99,15 @@ return
 
 cliptip(num)
 {
-	sleep,100
-	Outputtooltip=
+	sleep, 100
+	Outputtooltip =
 	if num != 4
 	{
 		if StrLen(ClipSaved%num%)>300
 		{
 			StringLeft, Outputtooltip1, ClipSaved%num%, 150
 			StringRight, Outputtooltip2, ClipSaved%num%, 150
-			Outputtooltip:=Outputtooltip1 "`n`n★☆★☆★☆★☆中间部分省略★☆★☆★☆★☆`n`n" Outputtooltip2
+			Outputtooltip := Outputtooltip1 "`n`n★☆★☆★☆★☆中间部分省略★☆★☆★☆★☆`n`n" Outputtooltip2
 		}
 		tooltip % "文字剪贴板之" num "`n"(Outputtooltip ? Outputtooltip : ClipSaved%num%)
 	}
@@ -196,6 +198,11 @@ execSql(s, warn:=0){
 
 gui_History(){
 	global
+	if !DB
+	{
+		CF_ToolTip("剪贴板历史没有启用! DB 数据库没有打开!", 1500)
+	return
+	}
 	static x, y, how_sort := 2_sort := 3_sort := 0, what_sort := 2
 	local selected_row, thisguisize
 	hst_genWt := 750

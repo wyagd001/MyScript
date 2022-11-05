@@ -1,5 +1,10 @@
 ﻿剪贴板上屏:
 ;^`::
+if !Auto_Cliphistory
+{
+tooltip, 等待简易版上线
+return
+}
 	if CHPITooltip
 	{
 		DCHPITooltip()

@@ -242,21 +242,25 @@ return
 
 ;!F1::
 有道网络翻译:
-	Youdao_keyword:=GetSelText()
+	Youdao_keyword := GetSelText()
+	Youdao_keyword := Trim(Youdao_keyword, " `t`r`n")
 	If !Youdao_keyword                          ;如果粘贴板里面没有内容，则判断是否有窗口定义
 	Return
 	Youdao_译文:=YouDaoApi(Youdao_keyword)
+	;msgbox % Youdao_译文
 	Youdao_基本释义:= json(Youdao_译文, "basic.explains")
 	Youdao_网络释义:= json(Youdao_译文, "web.value")
 	If Youdao_基本释义<>
 	{
-		ToolTip,%Youdao_keyword%:`n基本释义:%Youdao_基本释义%`n网络释义:%Youdao_网络释义%
-		gosub,soundpaly
+		ToolTip, %Youdao_keyword%:`n基本释义:%Youdao_基本释义%`n网络释义:%Youdao_网络释义%
+		sleep 1900
+		gosub, soundpaly
+		sleep, 100
 		ToolTip
 		Youdao_译文 := Youdao_基本释义 := Youdao_网络释义:= Youdao_keyword := ""
 	}
 else
-MsgBox,,有道网络翻译,网络错误或查询不到该单词的翻译。
+MsgBox,,有道网络翻译, 网络错误或查询不到该单词的翻译。, 5
 return
 
 /*
@@ -291,5 +295,6 @@ return
 
 CandyLast:
 Run_Candylast := 1
+;tooltip %Last_Candy_Cmd%`n%Run_Candylast%
 gosub Candy
 return

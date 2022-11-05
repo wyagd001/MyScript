@@ -1,4 +1,17 @@
-﻿OnMessageEx(MsgNumber, params*) {
+﻿/*
+Parameters
+MsgNumber: same as the first parameter of OnMessage()
+FunctionName: same as the second parameter of OnMessage(). To remove the function from monitoring the system message, specify 0 in the next parameter Priority. To remove the function in lowest priority from monitoring the system message, specify "" (blank).
+Object Method: [v1.0.1+] In order to specify an object method, pass an array consisting of three elements. e.g. [&myobj, "MyMethod", False]
+Object Address: the address of the object. It can be retrieved with the & operator. e.g. &myobj
+MethodName: the name of the method.
+AutoRemove: decides whether to remove the method if the object no longer exists. True to enable it; otherwise, set it to False. False by default.
+Priority: specify a whole number to set the priority of the registering function to be called. 1 is the highest and as the number increases the priority gets lowered. 0 is to remove the function from the list.
+Return Value
+If FunctionName and Priority is omitted, it returns the name of the function of the lowest priority in the function list. If FunctionName is explicitly blank (e.g. ""), it returns the name of the removed function. If FunctionName has a value and Priority is set to 0, it returns the name of the removed function. If FunctionName has a value and it is successfully added in the function list, it returns the name of the function of the highest priority in the list before the new function is added.
+*/
+
+OnMessageEx(MsgNumber, params*) {
     ;version 1.0.2 by A_Samurai http://sites.google.com/site/ahkref/custom-functions/onmessageex
     Static Functions := {}
     
@@ -18,7 +31,6 @@
         Priority := params.2 ? params.2 : (params.2 = 0) ? 0 : 1
         If FunctionName    {
             ;if FunctionName is specified, it means to register it or if the priority is set to 0, remove it
-            
             ;prepare for the function stack object
             Functions[MsgNumber] := Functions[MsgNumber] ? Functions[MsgNumber] : []
             

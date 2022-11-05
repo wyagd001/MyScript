@@ -3,11 +3,12 @@ SetTimer, CopyPathToClip, -150
 Return
 
 CopyPathToClip:
+FileRead, Files, %A_Temp%\7plus\files.txt
 Critical, On
-Files := GetSelectedFiles()
-msgbox % Files
 if !Files
-	FileRead, Files, %A_Temp%\7plus\files.txt
+	Files := GetSelectedFiles()
+Critical, Off
+;msgbox % Files
 If !Files
 {
 	CF_ToolTip("获取文件路径失败。", 3000)

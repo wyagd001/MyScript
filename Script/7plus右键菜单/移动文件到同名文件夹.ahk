@@ -8,17 +8,17 @@ Return
 ;按快捷键为结果为 G:\Users\lyh\Desktop\QQ  实际为QQ.lnk
 ;#G::
 移动文件到同名文件夹:
+FileRead, Files, %A_Temp%\7plus\files.txt
 sleep, 50
 Critical,On
-Files := GetSelectedFiles()
 if !Files
-FileRead, Files, %A_Temp%\7plus\files.txt
+	Files := GetSelectedFiles()
+Critical,Off
 If !Files
 {
 	CF_ToolTip("获取文件路径失败。", 3000)
 	Return
 }
-Critical,Off
 
 Loop, Parse, files, `n,`r
 {

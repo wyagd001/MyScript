@@ -504,3 +504,12 @@ f_Split2(String, Seperator, ByRef LeftStr, ByRef RightStr)
 	}
 	return
 }
+
+SafeFileName(String)
+{
+	IllegalLetter := "<,>,|,/,\,"",?,*,:,`n,`r,`t"
+	Loop, parse, IllegalLetter, `,
+		String := StrReplace(String, A_LoopField)
+	String := LTrim(String, " ")
+	return String
+}

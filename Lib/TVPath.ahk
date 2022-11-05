@@ -105,12 +105,11 @@ TVPath_Get(hTreeView, ByRef outPath, Delimiter="\")
 				ret := WriteProcessMemory(hProcess, pTVItemRemote, &tvitem, sizeof_TVITEMEX, 0)
 				if (ret)
 				{
-					;获取文字
+					; 获取文字， errorlevel 为真表示成功， false 表示失败
 					SendMessage, TVM_GETITEM, 0, pTVItemRemote, , ahk_id %hTreeView%
-					;if errorlevel = 0
-						;fileappend, % TVM_GETITEM " - " errorlevel " - " hTreeView " - 测试`n",%A_Desktop%\123.txt
 					if(errorlevel!="FAIL" && errorlevel!=0) ;获取文字成功
 					{
+						;fileappend, % "成功时errorlevel= " errorlevel " - " hTreeView " - 测试`n",%A_Desktop%\123.txt
 						ret := ReadProcessMemory(hProcess, pszTextRemote, szTextByte, cchTextMax * BytePerChar)
 						if (ret)
 						{
@@ -131,6 +130,7 @@ TVPath_Get(hTreeView, ByRef outPath, Delimiter="\")
 					else
 					{
 						HasError := "gettext - " errorlevel
+						;fileappend, % TVM_GETITEM " - " errorlevel " - " hTreeView " - 测试`n",%A_Desktop%\123.txt
 						break
 					}
 				}
@@ -253,7 +253,7 @@ TVPath_Set(hTreeView, inPath, ByRef outMatchPath,  EscapeChar="", Delimiter="\",
 				htext:=TVPath_GetText(hTreeView, hSelItem)
 				if (htext="计算机") || (htext="此电脑")  ; 找到 计算机 节点为止
 				{
-					;tooltip % hSelItem
+					CF_tooltip("找到了根目录: " htext, 3000)
 					break
 				}
 			}
@@ -345,8 +345,8 @@ __dummySetPathToTreeView(hProcess, hTreeView, hItem, RestPath, ByRef tvitem, ByR
 			}
 		}
 	}
-	fileappend, % RestPath "`n",%A_Desktop%\345.txt
-	fileappend, % FindText "`n",%A_Desktop%\345.txt
+	;fileappend, % "路径: " RestPath "`n",%A_Desktop%\345.txt
+	;fileappend, % FindText "`n",%A_Desktop%\345.txt
 	;判断窗口是否是Unicode
 	isUnicode:=DllCall("IsWindowUnicode", uint, hTreeView)
 
@@ -396,9 +396,6 @@ __dummySetPathToTreeView(hProcess, hTreeView, hItem, RestPath, ByRef tvitem, ByR
 		{
 			;获取文字
 			SendMessage, TVM_GETITEM, 0, pTVItemRemote, , ahk_id %hTreeView%
-			;msgbox % hItem " - " errorlevel
-			if errorlevel = 0
-				fileappend, % TVM_GETITEM " - " errorlevel " - " hTreeView " - 测试`n",%A_Desktop%\345.txt
 			if(errorlevel!="FAIL" && errorlevel!=0) ;获取文字成功
 			{
 				ret := ReadProcessMemory(hProcess, pszTextRemote, szTextByte, cchTextMax * BytePerChar)
@@ -470,6 +467,7 @@ __dummySetPathToTreeView(hProcess, hTreeView, hItem, RestPath, ByRef tvitem, ByR
 				}
 			} else {
 				HasError:="gettext"
+				;fileappend, % TVM_GETITEM " - " errorlevel " - " hTreeView " - 测试`n",%A_Desktop%\345.txt
 				break
 			}
 		} else {

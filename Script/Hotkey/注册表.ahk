@@ -13,7 +13,7 @@ if hdialogwin
 	}
 }
 ret := TVPath_Get(hTreeView, outPath)
-if(ret = "")
+if(ret = "") ; 为空表示成功
 {
 	If WinActive("ahk_class RegEdit_RegEdit") or WinExist("ahk_class RegEdit_RegEdit")
 	{
@@ -25,6 +25,7 @@ if(ret = "")
 	else
 		msgbox % outPath
 }
-;msgbox % ret " - " outPath
+else
+msgbox % "获取失败 " ret " @@@ " outPath
 Return
 ;#IfWinActive

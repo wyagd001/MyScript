@@ -3,26 +3,25 @@ SetTimer, notepadopen, -150
 Return
 
 notepadopen:
+FileReadLine, Files, %A_Temp%\7plus\files.txt, 1
 sleep, 50
 Critical,On
-Files := GetSelectedFiles()
-;msgbox % Files
-if !Files and lastexplorerhwnd
-Files := GetSelectedFiles(,lastexplorerhwnd)
 if !Files
-FileReadLine, Files, %A_Temp%\7plus\files.txt, 1
+	Files := GetSelectedFiles()
+if !Files and lastexplorerhwnd
+	Files := GetSelectedFiles(,lastexplorerhwnd)
+Critical, Off
+;msgbox % Files
 If !Files
 {
 	CF_ToolTip("获取文件路径失败。", 3000)
 Return
 }
-
 run, "%TextEditor%" "%files%",,, hpid
 WinWait, ahk_pid %hpid%, , 2
 WinActivate, ahk_pid %hpid%
 IfWinNotActive, ahk_pid %hpid%
 	WinActivate, ahk_pid %hpid%
-Critical, Off
 Return
 
 7PlusMenu_记事本打开()

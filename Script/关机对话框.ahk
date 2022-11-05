@@ -35,33 +35,33 @@
 ShutdownDialog:
 ;sendplay {esc}
 ;DllCall("AbortSystemShutdown", "Str", 0)
-if SubStr(A_OSVersion,1,3) = "10."   ; 需安装驱动
+if SubStr(A_OSVersion, 1, 3) = "10."   ; 需安装驱动
 {
-   sleep 2000
-   Interception.send("Esc", 1)
-   sleep 500
-   send {esc}
-   sleep 400
-   WinClose, ahk_class Progman
-   sleep 200
-   WinActivate, 关闭 Windows ahk_class #32770
-   SetTimer, ShutdownDialog, off
+	sleep 2000
+	Interception.send("Esc", 1)
+	sleep 200
+	send {esc}
+	sleep 400
+	WinClose, ahk_class Progman
+	sleep 400
+	WinActivate, 关闭 Windows ahk_class #32770
+	SetTimer, ShutdownDialog, off
 }
 else
 {
-WinWait, ahk_class BlockedShutdownResolver
-If not ErrorLevel
-{
-	 Sleep, 500
-	 send {Esc}
-   WinClose, ahk_class BlockedShutdownResolver
-   ;WinWaitClose, ahk_class BlockedShutdownResolver
-   ;IfNotEqual, ErrorLevel, 1
-	 Sleep, 500
-	 ;WinClose, ahk_class Progman
-	 ControlSend, SysListView321, !{F4}, ahk_class Progman
-   SetTimer, ShutdownDialog, off
-}
+	WinWait, ahk_class BlockedShutdownResolver
+	If not ErrorLevel
+	{
+		Sleep, 200
+		send {Esc}
+		WinClose, ahk_class BlockedShutdownResolver
+		;WinWaitClose, ahk_class BlockedShutdownResolver
+		;IfNotEqual, ErrorLevel, 1
+		Sleep, 1000
+		;WinClose, ahk_class Progman
+		ControlSend, SysListView321, !{F4}, ahk_class Progman
+		SetTimer, ShutdownDialog, off
+	}
 }
 Return
 
@@ -72,22 +72,28 @@ ControlGetFocus, Focus
 tooltip % Choice 
 If Choice in 注销,重新启动,关机,更新并重启,重启,更新并关机
 {
-tooltip % Choice "-" Focus "-" A_ThisHotkey
-   If (Focus = "ComboBox1" && A_ThisHotkey = "$Enter") or (Focus = "Button3")
-{
-      ShutdownBlock := false
-}
+	tooltip % Choice "-" Focus "-" A_ThisHotkey
+	If (Focus = "ComboBox1" && A_ThisHotkey = "$Enter") or (Focus = "Button3")
+	{
+		ShutdownBlock := false
+	}
 }
 SendInput, {Enter}
 Return
 #IfWinActive
 
+; https://docs.microsoft.com/en-us/windows/win32/winauto/event-constants
 HookProc(hWinEventHook2, Event, hWnd)
 {
-	global ShutdownBlock
+	global ShutdownBlock, HookProcAdr2
 	static hShutdownDialog
 	Event += 0
-	if Event = 8 ; EVENT_SYSTEM_CAPTURESTART
+	IfWinNotExist, 关闭 Windows ahk_class #32770
+	{
+		sleep 100
+		return
+	}
+	if Event = 8 ; EVENT_SYSTEM_CAPTURESTART  窗口收到鼠标捕获
 	{
 		WinGetClass, Class, ahk_id %hWnd%
 		WinGetTitle, Title, ahk_id %hWnd%
@@ -98,21 +104,21 @@ HookProc(hWinEventHook2, Event, hWnd)
 				ShutdownBlock := false
 		}
 	}
-	if Event = 9
+	if Event = 9  ; 失去了鼠标捕获
 	{
 		ifWinActive, 关闭 Windows ahk_class #32770
 		{
-			sleep,2000
+			sleep, 2000
 			ShutdownBlock := true
 		}
 	}
-	else if Event = 16 ; EVENT_SYSTEM_DIALOGSTART
+	else if Event = 16 ; EVENT_SYSTEM_DIALOGSTART  弹出对话框
 	{
 		WinGetClass, Class, ahk_id %hWnd%
 		WinGetTitle, Title, ahk_id %hWnd%
 		If (Class = "#32770" and Title = "关闭 Windows")
 			hShutdownDialog := hWnd
 	}
-	else if Event = 17 ; EVENT_SYSTEM_DIALOGEND
+	else if Event = 17 ; EVENT_SYSTEM_DIALOGEND  已关闭对话框
 		hShutdownDialog =
 }

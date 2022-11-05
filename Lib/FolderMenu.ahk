@@ -15,7 +15,7 @@
 ;                        子文件夹数量超过 50，文件数量超过 500，返回空值
 
 
-FolderMenu(FolderPath, SpecifyExt:="*", MenuName:="",ShowIcon:=1, ShowOpenFolderMenu:=1, Showhide:=0, FolderFirst:=1)
+FolderMenu(FolderPath, SpecifyExt:="*", MenuName:="", ShowIcon:=1, ShowOpenFolderMenu:=1, Showhide:=0, FolderFirst:=1, RecurseFolder:=1)
 {
 	MenuName := MenuName ? MenuName : FolderPath
 	
@@ -35,7 +35,7 @@ FolderMenu(FolderPath, SpecifyExt:="*", MenuName:="",ShowIcon:=1, ShowOpenFolder
 		{
 			if (A_Index > 500)
 			{
-				msgbox, ,目录菜单创建失败, 选定文件夹内文件过多，无法创建菜单。`n限制数量`n文件夹：50，文件：500。
+				msgbox, ,目录菜单创建失败, 选定文件夹内文件过多，无法创建菜单。`n文件最大数量: 500。
 			return
 			}
 			if !Showhide
@@ -66,11 +66,11 @@ FolderMenu(FolderPath, SpecifyExt:="*", MenuName:="",ShowIcon:=1, ShowOpenFolder
 		}
 	}
 
-	Loop, %FolderPath%\*.*, 2, 1   ; 文件夹
+	Loop, %FolderPath%\*.*, 2, %RecurseFolder%   ; 文件夹
 	{
 		if (A_Index > 50)
 		{
-			msgbox, ,目录菜单创建失败, 选定文件夹内文件过多，无法创建菜单。`n限制数量`n文件夹：50，文件：500。
+			msgbox, ,目录菜单创建失败, 选定文件夹内文件夹过多，无法创建菜单。`n文件夹最大数量：50。
 		return
 		}
 		if !Showhide
@@ -128,7 +128,7 @@ FolderMenu(FolderPath, SpecifyExt:="*", MenuName:="",ShowIcon:=1, ShowOpenFolder
 		{
 			if (A_Index > 500)
 			{
-				msgbox, ,目录菜单创建失败, 选定文件夹内文件过多，无法创建菜单。`n限制数量`n文件夹：50，文件：500。
+				msgbox, ,目录菜单创建失败, 选定文件夹内文件过多，无法创建菜单。`n文件最大数量: 500。
 			return
 			}
 			FileList .= A_LoopFileLongPath "`n"

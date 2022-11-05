@@ -1,33 +1,38 @@
 ﻿;LAlt & MButton::  ; 一键打开当前激活窗口的所在目录
 窗口程序所在目录:
-	Sleep,100
-	WinGet, hProcessPath, ProcessPath, A
-	;SplitPath, hProcessPath, hProcessName, hProcessDir
-	File_OpenAndSelect(hProcessPath)
-	;Run,% "explorer.exe /select," ProcessPath
-	sleep,200
-	Send,{Alt Down}
-	sleep,200
-	Send,{Alt Up}
-	;Tooltip OK
+Sleep,100
+WinGet, hProcessPath, ProcessPath, A
+;SplitPath, hProcessPath, hProcessName, hProcessDir
+File_OpenAndSelect(hProcessPath)
+;Run, % "explorer.exe /select," ProcessPath
+sleep, 200
+Send, {Alt Down}
+sleep, 200
+Send, {Alt Up}
+;Tooltip OK
 Return
 
 ;RAlt & MButton::
 打开文档所在目录:
-	WinGet pid, PID, A 
-	WinGetActiveTitle _Title
-	WinGet,ProcessPath,ProcessPath,A 
+WinGet pid, PID, A 
+WinGetActiveTitle _Title
+WinGet, ProcessPath, ProcessPath, A
 
 ; 窗口标题有路径的窗口直接获取窗口标题文字
-	IfInString,_Title,:\ 
-	{  
-		; 匹配目录不能匹配文件
-		;FullNamell:=RegExReplace(_Title,"^.*(.:(\\)?.*)\\.*$","$1")
-		; 编辑器文件修改后标题开头带“*”
-		RegExMatch(_Title, "i)^\*?\K.*\..*(?= [-*] )", FileFullPath)
-		If FileFullPath
-			goto OpenFileFullPath
-	}
+IfInString,_Title, :\ 
+{  
+	; 匹配目录不能匹配文件
+	;FullNamell:=RegExReplace(_Title,"^.*(.:(\\)?.*)\\.*$","$1")
+	; 编辑器文件修改后标题开头带“*”
+	RegExMatch(_Title, "i)^\*?\K.*\..*(?= [-*] )", FileFullPath)
+	If FileFullPath
+		goto OpenFileFullPath
+}
+
+; Word、Excel、WPS、et、Scite程序
+FileFullPath := getDocumentPath(ProcessPath)
+if FileFullPath
+	goto OpenFileFullPath
 
 /*
 ; 方式一
@@ -67,148 +72,142 @@ run % "explorer.exe /select,"  FullName
 
 ;;;;;;;;;;;;;;提取命令行;;;;;;;;;
 ;WMI_Query("\\.\root\cimv2", "Win32_Process")
-	CMDLine:= WMI_Query(pid)
+CMDLine:= WMI_Query(pid)
 
-	RegExMatch(CMDLine, "i).*exe.*?\s+(.*)", ff_)   ; 正则匹配命令行参数
+RegExMatch(CMDLine, "i).*exe.*?\s+(.*)", ff_)   ; 正则匹配命令行参数
 ; 带参数的命令行不能得到路径  例如 a.exe /resart "D:\123.txt"
 ; 命令行参数中打开的文件有些程序带  “"”（"打开文件路径"）， 有些程序不带 “"”（打开文件路径）
-	StringReplace,FileFullPath,ff_1,`",,All
-	startzimu:=RegExMatch(FileFullPath, "i)^[a-z]")
+StringReplace, FileFullPath, ff_1, `", , All
+startzimu := RegExMatch(FileFullPath, "i)^[a-z]")
 
-	if !startzimu
-	{
-		RegExMatch(FileFullPath, "i)([a-z]:\\.*\.\S*)", fff_)
-		FileFullPath:=fff_1
-	}
+if !startzimu
+{
+	RegExMatch(FileFullPath, "i)([a-z]:\\.*\.\S*)", fff_)
+	FileFullPath := fff_1
+}
 
-	if FileFullPath
-		goto OpenFileFullPath
+if FileFullPath
+	goto OpenFileFullPath
 
 ; RealPlayer
-	IfInString,_Title,RealPlayer
+IfInString, _Title, RealPlayer
+{
+	DetectHiddenText, On
+	SetTitleMatchMode, Slow
+	WinGetText, _Title, %_Title%
+	IfInString, _Title, :/
 	{
-		DetectHiddenText, On
-		SetTitleMatchMode, Slow
-		WinGetText, _Title, %_Title%
-		IfInString,_Title,:/
+		; RealPlayer式例：file://N:/电影/小视频/【藤缠楼】必看！正确的电线绕圈收集方法 标清.flv
+		StringReplace, _Title, _Title, /, \, 1
+		Loop, parse, _Title, `n, `r
 		{
-			; RealPlayer式例：file://N:/电影/小视频/【藤缠楼】必看！正确的电线绕圈收集方法 标清.flv
-			StringReplace,_Title,_Title,/,\,1
-			Loop, parse, _Title, `n, `r
-			{
-				StringTrimLeft,FileFullPath,A_LoopField,7
-				If FileFullPath && FileExist(FileFullPath)
-					gosub OpenFileFullPath
-			}
-		}
-		DetectHiddenText,Off
-		SetTitleMatchMode,fast
-	Return
-	}
-
-; Word、Excel、WPS、et、Scite程序
-	FileFullPath:=getDocumentPath(ProcessPath)  
-	if FileFullPath
-		goto OpenFileFullPath
-
-	; 直接打开记事本程序，然后打开文本文件，命令行没有文件路径，使用读取内存的方法得到路径
-	IfInString,_Title,记事本
-	{
-		If(_Title="无标题 - 记事本")
-		{
-			FileFullPath:=_Title:=pid:=ProcessPath:=startzimu:=ff_:=ff_1:=fff_:=fff_1=""
-		Return
-		}
-		WinGet, hWnd, ID, A
-		FileFullPath := JEE_NotepadGetPath(hWnd)
-		if FileFullPath
-			gosub OpenFileFullPath
-		else
-		{
-			OSRecentTextFile := A_AppData "\Microsoft\Windows\Recent\" StrReplace(_Title, " - 记事本") ".lnk"
-			FileGetShortcut, % OSRecentTextFile, FileFullPath
-			if FileExist(FileFullPath)
+			StringTrimLeft, FileFullPath, A_LoopField, 7
+			If FileFullPath && FileExist(FileFullPath)
 				gosub OpenFileFullPath
 		}
 	}
+	DetectHiddenText, Off
+	SetTitleMatchMode, fast
+	Return
+}
 
-	; 结束清理
-	FileFullPath:=_Title:=pid:=ProcessPath:=startzimu:=ff_:=ff_1:=fff_:=fff_1=""
+; 直接打开记事本程序，然后打开文本文件，命令行没有文件路径，使用读取内存的方法得到路径
+IfInString, _Title, 记事本
+{
+	If(_Title = "无标题 - 记事本")
+	{
+		FileFullPath := _Title := pid := ProcessPath := startzimu := ff_ := ff_1 := fff_ := fff_1 := ""
+	Return
+	}
+	WinGet, hWnd, ID, A
+	FileFullPath := JEE_NotepadGetPath(hWnd)
+	if FileFullPath
+		gosub OpenFileFullPath
+	else
+	{
+		OSRecentTextFile := A_AppData "\Microsoft\Windows\Recent\" StrReplace(_Title, " - 记事本") ".lnk"
+		FileGetShortcut, % OSRecentTextFile, FileFullPath
+		if FileExist(FileFullPath)
+			gosub OpenFileFullPath
+	}
+}
+
+; 结束清理
+FileFullPath := _Title := pid := ProcessPath := startzimu := ff_ := ff_1 := fff_ := fff_1 := ""
 Return
 
 OpenFileFullPath:
-	; QQ 影音  文件路径末尾带“*”号
-	FileFullPath:=Trim(FileFullPath,"`*")
+; QQ 影音  文件路径末尾带“*”号
+FileFullPath := Trim(FileFullPath, "`*")
+If Fileexist(FileFullPath)
+{
+	File_OpenAndSelect(FileFullPath)
+	;Run,% "explorer.exe /select," FileFullPath
+	FileFullPath := _Title := pid := ProcessPath := ""
+	Return
+}
+else
+{
+	RegExMatch(FileFullPath, "i)^\*?\K.*\..*(?= [-*] )", FileFullPath)
 	If Fileexist(FileFullPath)
 	{
-		File_OpenAndSelect(FileFullPath)
-		;Run,% "explorer.exe /select," FileFullPath
-		FileFullPath:=_Title:=pid:=ProcessPath:=""
+		Run, % "explorer.exe /select," FileFullPath
+		FileFullPath := _Title := pid := ProcessPath := ""
 		Return
 	}
-	else
+	Splitpath, FileFullPath, , Filepath
+	If Fileexist(Filepath)
 	{
-		RegExMatch(FileFullPath, "i)^\*?\K.*\..*(?= [-*] )", FileFullPath)
-		If Fileexist(FileFullPath)
-		{
-			Run,% "explorer.exe /select," FileFullPath
-			FileFullPath:=_Title:=pid:=ProcessPath:=""
-			Return
-		}
-		Splitpath,FileFullPath,,Filepath
-		If Fileexist(Filepath)
-		{
-			Msgbox,% "目标文件不存在 " FileFullPath "，`r`n" "打开文件所在目录 " Filepath "。"
-			Run,% Filepath
-			FileFullPath:=_Title:=pid:=ProcessPath:=""
-			Return
-		}
+		Msgbox, % "目标文件不存在 " FileFullPath "，`r`n" "打开文件所在目录 " Filepath "。"
+		Run, % Filepath
+		FileFullPath := _Title := pid := ProcessPath := ""
+		Return
 	}
+}
 Return
 
 getDocumentPath(_ProcessPath)  
 {  
-	SplitPath,_ProcessPath,,,,Process_NameNoExt  
-	value:=Process_NameNoExt  
-      
+	SplitPath, _ProcessPath, , , , Process_NameNoExt  
+	value := Process_NameNoExt  
 	If IsLabel( "Case_" . value)  
 		Goto Case_%value%  
 
 	Case_WINWORD:  ; Word OpusApp
-		Application:= ComObjActive("Word.Application") ; word
-		ActiveDocument:= Application.ActiveDocument ; ActiveDocument
+	Application:= ComObjActive("Word.Application") ; word
+	ActiveDocument:= Application.ActiveDocument ; ActiveDocument
 	Return  % ActiveDocument.FullName
 	Case_EXCEL:  ; Excel XLMAIN
-		Application := ComObjActive("Excel.Application") ; excel
-		ActiveWorkbook := Application.ActiveWorkbook ; ActiveWorkbook
+	Application := ComObjActive("Excel.Application") ; excel
+	ActiveWorkbook := Application.ActiveWorkbook ; ActiveWorkbook
 	Return % ActiveWorkbook.FullName
 	Case_POWERPNT:  ; Powerpoint PPTFrameClass
-		Application:= ComObjActive("PowerPoint.Application") ; Powerpoint
-		ActivePresentation := Application.ActivePresentation ; ActivePresentation
+	Application:= ComObjActive("PowerPoint.Application") ; Powerpoint
+	ActivePresentation := Application.ActivePresentation ; ActivePresentation
 	Return % ActivePresentation.FullName
 	Case_WPS:
-		Application := ComObjActive("kWPS.Application")
-		if !Application
-			Application := ComObjActive("WPS.Application")
-		ActiveDocument := Application.ActiveDocument
-		if !ActiveDocument   ; WPS 启动然后打开表格文件的情况
-		{
-			Goto Case_ET
-		}
+	Application := ComObjActive("kWPS.Application")
+	if !Application
+		Application := ComObjActive("WPS.Application")
+	ActiveDocument := Application.ActiveDocument
+	if !ActiveDocument   ; WPS 启动然后打开表格文件的情况
+	{
+		Goto Case_ET
+	}
 	Return  % ActiveDocument.FullName
 	Case_ET:
-		Application := ComObjActive("ket.Application")
-		if !Application
-			Application := ComObjActive("et.Application")
-		ActiveWorkbook := Application.ActiveWorkbook ; ActiveWorkbook
+	Application := ComObjActive("ket.Application")
+	if !Application
+		Application := ComObjActive("et.Application")
+	ActiveWorkbook := Application.ActiveWorkbook ; ActiveWorkbook
 	Return % ActiveWorkbook.FullName
 	Case_WPP:
-		Application := ComObjActive("kWPP.Application")
-		if !Application
-			Application := ComObjActive("wpp.Application")
-		ActivePresentation := Application.ActivePresentation ; ActivePresentation
+	Application := ComObjActive("kWPP.Application")
+	if !Application
+		Application := ComObjActive("wpp.Application")
+	ActivePresentation := Application.ActivePresentation ; ActivePresentation
 	Return % ActivePresentation.FullName
 	Case_SciTE:
-		Application := ComObjActive("SciTE4AHK.Application")
+	Application := ComObjActive("SciTE4AHK.Application")
 	Return Application.CurrentFile
 }

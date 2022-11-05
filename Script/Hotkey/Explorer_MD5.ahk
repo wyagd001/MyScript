@@ -7,12 +7,16 @@ Nomd5func := 0
 ;IfWinActive,ahk_Group ccc
 IfWinExist, MD5验证
 {
-	if WinActive("ahk_class EVERYTHING") or WinActive("ahk_class TTOTAL_CMD")
-		Md5FilePath2 := GetSelText()
+	if (A_ThisLabel = "7plusMD5")
+		FileReadLine, Md5FilePath2, %A_Temp%\7plus\files.txt, 1
 	else
-		Md5FilePath2 := GetSelectedFiles()
-	if !Md5FilePath2 && (A_ThisLabel="7plusMD5")
-			FileReadLine, Md5FilePath2, %A_Temp%\7plus\files.txt, 1
+	{
+		if WinActive("ahk_class EVERYTHING") or WinActive("ahk_class TTOTAL_CMD")
+			Md5FilePath2 := GetSelText()
+		else
+			Md5FilePath2 := GetSelectedFiles()
+	}
+
 	if (Md5FilePath2 = Md5FilePath)
 		Return
 	GuiControl, enable, CRC32_2
@@ -28,12 +32,15 @@ IfWinExist, MD5验证
 }
 Else
 {
-	if WinActive("ahk_class EVERYTHING") or WinActive("ahk_class TTOTAL_CMD")
-		Md5FilePath := GetSelText()
+	if (A_ThisLabel="7plusMD5")
+		FileReadLine, Md5FilePath, %A_Temp%\7plus\files.txt, 1
 	else
-		Md5FilePath := GetSelectedFiles()
-	if !Md5FilePath && (A_ThisLabel="7plusMD5")
-			FileReadLine, Md5FilePath, %A_Temp%\7plus\files.txt, 1
+	{
+		if WinActive("ahk_class EVERYTHING") or WinActive("ahk_class TTOTAL_CMD")
+			Md5FilePath := GetSelText()
+		else
+			Md5FilePath := GetSelectedFiles()
+	}
 	if (Md5FilePath = "")
 		Return
 	SplitPath, Md5FilePath, OutFileName,, OutExtension, OutNameNoExt

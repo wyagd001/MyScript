@@ -203,8 +203,7 @@ Return
 Label_Candy_RunCommand:
 	if Run_Candylast
 		Run_Candylast := 0
-	else
-		Last_Candy_Cmd := Candy_Cmd
+	Last_Candy_Cmd := Candy_Cmd
 	Candy_Cmd := SkSub_EnvTrans(Candy_Cmd)  ; 替换自变量以及系统变量,Ini里面用~%表示一个%,当然要用~~%，表示一个原义的~%
 	Candy_Cmd = %Candy_Cmd%
 	If (instr(Candy_Cmd, "{SetClipBoard:pure}")+instr(Candy_Cmd, "{SetClipBoard:rich}") )       ; 这个开关指令会修改系统粘贴板，不会对命令行本身产生作用。所以先要从命令行替换掉。

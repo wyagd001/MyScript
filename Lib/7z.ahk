@@ -11,8 +11,8 @@
 		msgbox, 未设置变量7z，7zg，无法解压。
 	return
 	}
-	SmartUnZip_首层多个文件标志 := SmartUnZip_首层有文件夹标志 := SmartUnZip_是否存在文件 := 0
-	SmartUnZip_首层文件夹名:= SmartUnZip_文件夹名A := SmartUnZip_文件夹名B := ""
+	SmartUnZip_首层多个文件标志 := SmartUnZip_首层有文件夹标志 := SmartUnZip_是否存在文件 := SmartUnZip_FileB := 0
+	SmartUnZip_文件夹名A := SmartUnZip_文件夹名B := ""
 	包_列表=%A_Temp%\wannianshuyaozhinengjieya_%A_Now%.txt
 
 	; 将压缩包路径分割为它的所在目录和不含扩展名的文件名
@@ -27,7 +27,13 @@
 	RunWait, %comspec% /c ""%7Z%" l "%S_File%"`>"%包_列表%"",,hide
 	loop, read, %包_列表%
 	{
-		; 合计项老版7z 不显示日期, 新版添加额外的条件
+		; 合计项老版 7z 不显示日期, 新版添加额外的条件
+		if InStr(A_loopreadline, "-------------------")
+		{
+			SmartUnZip_FileB +=1
+			if SmartUnZip_FileB = 2
+				break
+		}
 		If(RegExMatch(A_LoopReadLine, "^(\d\d\d\d-\d\d-\d\d)")) || InStr(A_loopreadline, "...")
 		{
 			SmartUnZip_是否存在文件 := 1
@@ -41,10 +47,9 @@
 			Else
 				StringTrimLeft, SmartUnZip_文件夹名A, A_LoopReadLine, 53
 
-			If((SmartUnZip_文件夹名B != SmartUnZip_文件夹名A) And (SmartUnZip_文件夹名B!=""))
+			If((SmartUnZip_文件夹名B != SmartUnZip_文件夹名A) And (SmartUnZip_文件夹名B != ""))
 			{
 				SmartUnZip_首层多个文件标志 = 1
-				;msgbox % SmartUnZip_文件夹名A " - " SmartUnZip_文件夹名B
 				Break
 			}
 			SmartUnZip_文件夹名B := SmartUnZip_文件夹名A
@@ -57,8 +62,9 @@
 	return
 	}
 
-	; ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-; -o参数后不能有空格
+	;msgbox % "SmartUnZip_首层多个文件标志: " SmartUnZip_首层多个文件标志 "`n" "SmartUnZip_首层有文件夹标志: " SmartUnZip_首层有文件夹标志 "`n" "SmartUnZip_首层文件夹名: " SmartUnZip_首层文件夹名 "`n" "SmartUnZip_文件夹名A: " SmartUnZip_文件夹名A "`n" "SmartUnZip_文件夹名B: " SmartUnZip_文件夹名B
+
+; -o 参数后不能有空格
 	If(SmartUnZip_首层多个文件标志=0 && SmartUnZip_首层有文件夹标志 = 0)   ; 压缩文件内，首层有且仅有一个文件
 	{
 		Run, %7ZG% x "%S_File%" -o"%包_目录%"    ; 有且仅有一个文件直接解压，覆盖还是改名，交给7z
@@ -86,7 +92,6 @@
 	}
 	Else  ;压缩文件内，首层有多个文件夹
 	{
-   ;msgbox 333 - %SmartUnZip_首层多个文件标志%
 		IfExist %包_目录%\%包_文件名%  ;已经存在了以“包文件名”的文件夹，怎么办？
 		{
 			Loop
@@ -106,5 +111,6 @@
 	}
 	if S_tooltip
 		CF_ToolTip("文件%包_完整文件名%解压完成！", 2000)
+*/
 Return
 }

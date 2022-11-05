@@ -48,7 +48,9 @@ Return
 
 Cando_文件名乱码转码:
 	CandySel_FileNameNoExt := UrlDecode(CandySel_FileNameNoExt)
+	CandySel_FileNameNoExt := SafeFileName(CandySel_FileNameNoExt)
 	FileMove, %CandySel%, %CandySel_ParentPath%\%CandySel_FileNameNoExt%.%CandySel_Ext%
+	;msgbox % A_LastError
 return
 
 Cando_文件列表:

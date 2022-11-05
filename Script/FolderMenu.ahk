@@ -1274,10 +1274,12 @@ f_GetIcon(ThisPath)
 		; Unknown
 		if ThisExtension =
 			ThisExtension = Unknown
-		if ThisExtension contains !, ,&,',(,),*,+,-,.,/,:,<,=,>,\,^,{,|,},~,``,`,,`",`%,`;
+		if ThisExtension contains ,,,!, ,&,',(,),*,+,-,.,/,:,<,=,>,\,^,{,|,},~,``,`",`%,`;
 			ThisExtension = Unknown
 		; Normal file
 		; first check variables
+		;fileappend, % ThisExtension "`n", %A_Desktop%\123.txt
+		;fileappend, % f_Icons_%ThisExtension% "`n", %A_Desktop%\123.txt
 		if f_Icons_%ThisExtension% =
 		{
 			; second read ini for custom icon

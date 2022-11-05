@@ -206,6 +206,7 @@ Gui, Add, Edit, x85 y148 w30 h20 vrh, %rh%
 Gui, Add, Text, x118 y150 vdingshi2, 时
 Gui, Add, Edit, x135 y148 w30 h20 vrm, %rm%
 Gui, Add, Text, x167 y150 vdingshi3, 分
+Gui, Add, CheckBox, Checked%dingshichongfu% x190 y150 vdingshichongfu, 重复运行(指定时间为间隔周期)
 Gui, Add, Text, x26 y180 vdingshi4, 指定执行的程序:
 Gui, Add, Edit, x120 y178 w350 h20 vrenwucx, %renwucx%
 Gui, Add, Button, x475 y175 w30 h25 vdingshi5 grenwusl, ...
@@ -255,6 +256,7 @@ If(renwu = 0)
 	GuiControl, Disable, rh
 	GuiControl, Disable, dingshi2
 	GuiControl, Disable, rm
+	GuiControl, Disable, dingshichongfu
 	GuiControl, Disable, dingshi3
 	GuiControl, Disable, dingshi4
 	GuiControl, Disable, renwucx
@@ -350,15 +352,16 @@ Gui, Add, CheckBox, x46 y310 w130 h20 vvLoginPass Checked%LoginPass%, 启动默�
 Gui, Tab, 关于
 Gui, Add, Text, x26 y30, 名称：运行 - Ahk
 Gui, Add, Text, x26 y50, 作者：桂林小廖
-Gui, Add, Text, x26 y70, 主页：
+Gui, Add, Link, x26 y70 ggio, 主页: <a>https://wyagd001.github.io/Run-Ahk</a>
+Gui, Add, Text, x26 y90, 下载：
 Gui, Font, CBlue
 ;Gui, Font, CBlue Underline
-Gui, Add, Text, x+ gg vURL, https://github.com/wyagd001/MyScript
+Gui, Add, Text, x+ ggcom vURL, https://github.com/wyagd001/MyScript
 Gui, Font
-Gui, Add, Text, x26 y90, % "版本：" AppVersion
-Gui, Add, Text, x26 y110, 适配 Autohotkey：1.1.28.00(Unicode) 系统：Win7 SP1 32bit/Win10 64bit 中文版
-Gui, Add, Text, x26 y130, % "当前 Autohotkey：" A_AhkVersion "(" (A_IsUnicode?"Unicode":"ansi") ") 系统：" A_OSVersion " " (A_Is64bitOS?64:32) "bit"
-Gui, Add, Button, x26 y155 gUpdate, 检查更新
+Gui, Add, Text, x26 y110, % "版本：" AppVersion
+Gui, Add, Text, x26 y130, 适配 Autohotkey：1.1.28.00(Unicode) 系统：Win7 SP1 32bit/Win10 64bit 中文版
+Gui, Add, Text, x26 y150, % "当前 Autohotkey：" A_AhkVersion "(" (A_IsUnicode?"Unicode":"ansi") ") 系统：" A_OSVersion " " (A_Is64bitOS?64:32) "bit"
+Gui, Add, Button, x26 y180 gUpdate, 检查更新
 
 ;Gui & Hyperlink - AGermanUser
 ;http://www.autohotkey.com/forum/viewtopic.php?p = 107703
@@ -372,7 +375,7 @@ WinGet, hw_gui, ID, ahk_class AutoHotkeyGUI ahk_pid %pid_this%
 
 ; Call "HanGGGGGGVdleMessage" when script receives WM_SETCURSOR message
 WM_SETCURSOR = 0x20
-OnMessage(WM_SETCURSOR, "HandleMessage")
+;OnMessage(WM_SETCURSOR, "HandleMessage")
 
 ; Call "HandleMessage" when script receives WM_MOUSEMOVE message
 WM_MOUSEMOVE = 0x200
@@ -455,6 +458,7 @@ If(renwu := !renwu)
 	GuiControl, Enable, rh
 	GuiControl, Enable, dingshi2
 	GuiControl, Enable, rm
+	GuiControl, Enable, dingshichongfu
 	GuiControl, Enable, dingshi3
 	GuiControl, Enable, dingshi4
 	GuiControl, Enable, renwucx
@@ -467,6 +471,7 @@ Else
 	GuiControl, Disable, rh
 	GuiControl, Disable, dingshi2
 	GuiControl, Disable, rm
+	GuiControl, Disable, dingshichongfu
 	GuiControl, Disable, dingshi3
 	GuiControl, Disable, dingshi4
 	GuiControl, Disable, renwucx
@@ -547,9 +552,24 @@ Return
 run, "%A_AhkPath%" "%A_ScriptDir%\Plugins\自定义运行命令.ahk"
 Return
 
-g:
+gio:
+if fileexist(A_ScriptDir "\Bin\AnyToAhk.exe")
+Run, %A_ScriptDir%\Bin\AnyToAhk.exe https://wyagd001.github.io/Run-Ahk
+else if fileexist(A_ScriptDir "\Bin\smartchooserbrowser.exe")
+Run, %A_ScriptDir%\Bin\smartchooserbrowser.exe https://wyagd001.github.io/Run-Ahk
+else
+Run, https://wyagd001.github.io/Run-Ahk
+return
+
+gcom:
+if fileexist(A_ScriptDir "\Bin\AnyToAhk.exe")
+Run, %A_ScriptDir%\Bin\AnyToAhk.exe https://github.com/wyagd001/MyScript
+else if fileexist(A_ScriptDir "\Bin\smartchooserbrowser.exe")
+Run, %A_ScriptDir%\Bin\smartchooserbrowser.exe https://github.com/wyagd001/MyScript
+else
 Run, https://github.com/wyagd001/MyScript
 Gui, Destroy
+OnMessageEx(0x200, "HandleMessage", 0)
 Return
 
 ;######## Function #############################################################
@@ -584,10 +604,10 @@ HandleMessage(p_w, p_l, p_m, p_hw)
 		{
 			If URL_hover
 			{
-			Gui, Font, norm cBlue
-			GuiControl, Font, %LastCtrl%
-			DllCall("SetCursor", "uint", h_old_cursor)
-			URL_hover = 
+				Gui, Font, norm cBlue
+				GuiControl, Font, %LastCtrl%
+				DllCall("SetCursor", "uint", h_old_cursor)
+				URL_hover = 
 			}
 		}
 	}
@@ -1125,6 +1145,7 @@ IniWrite, %rh4%, %run_iniFile%, 时间, rh4
 IniWrite, %rh5%, %run_iniFile%, 时间, rh5
 IniWrite, %renwu2%, %run_iniFile%, 时间, renwu2
 IniWrite, %Auto_JCTF%, %run_iniFile%, 功能开关, Auto_JCTF
+IniWrite, %dingshichongfu%, %run_iniFile%, 时间, dingshichongfu
 
 IniWrite, %vFoobar2000%, %run_iniFile%, AudioPlayer, Foobar2000
 IniWrite, %viTunes%, %run_iniFile%, AudioPlayer, iTunes
@@ -1174,4 +1195,5 @@ Return
 99GuiEscape:
 LV_Color_unload()
 Gui, Destroy
+OnMessageEx(0x200, "HandleMessage", 0)
 Return

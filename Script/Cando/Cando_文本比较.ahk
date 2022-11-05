@@ -31,17 +31,21 @@ else
 		FileEncoding
 		textfile1 := CandySel
 
-		SplitPath, textfile1, OutFileName,, OutExtension, OutNameNoExt
+		SplitPath, textfile1, OutFileName, OutDir, OutExtension, OutNameNoExt
+		;textfile2 := ""
 		AllOpenFolder := GetAllWindowOpenFolder()
 		for k,v in AllOpenFolder
 		{
+			if (v = OutDir)
+			Continue
 			Tmp_Fp := v "\" OutNameNoExt
 			Tmp_Fp := StrReplace(Tmp_Fp, "\\", "\")
 			if FileExist(Tmp_Fp "*.*")
 			{
-				if FileExist(Tmp_Fp "." OutExtension) && (Tmp_Fp "." OutExtension != textfile1)
+				if FileExist(Tmp_Fp "." OutExtension)
 				{
 					textfile2 := Tmp_Fp "." OutExtension
+					;MSGBox 1 - %A_LoopFilePath%
 					break
 				}
 				Loop, Files, % Tmp_Fp "*.*", F
@@ -50,8 +54,23 @@ else
 					{
 						textfile2 := v "\" A_LoopFileName
 						textfile2 := StrReplace(textfile2, "\\", "\")
+						;MSGBox 2 - %A_LoopFilePath%
 						break 2
 					}
+				}
+			}
+		}
+		if !textfile2
+		{
+			Tmp_Fp := OutDir "\" OutNameNoExt
+			Loop, Files, % Tmp_Fp "*.*", F
+			{
+				if InStr(A_LoopFileName, OutNameNoExt) && (A_LoopFileName != OutFileName)
+				{
+					textfile2 := OutDir "\" A_LoopFileName
+					textfile2 := StrReplace(textfile2, "\\", "\")
+					;MSGBox 3 - %A_LoopFilePath%
+					break
 				}
 			}
 		}
@@ -91,6 +110,7 @@ else
 		gosub UpdateSBText
 		if textfile2
 		{
+			;msgbox %textfile2%
 			FileEncoding, % File_GetEncoding(textfile2)
 			fileread, FileR_TFC2, %textfile2%
 			FileEncoding

@@ -3,7 +3,7 @@
 ; However, clicking and then moving a small amount will still trigger hover.
 ~RButton::
 If(Auto_Raise=1)
-stophovering(5)
+	stophovering(5)
 CoordMode, Mouse, Screen
 MouseGetPos, lastx, lasty
 ;CF_ToolTip("成功开启右键。", 2000)

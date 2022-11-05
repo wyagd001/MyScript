@@ -4,19 +4,6 @@
 ; http://code.google.com/p/7plus/
 ; https://github.com/7plus/7plus
 
-;测试快捷键
-/*
-#F1::
-If(WinActive("ahk_group ccc"))
-{
-	hWnd:=WinExist("A")
-	qqq:= ShellFolder(hwnd,2)
-	MsgBox %qqq%
-}
-Return
-*/
-;测试快捷键
-
 GetCurrentFolder()
 {
 	global MuteClipboardList, newfolder
@@ -24,44 +11,42 @@ GetCurrentFolder()
 	If WinActive("ahk_group ccc")
 	{
 		isdg := IsDialog()
-		;msgbox % isdg
-		If (isdg=0)
-		Return ShellFolder(,1)
-		Else If (isdg=1) ;No Support for old dialogs for now
+		If (isdg = 0)
+			Return ShellFolder(, 1)
+		Else If (isdg = 1) ; No Support for old dialogs for now
 		{
-			ControlGetText, text , ToolBarWindow322, A
-			dgpath:=SubStr(text, InStr(text," "))
+			ControlGetText, text, ToolBarWindow322, A
+			dgpath := SubStr(text, InStr(text, " "))
 			dgpath = %dgpath%
-		Return dgpath
+			Return dgpath
 		}
-		Else If (isdg=2)
+		Else If (isdg = 2)
 		{
-			newfolder=types2
-		Return 0
+			newfolder = types2
+			Return 0
 		}
 	}
-Return 0
+	Return 0
 }
 
-ShellNavigate(sPath, bExplore=False, hWnd=0)
+ShellNavigate(sPath, bExplore = False, hWnd=0)
 {
 	If (window := Explorer_GetWindow(hwnd))
 	{
-		
 		if !InStr(sPath, "#")  ; 排除特殊文件名
 		{
 			window.Navigate2(sPath) ; 当前资源管理器窗口切换到指定目录
 		}
 		else ; https://www.autohotkey.com/boards/viewtopic.php?f=5&t=526&p=153676#p153676
 		{
-			DllCall("shell32\SHParseDisplayName", WStr, sPath, Ptr,0, PtrP, vPIDL, UInt,0, Ptr,0)
+			DllCall("shell32\SHParseDisplayName", WStr, sPath, Ptr,0, PtrP, vPIDL, UInt, 0, Ptr, 0)
 			VarSetCapacity(SAFEARRAY, A_PtrSize=8?32:24, 0)
 			NumPut(1, SAFEARRAY, 0, "UShort") ;cDims
 			NumPut(1, SAFEARRAY, 4, "UInt") ;cbElements
 			NumPut(vPIDL, SAFEARRAY, A_PtrSize=8?16:12, "Ptr") ;pvData
 			NumPut(DllCall("shell32\ILGetSize", Ptr, vPIDL, UInt), SAFEARRAY, A_PtrSize=8?24:16, "Int") ;rgsabound[1]
-			window.Navigate2(ComObject(0x2011,&SAFEARRAY))
-			DllCall("shell32\ILFree", Ptr,vPIDL)
+			window.Navigate2(ComObject(0x2011, &SAFEARRAY))
+			DllCall("shell32\ILFree", Ptr, vPIDL)
 		}
 	}
 	Else If bExplore
@@ -79,64 +64,64 @@ ShellFolder(hWnd=0, returntype=1, onlyname=0)
 {
 	If !(window := Explorer_GetWindow(hwnd))
 		Return 0
-	If (window="desktop")
+	If (window = "desktop")
 	{
-		If (returntype=1)
+		If (returntype = 1)
 		return A_Desktop
-		If (returntype=2) or (returntype=3)
+		If (returntype = 2) or (returntype=3)
 			selection=1
-		If (returntype=4)
+		If (returntype = 4)
 			selection=0
 
 		ControlGet, hwWindow, HWND,, SysListView321, ahk_class Progman  ; 桌面文件夹区别对待
 		If !hwWindow ; #D mode
-			ControlGet, hwWindow, HWND,, SysListView321, A
-		ControlGet, files, List, % (selection ? "Selected":"") "Col1",, ahk_id %hwWindow%
+			ControlGet, hwWindow, HWND, , SysListView321, A
+		ControlGet, files, List, % (selection ? "Selected":"") "Col1", , ahk_id %hwWindow%
 		;base := SubStr(A_Desktop, 0, 1)=="\" ? SubStr(A_Desktop, 1, -1) : A_Desktop
 		Loop, Parse, files, `n, `r
 		{
 			hpath := A_Desktop "\" A_LoopField
 			hpath2 := A_DesktopCommon "\" A_LoopField
 			IfExist %hpath% ; ignore special icons like Computer (at least for now)
-				ret .= !onlyname?hpath:A_LoopField "`n"
+				ret .= (!onlyname?hpath:A_LoopField) "`n"
 			else IfExist %hpath%.lnk
-				ret .= !onlyname?hpath:A_LoopField ".lnk`n"
+				ret .= (!onlyname?hpath:A_LoopField) ".lnk`n"
 			else IfExist %hpath2%
-				ret .= !onlyname?hpath2:A_LoopField "`n"
+				ret .= (!onlyname?hpath2:A_LoopField)"`n"
 			else IfExist %hpath2%.lnk
-				ret .= !onlyname?hpath2:A_LoopField ".lnk`n"
+				ret .= (!onlyname?hpath2:A_LoopField) ".lnk`n"
 		}
-	Return Trim(ret,"`n")
+	Return Trim(ret, "`n")
 	}
 	Else
 	{
 		; Find hwnd window
 		doc := window.Document
-		If (returntype=1)
+		If (returntype = 1)
 		{
 			sFolder := doc.Folder.Self.path
 			If onlyname
 				sFolder := doc.Folder.Self.name
 		}
-		If (returntype=2)
+		If (returntype = 2)
 		{
 			sFocus :=doc.FocusedItem.Path
 			If onlyname
 				SplitPath, sFocus , sFocus
 		}
-		If(returntype=3)
+		If(returntype = 3)
 		{
 			collection := doc.SelectedItems
 			for item in collection
 			{
 				hpath :=  item.path
 				If onlyname
-					SplitPath, hpath , hpath
-				sSelect .=hpath "`n"
+					SplitPath, hpath, hpath
+				sSelect .= hpath "`n"
 			}
 			StringReplace, sSelect, sSelect, \\ , \, 1
 		}
-		If(returntype=4)
+		If(returntype = 4)
 		{
 			collection := doc.Folder.Items
 			for item in collection
@@ -147,14 +132,14 @@ ShellFolder(hWnd=0, returntype=1, onlyname=0)
 				sSelect .= hpath "`n"
 			}
 		}
-		sSelect:=Trim(sSelect,"`n")
-		If (returntype=1)
+		sSelect:=Trim(sSelect, "`n")
+		If (returntype = 1)
 			Return   sFolder
-		Else If (returntype=2)
+		Else If (returntype = 2)
 			Return   sFocus
-		Else If (returntype=3)
+		Else If (returntype = 3)
 			Return   sSelect
-		Else If (returntype=4)
+		Else If (returntype = 4)
 			Return sSelect
 	}
 }
@@ -214,8 +199,8 @@ SelectFiles(Select,Clear=1,Deselect=0,MakeVisible=1,focus=1, hWnd=0)
 			If(count > 0)
 			{
 				item := doc.Folder.Items.Item(0)
-				doc.SelectItem(item,4)
-				doc.SelectItem(item,0)
+				doc.SelectItem(item, 4)
+				doc.SelectItem(item, 0)
 			}
 		}
 		If(!IsObject(Select))
@@ -278,15 +263,15 @@ SelectFiles(Select,Clear=1,Deselect=0,MakeVisible=1,focus=1, hWnd=0)
 	Else If(window = "desktop")
 	{
 		SplitPath, Select,,,, Select
-		SendStr(Select)  ;A版，U版兼容
+		SendStr(Select)  ; A版，U版兼容
 		; _SendRaw(Select)  ; A版
 	}
 }
 
-;Returns selected files separated by `n
+; Returns selected files separated by `n
 GetSelectedFiles(FullName=1, hwnd=0)
 {
-	global MuteClipboardList,Vista7
+	global MuteClipboardList, Vista7
 	If(Vista7 && x:=IsDialog())
 	{
 		If(x=1)
@@ -298,17 +283,17 @@ GetSelectedFiles(FullName=1, hwnd=0)
 		result := GetSelText()
 		If(x=1)
 			ControlFocus %focussed%, A
-		MuteClipboardList:=false
+		MuteClipboardList := false
 		Return result
 	}
 	else
 	{
 		If(!hwnd)
-			hWnd:=WinExist("A")
+			hWnd := WinExist("A")
 		If FullName
-			Return ShellFolder(hwnd,3)
+			Return ShellFolder(hwnd, 3)
 		Else
-			Return ShellFolder(hwnd,3,1)
+			Return ShellFolder(hwnd, 3, 1)
 	}
 }
 
@@ -316,31 +301,31 @@ IsDialog(window=0)
 {
 	result:=0
 	If(window)
-		window:="ahk_id " window
+		window := "ahk_id " window
 	Else
 		window:="A"
-	WinGetClass,wc,%window%
-	If(wc="#32770")
+	WinGetClass, wc, %window%
+	If(wc = "#32770")
 	{
 		;Check for new FileOpen dialog
-		ControlGet, hwnd, Hwnd , , DirectUIHWND3, %window%
+		ControlGet, hwnd, Hwnd, , DirectUIHWND3, %window%
 		If(hwnd)
 		{
-			ControlGet, hwnd, Hwnd , , SysTreeView321, %window%
+			ControlGet, hwnd, Hwnd, , SysTreeView321, %window%
 			If(hwnd)
 			{
-				ControlGet, hwnd, Hwnd , , Edit1, %window%
+				ControlGet, hwnd, Hwnd, , Edit1, %window%
 				If(hwnd)
 				{
-					ControlGet, hwnd, Hwnd , , Button2, %window%
+					ControlGet, hwnd, Hwnd, , Button2, %window%
 					If(hwnd)
 					{
-						ControlGet, hwnd, Hwnd , , ComboBox2, %window%
+						ControlGet, hwnd, Hwnd, , ComboBox2, %window%
 						If(hwnd)
 						{
-						ControlGet, hwnd, Hwnd , , ToolBarWindow323, %window%
+						ControlGet, hwnd, Hwnd, , ToolBarWindow323, %window%
 						If(hwnd)
-							result:=1
+							result := 1
 						}
 					}
 				}
@@ -349,22 +334,22 @@ IsDialog(window=0)
 		;Check for old FileOpen dialog
 		If(!result)
 		{
-			ControlGet, hwnd, Hwnd , , ToolbarWindow321, %window%          ;工具栏
+			ControlGet, hwnd, Hwnd, , ToolbarWindow321, %window%          ;工具栏
 			If(hwnd)
 			{
-				ControlGet, hwnd, Hwnd , , SysListView321, %window%        ;文件列表
+				ControlGet, hwnd, Hwnd, , SysListView321, %window%        ;文件列表
 				If(hwnd)
 				{
-					ControlGet, hwnd, Hwnd , , ComboBox3, %window%         ;文件类型下拉选择框
+					ControlGet, hwnd, Hwnd, , ComboBox3, %window%         ;文件类型下拉选择框
 					If(hwnd)
 					{
-						ControlGet, hwnd, Hwnd , , Button3, %window%       ;取消按钮
+						ControlGet, hwnd, Hwnd, , Button3, %window%       ;取消按钮
 						If(hwnd)
 						{
 							;ControlGet, hwnd, Hwnd , , SysHeader321 , %window%    ;详细视图的列标题
-							ControlGet, hwnd, Hwnd , , ToolBarWindow322,%window%  ;左侧导航栏
+							ControlGet, hwnd, Hwnd, , ToolBarWindow322, %window%  ;左侧导航栏
 							If(hwnd)
-								result:=2
+								result := 2
 						}
 					}
 				}
@@ -381,7 +366,7 @@ SetFocusToFileView()
 		If(Vista7)
 		{
 			ControlGetFocus focussed, A
-			if (focussed="DirectUIHWND2")
+			if (focussed = "DirectUIHWND2")
 				ControlFocus DirectUIHWND2, A
 			else
 				ControlFocus DirectUIHWND3, A
@@ -432,7 +417,7 @@ IsRenaming()
 			Else
 				ControlGetPos , X, Y, Width, Height, SysListView321, A
 			ControlGetPos , X1, Y1, Width1, Height1, %focussed%, A
-			If(IsInArea(X1,Y1, X, Y, Width, Height) && IsInArea(X1+Width1,Y1, X, Y, Width, Height) && IsInArea(X1,Y1+Height1, X, Y, Width, Height) && IsInArea(X1+Width1,Y1+Height1, X, Y, Width, Height))
+			If(IsInArea(X1, Y1, X, Y, Width, Height) && IsInArea(X1+Width1, Y1, X, Y, Width, Height) && IsInArea(X1,Y1+Height1, X, Y, Width, Height) && IsInArea(X1+Width1,Y1+Height1, X, Y, Width, Height))
 				Return true
 		}
 	}
@@ -451,7 +436,7 @@ IsRenaming()
 			Else ;Old Dialogs
 				ControlGetPos , X, Y, Width, Height, SysListView321, A
 			ControlGetPos , X1, Y1, Width1, Height1, %focussed%, A
-			If(IsInArea(X1,Y1, X, Y, Width, Height)&&IsInArea(X1+Width1,Y1, X, Y, Width, Height)&&IsInArea(X1,Y1+Height1, X, Y, Width, Height)&&IsInArea(X1+Width1,Y1+Height1, X, Y, Width, Height))
+			If(IsInArea(X1, Y1, X, Y, Width, Height)&&IsInArea(X1+Width1, Y1, X, Y, Width, Height)&&IsInArea(X1, Y1+Height1, X, Y, Width, Height)&&IsInArea(X1+Width1, Y1+Height1, X, Y, Width, Height))
 				Return true
 		}
 	}
@@ -697,18 +682,18 @@ IsMouseOverFileList()
 		If(IsInArea(MouseX,MouseY,cX,cY,Width,Height))
 			Return true
 	}
-	Else If((z:=IsDialog(window))=1) ;New dialogs
+	Else If((z:=IsDialog(window))=1) ; New dialogs
 	{
 		outputdebug new dialog
 		ControlGetPos , cX, cY, Width, Height, DirectUIHWND2, A
 		outputdebug x %MouseX% y %mousey% x%cx% y%cy% w%width% h%height%
-		If(IsInArea(MouseX,MouseY,cX,cY,Width,Height)) ;Checking for area because rename might be in process and mouse might be over edit control
+		If(IsInArea(MouseX,MouseY,cX,cY,Width,Height)) ; Checking for area because rename might be in process and mouse might be over edit control
 		{
 			outputdebug over filelist
 			Return true
 		}
 	}
-	Else If(winclass="CabinetWClass" || winclass="ExploreWClass" || z=2) ;Old dialogs or Vista/XP
+	Else If(winclass="CabinetWClass" || winclass="ExploreWClass" || z=2) ; Old dialogs or Vista/XP
 	{
 		ControlGetPos , cX, cY, Width, Height, SysListView321, A
 		If(IsInArea(MouseX,MouseY,cX,cY,Width,Height) && UnderMouse = "SysListView321") ;Additional check needed for XP because of header
@@ -728,7 +713,7 @@ ToArray(SourceFiles, ByRef Separator = "`n", ByRef wasQuoted = 0)
 			break
 			
 		char := SubStr(SourceFiles, pos, 1)
-		If(char = """" || wasQuoted) ;Quoted paths
+		If(char = """" || wasQuoted) ; Quoted paths
 		{
 			file := SubStr(SourceFiles, InStr(SourceFiles, """", 0, pos) + 1, InStr(SourceFiles, """", 0, pos + 1) - pos - 1)
 			If(!wasQuoted)
@@ -749,7 +734,7 @@ ToArray(SourceFiles, ByRef Separator = "`n", ByRef wasQuoted = 0)
 		{
 			file := SubStr(SourceFiles, pos, max(InStr(SourceFiles, Separator, 0, pos + 1) - pos, 0)) ; separator
 			If(!file)
-				file := SubStr(SourceFiles, pos) ;no quotes or separators, single file
+				file := SubStr(SourceFiles, pos) ; no quotes or separators, single file
 			If(file)
 			{
 				files.Push(file)
@@ -1169,14 +1154,14 @@ ShellFileOperation( fileO=0x0, fSource="", fTarget="", flags=0x0, ghwnd=0x0 )
 SetDirectory(sPath)
 {
 	sPath:=ExpandEnvVars(sPath)
-	If(strEndsWith(sPath,":"))
+	If(strEndsWith(sPath, ":"))
 		sPath .="\"s
 	If (WinActive("ahk_class CabinetWClass"))
 	{
 		If (CF_IsFolder(sPath) || SubStr(sPath,1,6)="shell:" || SubStr(sPath,1,6)="ftp://" || strEndsWith(sPath,".search-ms")||CF_Isinteger(sPath))
 		{
 			hWnd := WinExist("A")
-			ShellNavigate(sPath,0,hwnd)
+			ShellNavigate(sPath, 0, hwnd)
 		}
 	}
 	Else If (IsDialog())

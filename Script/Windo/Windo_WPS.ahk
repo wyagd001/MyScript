@@ -2,6 +2,21 @@
 ;gosub Windo_ET_PasteAll
 ;return
 
+/*
+wps  VB 宏（Alt+F8）中的选项  指定快捷键
+在wps更新后，快捷键失效
+
+同一个excel文件的方法调用：
+module3/4/5在同一个excel文件。module5利用application.run调用其他module的sub/function时，如果该sub/function名在所有module里唯一，可以不加模块名(推荐全加模块名)。否则报错，需要模块名.方法名调用。
+模块名和方法名都不区分大小写。
+
+不同excel文件的方法调用：
+方法1：Application.Run " ‘文件名’ “!模块名.方法名”
+方法2：Application.Run " ‘路径+文件名’ “!模块名.方法名”
+必须带上文件名和模块名，即使方法在该文件唯一。且文件名两边有单引号，文件名和模块名间有!。
+如果被调用的工作簿是打开状态，方法1和方法2都可以。如果是关闭状态，方法2会打开路径+文件名进行调用，方法1会打开当前文件路径+文件名进行调用。
+*/
+
 Windo_WPS_RunVba:
 Application := ComObjActive("ket.Application")
 if !Splitted_Windy_Cmd4
@@ -34,35 +49,10 @@ SheetsCount := Application.ActiveWorkbook.Sheets.Count
 loop % SheetsCount
 {
 	SheetName := Application.ActiveWorkbook.Sheets(A_index).Name
-	if CF_Isinteger(SheetName)
+	if CF_Isinteger(SheetName)   ; 工作表名为数字时进行复制
 	{
 		Application.Sheets(A_index).Range(ActiveCell).Value := ActiveCellValue
 	}
 }
 Application:=""
 return
-
-/*
-CF_Isinteger(ByRef hNumber){
-	if hNumber is integer
-	{
-		hNumber := Round(hNumber)
-		return true
-	}
-}
-*/
-
-/*
-wps  VB 宏（Alt+F8）中的选项  指定快捷键
-在wps更新后，快捷键失效
-
-同一个excel文件的方法调用：
-module3/4/5在同一个excel文件。module5利用application.run调用其他module的sub/function时，如果该sub/function名在所有module里唯一，可以不加模块名(推荐全加模块名)。否则报错，需要模块名.方法名调用。
-模块名和方法名都不区分大小写。
-
-不同excel文件的方法调用：
-方法1：Application.Run " ‘文件名’ “!模块名.方法名”
-方法2：Application.Run " ‘路径+文件名’ “!模块名.方法名”
-必须带上文件名和模块名，即使方法在该文件唯一。且文件名两边有单引号，文件名和模块名间有!。
-如果被调用的工作簿是打开状态，方法1和方法2都可以。如果是关闭状态，方法2会打开路径+文件名进行调用，方法1会打开当前文件路径+文件名进行调用。
-*/

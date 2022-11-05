@@ -2,11 +2,19 @@
 ShellWM(wp, lp)
 {
 	;static wm := {1:"CREATED",2:"DESTROYED",4:"ACTIVATED",6:"REDRAW"}
+	global Auto_ShutdownMonitor, HookProcAdr2, hWinEventHook2
 	if (wp = 1 || wp = 4)
 	{
 		if folder_Arr.HasKey(lp) or textfile_Arr.HasKey(lp)
 			return
-		WinGet,ProcessName,ProcessName,ahk_id %lp%
+		If Auto_ShutdownMonitor && !hWinEventHook2 && WinActive("关闭 Windows ahk_class #32770")
+		{
+			HookProcAdr2 := RegisterCallback("HookProc", "F")
+			hWinEventHook2 := SetWinEventHook(0x1, 0x17, 0, HookProcAdr2, 0, 0, 0)
+			if !hWinEventHook2
+				CF_ToolTip("注册监视关机失败", 3000)
+		}
+		WinGet, ProcessName, ProcessName, ahk_id %lp%
 		if ProcessName = explorer.exe
 		{
 			folder_Arr.InsertAt(lp, {cmd: ShellFolder(lp, 1)})
@@ -206,7 +214,7 @@ Array_WriteMenuToINI(InputArray,sectionINI, fileName)
 		if FileExist(k) or Instr(k, "::{")
 		{
 			k:="run|" k
-			IniWrite, %k%, %fileName%, %sectionINI%,%MenuItemName%
+			IniWrite, %k%, %fileName%, %sectionINI%, %MenuItemName%
 		}
 	}
 }

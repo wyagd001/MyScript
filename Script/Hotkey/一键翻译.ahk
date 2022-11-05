@@ -1,5 +1,6 @@
 ﻿$`::
 	Tmp_Val := GetSelText(,,,0.1)
+	Tmp_Val := Trim(Tmp_Val, OmitChars := " `t`r`n")
 	if !Tmp_Val
 	{
 		SendRaw, ``
