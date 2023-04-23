@@ -31,8 +31,8 @@ Gui, Add, Text, x10 y48, 联接目录(&P)
 Gui, Add, Edit, x90 y46 w400 h40 vSHSL_Path, % ((sPara="/DES")?Files:"")
 Gui, Add, Text, x10 y95, 目标目录(&T)
 Gui, Add, Edit, x90 y93 w400 h40 vSHSL_TGPath, % ((sPara="/SRC")?Files:"")
-Gui, Add, Button, x270 y140 w100 h25 Default gSHSL_OK, 确定(&S)
-Gui, Add, Button, x380 y140 w100 h25 gSHSL_Cancel, 取消(&X)
+Gui, Add, Button, x270 y140 w100 h25 Default gVL_OK, 确定(&S)
+Gui, Add, Button, x380 y140 w100 h25 gVL_Cancel, 取消(&X)
 If(sPara="/SRC")
 {
 	GuiControl, disable, SHSL_TGPath

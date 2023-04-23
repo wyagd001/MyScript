@@ -1,19 +1,25 @@
 ﻿~LButton::
 CoordMode, Mouse, Screen
-MouseGetPos, lastx, lasty, id
+MouseGetPos, lastx, lasty, id, ContName
 If(Auto_Raise = 1)
 	stophovering(2)
 if !Auto_mouseclick
-return
+	return
 WinGetClass, Class, ahk_id %id%
-isF:=IsFullscreen("A", false, false)
+isF := IsFullscreen("A", false, false)
+;ToolTip % (lastx <= 0) ", " (lasty <= 32) ", " !WinActive("ahk_class Flip3D") ", " !isF ", " A_OSVersion
 ; 屏幕左上角点击按下快捷键
-If(lastx=0 && lasty=0 && !WinActive("ahk_class Flip3D") && !isF)   
+If (lastx <= 0) && (lasty <= 32) && !WinActive("ahk_class Flip3D") && !isF   
 {
 	if (A_OSVersion = "WIN_7")
 		Send ^#{Tab}   ;rundll32.exe DwmApi #105
 	else
+	{
+		Sleep 300
+		WinClose ahk_class #32768
+		Sleep 400
 		Send #{Tab}
+	}
 }
 ; 屏幕右下角点击打开任务管理器
 If(lastx>=A_ScreenWidth - 1.5 and lasty>=A_ScreenHeight - 60 and lasty<=A_ScreenHeight - 30 && !isF)
@@ -38,7 +44,7 @@ if WinActive("ahk_class Chrome_WidgetWin_1")
 			Acc := Acc_ObjectFromPoint(ChildId)
 			AccRole :=Acc_GetRoleText(Acc.accRole(ChildId))
 			;tooltip % AccRole
-			if(AccRole = "文字")
+			if(AccRole = "文字") or (AccRole = "窗格")
 			{
 				Send, ^w  ; 关闭标签页
 			return
@@ -46,7 +52,7 @@ if WinActive("ahk_class Chrome_WidgetWin_1")
 		}
 	}
 }
-if WinActive("ahk_class WinRarWindow")
+else if WinActive("ahk_class WinRarWindow")
 {
 	CoordMode, Mouse, Window
 	MouseGetPos, OutputVarX, OutputVarY
@@ -59,7 +65,17 @@ if WinActive("ahk_class WinRarWindow")
 	;tooltip % OutputVarColor " - " A_TimeSincePriorHotkey " - " A_PriorHotKey
 	return
 }
-if WinActive("ahk_class CabinetWClass") && !Qt
+else if WinActive("ahk_class SciTEWindow")
+{
+	if (ContName = "SciTeTabCtrl1"){
+		if (A_ThisHotkey = A_PriorHotkey && A_TimeSincePriorHotkey < 300) {
+			;tooltip % lasty
+			Send, ^w  ; 关闭标签页
+			return
+		}
+	}
+}
+else if WinActive("ahk_class CabinetWClass") && !Qt
 {
 	CoordMode, Mouse, Window
 	MouseGetPos, OutputVarX, OutputVarY

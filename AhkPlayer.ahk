@@ -210,14 +210,14 @@ UpdateMediaLib:
 		mp3_loop := A_loopfilename
 
 		Splitpath, mp3_loop,,,Extension
-		if (Extension != "mp3" && Extension != "wma")
-			Continue
-		else
+		If Extension in mp3,wma,wmv,wav,mpg,mp4,m4a
 		{
 			Tmp_Val .= a_loopfilefullpath "`n"
 			filelistarray[a_loopfilefullpath]:=1
 			Count++
 		}
+		else
+			Continue
 	}
 	FileAppend, % Tmp_Val, %AhkMediaLibFile%
 	updateMlib()
@@ -393,10 +393,10 @@ pld:=(PlayListdefalut="t")?1:2
 Gui, Add,DropDownList, vSelectedplaylist y5 w80 gSelectPlayList Choose%pld%,默认列表|媒体库|历史列表
 spo:=(PlayRandom="t")?2:1
 Gui, Add,DropDownList, x+5 yp w80 vSelectedPlayorder gSelectPlayorder Choose%spo%,默认|随机|单曲循环
-Gui, Add,Edit, x+5 yp+1  w250 vfind
-Gui, Add,Button, x+5 yp h20 gfind Default,查找
-Gui, Add,Button, x+5 yp h20 grefreshList,返回列表
-Gui, Add,Button, x+5 yp h20 gFindToList,追加到列表
+Gui, Add, Edit, x+5 yp+1  w250 vfind
+Gui, Add, Button, x+5 yp h20 gfind Default, 查找
+Gui, Add, Button, x+5 yp h20 grefreshList, 返回列表
+Gui, Add, Button, x+5 yp h20 gFindToList, 追加到列表
 
 Gui, Add,ListView ,xm Grid w600 h400 gListView Count5000 vListView Altsubmit, 序号|曲名|类型|位置|创建时间|上次播放|大小|播放次数
 Gui, Add,Slider,xm w600 h25 +Disabled -ToolTip vSlider page1 gSlider AltSubmit
@@ -1202,19 +1202,19 @@ Libxuhao=0
 LV_Delete()
 Gui, Submit, NoHide
 Loop, read, %AhkMediaLibFile%
-		{
-			Libxuhao++
-			SetFormat, float ,04
-			mp3_loop = %A_LoopReadline%
-			Found = Yes
-			Loop, Parse, find, %a_Space%
-			IfNotInString, mp3_loop, %A_LoopField%, SetEnv, Found, No
+{
+	Libxuhao++
+	SetFormat, float ,04
+	mp3_loop = %A_LoopReadline%
+	Found = Yes
+	Loop, Parse, find, %a_Space%
+	IfNotInString, mp3_loop, %A_LoopField%, SetEnv, Found, No
 
-			IfEqual, Found, Yes
-				{
-			    SplitPath, mp3_loop,,,ext, name
-				LV_Add("Focus",Libxuhao+0.0, name,ext, mp3_loop)
-				}
+	IfEqual, Found, Yes
+	{
+		SplitPath, mp3_loop,,,ext, name
+		LV_Add("Focus",Libxuhao+0.0, name,ext, mp3_loop)
+	}
 }
 LV_ModifyCol()
 Return
@@ -1340,9 +1340,9 @@ Return
 
 ListView:
 if (A_GuiEvent = "RightClick")
-	Menu, Context , Show
+	Menu, Context, Show
 else if (A_GuiEvent = "DoubleClick")
-gosub,PlayLV
+gosub, PlayLV
 return
 
 ; 右键播放所选歌曲

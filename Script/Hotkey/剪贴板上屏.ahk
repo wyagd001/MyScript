@@ -40,9 +40,9 @@ return
 	CoordMode, ToolTip
 	CoordMode, Caret
 	CHPITT_x := A_CaretX + 10, CHPITT_y := A_CaretY + 20
+	CHPITooltip := 1
 	ToolTip, % cliphistoryPIList, % CHPITT_x, % CHPITT_y
 	;WinActivate, ahk_class tooltips_class32   ; 不激活 鼠标点击无效
-	CHPITooltip := 1
 	settimer DCHPITooltip, -10000
 return
 
@@ -178,17 +178,27 @@ return
 }
 
 MenuClick:
-	WinActivate, ahk_class tooltips_class32
-	IfWinNotActive, ahk_class tooltips_class32
-	{
-		DCHPITooltip()
-	Return
-	}
-	CoordMode, Mouse, Relative
-	MouseGetPos, , mY
-	mY -= 38
-	IfLess, mY, 1, Return
-	mY /= 17
-	CHPI2Screen(mY+1)
-	DCHPITooltip()
+	;WinActivate, ahk_class tooltips_class32
+	;IfWinNotActive, ahk_class tooltips_class32
+	;{
+	;	DCHPITooltip()
+	;	Return
+	;}
+Critical
+CoordMode, Mouse, Relative
+WinActivate, ahk_class tooltips_class32
+Click
+MouseGetPos,, tooltipY
+;MouseGetPos, mx, tooltipY, winid, OutputVarControl
+Critical Off
+tooltipY -= 38
+;WinGetClass, h_class, ahk_id %Winid%
+;WinGetPos, OutX, OutY, OutWidth, OutHeight,  ahk_id %Winid%
+;jjj := tooltipY // 17
+;FileAppend, %mx%@%tooltipY%@%jjj%@%h_class%@%OutputVarControl%@%A_CoordModeMouse%`n, %A_Desktop%\789.txt
+;FileAppend, %OutX%@%OutY%@%OutWidth%@%OutHeight%`n, %A_Desktop%\789.txt
+IfLess, tooltipY, 1, Return
+tooltipY /= 17
+CHPI2Screen(tooltipY+1)
+DCHPITooltip()
 return

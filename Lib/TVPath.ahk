@@ -244,8 +244,9 @@ TVPath_Set(hTreeView, inPath, ByRef outMatchPath,  EscapeChar="", Delimiter="\",
 		hSelItem:=errorlevel
 
 		htext:=TVPath_GetText(hTreeView, hSelItem)
-		;tooltip % htext
-		if (htext = "收藏夹") || (htext = "快速访问") ; 资源管理器 首个节点为收藏夹
+		CF_tooltip(htext, 2000)
+		;if (htext = "收藏夹") || (htext = "快速访问") ; 资源管理器 首个节点为收藏夹
+		if (htext != "此电脑") && (htext != "计算机")
 		{
 			Loop 20
 			{

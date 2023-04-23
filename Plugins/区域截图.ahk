@@ -298,7 +298,7 @@ Convert(0,  截图保存目录 . "\" FileName "." . filetp)
 ExitApp
 
 WM_HELP(){
-global filetp
+global filetp, 截图保存目录
 WinClose,截图
 InputBox,FileName,截图,`n输入截图文件名并保存文件,,440,160
 if ErrorLevel=0

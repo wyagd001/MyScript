@@ -63,6 +63,10 @@ IME_SwitchToEng()
     IME_Switch(0x08040804) ; 中文(中国) 简体中文-美式键盘
 }
 
+; LoadKeyboardLayout  调用后会在系统中添加键盘 
+; 例如 "dwLayout=0" 或 "dwLayout=04090409" 会添加美式键盘
+; 可使用 IME_UnloadLayout(0x04090409) 来删除
+
 IME_Switch(dwLayout)
 {
     HKL := DllCall("LoadKeyboardLayout", Str, dwLayout, UInt, 1)
@@ -310,6 +314,9 @@ IME_GET(WinTitle="A")  {
 }
 
 ;-----------------------------------------------------------
+; IME_SET 设置输入法状态
+; SetSts := 0 英文
+; SetSts := 1 中文
 ; IME状态的设置
 ;   SetSts          1:ON / 0:OFF
 ;   WinTitle="A"    対象Window

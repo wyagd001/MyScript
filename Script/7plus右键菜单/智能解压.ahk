@@ -20,7 +20,10 @@ If !Files
 }
 Critical,Off
 Loop Parse, Files, `n, `r ;从 Files 中逐个获取压缩包路径。换行作分隔符，忽略头尾回车。
-	7z_smart_Unarchiver(A_LoopField)
+{
+	if A_LoopField
+		7z_smart_Unarchiver(A_LoopField)
+}
 Return
 
 7PlusMenu_智能解压()

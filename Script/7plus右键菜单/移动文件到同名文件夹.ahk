@@ -1,19 +1,26 @@
 ﻿;桌面lnk文件无效(所有lnk文件都无效)
 1003:
-SetTimer, 移动文件到同名文件夹, -150
+SetTimer, 移动文件到同名文件夹_7plus, -150
 Return
 
 ;文件移动到同名文件夹内
 ;桌面lnk文件无效  无法获得lnk 后缀
-;按快捷键为结果为 G:\Users\lyh\Desktop\QQ  实际为QQ.lnk
-;#G::
-移动文件到同名文件夹:
+;按快捷键结果为 G:\Users\lyh\Desktop\QQ  实际为QQ.lnk
+
+移动文件到同名文件夹_7plus:
 FileRead, Files, %A_Temp%\7plus\files.txt
 sleep, 50
-Critical,On
+Critical, On
 if !Files
 	Files := GetSelectedFiles()
 Critical,Off
+goto 移同名
+return
+
+;#G::
+移动文件到同名文件夹:
+Files := GetSelectedFiles()
+移同名:
 If !Files
 {
 	CF_ToolTip("获取文件路径失败。", 3000)

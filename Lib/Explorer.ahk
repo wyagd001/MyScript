@@ -6,7 +6,7 @@
 
 GetCurrentFolder()
 {
-	global MuteClipboardList, newfolder
+	global newfolder
 	newfolder =
 	If WinActive("ahk_group ccc")
 	{

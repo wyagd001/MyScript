@@ -111,6 +111,5 @@
 	}
 	if S_tooltip
 		CF_ToolTip("文件%包_完整文件名%解压完成！", 2000)
-*/
 Return
 }
