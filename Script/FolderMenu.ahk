@@ -717,22 +717,22 @@ f_OpenPath(ThisPath)
 		{
 			if CF_IsFolder(ThisPath)
 			{
-			ControlGetPos, w_Edit1Pos,,,, Edit5, ahk_id %w_WinID%
-			if w_Edit1Pos != ; it has quick connect bar, addressbar is edit5
-			{
-				ControlSetText, Edit5, %ThisPath%, ahk_id %w_WinID%
-				ControlSend, Edit5, {Enter}, ahk_id %w_WinID%
+				ControlGetPos, w_Edit1Pos,,,, Edit5, ahk_id %w_WinID%
+				if w_Edit1Pos != ; it has quick connect bar, addressbar is edit5
+				{
+					ControlSetText, Edit5, %ThisPath%, ahk_id %w_WinID%
+					ControlSend, Edit5, {Enter}, ahk_id %w_WinID%
+				}
+				else
+				{
+					ControlSetText, Edit1, %ThisPath%, ahk_id %w_WinID%
+					ControlSend, Edit1, {Enter}, ahk_id %w_WinID%
+				}
+				ControlFocus, SysListView321, ahk_id %w_WinID% ; Set focus to file list
 			}
 			else
-			{
-				ControlSetText, Edit1, %ThisPath%, ahk_id %w_WinID%
-				ControlSend, Edit1, {Enter}, ahk_id %w_WinID%
-			}
-			ControlFocus, SysListView321, ahk_id %w_WinID% ; Set focus to file list
-	        }
-	else
 				f_RunPath(ThisPath)
-	}
+		}
 		; Microsoft Office application
 		else if w_Class contains bosa_sdm_
 		{
@@ -766,17 +766,17 @@ f_OpenPath(ThisPath)
 		}
 		; Command Prompt
 		else if w_Class = ConsoleWindowClass
-    {
-		if CF_IsFolder(ThisPath)
 		{
-			WinActivate, ahk_id %w_WinID%	; Because sometimes the mclick deactivates it.
-			SetKeyDelay, 0	; This will be in effect only for the duration of this thread.
-			f_SendBig5("cd /d " . ThisPath . "\") ; (thanks to tireless for the /d switch)
-			Send, {Enter}
-		}
+			if CF_IsFolder(ThisPath)
+			{
+				WinActivate, ahk_id %w_WinID%	; Because sometimes the mclick deactivates it.
+				SetKeyDelay, 0	; This will be in effect only for the duration of this thread.
+				f_SendBig5("cd /d " . ThisPath . "\") ; (thanks to tireless for the /d switch)
+				Send, {Enter}
+			}
 			else
 				f_RunPath(ThisPath)
-	}
+		}
 		; Emacs (thanks to catweazle (John))
 		else if w_Class = Emacs
 		{
@@ -809,7 +809,7 @@ f_OpenPath(ThisPath)
 			else
 				f_RunPath(ThisPath)
 		}
-    }
+	}
 
 	if f_RecentEnabled = 1
 	{

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <head>
     <meta charset="utf-8"/>
     <title>api文档</title>
@@ -34,7 +35,7 @@
 <script type="text/javascript">
     $(function () {
 
-        $.get("apidoc.md", function (markdown) {
+        $.get("./apidoc.md", function (markdown) {
 
             editormd.markdownToHTML("md-view", {
                 markdown: markdown,//+ "\r\n" + $("#append-test").text(),

@@ -127,8 +127,6 @@ else
 			GuiControl, Disable, compmode
 		t1.SetText(CandySel)
 	}
-	
-	
 }
 return
 

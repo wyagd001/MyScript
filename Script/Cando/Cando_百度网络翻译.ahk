@@ -4,6 +4,7 @@
 ; https://www.jianshu.com/p/5f3177943b91
 ; https://blog.csdn.net/master_ning/article/details/81002474
 ; https://blog.csdn.net/hongquan1991/article/details/80616491
+; 百度添加了新的验证信息, 本脚本已无法获取到结果
 
 Cando_百度网络翻译:
 	Gui,66:Default
@@ -87,7 +88,7 @@ Return
 
 BaiduApi(KeyWord)
 {
-IfExist,%A_ScriptDir%\Settings\tmp\baidu.ini
+IfExist, %A_ScriptDir%\Settings\tmp\baidu.ini
 	IniRead, baiducookie, %A_ScriptDir%\Settings\tmp\baidu.ini, baidu, cookie
 else
 {
@@ -105,19 +106,23 @@ RegExMatch(webs,"window.gtk = '(.*?)';" , gtk)
 RegExMatch(webs,"token: '(.*?)'" , token)
 if !token1
 return
-
+;tooltip % gtk1 " - " token1
 	js := new ActiveScript("JScript")
 	js.Exec(GetJScript())
-  sign:=js.token(keyword,gtk1)
+  sign:=js.token(keyword, gtk1)
 
 if RegExMatch(KeyWord,"[^a-zA-Z0-9\.\?\-\!\s]")
     slang := "zh",dlang := "en"
 else
     slang := "en",dlang := "zh"
 url := "https://fanyi.baidu.com/v2transapi?from=" slang "&to=" dlang "&query=" UrlEncode(KeyWord,"UTF-8") "&transtype=translang&simple_means_flag=3&sign=" sign "&token=" token1
+;msgbox % url
+
+
 
    json := WinHttp.URLGet(url,"Charset:UTF-8",header)
 ; 错误代码：997，没有cookie； 998，cookie 过期；999，内部错误。
+; 百度翻译新增了一个请求头参数 Acs-Token,如果不携带该参数,直接按照以前的方法进行处理,会出现 1022 报错
 ;msgbox % json
     Return json
 }

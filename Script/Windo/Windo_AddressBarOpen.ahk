@@ -1,6 +1,6 @@
 ﻿Windo_ChromeAddressBarOpen:
 accAddressBar := FindChromeAddressBar(Windy_CurWin_id)
-accAddressBar.accObj.accValue(0) := !InStr("javascript:", Splitted_Windy_Cmd3) ? "javascript:void((function(){" Splitted_Windy_Cmd3 "})())" : Splitted_Windy_Cmd3
+accAddressBar.accObj.accValue(0) := !InStr(Splitted_Windy_Cmd3, "javascript:") ? "javascript:void((function(){" Splitted_Windy_Cmd3 "})())" : Splitted_Windy_Cmd3
 accAddressBar.accObj.accSelect(0x1, 0)
 sleep,500
 ControlSend,, {Enter}, ahk_id %Windy_CurWin_id%

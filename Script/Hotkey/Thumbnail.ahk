@@ -184,7 +184,7 @@ DetectHiddenWindows,Off
     SendClickThrough(mX,mY)
  DetectHiddenWindows,On
 
-    PostMessage, 0xA1, 2   ;PostMessage, 0xA1, 2, , , Ahk_Id %Win_ID%    窗口 hwnd  非控件的hwnd  否则控件就乱“跑”了
+    PostMessage, 0xA1, 2   ; PostMessage, 0xA1, 2, , , Ahk_Id %Win_ID%    ; 窗口 hwnd 非控件的hwnd  否则控件就乱“跑”了
 }
 }
 

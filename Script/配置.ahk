@@ -206,7 +206,7 @@ Gui, Add, Edit, x85 y148 w30 h20 vrh, %rh%
 Gui, Add, Text, x118 y150 vdingshi2, 时
 Gui, Add, Edit, x135 y148 w30 h20 vrm, %rm%
 Gui, Add, Text, x167 y150 vdingshi3, 分
-Gui, Add, CheckBox, Checked%dingshichongfu% x190 y150 vdingshichongfu, 重复运行(指定时间为间隔周期)
+Gui, Add, CheckBox, Checked%dingshichongfu% x190 y143 h30 vdingshichongfu, 重复运行(指定时间为间隔周期)
 Gui, Add, Text, x26 y180 vdingshi4, 指定执行的程序:
 Gui, Add, Edit, x120 y178 w350 h20 vrenwucx, %renwucx%
 Gui, Add, Button, x475 y175 w30 h25 vdingshi5 grenwusl, ...

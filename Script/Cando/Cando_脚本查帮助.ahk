@@ -25,7 +25,7 @@ Cando_查新版帮助:
 				sleep,2000
 				wb := WBGet("ahk_class HH Parent")
 				StringReplace,直接打开,CandySel,#,_
-				Ahk跳转的地址=/docs/commands/%直接打开%.htm
+				Ahk跳转的地址=/docs/lib/%直接打开%.htm
 				myURL =mk:@MSITStore:%ahk新版中文帮助%::%Ahk跳转的地址%
 				wb.Navigate(myURL)
 				wb := ""
@@ -116,7 +116,7 @@ Cando_脚本文字_查帮助:
 		ProperClick("SysTabControl321")
 		Sleep,100
 		StringReplace,直接打开,CandySel,#,_
-		Ahk跳转的地址=/docs/commands/%直接打开%.htm
+		Ahk跳转的地址=/docs/lib/%直接打开%.htm
 		Send !gu
 		Loop 3
 			IfWinNotActive Ahk_Class #32770  ; Is it still searching?

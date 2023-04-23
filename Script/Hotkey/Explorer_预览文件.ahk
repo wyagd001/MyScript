@@ -120,7 +120,8 @@ return
 Cando_wps_prew:
 Tmp_Str := xd2txlib.ExtractText(Prew_File)
 Gui, +ReSize +MinSize800x540
-Gui, Add, Edit, w800 h520 Multi ReadOnly vdisplayArea, %Tmp_Str%
+Gui, Add, Edit, w800 h520 Multi ReadOnly vdisplayArea
+GuiControl,, displayArea, %Tmp_Str%
 Gui,PreWWin:Show, w800 h540 Center, % Prew_File " - 文件预览"
 sendmessage, 0xB1, -1, -1, Edit1, 文件预览
 Tmp_Str := ""
@@ -226,15 +227,15 @@ if !prewpToken
 prewpToken := Gdip_Startup()        
 GUI, +AlwaysOnTop +Owner
 Gui, Margin, 0, 0
-pBitmap:=Gdip_CreateBitmapFromFile(Prew_File)
-WidthO  :=Gdip_GetImageWidth(pBitmap)
+pBitmap := Gdip_CreateBitmapFromFile(Prew_File)
+WidthO  := Gdip_GetImageWidth(pBitmap)
 HeightO := Gdip_GetImageHeight(pBitmap)
 Gdip_DisposeImage(pBitmap)
 Propor  := (A_ScreenHeight/HeightO < A_ScreenWidth/WidthO ? A_ScreenHeight/HeightO : A_ScreenWidth/WidthO)
-Propor:=Propor > 1?1:Propor
-	hW  := Floor(WidthO * Propor)
-	hH := Floor(HeightO * Propor)
-Gui, Add, Picture,w%hw% h%hh%, %Prew_File%
+Propor := Propor > 1 ? 1 : Propor
+hW  := Floor(WidthO * Propor)
+hH := Floor(HeightO * Propor)
+Gui, Add, Picture, w%hw% h%hh%, %Prew_File%
 Gui,PreWWin: Show,  Center, % Prew_File " - 文件预览"
 return
 
@@ -398,7 +399,11 @@ GUI, -Caption +AlwaysOnTop +Owner
 Gui, Margin, 0, 0
 pBitmap:=Gdip_CreateBitmapFromFile(Prew_File)
 Gdip_GetImageDimensions(pBitmap, width, height)
-Gui, Add, Picture,w%width% h%height% 0xE hwndhwndGif1
+Propor  := (A_ScreenHeight/Height < A_ScreenWidth/Width ? A_ScreenHeight/Height : A_ScreenWidth/Width)
+Propor := Propor > 1 ? 1 : Propor
+hW  := Floor(Width * Propor)
+hH := Floor(Height * Propor)
+Gui, Add, Picture, w%hw% h%hh% 0xE hwndhwndGif1
 Gdip_DisposeImage(pBitmap)
 hgif1 := new Gif(Prew_File, hwndGif1)
 Gui,PreWWin: Show, AutoSize Center, % Prew_File " - 文件预览"
@@ -452,7 +457,10 @@ WB.Navigate(A_ScriptDir "\html\html-markdown-preview\index.html")
 return
 */
 Cando_md_html_prew:
+File_Encode := File_GetEncoding(Prew_File)
+FileEncoding, % File_Encode
 Fileread, Tmp_val, % Prew_File
+FileEncoding
 gosub, IE_Open
 WB.Navigate("http://editor.md.ipandao.com/examples/simple.html")
 WBStartTime := A_TickCount
@@ -469,6 +477,7 @@ MouseClick , Right, 300,200
 ;sendevent ^v
 ;MouseClick , left, 350,320
 clipboard := backclip
+Tmp_val := ""
 ;msgbox % wb.document.querySelector("#test-editormd > textarea").value
 return
 
@@ -536,6 +545,7 @@ class Gif
 		DllCall("Gdiplus\GdipImageSelectActiveFrame", "ptr", this.pBitmap, "uptr", this.GetAddress("dimensionIDs"), "int", this.frameCurrent)
 		hBitmap := Gdip_CreateHBITMAPFromBitmap(this.pBitmap)
 		SetImage(this.hwnd, hBitmap)
+		;GuiControl,, % this.hwnd, HBITMAP: %hBitmap%   ; 能缩放gif  但是图片会闪烁
 		DeleteObject(hBitmap)
 
 		fn := this._fn

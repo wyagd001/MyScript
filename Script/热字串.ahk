@@ -27,7 +27,7 @@ zhushi_fun()
 		send {#}
 		return
 	}
-	else if InStr(h_hzcWin, ".html") or InStr(h_hzcWin, "htm")
+	else if InStr(h_hzcWin, ".html") or InStr(h_hzcWin, "htm") or InStr(h_hzcWin, "xml")
 	{
 		send <{!}--  -->
 		return

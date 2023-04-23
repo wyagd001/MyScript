@@ -23,7 +23,6 @@ Local Q, F := VarSetCapacity(Q,520,0)
 Return A_IsUnicode ? Q : StrGet(&Q, "UTF-16")
 }
 
-
 ; 删除文件，成功时返回非零值，失败返回0.
 DeleteFile(sFile)
 {

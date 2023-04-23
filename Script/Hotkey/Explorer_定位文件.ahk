@@ -209,7 +209,7 @@ If WinExist("ahk_class #32770")
 	DriveGet, OutputVar, Label, %hdrive%
 	dpath := StrReplace(dpath, hdrive, OutputVar " (" hdrive ")" )
 	dpath := StrReplace(dpath, "\users\", "\用户\")
-	dpath := StrReplace(dpath, "\desktop\", "\桌面\")
+	dpath := StrReplace(dpath, "\desktop", "\桌面")
 }
 ;tooltip % dpath
 if (A_OSVersion = "WIN_7")
@@ -245,7 +245,7 @@ If WinExist("ahk_class #32770")
 	DriveGet, OutputVar, Label, %hdrive%
 	dpath := StrReplace(dpath, hdrive, OutputVar " (" hdrive ")" )
 	dpath := StrReplace(dpath, "\users\", "\用户\")
-	dpath := StrReplace(dpath, "\desktop\", "\桌面\")
+	dpath := StrReplace(dpath, "\desktop", "\桌面")
 ;tooltip % dpath " - " hTreeView
 if (A_OSVersion = "WIN_7")
 	TVPath_Set(hTreeView, (hdialogedit?"计算机\":instr(dpath, "桌面")?"":"桌面\计算机\") dpath, outMatchPath,,,10)

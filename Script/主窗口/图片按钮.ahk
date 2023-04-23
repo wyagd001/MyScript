@@ -113,7 +113,7 @@ MouseLDown(wParam, lParam, msg, hwnd)
    }
    Local Current_Down_Image
    Local Current_GUI
-      if (A_Gui>50 &&  A_Gui<fi+50){
+      if (A_Gui > 50 && A_Gui < fi+50){
        ;鼠标左键点击后能拖拽移动窗口
        PostMessage, 0xA1, 2
     }

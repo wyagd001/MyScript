@@ -179,6 +179,7 @@ FolderMenu_AddIcon(menuitem,submenu)
 	if DllCall("shell32\SHGetFileInfoW", "wstr", A_LoopFileLongPath?A_LoopFileLongPath:A_LoopField
 		, "uint", 0, "ptr", &fileinfo, "uint", fisize, "uint", 0x100 | 0x000000001)
 	{
+		;msgbox % A_LoopFileLongPath " - " A_LoopField " - " submenu
 		hicon := NumGet(fileinfo, 0, "ptr")
 		; Set the menu item's icon.
 		Menu %menuitem%, Icon, %submenu%, HICON:%hicon%

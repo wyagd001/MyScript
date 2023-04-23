@@ -177,6 +177,7 @@ Label_Candy_HandleMenu:
 	else
 	{
 		Candy_Cmd := szMenuContent[ A_thisMenu "/" A_ThisMenuItem]
+		;tooltip % A_thisMenu "/" A_ThisMenuItem
 		CandyError_From_Menu := 1
 		Goto Label_Candy_RunCommand
 	}

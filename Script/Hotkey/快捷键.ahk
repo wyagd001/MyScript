@@ -226,10 +226,13 @@ while format := NumGet(bin, n, "uint")
     {
         html := StrGet(&bin + n + 8, size, "UTF-8")
         RegExMatch(html, "(*ANYCRLF)SourceURL:\K.*", sourceURL)
+				;fobj := FileOpen( A_Desktop "\123.txt", "rw", "UTF-8")
+				;fobj.Write(html, size)
         break
     }
     n += A_PtrSize + 4 + size
 }
+
 SelCode := sourceURL ? (";来源网址: " sourceURL "`r`n" SelCode) : SelCode
 if SelCode 
 {

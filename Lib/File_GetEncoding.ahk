@@ -180,4 +180,4 @@ File_GetEncoding(aFile, aNumBytes = 0, aMinimum = 4)
 	; 未符合上面条件的返回系统默认 ansi 内码
 	; 简体中文系统默认返回的是 CP936, 非中文系统的内码显示中文会乱码,如果要显示中文可直接改为"CP936"
 	return "CP" DllCall("GetACP")  
-}  
+}

@@ -20,7 +20,7 @@ WinGet, ProcessPath, ProcessPath, A
 
 ; 窗口标题有路径的窗口直接获取窗口标题文字
 IfInString,_Title, :\ 
-{  
+{
 	; 匹配目录不能匹配文件
 	;FullNamell:=RegExReplace(_Title,"^.*(.:(\\)?.*)\\.*$","$1")
 	; 编辑器文件修改后标题开头带“*”

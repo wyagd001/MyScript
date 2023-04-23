@@ -1,4 +1,4 @@
-/*
+ï»¿/*
 TODO:
 - find a better way to make context sensitive hotkeys for when listbox is selected
 	- didn't work: hotkey ifwinactive ahk_id %controlhwnd%
@@ -24,68 +24,68 @@ if not A_IsAdmin
 	ExitApp
 }
 
-presets_ini_file := A_ScriptDir "\ÍøÂçÁ¬½ÓIPÉèÖÃ.ini"
+presets_ini_file := A_ScriptDir "\ç½‘ç»œè¿æ¥IPè®¾ç½®.ini"
 interfaces_tmpfile := A_ScriptDir "\interfaces.tmp"
 putty := A_ScriptDir "\putty.exe"
-Gui, Add, Text, x12 y9 w120 h20 , ÍøÂçÁ¬½Ó
+Gui, Add, Text, x12 y9 w120 h20 , ç½‘ç»œè¿æ¥
 Gui, Add, DropDownList, x12 y29 w130 h100 vinterface gupdate_cmd, % get_interfaces_list(interfaces_tmpfile)
-Gui, Add, Button, x12 y59 w130 h20 gchang_interface_state, ÇĞ»»Á¬½Ó×´Ì¬
+Gui, Add, Button, x12 y59 w130 h20 gchang_interface_state, åˆ‡æ¢è¿æ¥çŠ¶æ€
 
-Gui, Add, Text, x12 y89 w130 h20 , ±£´æµÄ·½°¸
+Gui, Add, Text, x12 y89 w130 h20 , ä¿å­˜çš„æ–¹æ¡ˆ
 Gui, Add, ListBox, x12 y109 w130 h130 vpreset gpreset_select Hwndpresets_hwnd, % ini_get_sections(presets_ini_file)
-Gui, Add, Button, x12 y233 w30 h20 gpreset_up, ÉÏ
-Gui, Add, Button, x42 y233 w30 h20 gpreset_down, ÏÂ
-Gui, Add, Button, x102 y233 w30 h20 gpreset_delete, É¾³ı
+Gui, Add, Button, x12 y233 w30 h20 gpreset_up, ä¸Š
+Gui, Add, Button, x42 y233 w30 h20 gpreset_down, ä¸‹
+Gui, Add, Button, x102 y233 w30 h20 gpreset_delete, åˆ é™¤
 
 Gui, Add, GroupBox, x152 y9 w260 h120 , IP
-Gui, Add, CheckBox, x162 y29 w70 h20 vip_ignore gip_toggle, ºöÂÔ
-Gui, Add, CheckBox, x242 y29 w70 h20 vip_auto gip_toggle, ×Ô¶¯»ñÈ¡
+Gui, Add, CheckBox, x162 y29 w70 h20 vip_ignore gip_toggle, å¿½ç•¥
+Gui, Add, CheckBox, x242 y29 w70 h20 vip_auto gip_toggle, è‡ªåŠ¨è·å–
 
-Gui, Add, Text, x162 y59 w80 h20 , IPµØÖ·
+Gui, Add, Text, x162 y59 w80 h20 , IPåœ°å€
 Gui, Add, Custom, ClassSysIPAddress32 x242 y58 w120 h20 hwndhIPControl vcomp_ip gupdate_cmd
-Gui, Add, Text, x162 y79 w80 h20 , ×ÓÍøÑÚÂë
+Gui, Add, Text, x162 y79 w80 h20 , å­ç½‘æ©ç 
 ;Gui, Add, Custom, ClassSysIPAddress32 x242 y79 w120 h20 vnetmask gupdate_cmd, 
 Gui, Add, Custom, ClassSysIPAddress32 x242 y80 w120 h20  hwndhnetmaskControl vnetmask gip_haschanged
-Gui, Add, Text, x162 y99 w80 h20 , Ä¬ÈÏÍø¹Ø
+Gui, Add, Text, x162 y99 w80 h20 , é»˜è®¤ç½‘å…³
 Gui, Add, Custom, ClassSysIPAddress32 x242 y102 w120 h20 hwndhgatewayControl vgateway gupdate_cmd
 Gui, Add, Button, x372 y59 w30 h20 ggateway2comp_ip, <+1
 
 Gui, Add, GroupBox, x152 y139 w260 h100 , DNS
-Gui, Add, CheckBox, x160 y160 w40 h20 vdns_ignore gdns_toggle, ºöÂÔ
-Gui, Add, CheckBox, x210 y160 w65 h20 vdns_auto gdns_toggle, ×Ô¶¯»ñÈ¡
+Gui, Add, CheckBox, x160 y160 w40 h20 vdns_ignore gdns_toggle, å¿½ç•¥
+Gui, Add, CheckBox, x210 y160 w65 h20 vdns_auto gdns_toggle, è‡ªåŠ¨è·å–
 
-Gui, Add, Button, x285 y159 w60 h20 gset_now_dns, »ñÈ¡µ±Ç°
+Gui, Add, Button, x285 y159 w60 h20 gset_now_dns, è·å–å½“å‰
 Gui, Add, Button, x350 y159 w60 h20 gset_google_dns, Google
-Gui, Add, Text, x162 y189 w80 h20 , Ê×Ñ¡DNS·şÎñÆ÷
+Gui, Add, Text, x162 y189 w80 h20 , é¦–é€‰DNSæœåŠ¡å™¨
 Gui, Add, Custom, ClassSysIPAddress32 x242 y189 w120 h20 vdns_1 gupdate_cmd
-Gui, Add, Text, x162 y209 w80 h20 , ±¸ÓÃDNS·şÎñÆ÷
+Gui, Add, Text, x162 y209 w80 h20 , å¤‡ç”¨DNSæœåŠ¡å™¨
 Gui, Add, Custom, ClassSysIPAddress32 x242 y209 w120 h20 vdns_2 gupdate_cmd
 
 Gui, Add, Text, x12 y260 w120 h20 , Cmd
 Gui, Add, Edit, x12 y280 w400 h70 vcmd, Edit
-Gui, Add, Button, x432 y299 w100 h30 grun_cmd, Ó¦ÓÃÉèÖÃ
+Gui, Add, Button, x432 y299 w100 h30 grun_cmd, åº”ç”¨è®¾ç½®
 
-Gui, Add, Button, x432 y19 w100 h30 gsave, ±£´æ·½°¸
+Gui, Add, Button, x432 y19 w100 h30 gsave, ä¿å­˜æ–¹æ¡ˆ
 
-Gui, Add, Text, x432 y69 w120 h20 , ÆäËü
-Gui, Add, Button, x432 y89 w100 h30 gping, ping Íø¹Ø
-Gui, Add, Button, x535 y89 w100 h30 gbrowse, ä¯ÀÀ Íø¹Ø
-Gui, Add, Button, x432 y129 w100 h30 gScanSubnet, É¨Ãè¾ÖÓòÍø
-Gui, Add, Button, x535 y129 w100 h30 gGetAdaptersInfo, ²é¿´Íø¿¨ĞÅÏ¢
-Gui, Add, Button, x432 y169 w100 h30 gtelnet, telnet Íø¹Ø
-Gui, Add, Button, x535 y169 w100 h30 gssh, ssh Íø¹Ø
+Gui, Add, Text, x432 y69 w120 h20 , å…¶å®ƒ
+Gui, Add, Button, x432 y89 w100 h30 gping, ping ç½‘å…³
+Gui, Add, Button, x535 y89 w100 h30 gbrowse, æµè§ˆ ç½‘å…³
+Gui, Add, Button, x432 y129 w100 h30 gScanSubnet, æ‰«æå±€åŸŸç½‘
+Gui, Add, Button, x535 y129 w100 h30 gGetAdaptersInfo, æŸ¥çœ‹ç½‘å¡ä¿¡æ¯
+Gui, Add, Button, x432 y169 w100 h30 gtelnet, telnet ç½‘å…³
+Gui, Add, Button, x535 y169 w100 h30 gssh, ssh ç½‘å…³
 
-Gui, Add, Text, x610 y340 w40 h20 vshowmoretext gshowmore,¸ü¶à¡Å
+Gui, Add, Text, x610 y340 w40 h20 vshowmoretext gshowmore,æ›´å¤šâˆ¨
 
 Gui, Add, Text, xm+2 section
-Gui, Add, Text, yp+10, Ctrl+Enter = Ó¦ÓÃ  Ctrl+s = ±£´æ  Ctrl+p = Ping  Ctrl+b = ä¯ÀÀ  Ctrl+t = Telnet  Ctrl+h = SSH  Esc = ¹Ø±Õ
-Gui, Add, Text, xs, µ±Ñ¡ÖĞÔ¤Éè·½°¸ÁĞ±íÊ±: Del = É¾³ı  Ctrl+up = ÏòÉÏÒÆ¶¯  Ctrl+down = ÏòÏÂÒÆ¶¯  Ë«»÷ = Ó¦ÓÃ
+Gui, Add, Text, yp+10, Ctrl+Enter = åº”ç”¨  Ctrl+s = ä¿å­˜  Ctrl+p = Ping  Ctrl+b = æµè§ˆ  Ctrl+t = Telnet  Ctrl+h = SSH  Esc = å…³é—­
+Gui, Add, Text, xs, å½“é€‰ä¸­é¢„è®¾æ–¹æ¡ˆåˆ—è¡¨æ—¶: Del = åˆ é™¤  Ctrl+up = å‘ä¸Šç§»åŠ¨  Ctrl+down = å‘ä¸‹ç§»åŠ¨  åŒå‡» = åº”ç”¨
 
-Gui, Add, GroupBox, x15 y420 w550 h80 , IE ´úÀíÉèÖÃ
-Gui, Add, CheckBox, x25 y440 w100 h20 vieproxy , Ê¹ÓÃ´úÀí·şÎñÆ÷
-Gui, Add, Text,x25 y470 w100 h20,´úÀí·şÎñÆ÷:¶Ë¿Ú:
+Gui, Add, GroupBox, x15 y420 w550 h80 , IE ä»£ç†è®¾ç½®
+Gui, Add, CheckBox, x25 y440 w100 h20 vieproxy , ä½¿ç”¨ä»£ç†æœåŠ¡å™¨
+Gui, Add, Text,x25 y470 w100 h20,ä»£ç†æœåŠ¡å™¨:ç«¯å£:
 Gui, Add, edit,x130 y465 w300 h20 vieproxyserver
-Gui, Add, Button, x432 y435 w100 h30 gieproxy, Ó¦ÓÃ´úÀí
+Gui, Add, Button, x432 y435 w100 h30 gieproxy, åº”ç”¨ä»£ç†
 
 ; Generated using SmartGUI Creator 4.0
 
@@ -140,13 +140,13 @@ if !showmore
 GuiControl,,ieproxy,% CF_regread("HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","Proxyenable")
 GuiControl,,ieproxyserver,% CF_regread("HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","ProxyServer")
 gui,show,w650 h510
-GuiControl,,showmoretext,ÊÕÆğ¡Ä
+GuiControl,,showmoretext,æ”¶èµ·âˆ§
 showmore:=1
 }
 else 
 {
 Gui, Show,w650 h360
-GuiControl,,showmoretext,¸ü¶à¡Å
+GuiControl,,showmoretext,æ›´å¤šâˆ¨
 showmore:=
 }
 return
@@ -154,17 +154,17 @@ return
 chang_interface_state:
 gui, submit, nohide
 filedelete, error.tmp
-if interface contains  ÒÑÆôÓÃ
+if interface contains  å·²å¯ç”¨
 {
-interface:=trim(StrReplace(interface,"ÒÑÆôÓÃ"))
+interface:=trim(StrReplace(interface,"å·²å¯ç”¨"))
 Runwait,%comspec% /c netsh interface set interface name="%interface%" admin=disabled >error.tmp, ,Hide
-check_error("error.tmp","ÒÑ½ûÓÃ" interface)
+check_error("error.tmp","å·²ç¦ç”¨" interface)
 }
-if interface contains  ÒÑ½ûÓÃ
+if interface contains  å·²ç¦ç”¨
 {
-interface:=trim(StrReplace(interface,"ÒÑ½ûÓÃ"))
+interface:=trim(StrReplace(interface,"å·²ç¦ç”¨"))
 Runwait,  %comspec% /c netsh interface set interface name="%interface%" admin=enabled >error.tmp,,Hide
-check_error("error.tmp","ÒÑÆôÓÃ" interface)
+check_error("error.tmp","å·²å¯ç”¨" interface)
 }
 
 GuiControl, , interface,|
@@ -190,14 +190,14 @@ error_msg:=StrReplace(error_msg,"`r`n")
 filedelete, %tmp_file%
 if !error_msg
 {
-tooltip,%msg%¡£
+tooltip,%msg%ã€‚
 sleep,1000
 tooltip
 return
 }
 else
 {
-msgbox,,ÌáÊ¾ĞÅÏ¢,% error_msg
+msgbox,,æç¤ºä¿¡æ¯,% error_msg
 return
 }
 }
@@ -208,7 +208,7 @@ CF_RegWrite("REG_DWORD","HKCU","Software\Microsoft\Windows\CurrentVersion\Intern
 CF_RegWrite("REG_SZ","HKCU","Software\Microsoft\Windows\CurrentVersion\Internet Settings","ProxyServer",ieproxyserver)
 dllcall("wininet\InternetSetOptionW","int","0","int","39","int","0","int","0")
 dllcall("wininet\InternetSetOptionW","int","0","int","37","int","0","int","0")
-tooltip,´úÀíÉèÖÃÍê±Ï¡£
+tooltip,ä»£ç†è®¾ç½®å®Œæ¯•ã€‚
 sleep,1000
 tooltip
 return
@@ -233,20 +233,20 @@ IPCtrlSetAddress(hgatewayControl, IPoctet1 "." IPoctet2 "." IPoctet3 "." GWoctet
 return
 
 /*
-; ÏûÏ¢ÁĞ±í
+; æ¶ˆæ¯åˆ—è¡¨
 ; SendMessage(hIpEdit,IPM_CLEARADDRESS,0,0)
-IPM_CLEARADDRESS := WM_USER + 100 ; wparam Îª0 LparamÎª0
+IPM_CLEARADDRESS := WM_USER + 100 ; wparam ä¸º0 Lparamä¸º0
 ; nIP=MAKEIPADDRESS(192,168,0,1);   
 ; SendMessage(hIpEdit,IPM_SETADDRESS,0,nIP)
-IPM_SETADDRESS := WM_USER + 101 ; wparam Îª0 LparamÎª32Î»µÄIPÖµ
+IPM_SETADDRESS := WM_USER + 101 ; wparam ä¸º0 Lparamä¸º32ä½çš„IPå€¼
 ; SendMessage(hIpEdit,IPM_GETADDRESS,0,int(&nIP))
-IPM_GETADDRESS := WM_USER + 102 ; wparam Îª0 LparamÎªÒ»¸öÖ¸ÏòInteger±äÁ¿µÄÖ¸Õë(Ö¸ÏòIPÖµ) ·µ»ØÖµÎª×Ö¶ÎÊıÄ¿
+IPM_GETADDRESS := WM_USER + 102 ; wparam ä¸º0 Lparamä¸ºä¸€ä¸ªæŒ‡å‘Integerå˜é‡çš„æŒ‡é’ˆ(æŒ‡å‘IPå€¼) è¿”å›å€¼ä¸ºå­—æ®µæ•°ç›®
 ; SendMessage   (hIpEdit,   IPM_SETRANGE,   0,   200 < <8|100)
-IPM_SETRANGE¡¡:=   WM_USER + 103 ; ÉèÖÃIP¿Ø¼ş4¸ö²¿·Ö(0,1,2,3)µÄÆäÖĞÒ»¸öµÄIPÈ¡Öµ·¶Î§, WparamÖ¸Ã÷ÒªÉèÖÃÈ¡Öµ·¶Î§µÄ²¿·Ö(0,1,2,3)£»lparamµÄµÍ16Î»×ÖÎª¸Ã×Ö¶ÎµÄ·¶Î§£º¸ß×Ö½ÚÎªÉÏÏŞ£¬µÍ×Ö½ÚÎªÏÂÏŞ(Àı×Ó 200*256+100)
+IPM_SETRANGEã€€:=   WM_USER + 103 ; è®¾ç½®IPæ§ä»¶4ä¸ªéƒ¨åˆ†(0,1,2,3)çš„å…¶ä¸­ä¸€ä¸ªçš„IPå–å€¼èŒƒå›´, WparamæŒ‡æ˜è¦è®¾ç½®å–å€¼èŒƒå›´çš„éƒ¨åˆ†(0,1,2,3)ï¼›lparamçš„ä½16ä½å­—ä¸ºè¯¥å­—æ®µçš„èŒƒå›´ï¼šé«˜å­—èŠ‚ä¸ºä¸Šé™ï¼Œä½å­—èŠ‚ä¸ºä¸‹é™(ä¾‹å­ 200*256+100)
 ; SendMessage(hIpEdit,IPM_SETFOCUS,3,0)
-IPM_SETFOCUS   :=    WM_USER + 104 ; ÉèÊäÈë½¹µã¡¡WparamÖ¸Ã÷ÄÄ¸ö²¿·Ö(0,1,2,3)»ñÈ¡½¹µã
+IPM_SETFOCUS   :=    WM_USER + 104 ; è®¾è¾“å…¥ç„¦ç‚¹ã€€WparamæŒ‡æ˜å“ªä¸ªéƒ¨åˆ†(0,1,2,3)è·å–ç„¦ç‚¹
 ; if(!SendMessage(hIpEdit,IPM_ISBLANK,0,0))
-IPM_ISBLANK¡¡ :=¡¡ WM_USER+105 ; IP´®ÊÇ·ñÎª¿Õ  Îª¿Õ·µ»Ø·Ç0 ²»Îª¿Õ·µ»Ø0
+IPM_ISBLANKã€€ :=ã€€ WM_USER+105 ; IPä¸²æ˜¯å¦ä¸ºç©º  ä¸ºç©ºè¿”å›é0 ä¸ä¸ºç©ºè¿”å›0
 */
 
 IPCtrlSetAddress(hControl, ipaddress)
@@ -254,7 +254,7 @@ IPCtrlSetAddress(hControl, ipaddress)
     static WM_USER := 0x400
     static IPM_SETADDRESS := WM_USER + 101
 
-    ; °Ñ IP µØÖ·´ò°ü³É 32 Î»×ÖÒÔÓÃÓÚ SendMessage.
+    ; æŠŠ IP åœ°å€æ‰“åŒ…æˆ 32 ä½å­—ä»¥ç”¨äº SendMessage.
     ipaddrword := 0
     Loop, Parse, ipaddress, .
         ipaddrword := (ipaddrword * 256) + A_LoopField
@@ -367,8 +367,8 @@ update_cmd:
 				cmd .= "netsh interface ip add dns name=""" interface """ addr=" dns_2 " index=2 & "
 		}	
 	}
-	cmd:=StrReplace(cmd,"ÒÑ½ûÓÃ ")
-	cmd:=StrReplace(cmd,"ÒÑÆôÓÃ ")
+	cmd:=StrReplace(cmd,"å·²ç¦ç”¨ ")
+	cmd:=StrReplace(cmd,"å·²å¯ç”¨ ")
 	cmd := regexreplace(cmd, "& $", "")
 	guicontrol,, cmd, % cmd
 return
@@ -441,12 +441,12 @@ run_cmd:
 	filedelete, error.tmp
 	cmd:=StrReplace(cmd,"&",">>error.tmp &") ">>error.tmp"
 	RunWait, %comspec% /c %cmd%,,hide
-check_error("error.tmp","IP ÉèÖÃÓ¦ÓÃÍê³É")
+check_error("error.tmp","IP è®¾ç½®åº”ç”¨å®Œæˆ")
 return
 
 save:
 	gui, submit, nohide
-	inputbox, name, ±£´æÉèÖÃµ½·½°¸ , ÇëÊäÈë·½°¸Ãû³Æ,,,,,,,, % comp_ip
+	inputbox, name, ä¿å­˜è®¾ç½®åˆ°æ–¹æ¡ˆ , è¯·è¾“å…¥æ–¹æ¡ˆåç§°,,,,,,,, % comp_ip
 	if ErrorLevel
 	{
 		return
@@ -458,7 +458,7 @@ save:
 	{
 		if (name == A_LoopField)
 		{
-			msgbox ·½°¸Ãû %name% ÒÑ¾­´æÔÚ.`nÇëÊäÈëĞÂµÄÃû³Æ.
+			msgbox æ–¹æ¡ˆå %name% å·²ç»å­˜åœ¨.`nè¯·è¾“å…¥æ–°çš„åç§°.
 			return
 		}
 	}
@@ -713,7 +713,7 @@ ShellRun(prms*)
 ; ------------------------------------------------------------------------------------
 ; ending includefile: shellrun.ahk
 ; ------------------------------------------------------------------------------------
-;À´Ô´ÍøÖ·: https://blog.csdn.net/liuyukuan/article/details/90725786
+;æ¥æºç½‘å€: https://blog.csdn.net/liuyukuan/article/details/90725786
 
 GetDnsAddress()
 {
@@ -731,7 +731,7 @@ GetDnsAddress()
     return DNS_SERVERS
 }
 
-; À´Ô´ÍøÖ·: https://www.autohotkey.com/boards/viewtopic.php?f=6&t=60367&sid=23a0b8fb8403b0329e8fe6e452ccc8b9
+; æ¥æºç½‘å€: https://www.autohotkey.com/boards/viewtopic.php?f=6&t=60367&sid=23a0b8fb8403b0329e8fe6e452ccc8b9
 ;ScanSubnet() Basically Does what all those IP scanners do,with WMI...Pretty Darn Fast Too,almost as fast as Nmap.
 
 ScanSubnet(addresses:="") {	;pings IP ranges & returns active IP's
@@ -757,9 +757,9 @@ ScanSubnet(addresses:="") {	;pings IP ranges & returns active IP's
 	Return rVal
 }
 
-;À´Ô´ÍøÖ·: https://blog.csdn.net/liuyukuan/article/details/90725735
+;æ¥æºç½‘å€: https://blog.csdn.net/liuyukuan/article/details/90725735
 
-;×ª×Ô https://www.autohotkey.com/boards/viewtopic.php?f=9&t=18768&p=91413&hilit=GetAdaptersInfo#p91413
+;è½¬è‡ª https://www.autohotkey.com/boards/viewtopic.php?f=9&t=18768&p=91413&hilit=GetAdaptersInfo#p91413
  
 
 GetAdaptersInfo()

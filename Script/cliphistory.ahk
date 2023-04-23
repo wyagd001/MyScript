@@ -737,7 +737,7 @@ historyVacuum()
 {
 q := "VACUUM history"
 	if (!DB.Exec(q))
-		msgbox % "Error Remove duplicate `n " DB.ErrorMsg "`n" DB.ErrorCode "`n" q
+		msgbox % "Error `n " DB.ErrorMsg "`n" DB.ErrorCode "`n" q
 }
 
 historylenclean()
